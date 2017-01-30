@@ -84,7 +84,6 @@ public class WizardController {
     }
 
     private void buildSteps() throws java.io.IOException {
-
         final JavaFXBuilderFactory bf = new JavaFXBuilderFactory();
 
         final Callback<Class<?>, Object> cb = (clazz) -> injector.getInstance(clazz);
@@ -109,6 +108,10 @@ public class WizardController {
         Parent step4 = fxmlLoaderStep4.load();
         step4.getProperties().put(CONTROLLER_KEY, fxmlLoaderStep4.getController());
 
+        FXMLLoader fxmlLoaderStep5 = new FXMLLoader(WizardController.class.getResource("/main/wizard-fxml/Step5.fxml"), null, bf, cb);
+        Parent step5 = fxmlLoaderStep5.load();
+        step5.getProperties().put(CONTROLLER_KEY, fxmlLoaderStep5.getController());
+
         FXMLLoader fxmlLoaderConfirm = new FXMLLoader(WizardController.class.getResource("/main/wizard-fxml/Confirm.fxml"), null, bf, cb);
         Parent confirm = fxmlLoaderConfirm.load();
         confirm.getProperties().put(CONTROLLER_KEY, fxmlLoaderConfirm.getController());
@@ -118,7 +121,7 @@ public class WizardController {
         completed.getProperties().put(CONTROLLER_KEY, fxmlLoaderCompleted.getController());
 
         steps.addAll(Arrays.asList(
-                step0, step1, step2, step3, step4, confirm, completed
+                step0, step1, step2, step3, step4, step5, confirm, completed
         ));
     }
 

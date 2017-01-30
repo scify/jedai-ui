@@ -9,8 +9,8 @@ import javafx.scene.control.ComboBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Step4Controller {
-    public ComboBox<String> entityMatchingMethodCombobox;
+public class Step5Controller {
+    public ComboBox<String> entityClusteringMethodCombobox;
     private Logger log = LoggerFactory.getLogger(Step3Controller.class);
 
     @Inject
@@ -21,23 +21,26 @@ public class Step4Controller {
         // Add options to combobox
         ObservableList<String> comboboxOptions =
                 FXCollections.observableArrayList(
-                        "Group Linkage",
-                        "Profile Matcher",
-                        "(todo)"
+                        "Center Clustering",
+                        "Connected Components Clustering",
+                        "Cut Clustering",
+                        "Markov Clustering",
+                        "Merge-Center Clustering",
+                        "Ricochet SR Clustering"
                 );
-        entityMatchingMethodCombobox.setItems(comboboxOptions);
+        entityClusteringMethodCombobox.setItems(comboboxOptions);
 
         // Bind combobox selection to model
-        entityMatchingMethodCombobox.valueProperty().bindBidirectional(model.entityMatchingProperty());
+        entityClusteringMethodCombobox.valueProperty().bindBidirectional(model.entityClusteringProperty());
     }
 
     @Validate
     public boolean validate() throws Exception {
-        if (entityMatchingMethodCombobox.getValue() == null || entityMatchingMethodCombobox.getValue().isEmpty()) {
+        if (entityClusteringMethodCombobox.getValue() == null || entityClusteringMethodCombobox.getValue().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Entity Matching Method");
+            alert.setTitle("Entity Clustering Method");
             alert.setHeaderText("Missing Field");
-            alert.setContentText("Selecting an Entity Matching Method is required.");
+            alert.setContentText("Selecting an Entity Clustering Method is required.");
             alert.showAndWait();
             return false;
         }
@@ -48,7 +51,7 @@ public class Step4Controller {
     @Submit
     public void submit() throws Exception {
         if (log.isDebugEnabled()) {
-            log.debug("[SUBMIT] the user has completed step 4");
+            log.debug("[SUBMIT] the user has completed step 5");
         }
     }
 }

@@ -21,6 +21,7 @@ public class ConfirmController {
         tfField4.textProperty().bind(model.blockBuildingProperty());
         tfField5.textProperty().bind(model.blockProcessingProperty());
         tfField6.textProperty().bind(model.entityMatchingProperty());
+        tfField7.textProperty().bind(model.entityClusteringProperty());
     }
 
     @Submit
