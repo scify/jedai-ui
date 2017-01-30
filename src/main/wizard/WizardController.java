@@ -66,7 +66,7 @@ public class WizardController {
         this.stepTexts.add("Step 4: Entity Matching");
         this.stepTexts.add("Step 5: Entity Clustering");
         this.stepTexts.add("Selection Confirmation");
-        this.stepTexts.add("Results");
+        this.stepTexts.add("");
 
         this.stepDescriptions = new ArrayList<>();
         this.stepDescriptions.add("Welcome description");
@@ -76,7 +76,7 @@ public class WizardController {
         this.stepDescriptions.add("Entity Matching description");
         this.stepDescriptions.add("Entity Clustering description");
         this.stepDescriptions.add("Selection Confirmation description");
-        this.stepDescriptions.add("Results description");
+        this.stepDescriptions.add("Run complete!");
 
         buildSteps();
         initButtons();
@@ -99,7 +99,8 @@ public class WizardController {
 
     /**
      * Set the stepsLabel and stepDescriptionTextArea values to the ones for the given step
-     * @param stepNum   Step number
+     *
+     * @param stepNum Step number
      */
     private void setLabelAndDescription(int stepNum) {
         stepsLabel.setText(stepTexts.get(stepNum));
