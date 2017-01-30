@@ -10,7 +10,7 @@ public class ConfirmController {
     private Logger log = LoggerFactory.getLogger(ConfirmController.class);
 
     @FXML
-    TextField tfField1, tfField2, tfField3, tfField4, tfField5, tfField6, tfField7;
+    TextField tfField1, tfField2, tfField3, tfField4, tfField5;
 
     @Inject
     WizardData model;
@@ -18,10 +18,10 @@ public class ConfirmController {
     @FXML
     public void initialize() {
         tfField1.textProperty().bind(model.datasetProperty());
-        tfField4.textProperty().bind(model.blockBuildingProperty());
-        tfField5.textProperty().bind(model.blockProcessingProperty());
-        tfField6.textProperty().bind(model.entityMatchingProperty());
-        tfField7.textProperty().bind(model.entityClusteringProperty());
+        tfField2.textProperty().bind(model.blockBuildingProperty());
+        tfField3.textProperty().bind(model.blockProcessingProperty());
+        tfField4.textProperty().bind(model.entityMatchingProperty());
+        tfField5.textProperty().bind(model.entityClusteringProperty());
     }
 
     @Submit

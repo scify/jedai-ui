@@ -19,7 +19,7 @@
                 <Font name="System Bold" size="24.0"/>
             </font>
         </Label>
-        <GridPane gridLinesVisible="true">
+        <GridPane>
             <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0"/>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
