@@ -6,7 +6,7 @@ import javafx.beans.property.StringProperty;
 public class WizardData {
 
     private final StringProperty dataset = new SimpleStringProperty();
-    private final StringProperty field4 = new SimpleStringProperty();
+    private final StringProperty blockBuilding = new SimpleStringProperty();
     private final StringProperty field5 = new SimpleStringProperty();
     private final StringProperty field6 = new SimpleStringProperty();
     private final StringProperty field7 = new SimpleStringProperty();
@@ -23,16 +23,16 @@ public class WizardData {
         this.dataset.set(dataset);
     }
 
-    public String getField4() {
-        return field4.get();
+    public String getBlockBuilding() {
+        return blockBuilding.get();
     }
 
-    public StringProperty field4Property() {
-        return field4;
+    public StringProperty blockBuildingProperty() {
+        return blockBuilding;
     }
 
-    public void setField4(String field4) {
-        this.field4.set(field4);
+    public void setBlockBuilding(String blockBuilding) {
+        this.blockBuilding.set(blockBuilding);
     }
 
     public String getField5() {
@@ -73,7 +73,7 @@ public class WizardData {
 
     public void reset() {
         dataset.set("");
-        field4.set("");
+        blockBuilding.set("");
         field5.set("");
         field6.set("");
         field7.set("");
