@@ -38,11 +38,11 @@ public class Step2Controller {
 
     @Validate
     public boolean validate() throws Exception {
-        if( blockBuildingCombobox.getValue() == null || blockBuildingCombobox.getValue().isEmpty() ) {
+        if (blockBuildingCombobox.getValue() == null || blockBuildingCombobox.getValue().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Block Building Selection");
-            alert.setHeaderText( "Missing Field" );
-            alert.setContentText( "Block Building Selection is required." );
+            alert.setHeaderText("Missing Field");
+            alert.setContentText("Block Building Selection is required.");
             alert.showAndWait();
             return false;
         }
@@ -52,7 +52,7 @@ public class Step2Controller {
 
     @Submit
     public void submit() throws Exception {
-        if( log.isDebugEnabled() ) {
+        if (log.isDebugEnabled()) {
             log.debug("[SUBMIT] the user has completed step 2");
         }
     }

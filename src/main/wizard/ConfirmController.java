@@ -20,9 +20,7 @@ public class ConfirmController {
     public void initialize() {
         tfField1.textProperty().bind(model.datasetProperty());
         tfField4.textProperty().bind(model.blockBuildingProperty());
-        tfField5.textProperty().bind(model.field5Property());
-        tfField6.textProperty().bind(model.field6Property());
-        tfField7.textProperty().bind(model.field7Property());
+        tfField5.textProperty().bind(model.blockProcessingProperty());
     }
 
     @Submit

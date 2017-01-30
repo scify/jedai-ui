@@ -28,16 +28,16 @@ public class Step1Controller {
         datasetCombobox.setItems(comboboxOptions);
 
         // Bind combobox selection to model
-        datasetCombobox.valueProperty().bindBidirectional( model.datasetProperty() );
+        datasetCombobox.valueProperty().bindBidirectional(model.datasetProperty());
     }
 
     @Validate
     public boolean validate() throws Exception {
-        if( datasetCombobox.getValue() == null || datasetCombobox.getValue().isEmpty() ) {
+        if (datasetCombobox.getValue() == null || datasetCombobox.getValue().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Dataset Selection");
-            alert.setHeaderText( "Missing Field" );
-            alert.setContentText( "Selecting a dataset is required." );
+            alert.setHeaderText("Missing Field");
+            alert.setContentText("Selecting a dataset is required.");
             alert.showAndWait();
             return false;
         }
@@ -47,7 +47,7 @@ public class Step1Controller {
 
     @Submit
     public void submit() throws Exception {
-        if( log.isDebugEnabled() ) {
+        if (log.isDebugEnabled()) {
             log.debug("[SUBMIT] the user has completed step 1");
         }
     }
