@@ -1,12 +1,5 @@
 package main.wizard;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import javafx.beans.binding.When;
@@ -22,6 +15,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Callback;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class WizardController {
 
@@ -90,6 +90,10 @@ public class WizardController {
 
 		final Callback<Class<?>, Object> cb = (clazz) -> injector.getInstance(clazz);
 
+		FXMLLoader fxmlLoaderStep0 = new FXMLLoader( WizardController.class.getResource("/main/wizard-fxml/Step0.fxml"), null, bf, cb);
+		Parent step0 = fxmlLoaderStep0.load( );
+		step0.getProperties().put( CONTROLLER_KEY, fxmlLoaderStep0.getController() );
+
 		FXMLLoader fxmlLoaderStep1 = new FXMLLoader( WizardController.class.getResource("/main/wizard-fxml/Step1.fxml"), null, bf, cb);
 		Parent step1 = fxmlLoaderStep1.load( );
 		step1.getProperties().put( CONTROLLER_KEY, fxmlLoaderStep1.getController() );
@@ -111,7 +115,7 @@ public class WizardController {
 		completed.getProperties().put( CONTROLLER_KEY, fxmlLoaderCompleted.getController() );
 
 		steps.addAll( Arrays.asList(
-				step1, step2, step3, confirm, completed
+				step0, step1, step2, step3, confirm, completed
 					));
 	}
 
