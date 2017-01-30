@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Step4Controller {
-    public ComboBox<String> blockProcessingMethodCombobox;
+    public ComboBox<String> entityMatchingMethodCombobox;
     private Logger log = LoggerFactory.getLogger(Step3Controller.class);
 
     @Inject
@@ -21,31 +21,23 @@ public class Step4Controller {
         // Add options to combobox
         ObservableList<String> comboboxOptions =
                 FXCollections.observableArrayList(
-                        "Block Filtering",
-                        "Block Scheduling",
-                        "Size-based Block Purging",
-                        "Comparison-based Block Purging",
-                        "Comparison Propagation",
-                        "Cardinality Edge Pruning (CEP)",
-                        "Cardinality Node Pruning (CNP)",
-                        "Weighed Edge Pruning (WEP)",
-                        "Weighed Node Pruning (WNP)",
-                        "Reciprocal Cardinality Node Pruning (ReCNP)",
-                        "Reciprocal Weighed Node Pruning (ReWNP)"
+                        "Group Linkage",
+                        "Profile Matcher",
+                        "(todo)"
                 );
-        blockProcessingMethodCombobox.setItems(comboboxOptions);
+        entityMatchingMethodCombobox.setItems(comboboxOptions);
 
         // Bind combobox selection to model
-        blockProcessingMethodCombobox.valueProperty().bindBidirectional(model.blockProcessingProperty());
+        entityMatchingMethodCombobox.valueProperty().bindBidirectional(model.entityMatchingProperty());
     }
 
     @Validate
     public boolean validate() throws Exception {
-        if (blockProcessingMethodCombobox.getValue() == null || blockProcessingMethodCombobox.getValue().isEmpty()) {
+        if (entityMatchingMethodCombobox.getValue() == null || entityMatchingMethodCombobox.getValue().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Block Processing Method");
+            alert.setTitle("Entity Matching Method");
             alert.setHeaderText("Missing Field");
-            alert.setContentText("Selecting a Block Processing Method is required.");
+            alert.setContentText("Selecting an Entity Matching Method is required.");
             alert.showAndWait();
             return false;
         }

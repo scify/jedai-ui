@@ -12,22 +12,22 @@
 
 <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.71" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.wizard.Step4Controller">
     <children>
-        <Label text="STEP44444 Processing">
+        <Label text="Entity Matching">
             <font>
                 <Font name="System Bold" size="24.0" />
             </font>
         </Label>
         <GridPane>
             <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="250.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="250.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="300.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="300.0" />
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <ComboBox fx:id="blockProcessingMethodCombobox" prefWidth="240.0" promptText="Select STEP4 method" />
-                <TextArea editable="false" prefHeight="200.0" prefWidth="200.0" text="Block building method description" wrapText="true" GridPane.columnIndex="1" />
+                <ComboBox fx:id="entityMatchingMethodCombobox" prefWidth="290.0" promptText="Select entity matching method" />
+                <TextArea editable="false" prefHeight="200.0" prefWidth="200.0" text="Entity matching method description" wrapText="true" GridPane.columnIndex="1" />
             </children>
         </GridPane>
     </children>

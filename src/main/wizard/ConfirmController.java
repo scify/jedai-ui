@@ -20,6 +20,7 @@ public class ConfirmController {
         tfField1.textProperty().bind(model.datasetProperty());
         tfField4.textProperty().bind(model.blockBuildingProperty());
         tfField5.textProperty().bind(model.blockProcessingProperty());
+        tfField6.textProperty().bind(model.entityMatchingProperty());
     }
 
     @Submit

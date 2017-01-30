@@ -7,6 +7,7 @@ public class WizardData {
     private final StringProperty dataset = new SimpleStringProperty();
     private final StringProperty blockBuilding = new SimpleStringProperty();
     private final StringProperty blockProcessing = new SimpleStringProperty();
+    private final StringProperty entityMatching = new SimpleStringProperty();
 
     public String getDataset() {
         return dataset.get();
@@ -44,9 +45,22 @@ public class WizardData {
         this.blockProcessing.set(blockProcessing);
     }
 
+    public String getEntityMatching() {
+        return entityMatching.get();
+    }
+
+    public StringProperty entityMatchingProperty() {
+        return entityMatching;
+    }
+
+    public void setEntityMatching(String entityMatching) {
+        this.entityMatching.set(entityMatching);
+    }
+
     public void reset() {
         dataset.set("");
         blockBuilding.set("");
         blockProcessing.set("");
+        entityMatching.set("");
     }
 }
