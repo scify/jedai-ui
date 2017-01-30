@@ -12,7 +12,7 @@
             <font>
                 <Font name="System Bold" size="24.0" />
             </font></Label>
-      <TextArea editable="false" prefHeight="200.0" prefWidth="200.0" text="Overview of steps&#10;1. Data reading&#10;2. Block building&#10;3. Block processing&#10;4. Entity matching&#10;5. Entity clustering" />
+      <TextArea editable="false" prefHeight="200.0" prefWidth="400.0" text="1. Data reading&#10;2. Block building&#10;3. Block processing&#10;4. Entity matching&#10;5. Entity clustering" />
     </children>
     <padding>
         <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
