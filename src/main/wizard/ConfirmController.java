@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ConfirmController {
-
     private Logger log = LoggerFactory.getLogger(ConfirmController.class);
 
     @FXML
@@ -29,5 +28,4 @@ public class ConfirmController {
             log.debug("[SUBMIT] Running algorithm with specified parameters");
         }
     }
-
 }

@@ -9,7 +9,7 @@ import javafx.scene.control.ComboBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Step3Controller {
+public class Step4Controller {
     public ComboBox<String> blockProcessingMethodCombobox;
     private Logger log = LoggerFactory.getLogger(Step3Controller.class);
 
