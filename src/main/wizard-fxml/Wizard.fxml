@@ -1,19 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.wizard.WizardController">
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.71" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.wizard.WizardController">
    <children>
+      <GridPane prefHeight="132.0" prefWidth="568.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <VBox prefHeight="131.0" prefWidth="366.0">
+               <children>
+                  <Label prefHeight="70.0" prefWidth="284.0" text="JedAI">
+                     <font>
+                        <Font size="48.0" />
+                     </font>
+                  </Label>
+                  <Label prefHeight="21.0" prefWidth="295.0" text="Step X: ???" />
+                  <HBox fx:id="hboxIndicators" alignment="CENTER" prefHeight="40.0" prefWidth="299.0" spacing="2.0">
+                     <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </padding>
+                  </HBox>
+               </children>
+            </VBox>
+            <TextArea prefHeight="200.0" prefWidth="200.0" text="Test text test text test text test text test text test text " wrapText="true" GridPane.columnIndex="1" />
+         </children>
+      </GridPane>
       <VBox fx:id="contentPanel" alignment="CENTER" minHeight="320.0" minWidth="568.0" VBox.vgrow="ALWAYS" />
-      <HBox fx:id="hboxIndicators" alignment="CENTER" spacing="2.0">
-         <padding>
-            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-         </padding>
-      </HBox>
       <Separator prefWidth="200.0" />
       <HBox alignment="TOP_RIGHT" spacing="4.0">
          <children>
