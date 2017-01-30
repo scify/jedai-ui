@@ -10,6 +10,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -28,6 +30,11 @@ public class WizardController {
     private final int INDICATOR_RADIUS = 10;
 
     private final String CONTROLLER_KEY = "controller";
+    public Label stepsLabel;
+    public TextArea stepDescriptionTextarea;
+
+    private List<String> stepTexts;
+    private List<String> stepDescriptions;
 
     @FXML
     VBox contentPanel;
@@ -50,12 +57,30 @@ public class WizardController {
 
     @FXML
     public void initialize() throws Exception {
+        // Initialize ArrayLists with step texts & descriptions
+        this.stepTexts = new ArrayList<>();
+        this.stepTexts.add("Welcome");
+        this.stepTexts.add("Step 1: Data Reading");
+        this.stepTexts.add("Step 2: Block Building");
+        this.stepTexts.add("Step 3: Block Processing");
+        this.stepTexts.add("Step 4: Entity Matching");
+        this.stepTexts.add("Step 5: Entity Clustering");
+        this.stepTexts.add("Selection Confirmation");
+        this.stepTexts.add("Results");
+
+        this.stepDescriptions = new ArrayList<>();
+        this.stepDescriptions.add("Welcome description");
+        this.stepDescriptions.add("Data reading description");
+        this.stepDescriptions.add("Block Building description");
+        this.stepDescriptions.add("Block Processing description");
+        this.stepDescriptions.add("Entity Matching description");
+        this.stepDescriptions.add("Entity Clustering description");
+        this.stepDescriptions.add("Selection Confirmation description");
+        this.stepDescriptions.add("Results description");
+
         buildSteps();
-
         initButtons();
-
         buildIndicatorCircles();
-
         setInitialContent();
     }
 
@@ -72,9 +97,21 @@ public class WizardController {
         );
     }
 
+    /**
+     * Set the stepsLabel and stepDescriptionTextArea values to the ones for the given step
+     * @param stepNum   Step number
+     */
+    private void setLabelAndDescription(int stepNum) {
+        stepsLabel.setText(stepTexts.get(stepNum));
+        stepDescriptionTextarea.setText(stepDescriptions.get(stepNum));
+    }
+
     private void setInitialContent() {
         currentStep.set(0);  // first element
         contentPanel.getChildren().add(steps.get(currentStep.get()));
+
+        // Set step text & description
+        setLabelAndDescription(0);
     }
 
     private void buildIndicatorCircles() {
@@ -171,6 +208,9 @@ public class WizardController {
             contentPanel.getChildren().remove(steps.get(currentStep.get()));
             currentStep.set(currentStep.get() + 1);
             contentPanel.getChildren().add(steps.get(currentStep.get()));
+
+            // Set step label & description
+            setLabelAndDescription(currentStep.getValue());
         }
     }
 
@@ -180,6 +220,9 @@ public class WizardController {
             contentPanel.getChildren().remove(steps.get(currentStep.get()));
             currentStep.set(currentStep.get() - 1);
             contentPanel.getChildren().add(steps.get(currentStep.get()));
+
+            // Set step label & description
+            setLabelAndDescription(currentStep.getValue());
         }
     }
 
