@@ -6,18 +6,20 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.71" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.wizard.CompletedController">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      spacing="10.0" xmlns="http://javafx.com/javafx/8.0.71" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="main.wizard.CompletedController">
     <children>
         <HBox prefHeight="100.0" prefWidth="200.0">
             <children>
-                <PieChart fx:id="f1MeasurePie" title="F1-measure" />
-                <PieChart fx:id="recallPie" title="Recall" />
-                <PieChart fx:id="precisionPie" title="Precision" />
+                <PieChart fx:id="f1MeasurePie" title="F1-measure"/>
+                <PieChart fx:id="recallPie" title="Recall"/>
+                <PieChart fx:id="precisionPie" title="Precision"/>
             </children>
         </HBox>
-        <TreeView prefHeight="150.0" prefWidth="200.0" />
+        <TreeView fx:id="treeView" prefHeight="150.0" prefWidth="200.0"/>
     </children>
     <padding>
-        <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+        <Insets bottom="40.0" left="40.0" right="40.0" top="40.0"/>
     </padding>
 </VBox>

@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.chart.PieChart;
+import javafx.scene.control.TreeView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,6 +13,7 @@ public class CompletedController {
     public PieChart f1MeasurePie;
     public PieChart recallPie;
     public PieChart precisionPie;
+    public TreeView treeView;
     private Logger log = LoggerFactory.getLogger(ConfirmController.class);
 
     @Inject
@@ -19,6 +21,7 @@ public class CompletedController {
 
     @FXML
     public void initialize() {
+        // Add fake pie data
         ObservableList<PieChart.Data> pieChartData1 =
                 FXCollections.observableArrayList(
                         new PieChart.Data("Grapefruit", 13),
@@ -42,5 +45,8 @@ public class CompletedController {
         f1MeasurePie.setData(pieChartData1);
         recallPie.setData(pieChartData2);
         precisionPie.setData(pieChartData3);
+
+        // Add fake treeview data
+        //todo (http://stackoverflow.com/a/31074622 ?)
     }
 }
