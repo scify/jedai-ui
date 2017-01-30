@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="480.0" prefWidth="768.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controller">
+   <children>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#d0d0d0" height="351.0" layoutX="14.0" layoutY="115.0" stroke="BLACK" strokeType="INSIDE" width="740.0" />
+      <Label layoutX="14.0" layoutY="14.0" prefHeight="31.0" prefWidth="200.0" text="JedAI">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Label>
+      <Label layoutX="14.0" layoutY="67.0" prefHeight="21.0" prefWidth="200.0" text="Step 1: Data Reading" />
+      <Button layoutX="677.0" layoutY="426.0" mnemonicParsing="false" text="Next &gt;" />
+      <TextArea editable="false" layoutX="554.0" layoutY="14.0" prefHeight="87.0" prefWidth="200.0" text="Test text Test text Test text Test text Test text Test text Test text Test " wrapText="true" />
+      <Button layoutX="27.0" layoutY="426.0" mnemonicParsing="false" text="&lt; Back" />
+      <ProgressBar layoutX="14.0" layoutY="90.0" prefWidth="200.0" progress="0.16" />
+      <ComboBox layoutX="27.0" layoutY="131.0" prefWidth="150.0" promptText="Select data" />
+   </children>
+</AnchorPane>
