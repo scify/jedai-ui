@@ -1,57 +1,43 @@
 package main.wizard;
 
 import com.google.inject.Inject;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.TextField;
+import javafx.scene.control.ComboBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Step1Controller {
-
+    public ComboBox<String> datasetCombobox;
     private Logger log = LoggerFactory.getLogger(Step1Controller.class);
-
-    @FXML
-    TextField tfField1, tfField2, tfField3;
 
     @Inject
     WizardData model;
 
     @FXML
     public void initialize() {
+        // Add options to combobox
+        ObservableList<String> comboboxOptions =
+                FXCollections.observableArrayList(
+                        "Dataset 1",
+                        "Dataset 2",
+                        "Dataset 3"
+                );
+        datasetCombobox.setItems(comboboxOptions);
 
-        tfField1.textProperty().bindBidirectional( model.field1Property() );
-        tfField2.textProperty().bindBidirectional( model.field2Property() );
-        tfField3.textProperty().bindBidirectional( model.field3Property() );
-
+        // Bind combobox selection to model
+        datasetCombobox.valueProperty().bindBidirectional( model.datasetProperty() );
     }
 
     @Validate
     public boolean validate() throws Exception {
-
-        if( tfField1.getText() == null || tfField1.getText().isEmpty() ) {
+        if( datasetCombobox.getValue() == null || datasetCombobox.getValue().isEmpty() ) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Step 1");
+            alert.setTitle("Dataset Selection");
             alert.setHeaderText( "Missing Field" );
-            alert.setContentText( "Field 1 is required." );
-            alert.showAndWait();
-            return false;
-        }
-
-        if( tfField2.getText() == null || tfField2.getText().isEmpty() ) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Step 1");
-            alert.setHeaderText( "Missing Field" );
-            alert.setContentText( "Field 2 is required." );
-            alert.showAndWait();
-            return false;
-        }
-
-        if( tfField3.getText() == null || tfField3.getText().isEmpty() ) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Step 3");
-            alert.setHeaderText( "Missing Field" );
-            alert.setContentText( "Field 3 is required." );
+            alert.setContentText( "Selecting a dataset is required." );
             alert.showAndWait();
             return false;
         }
@@ -61,7 +47,6 @@ public class Step1Controller {
 
     @Submit
     public void submit() throws Exception {
-
         if( log.isDebugEnabled() ) {
             log.debug("[SUBMIT] the user has completed step 1");
         }

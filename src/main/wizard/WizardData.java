@@ -5,48 +5,22 @@ import javafx.beans.property.StringProperty;
 
 public class WizardData {
 
-    private final StringProperty field1 = new SimpleStringProperty();
-    private final StringProperty field2 = new SimpleStringProperty();
-    private final StringProperty field3 = new SimpleStringProperty();
+    private final StringProperty dataset = new SimpleStringProperty();
     private final StringProperty field4 = new SimpleStringProperty();
     private final StringProperty field5 = new SimpleStringProperty();
     private final StringProperty field6 = new SimpleStringProperty();
     private final StringProperty field7 = new SimpleStringProperty();
 
-    public String getField1() {
-        return field1.get();
+    public String getDataset() {
+        return dataset.get();
     }
 
-    public StringProperty field1Property() {
-        return field1;
+    public StringProperty datasetProperty() {
+        return dataset;
     }
 
-    public void setField1(String field1) {
-        this.field1.set(field1);
-    }
-
-    public String getField2() {
-        return field2.get();
-    }
-
-    public StringProperty field2Property() {
-        return field2;
-    }
-
-    public void setField2(String field2) {
-        this.field2.set(field2);
-    }
-
-    public String getField3() {
-        return field3.get();
-    }
-
-    public StringProperty field3Property() {
-        return field3;
-    }
-
-    public void setField3(String field3) {
-        this.field3.set(field3);
+    public void setDataset(String dataset) {
+        this.dataset.set(dataset);
     }
 
     public String getField4() {
@@ -98,9 +72,7 @@ public class WizardData {
     }
 
     public void reset() {
-        field1.set("");
-        field2.set("");
-        field3.set("");
+        dataset.set("");
         field4.set("");
         field5.set("");
         field6.set("");

@@ -18,9 +18,7 @@ public class ConfirmController {
 
     @FXML
     public void initialize() {
-        tfField1.textProperty().bind(model.field1Property());
-        tfField2.textProperty().bind(model.field2Property());
-        tfField3.textProperty().bind(model.field3Property());
+        tfField1.textProperty().bind(model.datasetProperty());
         tfField4.textProperty().bind(model.field4Property());
         tfField5.textProperty().bind(model.field5Property());
         tfField6.textProperty().bind(model.field6Property());
@@ -29,7 +27,6 @@ public class ConfirmController {
 
     @Submit
     public void submit() throws Exception {
-
         if( log.isDebugEnabled() ) {
             log.debug("[SUBMIT] Running algorithm with specified parameters");
         }

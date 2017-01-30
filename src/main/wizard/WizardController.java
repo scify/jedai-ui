@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class WizardController {
-
+	@SuppressWarnings("FieldCanBeLocal")
 	private final int INDICATOR_RADIUS = 10;
 
 	private final String CONTROLLER_KEY = "controller";
@@ -50,7 +50,6 @@ public class WizardController {
 
 	@FXML
 	public void initialize() throws Exception {
-
 		buildSteps();
 
 		initButtons();
@@ -135,7 +134,6 @@ public class WizardController {
 
 	@FXML
 	public void next() {
-
 		Parent p = steps.get(currentStep.get());
 		Object controller = p.getProperties().get(CONTROLLER_KEY);
 
@@ -172,7 +170,6 @@ public class WizardController {
 
 	@FXML
 	public void back() {
-
 		if( currentStep.get() > 0 ) {
 			contentPanel.getChildren().remove( steps.get(currentStep.get()) );
 			currentStep.set( currentStep.get() - 1 );
@@ -182,7 +179,6 @@ public class WizardController {
 
 	@FXML
 	public void cancel() {
-
 		contentPanel.getChildren().remove( steps.get(currentStep.get()) );
 		currentStep.set( 0 );  // first screen
 		contentPanel.getChildren().add( steps.get(currentStep.get()) );
@@ -191,7 +187,6 @@ public class WizardController {
 	}
 
 	private Method getMethod(Class<? extends Annotation> an, Object obj) {
-
 		if( an == null ) {
 			return null;
 		}
