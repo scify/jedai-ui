@@ -3,6 +3,7 @@ package main.wizard.steps;
 import com.google.inject.Inject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
@@ -17,6 +18,7 @@ public class Step3Controller {
     private Logger log = LoggerFactory.getLogger(Step3Controller.class);
 
     @Inject
+    private
     WizardData model;
 
     @FXML
@@ -24,22 +26,24 @@ public class Step3Controller {
         // Add options to combobox
         ObservableList<String> comboboxOptions =
                 FXCollections.observableArrayList(
-                        "Block Filtering",
-                        "Block Scheduling",
-                        "Size-based Block Purging",
-                        "Comparison-based Block Purging",
-                        "Comparison Propagation",
-                        "Cardinality Edge Pruning (CEP)",
-                        "Cardinality Node Pruning (CNP)",
-                        "Weighed Edge Pruning (WEP)",
-                        "Weighed Node Pruning (WNP)",
-                        "Reciprocal Cardinality Node Pruning (ReCNP)",
-                        "Reciprocal Weighed Node Pruning (ReWNP)"
+                        "Block-refinement methods",
+//                        "Block Filtering",
+//                        "Block Scheduling",
+//                        "Size-based Block Purging",
+//                        "Comparison-based Block Purging",
+                        "Comparison-refinement methods"
+//                        "Comparison Propagation",
+//                        "Cardinality Edge Pruning (CEP)",
+//                        "Cardinality Node Pruning (CNP)",
+//                        "Weighed Edge Pruning (WEP)",
+//                        "Weighed Node Pruning (WNP)",
+//                        "Reciprocal Cardinality Node Pruning (ReCNP)",
+//                        "Reciprocal Weighed Node Pruning (ReWNP)"
                 );
         blockProcessingMethodCombobox.setItems(comboboxOptions);
 
         // Bind combobox selection to model
-        blockProcessingMethodCombobox.valueProperty().bindBidirectional(model.blockProcessingProperty());
+        blockProcessingMethodCombobox.valueProperty().bindBidirectional(model.blockProcessingTypeProperty());
     }
 
     @Validate
@@ -53,6 +57,8 @@ public class Step3Controller {
             return false;
         }
 
+        //todo: also check the actual method selection, not just type like right now
+
         return true;
     }
 
@@ -60,6 +66,18 @@ public class Step3Controller {
     public void submit() throws Exception {
         if (log.isDebugEnabled()) {
             log.debug("[SUBMIT] the user has completed step 3");
+        }
+    }
+
+    public void methodTypeSelectionHandler(ActionEvent actionEvent) {
+        String type = model.getBlockProcessingType();
+
+        if (type.equals("Block-refinement methods")) {
+            // todo
+            System.out.println("Block refinement has been chosen");
+        } else if (type.equals("Comparison-refinement methods")) {
+            // todo
+            System.out.println("Comparison refinement methods popup");
         }
     }
 }

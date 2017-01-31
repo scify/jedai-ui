@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.71" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.wizard.steps.Step3Controller">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.91" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.wizard.steps.Step3Controller">
     <children>
         <Label text="Block Processing">
             <font>
@@ -26,7 +26,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <ComboBox fx:id="blockProcessingMethodCombobox" prefWidth="240.0" promptText="Select processing method" />
+                <ComboBox fx:id="blockProcessingMethodCombobox" onAction="#methodTypeSelectionHandler" prefWidth="240.0" promptText="Select method type" />
                 <TextArea editable="false" prefHeight="200.0" prefWidth="200.0" text="Block building method description" wrapText="true" GridPane.columnIndex="1" />
             </children>
         </GridPane>

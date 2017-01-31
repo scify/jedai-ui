@@ -23,7 +23,7 @@ public class ConfirmController {
     public void initialize() {
         tfField1.textProperty().bind(model.datasetProperty());
         tfField2.textProperty().bind(model.blockBuildingProperty());
-        tfField3.textProperty().bind(model.blockProcessingProperty());
+        tfField3.textProperty().bind(model.blockProcessingTypeProperty());
         tfField4.textProperty().bind(model.entityMatchingProperty());
         tfField5.textProperty().bind(model.entityClusteringProperty());
         pMatcherParamField.textProperty().bind(model.profileMatcherParamProperty());

@@ -1,15 +1,30 @@
 package main.wizard;
 
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
 
 public class WizardData {
     private final StringProperty dataset = new SimpleStringProperty();
     private final StringProperty blockBuilding = new SimpleStringProperty();
-    private final StringProperty blockProcessing = new SimpleStringProperty();
+    private final StringProperty blockProcessingType = new SimpleStringProperty();
+    private final SimpleListProperty<SimpleStringProperty> blockProcessingMethods = new SimpleListProperty<>();
     private final StringProperty entityMatching = new SimpleStringProperty();
     private final StringProperty profileMatcherParam = new SimpleStringProperty();
     private final StringProperty entityClustering = new SimpleStringProperty();
+
+    public ObservableList<SimpleStringProperty> getBlockProcessingMethods() {
+        return blockProcessingMethods.get();
+    }
+
+    public SimpleListProperty<SimpleStringProperty> blockProcessingMethodsProperty() {
+        return blockProcessingMethods;
+    }
+
+    public void setBlockProcessingMethods(ObservableList<SimpleStringProperty> blockProcessingMethods) {
+        this.blockProcessingMethods.set(blockProcessingMethods);
+    }
 
     public String getDataset() {
         return dataset.get();
@@ -35,16 +50,16 @@ public class WizardData {
         this.blockBuilding.set(blockBuilding);
     }
 
-    public String getBlockProcessing() {
-        return blockProcessing.get();
+    public String getBlockProcessingType() {
+        return blockProcessingType.get();
     }
 
-    public StringProperty blockProcessingProperty() {
-        return blockProcessing;
+    public StringProperty blockProcessingTypeProperty() {
+        return blockProcessingType;
     }
 
-    public void setBlockProcessing(String blockProcessing) {
-        this.blockProcessing.set(blockProcessing);
+    public void setBlockProcessingType(String blockProcessingType) {
+        this.blockProcessingType.set(blockProcessingType);
     }
 
     public String getEntityMatching() {
@@ -83,10 +98,12 @@ public class WizardData {
         this.profileMatcherParam.set(profileMatcherParam);
     }
 
+
+
     public void reset() {
         dataset.set("");
         blockBuilding.set("");
-        blockProcessing.set("");
+        blockProcessingType.set("");
         entityMatching.set("");
         entityClustering.set("");
         profileMatcherParam.set("");
