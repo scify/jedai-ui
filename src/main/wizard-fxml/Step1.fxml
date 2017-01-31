@@ -22,7 +22,7 @@
         <GridPane>
             <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0"/>
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES"/>
@@ -31,7 +31,7 @@
                 <RowConstraints/>
             </rowConstraints>
             <children>
-                <ComboBox fx:id="datasetCombobox" prefWidth="200.0" promptText="Select dataset" GridPane.rowIndex="0"/>
+                <ComboBox fx:id="datasetCombobox" prefWidth="190.0" promptText="Select dataset" GridPane.rowIndex="0"/>
                 <TextArea editable="false" prefHeight="200.0" prefWidth="100.0" text="Dataset description goes here"
                           wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
             </children>

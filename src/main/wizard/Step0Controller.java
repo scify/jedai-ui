@@ -23,8 +23,7 @@ public class Step0Controller {
 
     @Submit
     public void submit() throws Exception {
-
-        if( log.isDebugEnabled() ) {
+        if (log.isDebugEnabled()) {
             log.debug("[SUBMIT] the user has completed step 0");
         }
     }
