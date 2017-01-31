@@ -1,8 +1,10 @@
-package main.wizard;
+package main.wizard.steps;
 
 import com.google.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import main.wizard.Submit;
+import main.wizard.WizardData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

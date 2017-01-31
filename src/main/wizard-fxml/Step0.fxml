@@ -8,7 +8,7 @@
 
 <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
       spacing="10.0" xmlns="http://javafx.com/javafx/8.0.91" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="main.wizard.Step0Controller">
+      fx:controller="main.wizard.steps.Step0Controller">
     <children>
         <Label text="Overview of Steps">
             <font>

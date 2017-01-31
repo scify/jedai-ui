@@ -1,4 +1,4 @@
-package main.wizard;
+package main.wizard.steps;
 
 import com.google.inject.Inject;
 import javafx.collections.FXCollections;
@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.TreeView;
+import main.wizard.WizardData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

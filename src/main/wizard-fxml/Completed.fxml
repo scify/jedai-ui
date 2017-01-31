@@ -12,7 +12,7 @@
 
 <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
       spacing="10.0" xmlns="http://javafx.com/javafx/8.0.71" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="main.wizard.CompletedController">
+      fx:controller="main.wizard.steps.CompletedController">
     <children>
         <GridPane>
             <columnConstraints>
