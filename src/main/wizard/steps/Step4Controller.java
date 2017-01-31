@@ -25,8 +25,7 @@ public class Step4Controller {
         ObservableList<String> comboboxOptions =
                 FXCollections.observableArrayList(
                         "Group Linkage",
-                        "Profile Matcher",
-                        "(todo)"
+                        "Profile Matcher"
                 );
         entityMatchingMethodCombobox.setItems(comboboxOptions);
 
