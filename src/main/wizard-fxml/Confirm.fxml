@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 
 <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      spacing="10.0" xmlns="http://javafx.com/javafx/8.0.71" xmlns:fx="http://javafx.com/fxml/1"
+      spacing="10.0" xmlns="http://javafx.com/javafx/8.0.91" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="main.wizard.steps.ConfirmController">
     <children>
         <Label text="Confirm">
@@ -30,18 +30,21 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
             </rowConstraints>
             <children>
                 <Label text="Dataset"/>
                 <Label text="Block Building Method" GridPane.rowIndex="1"/>
                 <Label text="Block Processing Method" GridPane.rowIndex="2"/>
                 <Label text="Entity Matching Method" GridPane.rowIndex="3"/>
-                <Label text="Entity Clustering Method" GridPane.rowIndex="4"/>
+                <Label text="Profile Matcher Parameter" GridPane.rowIndex="4"/>
+                <Label text="Entity Clustering Method" GridPane.rowIndex="5"/>
                 <TextField fx:id="tfField1" editable="false" GridPane.columnIndex="1"/>
                 <TextField fx:id="tfField2" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
                 <TextField fx:id="tfField3" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
                 <TextField fx:id="tfField4" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-                <TextField fx:id="tfField5" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                <TextField fx:id="pMatcherParamField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                <TextField fx:id="tfField5" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
             </children>
         </GridPane>
     </children>

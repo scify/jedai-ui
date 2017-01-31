@@ -9,12 +9,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ConfirmController {
+    public TextField pMatcherParamField;
     private Logger log = LoggerFactory.getLogger(ConfirmController.class);
 
     @FXML
     TextField tfField1, tfField2, tfField3, tfField4, tfField5;
 
     @Inject
+    private
     WizardData model;
 
     @FXML
@@ -24,6 +26,7 @@ public class ConfirmController {
         tfField3.textProperty().bind(model.blockProcessingProperty());
         tfField4.textProperty().bind(model.entityMatchingProperty());
         tfField5.textProperty().bind(model.entityClusteringProperty());
+        pMatcherParamField.textProperty().bind(model.profileMatcherParamProperty());
     }
 
     @Submit
