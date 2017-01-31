@@ -1,5 +1,6 @@
 package main.wizard;
 
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -9,20 +10,20 @@ public class WizardData {
     private final StringProperty dataset = new SimpleStringProperty();
     private final StringProperty blockBuilding = new SimpleStringProperty();
     private final StringProperty blockProcessingType = new SimpleStringProperty();
-    private final SimpleListProperty<SimpleStringProperty> blockProcessingMethods = new SimpleListProperty<>();
+    private final ListProperty<String> blockProcessingMethods = new SimpleListProperty<>();
     private final StringProperty entityMatching = new SimpleStringProperty();
     private final StringProperty profileMatcherParam = new SimpleStringProperty();
     private final StringProperty entityClustering = new SimpleStringProperty();
 
-    public ObservableList<SimpleStringProperty> getBlockProcessingMethods() {
+    public ObservableList<String> getBlockProcessingMethods() {
         return blockProcessingMethods.get();
     }
 
-    public SimpleListProperty<SimpleStringProperty> blockProcessingMethodsProperty() {
+    public ListProperty<String> blockProcessingMethodsProperty() {
         return blockProcessingMethods;
     }
 
-    public void setBlockProcessingMethods(ObservableList<SimpleStringProperty> blockProcessingMethods) {
+    public void setBlockProcessingMethods(ObservableList<String> blockProcessingMethods) {
         this.blockProcessingMethods.set(blockProcessingMethods);
     }
 
@@ -97,8 +98,6 @@ public class WizardData {
     public void setProfileMatcherParam(String profileMatcherParam) {
         this.profileMatcherParam.set(profileMatcherParam);
     }
-
-
 
     public void reset() {
         dataset.set("");
