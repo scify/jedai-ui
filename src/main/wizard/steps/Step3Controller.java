@@ -36,18 +36,7 @@ public class Step3Controller {
         ObservableList<String> comboboxOptions =
                 FXCollections.observableArrayList(
                         "Block-refinement methods",
-//                        "Block Filtering",
-//                        "Block Scheduling",
-//                        "Size-based Block Purging",
-//                        "Comparison-based Block Purging",
                         "Comparison-refinement methods"
-//                        "Comparison Propagation",
-//                        "Cardinality Edge Pruning (CEP)",
-//                        "Cardinality Node Pruning (CNP)",
-//                        "Weighed Edge Pruning (WEP)",
-//                        "Weighed Node Pruning (WNP)",
-//                        "Reciprocal Cardinality Node Pruning (ReCNP)",
-//                        "Reciprocal Weighed Node Pruning (ReWNP)"
                 );
         blockProcessingMethodCombobox.setItems(comboboxOptions);
 
@@ -102,7 +91,6 @@ public class Step3Controller {
             });
 
             // todo: Bind selection list data to the model
-//            list.
 
             // Create modal dialog
             final Stage dialog = new Stage();
@@ -118,9 +106,17 @@ public class Step3Controller {
             dialog.show();
         } else if (type.equals("Comparison-refinement methods")) {
             // todo
+            /*
+                Options for dropdown:
+                "Comparison Propagation",
+                "Cardinality Edge Pruning (CEP)",
+                "Cardinality Node Pruning (CNP)",
+                "Weighed Edge Pruning (WEP)",
+                "Weighed Node Pruning (WNP)",
+                "Reciprocal Cardinality Node Pruning (ReCNP)",
+                "Reciprocal Weighed Node Pruning (ReWNP)"
+             */
             System.out.println("Comparison refinement methods popup");
         }
     }
 }
-
-
