@@ -18,6 +18,7 @@ public class Step2Controller {
     private Logger log = LoggerFactory.getLogger(Step2Controller.class);
 
     @Inject
+    private
     WizardData model;
 
     @FXML
@@ -27,10 +28,12 @@ public class Step2Controller {
                 FXCollections.observableArrayList(
                         "Standard/Token Blocking",
                         "Attribute Clustering",
-                        "(Extended) Sorted Neighborhood",
-                        "(Extended) Q-Grams Blocking",
-                        "(Extended) Suffix Arrays Blocking",
-                        "to be added: URI Semantics blocking"
+                        "Sorted Neighborhood",
+                        "Sorted Neighborhood (Extended)",
+                        "Q-Grams Blocking",
+                        "Q-Grams Blocking (Extended)",
+                        "Suffix Arrays Blocking",
+                        "Suffix Arrays Blocking (Extended)"
                 );
 
         blockBuildingCombobox.setItems(comboboxOptions);
