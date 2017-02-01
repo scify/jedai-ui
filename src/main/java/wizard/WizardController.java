@@ -46,9 +46,11 @@ public class WizardController {
     Button btnNext, btnBack, btnCancel;
 
     @Inject
+    private
     Injector injector;
 
     @Inject
+    private
     WizardData model;
 
     private final List<Parent> steps = new ArrayList<>();
@@ -82,6 +84,9 @@ public class WizardController {
         initButtons();
         buildIndicatorCircles();
         setInitialContent();
+
+        model.setDataset("skip");
+        model.setBlockBuilding("skip");
     }
 
     private void initButtons() {

@@ -1,7 +1,6 @@
 package wizard.steps;
 
 import com.google.inject.Inject;
-import javafx.fxml.FXML;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import wizard.Submit;
@@ -14,10 +13,6 @@ public class Step0Controller {
 
     @Inject
     WizardData model;
-
-    @FXML
-    public void initialize() {
-    }
 
     @Validate
     public boolean validate() throws Exception {

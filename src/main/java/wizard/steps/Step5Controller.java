@@ -17,6 +17,7 @@ public class Step5Controller {
     private Logger log = LoggerFactory.getLogger(Step3Controller.class);
 
     @Inject
+    private
     WizardData model;
 
     @FXML
