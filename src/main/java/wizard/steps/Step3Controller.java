@@ -106,7 +106,7 @@ public class Step3Controller {
 
     public void methodSelectionBtnHandler(ActionEvent actionEvent) {
         // Get selected method
-// Get block processing type that was selected
+        // Get block processing type that was selected
         String type = model.getBlockProcessingType();
 
         Stage primaryStage = (Stage) containerVBox.getScene().getWindow();

@@ -8,7 +8,6 @@ import wizard.Validate;
 import wizard.WizardData;
 
 public class Step0Controller {
-
     private Logger log = LoggerFactory.getLogger(Step0Controller.class);
 
     @Inject
