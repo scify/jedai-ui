@@ -82,6 +82,9 @@ public class WizardController {
         initButtons();
         buildIndicatorCircles();
         setInitialContent();
+
+        model.setDataset("skip");
+        model.setBlockBuilding("skip");
     }
 
     private void initButtons() {

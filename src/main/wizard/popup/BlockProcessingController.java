@@ -1,5 +1,6 @@
 package main.wizard.popup;
 
+import com.google.inject.Inject;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,6 +17,7 @@ public class BlockProcessingController {
     public Button saveBtn;
     private Logger log = LoggerFactory.getLogger(BlockProcessingController.class);
 
+    @Inject
     private WizardData model;
 
     @FXML
@@ -34,23 +36,6 @@ public class BlockProcessingController {
         list.getSelectionModel().selectedItemProperty().addListener((obs, ov, nv) -> {
             selectedList.setItems(list.getSelectionModel().getSelectedItems());
         });
-    }
-
-    public void saveBtnHandler(ActionEvent actionEvent) {
-        // Set the model's value to be the selected items from the list
-        model.blockProcessingMethodsProperty().setValue(list.getSelectionModel().getSelectedItems());
-
-        // todo: close this
-    }
-
-    /**
-     * Set the data model. Also, because it is called right after loading the controller, checks if there are any values
-     * that should be shown as selected on the list (in case the popup opens a 2nd time after having selected items)
-     *
-     * @param model The model to set
-     */
-    public void setModel(WizardData model) {
-        this.model = model;
 
         // Set selected values as selected in the list, if they exist in model
         if (model.getBlockProcessingMethods() != null && !model.getBlockProcessingMethods().isEmpty()) {
@@ -58,5 +43,12 @@ public class BlockProcessingController {
                 list.getSelectionModel().select(selectedValue);
             }
         }
+    }
+
+    public void saveBtnHandler(ActionEvent actionEvent) {
+        // Set the model's value to be the selected items from the list
+        model.blockProcessingMethodsProperty().setValue(list.getSelectionModel().getSelectedItems());
+
+        // todo: close this
     }
 }
