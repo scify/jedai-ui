@@ -11,6 +11,7 @@ import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
@@ -29,15 +30,14 @@ public class Step3Controller {
     public ComboBox<String> blockProcessingMethodCombobox;
     public VBox containerVBox;
     public ListView selectionList;
+    public Button selectMethodBtn;
     private Logger log = LoggerFactory.getLogger(Step3Controller.class);
 
     @Inject
-    private
-    Injector injector;
+    private Injector injector;
 
     @Inject
-    private
-    WizardData model;
+    private WizardData model;
 
     @FXML
     public void initialize() {
@@ -106,18 +106,17 @@ public class Step3Controller {
         // Get block processing type that was selected
         String type = model.getBlockProcessingType();
 
-        if (type != null && type.equals("Block-refinement methods")) {
+        if (type == null)
+            return;
+
+        if (type.equals("Block-refinement methods")) {
             // Show block refinement modal
             showModal("wizard-fxml/popup/BlockRefinementPopup.fxml",
                     "Block-refinement Method Selection");
-        } else if (type != null && type.equals("Comparison-refinement methods")) {
+        } else if (type.equals("Comparison-refinement methods")) {
             // Show comparison refinement modal
             showModal("wizard-fxml/popup/ComparisonRefinementPopup.fxml",
                     "Comparison-refinement Method Selection");
-        } else {
-            // Alert that says parameters can only be selected after you have selected a processing method
-            showError("Block Processing Parameter Seletion", "No Block Matching method selected.",
-                    "When you haven't selected a Block Processing method, you can't select parameters for it.");
         }
     }
 
@@ -153,5 +152,12 @@ public class Step3Controller {
             e.printStackTrace();
         }
 
+    }
+
+    public void methodTypeChangeHandler(ActionEvent actionEvent) {
+        //todo: clear selection from model
+
+        // Make method selection button disabled if the method type selected is "No block processing"
+        selectMethodBtn.setDisable(blockProcessingMethodCombobox.getValue().equals("No block processing"));
     }
 }

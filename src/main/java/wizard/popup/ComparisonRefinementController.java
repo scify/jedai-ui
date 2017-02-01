@@ -36,7 +36,7 @@ public class ComparisonRefinementController {
         // todo: restore selection from model
     }
 
-    public void saveBtnHandler(ActionEvent actionEvent) {
+    public void saveBtnHandler() {
         // todo: save selection
 
         // Close the dialog window
