@@ -8,15 +8,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.stage.Stage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import wizard.WizardData;
 
 public class BlockRefinementController {
     public ListView<String> list;
     public ListView<String> selectedList;
     public Button saveBtn;
-    private Logger log = LoggerFactory.getLogger(BlockRefinementController.class);
 
     @Inject
     private WizardData model;

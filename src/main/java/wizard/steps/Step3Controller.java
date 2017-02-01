@@ -52,8 +52,6 @@ public class Step3Controller {
 
         // Bind combobox selection to model
         blockProcessingMethodCombobox.valueProperty().bindBidirectional(model.blockProcessingTypeProperty());
-
-        // todo: bind selectionList to the selected method parameters
     }
 
     @Validate
@@ -104,50 +102,56 @@ public class Step3Controller {
         }
     }
 
-    public void methodSelectionBtnHandler(ActionEvent actionEvent) {
-        // Get selected method
+    public void methodSelectionBtnHandler() {
         // Get block processing type that was selected
         String type = model.getBlockProcessingType();
 
-        Stage primaryStage = (Stage) containerVBox.getScene().getWindow();
         if (type != null && type.equals("Block-refinement methods")) {
-            Stage dialog = new Stage();
-            Parent root;
-            try {
-                // Load the FXML file and inject model to its controller
-                final JavaFXBuilderFactory bf = new JavaFXBuilderFactory();
-                final Callback<Class<?>, Object> cb = (clazz) -> injector.getInstance(clazz);
-
-                FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("wizard-fxml/popup/BlockRefinementPopup.fxml"), null, bf, cb);
-                root = loader.load();
-                root.getProperties().put("controller", loader.getController());
-
-                dialog.setScene(new Scene(root));
-                dialog.setTitle("Block-refinement Method Selection");
-                dialog.initModality(Modality.APPLICATION_MODAL);
-                dialog.initOwner(primaryStage);
-
-                dialog.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            // Show block refinement modal
+            showModal("wizard-fxml/popup/BlockRefinementPopup.fxml",
+                    "Block-refinement Method Selection");
         } else if (type != null && type.equals("Comparison-refinement methods")) {
-            // todo
-            /*
-                Options for dropdown:
-                "Comparison Propagation",
-                "Cardinality Edge Pruning (CEP)",
-                "Cardinality Node Pruning (CNP)",
-                "Weighed Edge Pruning (WEP)",
-                "Weighed Node Pruning (WNP)",
-                "Reciprocal Cardinality Node Pruning (ReCNP)",
-                "Reciprocal Weighed Node Pruning (ReWNP)"
-             */
-            System.out.println("Comparison refinement methods popup");
+            // Show comparison refinement modal
+            showModal("wizard-fxml/popup/ComparisonRefinementPopup.fxml",
+                    "Comparison-refinement Method Selection");
         } else {
             // Alert that says parameters can only be selected after you have selected a processing method
             showError("Block Processing Parameter Seletion", "No Block Matching method selected.",
                     "When you haven't selected a Block Processing method, you can't select parameters for it.");
         }
+    }
+
+    /**
+     * Create and show a modal from the FXML at the given path.
+     *
+     * @param fxmlPath Path to the FXML
+     * @param title    Title to put on modal dialog
+     */
+    private void showModal(String fxmlPath, String title) {
+        // Declare some variables
+        Stage primaryStage = (Stage) containerVBox.getScene().getWindow();
+        Parent root;
+
+        // Load the FXML file and inject model to its controller
+        final JavaFXBuilderFactory bf = new JavaFXBuilderFactory();
+        final Callback<Class<?>, Object> cb = (clazz) -> injector.getInstance(clazz);
+
+        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(fxmlPath), null, bf, cb);
+
+        try {
+            root = loader.load();
+            root.getProperties().put("controller", loader.getController());
+
+            Stage dialog = new Stage();
+            dialog.setScene(new Scene(root));
+            dialog.setTitle(title);
+            dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.initOwner(primaryStage);
+
+            dialog.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
