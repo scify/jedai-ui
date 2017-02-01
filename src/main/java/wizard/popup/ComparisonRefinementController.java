@@ -3,7 +3,6 @@ package wizard.popup;
 import com.google.inject.Inject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -33,11 +32,23 @@ public class ComparisonRefinementController {
 
         methodCombobox.setItems(comboboxOptions);
 
-        // todo: restore selection from model
+        // Restore selection if there is any saved in the model
+        if (model.getBlockProcessingMethods() != null && !model.getBlockProcessingMethods().isEmpty()) {
+            // There can only be 1 selection, so get item at index 0
+            String previousSelection = model.getBlockProcessingMethods().get(0);
+
+            // Set on combobox
+            methodCombobox.setValue(previousSelection);
+        }
     }
 
     public void saveBtnHandler() {
-        // todo: save selection
+        // Save selection
+        String selectedItem = methodCombobox.getValue();
+
+        model.setBlockProcessingMethods(FXCollections.observableArrayList(
+                selectedItem
+        ));
 
         // Close the dialog window
         Stage stage = (Stage) saveBtn.getScene().getWindow();
