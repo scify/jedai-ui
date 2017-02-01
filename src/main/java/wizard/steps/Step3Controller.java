@@ -4,7 +4,6 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
@@ -154,8 +153,9 @@ public class Step3Controller {
 
     }
 
-    public void methodTypeChangeHandler(ActionEvent actionEvent) {
-        //todo: clear selection from model
+    public void methodTypeChangeHandler() {
+        // Clear selection from model
+        model.setBlockProcessingMethods(null);
 
         // Make method selection button disabled if the method type selected is "No block processing"
         selectMethodBtn.setDisable(blockProcessingMethodCombobox.getValue().equals("No block processing"));
