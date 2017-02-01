@@ -6,10 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -90,17 +87,40 @@ public class Step3Controller {
                 selectedList.setItems(list.getSelectionModel().getSelectedItems());
             });
 
-            // todo: Bind selection list data to the model
+            // Check if there are any already selected block processing methods in the model and select them on the list
+            if (model.getBlockProcessingMethods() != null && !model.getBlockProcessingMethods().isEmpty()) {
+                for (String selectedValue : model.getBlockProcessingMethods()) {
+                    list.getSelectionModel().select(selectedValue);
+                }
+            }
 
-            // Create modal dialog
+            // Create modal and elements for the modal
             final Stage dialog = new Stage();
             dialog.initModality(Modality.APPLICATION_MODAL);
             dialog.initOwner(primaryStage);
             VBox dialogVbox = new VBox(20);
-            dialogVbox.getChildren().add(new Text("Select Block-refinement method:"));
-            dialogVbox.getChildren().add(new Text("(Hold CTRL to select multiple)"));
-            dialogVbox.getChildren().add(new Text("Selected items are shown on the right."));
-            dialogVbox.getChildren().add(listHBox);
+            Button saveBtn = new Button("Save and Close");
+
+            // Add save button handler
+            saveBtn.setOnAction(e -> {
+                System.out.println("SAVING");
+                model.blockProcessingMethodsProperty().setValue(list.getSelectionModel().getSelectedItems());
+
+                System.out.println("saved: ");
+                for (String s : model.getBlockProcessingMethods()) {
+                    System.out.println("- " + s);
+                }
+            });
+
+            // Add the elements to the modal
+            dialogVbox.getChildren().addAll(
+                    new Text("Select Block-refinement method:"),
+                    new Text("(Hold CTRL to select multiple)"),
+                    new Text("Selected items are shown on the right."),
+                    listHBox,
+                    saveBtn);
+
+            // Show modal
             Scene dialogScene = new Scene(dialogVbox, 350, 300);
             dialog.setScene(dialogScene);
             dialog.show();
