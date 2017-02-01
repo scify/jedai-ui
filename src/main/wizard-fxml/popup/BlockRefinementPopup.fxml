@@ -12,7 +12,7 @@
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0"
       prefWidth="350.0" xmlns="http://javafx.com/javafx/8.0.91" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="main.wizard.popup.BlockProcessingController">
+      fx:controller="main.wizard.popup.BlockRefinementController">
     <children>
         <Label alignment="CENTER" prefHeight="34.0" prefWidth="350.0" text="Select Block-refinement method">
             <font>

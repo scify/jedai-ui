@@ -118,7 +118,7 @@ public class Step3Controller {
                 final JavaFXBuilderFactory bf = new JavaFXBuilderFactory();
                 final Callback<Class<?>, Object> cb = (clazz) -> injector.getInstance(clazz);
 
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/wizard-fxml/popup/BlockProcessingPopup.fxml"), null, bf, cb);
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/wizard-fxml/popup/BlockRefinementPopup.fxml"), null, bf, cb);
                 root = loader.load();
                 root.getProperties().put("controller", loader.getController());
 

@@ -12,11 +12,11 @@ import main.wizard.WizardData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class BlockProcessingController {
+public class BlockRefinementController {
     public ListView<String> list;
     public ListView<String> selectedList;
     public Button saveBtn;
-    private Logger log = LoggerFactory.getLogger(BlockProcessingController.class);
+    private Logger log = LoggerFactory.getLogger(BlockRefinementController.class);
 
     @Inject
     private WizardData model;
