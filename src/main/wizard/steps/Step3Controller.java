@@ -30,6 +30,7 @@ public class Step3Controller {
     private Logger log = LoggerFactory.getLogger(Step3Controller.class);
 
     @Inject
+    private
     Injector injector;
 
     @Inject
@@ -41,6 +42,7 @@ public class Step3Controller {
         // Add options to combobox
         ObservableList<String> comboboxOptions =
                 FXCollections.observableArrayList(
+                        "No block processing",
                         "Block-refinement methods",
                         "Comparison-refinement methods"
                 );
@@ -53,17 +55,39 @@ public class Step3Controller {
     @Validate
     public boolean validate() throws Exception {
         if (blockProcessingMethodCombobox.getValue() == null || blockProcessingMethodCombobox.getValue().isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Block Processing Method");
-            alert.setHeaderText("Missing Field");
-            alert.setContentText("Selecting a Block Processing Method is required.");
-            alert.showAndWait();
+            showError("Block Processing Method", "Missing Field", "Selecting a Block Processing Method is required.");
             return false;
         }
 
-        //todo: also check the actual method selection, not just type like right now
+        // If there is a selection other than "No block processing", check that parameters were also selected
+        if (blockProcessingMethodCombobox.getValue().equals("Block-refinement methods") &&
+                (model.getBlockProcessingMethods() == null || model.getBlockProcessingMethods().isEmpty())) {
+            // No block refinement methods
+            showError("Block-refinement Methods", "Missing Field", "Selecting a Block-refinement method for Block Processing is required.");
+            return false;
+        } else if (blockProcessingMethodCombobox.getValue().equals("Comparison-refinement methods") &&
+                (model.getBlockProcessingMethods() == null || model.getBlockProcessingMethods().isEmpty())) {
+            // No comparison refinement methods
+            showError("Comparison-refinement Methods", "Missing Field", "Selecting a Comparison-refinement method for Block Processing is required.");
+            return false;
+        }
 
         return true;
+    }
+
+    /**
+     * Show an error with the specified title, header and content
+     *
+     * @param title   Title of the alert window
+     * @param header  Header of alert
+     * @param content Message with more detail about the problem
+     */
+    private void showError(String title, String header, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
     @Submit
