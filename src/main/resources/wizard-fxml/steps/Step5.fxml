@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      spacing="10.0" xmlns="http://javafx.com/javafx/8.0.71" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="wizard.steps.Step5Controller">
+    <children>
+        <Label text="Entity Clustering">
+            <font>
+                <Font name="System Bold" size="24.0"/>
+            </font>
+        </Label>
+        <GridPane>
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="300.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="300.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES"/>
+            </rowConstraints>
+            <children>
+                <ComboBox fx:id="entityClusteringMethodCombobox" prefWidth="290.0"
+                          promptText="Select entity clustering method"/>
+                <TextArea editable="false" prefHeight="200.0" prefWidth="200.0"
+                          text="Entity clustering method description" wrapText="true" GridPane.columnIndex="1"/>
+            </children>
+        </GridPane>
+    </children>
+    <padding>
+        <Insets bottom="40.0" left="40.0" right="40.0" top="40.0"/>
+    </padding>
+</VBox>
