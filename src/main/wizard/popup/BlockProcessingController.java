@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
+import javafx.stage.Stage;
 import main.wizard.WizardData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,8 +23,6 @@ public class BlockProcessingController {
 
     @FXML
     public void initialize() {
-        System.out.println("i am initialized");
-
         // Create lists for selection
         list.setItems(FXCollections.observableArrayList(
                 "Block Filtering",
@@ -49,6 +48,8 @@ public class BlockProcessingController {
         // Set the model's value to be the selected items from the list
         model.blockProcessingMethodsProperty().setValue(list.getSelectionModel().getSelectedItems());
 
-        // todo: close this
+        // Close the dialog window
+        Stage stage = (Stage) saveBtn.getScene().getWindow();
+        stage.close();
     }
 }
