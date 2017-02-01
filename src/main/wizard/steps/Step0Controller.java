@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 public class Step0Controller {
 
-    private Logger log = LoggerFactory.getLogger(Step1Controller.class);
+    private Logger log = LoggerFactory.getLogger(Step0Controller.class);
 
     @Inject
     WizardData model;

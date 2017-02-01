@@ -5,18 +5,22 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import main.wizard.Submit;
 import main.wizard.Validate;
 import main.wizard.WizardData;
+import main.wizard.popup.BlockProcessingController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 public class Step3Controller {
     public ComboBox<String> blockProcessingMethodCombobox;
@@ -68,62 +72,30 @@ public class Step3Controller {
         // Get block processing type that was selected
         String type = model.getBlockProcessingType();
 
-        // Get primary stage
         Stage primaryStage = (Stage) containerVBox.getScene().getWindow();
 
         if (type.equals("Block-refinement methods")) {
-            // Create lists for selection
-            ListView<String> list = new ListView<>(FXCollections.observableArrayList(
-                    "Block Filtering",
-                    "Block Scheduling",
-                    "Size-based Block Purging",
-                    "Comparison-based Block Purging"
-            ));
-            ListView<String> selectedList = new ListView<>();
-            HBox listHBox = new HBox(list, selectedList);
+            Stage dialog = new Stage();
+            Parent root;
+            try {
+//                root = FXMLLoader.load(getClass().getResource("/main/wizard-fxml/popup/BlockProcessingPopup.fxml"));
 
-            list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-            list.getSelectionModel().selectedItemProperty().addListener((obs, ov, nv) -> {
-                selectedList.setItems(list.getSelectionModel().getSelectedItems());
-            });
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/wizard-fxml/popup/BlockProcessingPopup.fxml"));
+                root = loader.load();
+                // Get the Controller from the FXMLLoader
+                BlockProcessingController controller = loader.getController();
+                // Set data in the controller
+                controller.setModel(this.model);
 
-            // Check if there are any already selected block processing methods in the model and select them on the list
-            if (model.getBlockProcessingMethods() != null && !model.getBlockProcessingMethods().isEmpty()) {
-                for (String selectedValue : model.getBlockProcessingMethods()) {
-                    list.getSelectionModel().select(selectedValue);
-                }
+                dialog.setScene(new Scene(root));
+                dialog.setTitle("Block-refinement Method Selection");
+                dialog.initModality(Modality.APPLICATION_MODAL);
+                dialog.initOwner(primaryStage);
+
+                dialog.show();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-            // Create modal and elements for the modal
-            final Stage dialog = new Stage();
-            dialog.initModality(Modality.APPLICATION_MODAL);
-            dialog.initOwner(primaryStage);
-            VBox dialogVbox = new VBox(20);
-            Button saveBtn = new Button("Save and Close");
-
-            // Add save button handler
-            saveBtn.setOnAction(e -> {
-                System.out.println("SAVING");
-                model.blockProcessingMethodsProperty().setValue(list.getSelectionModel().getSelectedItems());
-
-                System.out.println("saved: ");
-                for (String s : model.getBlockProcessingMethods()) {
-                    System.out.println("- " + s);
-                }
-            });
-
-            // Add the elements to the modal
-            dialogVbox.getChildren().addAll(
-                    new Text("Select Block-refinement method:"),
-                    new Text("(Hold CTRL to select multiple)"),
-                    new Text("Selected items are shown on the right."),
-                    listHBox,
-                    saveBtn);
-
-            // Show modal
-            Scene dialogScene = new Scene(dialogVbox, 350, 300);
-            dialog.setScene(dialogScene);
-            dialog.show();
         } else if (type.equals("Comparison-refinement methods")) {
             // todo
             /*

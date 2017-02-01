@@ -14,27 +14,28 @@ import javafx.stage.Stage;
  * https://github.com/bekwam/examples-javafx-repos1/tree/master/examples-javafx-parent/examples-javafx-wizard
  */
 public class WizardMain extends Application {
-	@Override
-	public void start(Stage primaryStage) throws Exception {
+    @Override
+    public void start(Stage primaryStage) throws Exception {
 
-		final Injector injector = Guice.createInjector( new WizardModule() );
+        final Injector injector = Guice.createInjector(new WizardModule());
 
-		final Parent p = FXMLLoader.load( WizardMain.class.getResource("/main/wizard-fxml/Wizard.fxml"),
-										  null,
-										  new JavaFXBuilderFactory(),
-										  (clazz) -> injector.getInstance(clazz)
-		);
-		
-		final Scene scene = new Scene(p);
-		
-		primaryStage.setScene( scene );
-		primaryStage.setWidth( 800 );
-		primaryStage.setHeight( 600 );
-		primaryStage.setTitle("JedAI");
-		
-		primaryStage.show();
-	}
-	
-	public static void main(String[] args) { launch(args); }
+        final Parent p = FXMLLoader.load(WizardMain.class.getResource("/main/wizard-fxml/Wizard.fxml"),
+                null,
+                new JavaFXBuilderFactory(),
+                injector::getInstance
+        );
 
+        final Scene scene = new Scene(p);
+
+        primaryStage.setScene(scene);
+        primaryStage.setWidth(800);
+        primaryStage.setHeight(600);
+        primaryStage.setTitle("JedAI");
+
+        primaryStage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
 }

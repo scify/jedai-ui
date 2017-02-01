@@ -126,35 +126,35 @@ public class WizardController {
 
         final Callback<Class<?>, Object> cb = (clazz) -> injector.getInstance(clazz);
 
-        FXMLLoader fxmlLoaderStep0 = new FXMLLoader(WizardController.class.getResource("/main/wizard-fxml/Step0.fxml"), null, bf, cb);
+        FXMLLoader fxmlLoaderStep0 = new FXMLLoader(WizardController.class.getResource("/main/wizard-fxml/steps/Step0.fxml"), null, bf, cb);
         Parent step0 = fxmlLoaderStep0.load();
         step0.getProperties().put(CONTROLLER_KEY, fxmlLoaderStep0.getController());
 
-        FXMLLoader fxmlLoaderStep1 = new FXMLLoader(WizardController.class.getResource("/main/wizard-fxml/Step1.fxml"), null, bf, cb);
+        FXMLLoader fxmlLoaderStep1 = new FXMLLoader(WizardController.class.getResource("/main/wizard-fxml/steps/Step1.fxml"), null, bf, cb);
         Parent step1 = fxmlLoaderStep1.load();
         step1.getProperties().put(CONTROLLER_KEY, fxmlLoaderStep1.getController());
 
-        FXMLLoader fxmlLoaderStep2 = new FXMLLoader(WizardController.class.getResource("/main/wizard-fxml/Step2.fxml"), null, bf, cb);
+        FXMLLoader fxmlLoaderStep2 = new FXMLLoader(WizardController.class.getResource("/main/wizard-fxml/steps/Step2.fxml"), null, bf, cb);
         Parent step2 = fxmlLoaderStep2.load();
         step2.getProperties().put(CONTROLLER_KEY, fxmlLoaderStep2.getController());
 
-        FXMLLoader fxmlLoaderStep3 = new FXMLLoader(WizardController.class.getResource("/main/wizard-fxml/Step3.fxml"), null, bf, cb);
+        FXMLLoader fxmlLoaderStep3 = new FXMLLoader(WizardController.class.getResource("/main/wizard-fxml/steps/Step3.fxml"), null, bf, cb);
         Parent step3 = fxmlLoaderStep3.load();
         step3.getProperties().put(CONTROLLER_KEY, fxmlLoaderStep3.getController());
 
-        FXMLLoader fxmlLoaderStep4 = new FXMLLoader(WizardController.class.getResource("/main/wizard-fxml/Step4.fxml"), null, bf, cb);
+        FXMLLoader fxmlLoaderStep4 = new FXMLLoader(WizardController.class.getResource("/main/wizard-fxml/steps/Step4.fxml"), null, bf, cb);
         Parent step4 = fxmlLoaderStep4.load();
         step4.getProperties().put(CONTROLLER_KEY, fxmlLoaderStep4.getController());
 
-        FXMLLoader fxmlLoaderStep5 = new FXMLLoader(WizardController.class.getResource("/main/wizard-fxml/Step5.fxml"), null, bf, cb);
+        FXMLLoader fxmlLoaderStep5 = new FXMLLoader(WizardController.class.getResource("/main/wizard-fxml/steps/Step5.fxml"), null, bf, cb);
         Parent step5 = fxmlLoaderStep5.load();
         step5.getProperties().put(CONTROLLER_KEY, fxmlLoaderStep5.getController());
 
-        FXMLLoader fxmlLoaderConfirm = new FXMLLoader(WizardController.class.getResource("/main/wizard-fxml/Confirm.fxml"), null, bf, cb);
+        FXMLLoader fxmlLoaderConfirm = new FXMLLoader(WizardController.class.getResource("/main/wizard-fxml/steps/Confirm.fxml"), null, bf, cb);
         Parent confirm = fxmlLoaderConfirm.load();
         confirm.getProperties().put(CONTROLLER_KEY, fxmlLoaderConfirm.getController());
 
-        FXMLLoader fxmlLoaderCompleted = new FXMLLoader(WizardController.class.getResource("/main/wizard-fxml/Completed.fxml"), null, bf, cb);
+        FXMLLoader fxmlLoaderCompleted = new FXMLLoader(WizardController.class.getResource("/main/wizard-fxml/steps/Completed.fxml"), null, bf, cb);
         Parent completed = fxmlLoaderCompleted.load();
         completed.getProperties().put(CONTROLLER_KEY, fxmlLoaderCompleted.getController());
 
@@ -186,7 +186,7 @@ public class WizardController {
         if (v != null) {
             try {
                 Object retval = v.invoke(controller);
-                if (retval != null && ((Boolean) retval) == false) {
+                if (retval != null && !((Boolean) retval)) {
                     return;
                 }
 
