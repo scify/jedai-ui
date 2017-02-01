@@ -12,6 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -27,6 +28,7 @@ import java.io.IOException;
 public class Step3Controller {
     public ComboBox<String> blockProcessingMethodCombobox;
     public VBox containerVBox;
+    public ListView selectionList;
     private Logger log = LoggerFactory.getLogger(Step3Controller.class);
 
     @Inject
@@ -50,12 +52,15 @@ public class Step3Controller {
 
         // Bind combobox selection to model
         blockProcessingMethodCombobox.valueProperty().bindBidirectional(model.blockProcessingTypeProperty());
+
+        // todo: bind selectionList to the selected method parameters
     }
 
     @Validate
     public boolean validate() throws Exception {
         if (blockProcessingMethodCombobox.getValue() == null || blockProcessingMethodCombobox.getValue().isEmpty()) {
-            showError("Block Processing Method", "Missing Field", "Selecting a Block Processing Method is required.");
+            showError("Block Processing Method", "Missing Field",
+                    "Selecting a Block Processing Method is required.");
             return false;
         }
 
@@ -63,12 +68,14 @@ public class Step3Controller {
         if (blockProcessingMethodCombobox.getValue().equals("Block-refinement methods") &&
                 (model.getBlockProcessingMethods() == null || model.getBlockProcessingMethods().isEmpty())) {
             // No block refinement methods
-            showError("Block-refinement Methods", "Missing Field", "Selecting a Block-refinement method for Block Processing is required.");
+            showError("Block-refinement Methods", "Missing Field",
+                    "Selecting a Block-refinement method for Block Processing is required.");
             return false;
         } else if (blockProcessingMethodCombobox.getValue().equals("Comparison-refinement methods") &&
                 (model.getBlockProcessingMethods() == null || model.getBlockProcessingMethods().isEmpty())) {
             // No comparison refinement methods
-            showError("Comparison-refinement Methods", "Missing Field", "Selecting a Comparison-refinement method for Block Processing is required.");
+            showError("Comparison-refinement Methods", "Missing Field",
+                    "Selecting a Comparison-refinement method for Block Processing is required.");
             return false;
         }
 
@@ -97,13 +104,13 @@ public class Step3Controller {
         }
     }
 
-    public void methodTypeSelectionHandler(ActionEvent actionEvent) {
-        // Get block processing type that was selected
+    public void methodSelectionBtnHandler(ActionEvent actionEvent) {
+        // Get selected method
+// Get block processing type that was selected
         String type = model.getBlockProcessingType();
 
         Stage primaryStage = (Stage) containerVBox.getScene().getWindow();
-
-        if (type.equals("Block-refinement methods")) {
+        if (type != null && type.equals("Block-refinement methods")) {
             Stage dialog = new Stage();
             Parent root;
             try {
@@ -124,7 +131,7 @@ public class Step3Controller {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else if (type.equals("Comparison-refinement methods")) {
+        } else if (type != null && type.equals("Comparison-refinement methods")) {
             // todo
             /*
                 Options for dropdown:
@@ -137,6 +144,10 @@ public class Step3Controller {
                 "Reciprocal Weighed Node Pruning (ReWNP)"
              */
             System.out.println("Comparison refinement methods popup");
+        } else {
+            // Alert that says parameters can only be selected after you have selected a processing method
+            showError("Block Processing Parameter Seletion", "No Block Matching method selected.",
+                    "When you haven't selected a Block Processing method, you can't select parameters for it.");
         }
     }
 }

@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-
 <VBox fx:id="containerVBox" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.91" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.wizard.steps.Step3Controller">
     <children>
         <Label text="Block Processing">
@@ -17,6 +11,7 @@
                 <Font name="System Bold" size="24.0" />
             </font>
         </Label>
+      <Label prefHeight="34.0" prefWidth="367.0" text="This step is optional. If you select a Block Processing method, you also need to select parameters for it" textAlignment="CENTER" wrapText="true" />
         <GridPane>
             <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="250.0" />
@@ -24,10 +19,13 @@
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <ComboBox fx:id="blockProcessingMethodCombobox" onAction="#methodTypeSelectionHandler" prefWidth="240.0" promptText="Select method type" />
+                <ComboBox fx:id="blockProcessingMethodCombobox" prefWidth="240.0" promptText="Select method type" />
                 <TextArea editable="false" prefHeight="200.0" prefWidth="200.0" text="Block building method description" wrapText="true" GridPane.columnIndex="1" />
+            <Button mnemonicParsing="false" onAction="#methodSelectionBtnHandler" text="Select Method Parameters" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+            <ListView fx:id="selectionList" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             </children>
         </GridPane>
     </children>
