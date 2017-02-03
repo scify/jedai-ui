@@ -15,7 +15,7 @@ public class CompletedController {
     public PieChart recallPie;
     public PieChart precisionPie;
     public TreeView treeView;
-    private Logger log = LoggerFactory.getLogger(ConfirmController.class);
+    private Logger log = LoggerFactory.getLogger(CompletedController.class);
 
     @Inject
     WizardData model;
@@ -47,7 +47,6 @@ public class CompletedController {
         recallPie.setData(pieChartData2);
         precisionPie.setData(pieChartData3);
 
-        // Add fake treeview data
-        //todo (http://stackoverflow.com/a/31074622 ?)
+        // todo: run algorithm
     }
 }
