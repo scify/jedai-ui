@@ -77,32 +77,16 @@ public class CompletedController {
     private void runAlgorithm() {
         BlockBuildingMethod blockingWorkflow = BlockBuildingMethod.STANDARD_BLOCKING;
 
+        // Step 1: Data Reading
         String[] datasetProfiles = {
                 "C:\\Users\\Leo\\Desktop\\JedAIToolkit\\datasets\\restaurantProfiles",
-//            "E:\\Data\\csvProfiles\\censusProfiles",
-//            "E:\\Data\\csvProfiles\\coraProfiles",
-//            "E:\\Data\\csvProfiles\\cddbProfiles",
-//            "E:\\Data\\csvProfiles\\abt-buy\\dataset",
-//            "E:\\Data\\csvProfiles\\amazon-gp\\dataset",
-//            "E:\\Data\\csvProfiles\\dblp-acm\\dataset",
-//            "E:\\Data\\csvProfiles\\dblp-scholar\\dataset",
-//            "E:\\Data\\csvProfiles\\movies\\dataset"
         };
         String[] datasetGroundtruth = {
                 "C:\\Users\\Leo\\Desktop\\JedAIToolkit\\datasets\\restaurantIdDuplicates",
-//            "E:\\Data\\csvProfiles\\censusIdDuplicates",
-//            "E:\\Data\\csvProfiles\\coraIdDuplicates",
-//            "E:\\Data\\csvProfiles\\cddbIdDuplicates",
-//            "E:\\Data\\csvProfiles\\abt-buy\\groundtruth",
-//            "E:\\Data\\csvProfiles\\amazon-gp\\groundtruth",
-//            "E:\\Data\\csvProfiles\\dblp-acm\\groundtruth",
-//            "E:\\Data\\csvProfiles\\dblp-scholar\\groundtruth",
-//            "E:\\Data\\csvProfiles\\movies\\groundtruth"
         };
 
         for (int datasetId = 0; datasetId < datasetProfiles.length; datasetId++) {
             System.out.println("\n\n\n\n\nCurrent dataset id\t:\t" + datasetId);
-            ;
 
             IEntityReader eReader = new EntitySerializationReader(datasetProfiles[datasetId]);
             List<EntityProfile> profiles = eReader.getEntityProfiles();
@@ -112,10 +96,12 @@ public class CompletedController {
             final AbstractDuplicatePropagation duplicatePropagation = new UnilateralDuplicatePropagation(gtReader.getDuplicatePairs(eReader.getEntityProfiles()));
             System.out.println("Existing Duplicates\t:\t" + duplicatePropagation.getDuplicates().size());
 
+            // Step 2: Block Building
             IBlockBuilding blockBuildingMethod = BlockBuildingMethod.getDefaultConfiguration(blockingWorkflow);
             List<AbstractBlock> blocks = blockBuildingMethod.getBlocks(profiles, null);
             System.out.println("Original blocks\t:\t" + blocks.size());
 
+            // Step 3: Block Processing
             IBlockProcessing blockCleaningMethod = BlockBuildingMethod.getDefaultBlockCleaning(blockingWorkflow);
             if (blockCleaningMethod != null) {
                 blocks = blockCleaningMethod.refineBlocks(blocks);
@@ -130,22 +116,26 @@ public class CompletedController {
             blp.setStatistics();
             blp.printStatistics();
 
+            // Step 4: Entity Matching
             RepresentationModel repModel = RepresentationModel.CHARACTER_BIGRAMS;
 //            for (RepresentationModel repModel : RepresentationModel.values()) {
             System.out.println("\n\nCurrent model\t:\t" + repModel.toString() + "\t\t" + SimilarityMetric.getModelDefaultSimMetric(repModel));
             IEntityMatching em = new ProfileMatcher(repModel, SimilarityMetric.JACCARD_SIMILARITY);
             SimilarityPairs simPairs = em.executeComparisons(blocks, profiles);
 
+            // Step 5: Entity Clustering
             IEntityClustering ec = new RicochetSRClustering();
             ec.setSimilarityThreshold(0.1);
             List<EquivalenceCluster> entityClusters = ec.getDuplicates(simPairs);
 
+            // Results export to CSV
             try {
                 PrintToFile.toCSV(entityClusters, "C:\\Users\\Leo\\Desktop\\results.csv");
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
 
+            // Print clustering performance
             ClustersPerformance clp = new ClustersPerformance(entityClusters, duplicatePropagation);
             clp.setStatistics();
             clp.printStatistics();
