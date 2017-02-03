@@ -1,5 +1,6 @@
 package wizard.steps;
 
+import Utilities.Enumerations.BlockBuildingMethod;
 import com.google.inject.Inject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -47,6 +48,87 @@ public class CompletedController {
         recallPie.setData(pieChartData2);
         precisionPie.setData(pieChartData3);
 
-        // todo: run algorithm
+        // Run algorithm
+        this.runAlgorithm();
+    }
+
+    private void runAlgorithm() {
+        BlockBuildingMethod blockingWorkflow = BlockBuildingMethod.STANDARD_BLOCKING;
+        /*
+
+        String[] datasetProfiles = {
+            "/home/ethanos/workspace/JedAIToolkitNew/datasets/restaurantProfiles",
+//            "E:\\Data\\csvProfiles\\censusProfiles",
+//            "E:\\Data\\csvProfiles\\coraProfiles",
+//            "E:\\Data\\csvProfiles\\cddbProfiles",
+//            "E:\\Data\\csvProfiles\\abt-buy\\dataset",
+//            "E:\\Data\\csvProfiles\\amazon-gp\\dataset",
+//            "E:\\Data\\csvProfiles\\dblp-acm\\dataset",
+//            "E:\\Data\\csvProfiles\\dblp-scholar\\dataset",
+//            "E:\\Data\\csvProfiles\\movies\\dataset"
+        };
+        String[] datasetGroundtruth = {
+            "/home/ethanos/workspace/JedAIToolkitNew/datasets/restaurantIdDuplicates",
+//            "E:\\Data\\csvProfiles\\censusIdDuplicates",
+//            "E:\\Data\\csvProfiles\\coraIdDuplicates",
+//            "E:\\Data\\csvProfiles\\cddbIdDuplicates",
+//            "E:\\Data\\csvProfiles\\abt-buy\\groundtruth",
+//            "E:\\Data\\csvProfiles\\amazon-gp\\groundtruth",
+//            "E:\\Data\\csvProfiles\\dblp-acm\\groundtruth",
+//            "E:\\Data\\csvProfiles\\dblp-scholar\\groundtruth",
+//            "E:\\Data\\csvProfiles\\movies\\groundtruth"
+        };
+
+        for (int datasetId = 0; datasetId < datasetProfiles.length; datasetId++) {
+            System.out.println("\n\n\n\n\nCurrent dataset id\t:\t" + datasetId);;
+
+            IEntityReader eReader = new EntitySerializationReader(datasetProfiles[datasetId]);
+            List<EntityProfile> profiles = eReader.getEntityProfiles();
+            System.out.println("Input Entity Profiles\t:\t" + profiles.size());
+
+            IGroundTruthReader gtReader = new GtSerializationReader(datasetGroundtruth[datasetId]);
+            final AbstractDuplicatePropagation duplicatePropagation = new UnilateralDuplicatePropagation(gtReader.getDuplicatePairs(eReader.getEntityProfiles()));
+            System.out.println("Existing Duplicates\t:\t" + duplicatePropagation.getDuplicates().size());
+
+            IBlockBuilding blockBuildingMethod = BlockBuildingMethod.getDefaultConfiguration(blockingWorkflow);
+            List<AbstractBlock> blocks = blockBuildingMethod.getBlocks(profiles, null);
+            System.out.println("Original blocks\t:\t" + blocks.size());
+
+            IBlockProcessing blockCleaningMethod = BlockBuildingMethod.getDefaultBlockCleaning(blockingWorkflow);
+            if (blockCleaningMethod != null) {
+                blocks = blockCleaningMethod.refineBlocks(blocks);
+            }
+
+            IBlockProcessing comparisonCleaningMethod = BlockBuildingMethod.getDefaultComparisonCleaning(blockingWorkflow);
+            if (comparisonCleaningMethod != null) {
+                blocks = comparisonCleaningMethod.refineBlocks(blocks);
+            }
+
+            BlocksPerformance blp = new BlocksPerformance(blocks, duplicatePropagation);
+            blp.setStatistics();
+            blp.printStatistics();
+
+            RepresentationModel repModel = RepresentationModel.CHARACTER_BIGRAMS;
+//            for (RepresentationModel repModel : RepresentationModel.values()) {
+                System.out.println("\n\nCurrent model\t:\t" + repModel.toString() + "\t\t" +  SimilarityMetric.getModelDefaultSimMetric(repModel));
+                IEntityMatching em = new ProfileMatcher(repModel, SimilarityMetric.JACCARD_SIMILARITY);
+                SimilarityPairs simPairs = em.executeComparisons(blocks, profiles);
+
+                IEntityClustering ec = new RicochetSRClustering();
+                ec.setSimilarityThreshold(0.1);
+                List<EquivalenceCluster> entityClusters = ec.getDuplicates(simPairs);
+
+                try {
+					PrintToFile.toCSV(entityClusters, "/home/ethanos/workspace/JedAIToolkitNew/rest.csv");
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+
+                ClustersPerformance clp = new ClustersPerformance(entityClusters, duplicatePropagation);
+                clp.setStatistics();
+                clp.printStatistics();
+            }
+//        }
+         */
     }
 }
