@@ -84,9 +84,6 @@ public class WizardController {
         initButtons();
         buildIndicatorCircles();
         setInitialContent();
-
-        model.setDataset("skip");
-        model.setBlockBuilding("skip");
     }
 
     private void initButtons() {
@@ -164,6 +161,7 @@ public class WizardController {
         completed.getProperties().put(CONTROLLER_KEY, fxmlLoaderCompleted.getController());
 
         steps.addAll(Arrays.asList(
+//                completed,
                 step0, step1, step2, step3, step4, step5, confirm, completed
         ));
     }

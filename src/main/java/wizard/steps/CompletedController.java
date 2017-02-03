@@ -1,6 +1,27 @@
 package wizard.steps;
 
+import BlockBuilding.IBlockBuilding;
+import BlockProcessing.IBlockProcessing;
+import DataModel.AbstractBlock;
+import DataModel.EntityProfile;
+import DataModel.EquivalenceCluster;
+import DataModel.SimilarityPairs;
+import DataReader.EntityReader.EntitySerializationReader;
+import DataReader.EntityReader.IEntityReader;
+import DataReader.GroundTruthReader.GtSerializationReader;
+import DataReader.GroundTruthReader.IGroundTruthReader;
+import EntityClustering.IEntityClustering;
+import EntityClustering.RicochetSRClustering;
+import EntityMatching.IEntityMatching;
+import EntityMatching.ProfileMatcher;
+import Utilities.BlocksPerformance;
+import Utilities.ClustersPerformance;
+import Utilities.DataStructures.AbstractDuplicatePropagation;
+import Utilities.DataStructures.UnilateralDuplicatePropagation;
 import Utilities.Enumerations.BlockBuildingMethod;
+import Utilities.Enumerations.RepresentationModel;
+import Utilities.Enumerations.SimilarityMetric;
+import Utilities.PrintToFile;
 import com.google.inject.Inject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,6 +31,9 @@ import javafx.scene.control.TreeView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import wizard.WizardData;
+
+import java.io.FileNotFoundException;
+import java.util.List;
 
 public class CompletedController {
     public PieChart f1MeasurePie;
@@ -47,14 +71,11 @@ public class CompletedController {
         f1MeasurePie.setData(pieChartData1);
         recallPie.setData(pieChartData2);
         precisionPie.setData(pieChartData3);
-
-        // Run algorithm
-        this.runAlgorithm();
     }
 
+    @FXML
     private void runAlgorithm() {
         BlockBuildingMethod blockingWorkflow = BlockBuildingMethod.STANDARD_BLOCKING;
-        /*
 
         String[] datasetProfiles = {
             "/home/ethanos/workspace/JedAIToolkitNew/datasets/restaurantProfiles",
@@ -119,7 +140,7 @@ public class CompletedController {
                 List<EquivalenceCluster> entityClusters = ec.getDuplicates(simPairs);
 
                 try {
-					PrintToFile.toCSV(entityClusters, "/home/ethanos/workspace/JedAIToolkitNew/rest.csv");
+					PrintToFile.toCSV(entityClusters, "results.csv");
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
@@ -128,7 +149,5 @@ public class CompletedController {
                 clp.setStatistics();
                 clp.printStatistics();
             }
-//        }
-         */
     }
 }
