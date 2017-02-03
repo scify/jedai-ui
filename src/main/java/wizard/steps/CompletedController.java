@@ -78,7 +78,7 @@ public class CompletedController {
         BlockBuildingMethod blockingWorkflow = BlockBuildingMethod.STANDARD_BLOCKING;
 
         String[] datasetProfiles = {
-            "/home/ethanos/workspace/JedAIToolkitNew/datasets/restaurantProfiles",
+                "C:\\Users\\Leo\\Desktop\\JedAIToolkit\\datasets\\restaurantProfiles",
 //            "E:\\Data\\csvProfiles\\censusProfiles",
 //            "E:\\Data\\csvProfiles\\coraProfiles",
 //            "E:\\Data\\csvProfiles\\cddbProfiles",
@@ -89,7 +89,7 @@ public class CompletedController {
 //            "E:\\Data\\csvProfiles\\movies\\dataset"
         };
         String[] datasetGroundtruth = {
-            "/home/ethanos/workspace/JedAIToolkitNew/datasets/restaurantIdDuplicates",
+                "C:\\Users\\Leo\\Desktop\\JedAIToolkit\\datasets\\restaurantIdDuplicates",
 //            "E:\\Data\\csvProfiles\\censusIdDuplicates",
 //            "E:\\Data\\csvProfiles\\coraIdDuplicates",
 //            "E:\\Data\\csvProfiles\\cddbIdDuplicates",
@@ -101,7 +101,8 @@ public class CompletedController {
         };
 
         for (int datasetId = 0; datasetId < datasetProfiles.length; datasetId++) {
-            System.out.println("\n\n\n\n\nCurrent dataset id\t:\t" + datasetId);;
+            System.out.println("\n\n\n\n\nCurrent dataset id\t:\t" + datasetId);
+            ;
 
             IEntityReader eReader = new EntitySerializationReader(datasetProfiles[datasetId]);
             List<EntityProfile> profiles = eReader.getEntityProfiles();
@@ -131,23 +132,23 @@ public class CompletedController {
 
             RepresentationModel repModel = RepresentationModel.CHARACTER_BIGRAMS;
 //            for (RepresentationModel repModel : RepresentationModel.values()) {
-                System.out.println("\n\nCurrent model\t:\t" + repModel.toString() + "\t\t" +  SimilarityMetric.getModelDefaultSimMetric(repModel));
-                IEntityMatching em = new ProfileMatcher(repModel, SimilarityMetric.JACCARD_SIMILARITY);
-                SimilarityPairs simPairs = em.executeComparisons(blocks, profiles);
+            System.out.println("\n\nCurrent model\t:\t" + repModel.toString() + "\t\t" + SimilarityMetric.getModelDefaultSimMetric(repModel));
+            IEntityMatching em = new ProfileMatcher(repModel, SimilarityMetric.JACCARD_SIMILARITY);
+            SimilarityPairs simPairs = em.executeComparisons(blocks, profiles);
 
-                IEntityClustering ec = new RicochetSRClustering();
-                ec.setSimilarityThreshold(0.1);
-                List<EquivalenceCluster> entityClusters = ec.getDuplicates(simPairs);
+            IEntityClustering ec = new RicochetSRClustering();
+            ec.setSimilarityThreshold(0.1);
+            List<EquivalenceCluster> entityClusters = ec.getDuplicates(simPairs);
 
-                try {
-					PrintToFile.toCSV(entityClusters, "results.csv");
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				}
-
-                ClustersPerformance clp = new ClustersPerformance(entityClusters, duplicatePropagation);
-                clp.setStatistics();
-                clp.printStatistics();
+            try {
+                PrintToFile.toCSV(entityClusters, "C:\\Users\\Leo\\Desktop\\results.csv");
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
             }
+
+            ClustersPerformance clp = new ClustersPerformance(entityClusters, duplicatePropagation);
+            clp.setStatistics();
+            clp.printStatistics();
+        }
     }
 }
