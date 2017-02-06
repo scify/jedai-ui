@@ -23,6 +23,7 @@ import Utilities.Enumerations.SimilarityMetric;
 import Utilities.PrintToFile;
 import com.google.inject.Inject;
 import eu.hansolo.medusa.Gauge;
+import eu.hansolo.medusa.Gauge.SkinType;
 import eu.hansolo.medusa.GaugeBuilder;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -72,104 +73,102 @@ public class CompletedController {
 
     private Gauge newGauge(String title) {
         return GaugeBuilder.create()
-                .skinType(Gauge.SkinType.HORIZONTAL)
+                .skinType(SkinType.HORIZONTAL)
                 .minValue(0.0)
                 .maxValue(1.0)
-                .title(title)
                 .tickLabelDecimals(1)
+                .title(title)
+                .decimals(3)
                 .build();
     }
 
     @FXML
     private void runAlgorithm() {
         // Get profiles and ground truth paths from model
-        String[] datasetProfiles = {
-                model.getEntityProfilesPath()
-        };
-        String[] datasetGroundtruth = {
-                model.getGroundTruthPath()
-        };
+        String datasetProfiles = model.getEntityProfilesPath();
+        String datasetGroundTruth = model.getGroundTruthPath();
 
-        for (int datasetId = 0; datasetId < datasetProfiles.length; datasetId++) {
-            System.out.println("\n\n\n\n\nCurrent dataset id\t:\t" + datasetId);
+        System.out.println("\n\n\n\n\nCurrent dataset id\t:\t" + datasetProfiles);
 
-            boolean hasGroundTruth = false;
-            if (datasetGroundtruth[datasetId] != null && !datasetGroundtruth[datasetId].isEmpty()) {
-                hasGroundTruth = true;
-            }
+        boolean hasGroundTruth = false;
+        if (datasetGroundTruth != null && !datasetGroundTruth.isEmpty()) {
+            hasGroundTruth = true;
+        }
 
-            // Step 1: Data reading (complete)
-            IEntityReader eReader = new EntitySerializationReader(datasetProfiles[datasetId]);
-            List<EntityProfile> profiles = eReader.getEntityProfiles();
-            System.out.println("Input Entity Profiles\t:\t" + profiles.size());
+        // Step 1: Data reading (complete)
+        IEntityReader eReader = new EntitySerializationReader(datasetProfiles);
+        List<EntityProfile> profiles = eReader.getEntityProfiles();
+        System.out.println("Input Entity Profiles\t:\t" + profiles.size());
 
-            AbstractDuplicatePropagation duplicatePropagation = null;
-            if (hasGroundTruth) {
-                IGroundTruthReader gtReader = new GtSerializationReader(datasetGroundtruth[datasetId]);
-                duplicatePropagation = new UnilateralDuplicatePropagation(gtReader.getDuplicatePairs(eReader.getEntityProfiles()));
-                System.out.println("Existing Duplicates\t:\t" + duplicatePropagation.getDuplicates().size());
-            }
+        AbstractDuplicatePropagation duplicatePropagation = null;
+        if (hasGroundTruth) {
+            IGroundTruthReader gtReader = new GtSerializationReader(datasetGroundTruth);
+            duplicatePropagation = new UnilateralDuplicatePropagation(gtReader.getDuplicatePairs(eReader.getEntityProfiles()));
+            System.out.println("Existing Duplicates\t:\t" + duplicatePropagation.getDuplicates().size());
+        }
 
-            // Step 2: Block Building (complete)
-            BlockBuildingMethod blockingWorkflow = MethodMapping.blockBuildingMethods.get(model.getBlockBuilding());
+        // Step 2: Block Building (complete)
+        BlockBuildingMethod blockingWorkflow = MethodMapping.blockBuildingMethods.get(model.getBlockBuilding());
 
-            IBlockBuilding blockBuildingMethod = BlockBuildingMethod.getDefaultConfiguration(blockingWorkflow);
-            List<AbstractBlock> blocks = blockBuildingMethod.getBlocks(profiles, null);
-            System.out.println("Original blocks\t:\t" + blocks.size());
+        IBlockBuilding blockBuildingMethod = BlockBuildingMethod.getDefaultConfiguration(blockingWorkflow);
+        List<AbstractBlock> blocks = blockBuildingMethod.getBlocks(profiles, null);
+        System.out.println("Original blocks\t:\t" + blocks.size());
 
-            // Step 3: Block Processing
-            IBlockProcessing blockCleaningMethod = BlockBuildingMethod.getDefaultBlockCleaning(blockingWorkflow);
-            if (blockCleaningMethod != null) {
-                blocks = blockCleaningMethod.refineBlocks(blocks);
-            }
+        // Step 3: Block Processing
+        IBlockProcessing blockCleaningMethod = BlockBuildingMethod.getDefaultBlockCleaning(blockingWorkflow);
+        if (blockCleaningMethod != null) {
+            blocks = blockCleaningMethod.refineBlocks(blocks);
+        }
 
-            IBlockProcessing comparisonCleaningMethod = BlockBuildingMethod.getDefaultComparisonCleaning(blockingWorkflow);
-            if (comparisonCleaningMethod != null) {
-                blocks = comparisonCleaningMethod.refineBlocks(blocks);
-            }
+        IBlockProcessing comparisonCleaningMethod = BlockBuildingMethod.getDefaultComparisonCleaning(blockingWorkflow);
+        if (comparisonCleaningMethod != null) {
+            blocks = comparisonCleaningMethod.refineBlocks(blocks);
+        }
 
-            if (hasGroundTruth) {
-                BlocksPerformance blp = new BlocksPerformance(blocks, duplicatePropagation);
-                blp.setStatistics();
-                blp.printStatistics();
-            }
+        if (hasGroundTruth) {
+            BlocksPerformance blp = new BlocksPerformance(blocks, duplicatePropagation);
+            blp.setStatistics();
+            blp.printStatistics();
+        }
 
-            // Step 4: Entity Matching
-            RepresentationModel repModel = RepresentationModel.CHARACTER_BIGRAMS;
+        // Step 4: Entity Matching
+        RepresentationModel repModel = RepresentationModel.CHARACTER_BIGRAMS;
 //            for (RepresentationModel repModel : RepresentationModel.values()) {
-            System.out.println("\n\nCurrent model\t:\t" + repModel.toString() + "\t\t" + SimilarityMetric.getModelDefaultSimMetric(repModel));
-            IEntityMatching em = new ProfileMatcher(repModel, SimilarityMetric.JACCARD_SIMILARITY);
-            SimilarityPairs simPairs = em.executeComparisons(blocks, profiles);
+        System.out.println("\n\nCurrent model\t:\t" + repModel.toString() + "\t\t" + SimilarityMetric.getModelDefaultSimMetric(repModel));
+        IEntityMatching em = new ProfileMatcher(repModel, SimilarityMetric.JACCARD_SIMILARITY);
+        SimilarityPairs simPairs = em.executeComparisons(blocks, profiles);
 
-            // Step 5: Entity Clustering (complete)
-            IEntityClustering ec = MethodMapping.getEntityClusteringMethod(model.getEntityClustering());
-            ec.setSimilarityThreshold(0.1);
-            entityClusters = ec.getDuplicates(simPairs);
+        // Step 5: Entity Clustering (complete)
+        IEntityClustering ec = MethodMapping.getEntityClusteringMethod(model.getEntityClustering());
+        ec.setSimilarityThreshold(0.1);
+        entityClusters = ec.getDuplicates(simPairs);
 
-            // Set label values and show them
-            numOfClustersLabel.setText("Number of clusters: " + entityClusters.size());
-            numOfClustersLabel.setVisible(true);
+        // Set label values and show them
+        numOfClustersLabel.setText("Number of clusters: " + entityClusters.size());
+        numOfClustersLabel.setVisible(true);
 
 //            numOfInstancesLabel.setText("Number of instances: " + entityClusters.size());
-            numOfInstancesLabel.setVisible(true);
+        numOfInstancesLabel.setVisible(true);
 
-            // Enable button for result export to CSV
-            exportBtn.setDisable(false);
+        // Enable button for result export to CSV
+        exportBtn.setDisable(false);
 
-            // Print clustering performance
-            if (hasGroundTruth) {
-                ClustersPerformance clp = new ClustersPerformance(entityClusters, duplicatePropagation);
-                clp.setStatistics();
-                clp.printStatistics();
+        // Print clustering performance
+        if (hasGroundTruth) {
+            ClustersPerformance clp = new ClustersPerformance(entityClusters, duplicatePropagation);
+            clp.setStatistics();
+            clp.printStatistics();
 
-                // Set gauge values
-                f1Gauge.setValue(clp.getFMeasure());
-                recallGauge.setValue(clp.getRecall());
-                precisionGauge.setValue(clp.getPrecision());
-            }
+            // Set gauge values
+            f1Gauge.setValue(clp.getFMeasure());
+            recallGauge.setValue(clp.getRecall());
+            precisionGauge.setValue(clp.getPrecision());
         }
     }
 
+    /**
+     * Asks the user for a filename with a save file dialog, and saves a CSV with the entity clusters
+     */
     public void exportBtnHandler() {
         FileChooser fileChooser = new FileChooser();
 
