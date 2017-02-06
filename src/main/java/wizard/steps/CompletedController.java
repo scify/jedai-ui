@@ -33,6 +33,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import wizard.MethodMapping;
 import wizard.WizardData;
 
 import java.io.File;
@@ -84,9 +85,7 @@ public class CompletedController {
 
     @FXML
     private void runAlgorithm() {
-        BlockBuildingMethod blockingWorkflow = BlockBuildingMethod.STANDARD_BLOCKING;
-
-        // Step 1: Data Reading
+        // Get profiles and ground truth paths from model
         String[] datasetProfiles = {
                 model.getEntityProfilesPath()
         };
@@ -102,6 +101,7 @@ public class CompletedController {
                 hasGroundTruth = true;
             }
 
+            // Step 1: Data reading
             IEntityReader eReader = new EntitySerializationReader(datasetProfiles[datasetId]);
             List<EntityProfile> profiles = eReader.getEntityProfiles();
             System.out.println("Input Entity Profiles\t:\t" + profiles.size());
@@ -114,6 +114,8 @@ public class CompletedController {
             }
 
             // Step 2: Block Building
+            BlockBuildingMethod blockingWorkflow = MethodMapping.blockBuildingMethods.get(model.getBlockBuilding());
+
             IBlockBuilding blockBuildingMethod = BlockBuildingMethod.getDefaultConfiguration(blockingWorkflow);
             List<AbstractBlock> blocks = blockBuildingMethod.getBlocks(profiles, null);
             System.out.println("Original blocks\t:\t" + blocks.size());

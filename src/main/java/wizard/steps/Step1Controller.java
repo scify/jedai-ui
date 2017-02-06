@@ -33,6 +33,10 @@ public class Step1Controller {
         // Bind text field values to the model
         entityProfTextField.textProperty().bindBidirectional(model.entityProfilesPathProperty());
         groundTruthTextField.textProperty().bindBidirectional(model.groundTruthPathProperty());
+
+        // Set initial values to text fields (for testing...)
+//        entityProfTextField.setText("C:\\Users\\leots\\Documents\\JedAIToolkit\\datasets\\restaurantProfiles");
+//        groundTruthTextField.setText("C:\\Users\\leots\\Documents\\JedAIToolkit\\datasets\\restaurantIdDuplicates");
     }
 
     @Validate
@@ -47,7 +51,7 @@ public class Step1Controller {
             return false;
         }
 
-        //todo: check that files exist because it is possible to set the directly from text field
+        //todo: check that files exist because it is possible to set the paths directly from the text fields
 
         return true;
     }
