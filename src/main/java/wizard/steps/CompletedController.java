@@ -88,8 +88,6 @@ public class CompletedController {
         String datasetProfiles = model.getEntityProfilesPath();
         String datasetGroundTruth = model.getGroundTruthPath();
 
-        System.out.println("\n\n\n\n\nCurrent dataset id\t:\t" + datasetProfiles);
-
         boolean hasGroundTruth = false;
         if (datasetGroundTruth != null && !datasetGroundTruth.isEmpty()) {
             hasGroundTruth = true;
@@ -147,7 +145,7 @@ public class CompletedController {
         numOfClustersLabel.setText("Number of clusters: " + entityClusters.size());
         numOfClustersLabel.setVisible(true);
 
-//            numOfInstancesLabel.setText("Number of instances: " + entityClusters.size());
+        numOfInstancesLabel.setText("Number of input instances: " + profiles.size());
         numOfInstancesLabel.setVisible(true);
 
         // Enable button for result export to CSV
