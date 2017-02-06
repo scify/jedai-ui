@@ -21,7 +21,7 @@ public class ConfirmController {
 
     @FXML
     public void initialize() {
-        tfField1.textProperty().bind(model.datasetProperty());
+        tfField1.textProperty().bind(model.entityProfilesPathProperty());
         tfField2.textProperty().bind(model.blockBuildingProperty());
         tfField3.textProperty().bind(model.blockProcessingTypeProperty());
         tfField4.textProperty().bind(model.entityMatchingProperty());

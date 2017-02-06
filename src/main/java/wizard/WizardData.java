@@ -7,7 +7,8 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 
 public class WizardData {
-    private final StringProperty dataset = new SimpleStringProperty();
+    private final StringProperty entityProfilesPath = new SimpleStringProperty();
+    private final StringProperty groundTruthPath = new SimpleStringProperty();
     private final StringProperty blockBuilding = new SimpleStringProperty();
     private final StringProperty blockProcessingType = new SimpleStringProperty();
     private final ListProperty<String> blockProcessingMethods = new SimpleListProperty<>();
@@ -27,16 +28,28 @@ public class WizardData {
         this.blockProcessingMethods.set(blockProcessingMethods);
     }
 
-    public String getDataset() {
-        return dataset.get();
+    public String getGroundTruthPath() {
+        return groundTruthPath.get();
     }
 
-    public StringProperty datasetProperty() {
-        return dataset;
+    public StringProperty groundTruthPathProperty() {
+        return groundTruthPath;
     }
 
-    public void setDataset(String dataset) {
-        this.dataset.set(dataset);
+    public void setGroundTruthPath(String groundTruthPath) {
+        this.groundTruthPath.set(groundTruthPath);
+    }
+
+    public String getEntityProfilesPath() {
+        return entityProfilesPath.get();
+    }
+
+    public StringProperty entityProfilesPathProperty() {
+        return entityProfilesPath;
+    }
+
+    public void setEntityProfilesPath(String entityProfilesPath) {
+        this.entityProfilesPath.set(entityProfilesPath);
     }
 
     public String getBlockBuilding() {
@@ -100,7 +113,7 @@ public class WizardData {
     }
 
     public void reset() {
-        dataset.set("");
+        entityProfilesPath.set("");
         blockBuilding.set("");
         blockProcessingType.set("");
         entityMatching.set("");
