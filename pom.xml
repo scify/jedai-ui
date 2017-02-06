@@ -71,5 +71,12 @@
             <artifactId>apache-jena-libs</artifactId>
             <version>3.1.1</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/eu.hansolo/Medusa -->
+        <dependency>
+            <groupId>eu.hansolo</groupId>
+            <artifactId>Medusa</artifactId>
+            <version>7.5</version>
+        </dependency>
     </dependencies>
 </project>

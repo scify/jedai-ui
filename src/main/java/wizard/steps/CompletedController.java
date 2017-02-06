@@ -22,12 +22,12 @@ import Utilities.Enumerations.RepresentationModel;
 import Utilities.Enumerations.SimilarityMetric;
 import Utilities.PrintToFile;
 import com.google.inject.Inject;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import eu.hansolo.medusa.Gauge;
+import eu.hansolo.medusa.GaugeBuilder;
 import javafx.fxml.FXML;
-import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
@@ -40,23 +40,44 @@ import java.io.FileNotFoundException;
 import java.util.List;
 
 public class CompletedController {
-    public PieChart f1MeasurePie;
-    public PieChart recallPie;
-    public PieChart precisionPie;
     public Button runBtn;
     public Button exportBtn;
     public VBox containerVBox;
     public Label numOfInstancesLabel;
     public Label numOfClustersLabel;
+    public HBox gaugesHBox;
     private Logger log = LoggerFactory.getLogger(CompletedController.class);
+
+    private Gauge f1Gauge;
+    private Gauge recallGauge;
+    private Gauge precisionGauge;
 
     private List<EquivalenceCluster> entityClusters;
 
     @Inject
-    WizardData model;
+    private WizardData model;
 
     @FXML
     public void initialize() {
+        // Create gauges
+        f1Gauge = newGauge("F1-measure");
+        gaugesHBox.getChildren().add(f1Gauge);
+
+        recallGauge = newGauge("Recall");
+        gaugesHBox.getChildren().add(recallGauge);
+
+        precisionGauge = newGauge("Precision");
+        gaugesHBox.getChildren().add(precisionGauge);
+    }
+
+    private Gauge newGauge(String title) {
+        return GaugeBuilder.create()
+                .skinType(Gauge.SkinType.HORIZONTAL)
+                .minValue(0.0)
+                .maxValue(1.0)
+                .title(title)
+                .tickLabelDecimals(1)
+                .build();
     }
 
     @FXML
@@ -141,39 +162,10 @@ public class CompletedController {
                 clp.setStatistics();
                 clp.printStatistics();
 
-                // Get clustering accuracy measures data
-                double fMeasure = clp.getFMeasure();
-                double recall = clp.getRecall();
-                double precision = clp.getPrecision();
-
-                // Create observable arraylists to give data to pies
-                ObservableList<PieChart.Data> f1MeasureData =
-                        FXCollections.observableArrayList(
-                                new PieChart.Data(String.format("F1-measure: %1$.3f", fMeasure), fMeasure),
-                                new PieChart.Data("", (1.0 - fMeasure))
-                        );
-
-                ObservableList<PieChart.Data> recallData =
-                        FXCollections.observableArrayList(
-                                new PieChart.Data(String.format("Recall: %1$.3f", recall), recall),
-                                new PieChart.Data("", (1.0 - recall))
-                        );
-
-                ObservableList<PieChart.Data> precisionData =
-                        FXCollections.observableArrayList(
-                                new PieChart.Data(String.format("Precision: %1$.3f", precision), precision),
-                                new PieChart.Data("", (1.0 - precision))
-                        );
-
-                // Give data to pies
-                f1MeasurePie.setData(f1MeasureData);
-                recallPie.setData(recallData);
-                precisionPie.setData(precisionData);
-
-                // Show pies
-                f1MeasurePie.setVisible(true);
-                recallPie.setVisible(true);
-                precisionPie.setVisible(true);
+                // Set gauge values
+                f1Gauge.setValue(clp.getFMeasure());
+                recallGauge.setValue(clp.getRecall());
+                precisionGauge.setValue(clp.getPrecision());
             }
         }
     }
