@@ -37,7 +37,7 @@ public class Step1Controller {
 
     @Validate
     public boolean validate() throws Exception {
-        // Check that text fields have a value (could also check if the files exist, but in FileChooser we trust...)
+        // Check that text fields have a value
         if (entityProfTextField.getText() == null || entityProfTextField.getText().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Dataset Selection");
@@ -46,6 +46,8 @@ public class Step1Controller {
             alert.showAndWait();
             return false;
         }
+
+        //todo: check that files exist because it is possible to set the directly from text field
 
         return true;
     }

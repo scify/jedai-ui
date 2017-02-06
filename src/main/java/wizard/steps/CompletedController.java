@@ -88,22 +88,30 @@ public class CompletedController {
 
         // Step 1: Data Reading
         String[] datasetProfiles = {
-                "C:\\Users\\leots\\Documents\\JedAIToolkit\\datasets\\restaurantProfiles",
+                model.getEntityProfilesPath()
         };
         String[] datasetGroundtruth = {
-                "C:\\Users\\leots\\Documents\\JedAIToolkit\\datasets\\restaurantIdDuplicates",
+                model.getGroundTruthPath()
         };
 
         for (int datasetId = 0; datasetId < datasetProfiles.length; datasetId++) {
             System.out.println("\n\n\n\n\nCurrent dataset id\t:\t" + datasetId);
 
+            boolean hasGroundTruth = false;
+            if (datasetGroundtruth[datasetId] != null && !datasetGroundtruth[datasetId].isEmpty()) {
+                hasGroundTruth = true;
+            }
+
             IEntityReader eReader = new EntitySerializationReader(datasetProfiles[datasetId]);
             List<EntityProfile> profiles = eReader.getEntityProfiles();
             System.out.println("Input Entity Profiles\t:\t" + profiles.size());
 
-            IGroundTruthReader gtReader = new GtSerializationReader(datasetGroundtruth[datasetId]);
-            final AbstractDuplicatePropagation duplicatePropagation = new UnilateralDuplicatePropagation(gtReader.getDuplicatePairs(eReader.getEntityProfiles()));
-            System.out.println("Existing Duplicates\t:\t" + duplicatePropagation.getDuplicates().size());
+            AbstractDuplicatePropagation duplicatePropagation = null;
+            if (hasGroundTruth) {
+                IGroundTruthReader gtReader = new GtSerializationReader(datasetGroundtruth[datasetId]);
+                duplicatePropagation = new UnilateralDuplicatePropagation(gtReader.getDuplicatePairs(eReader.getEntityProfiles()));
+                System.out.println("Existing Duplicates\t:\t" + duplicatePropagation.getDuplicates().size());
+            }
 
             // Step 2: Block Building
             IBlockBuilding blockBuildingMethod = BlockBuildingMethod.getDefaultConfiguration(blockingWorkflow);
@@ -121,9 +129,11 @@ public class CompletedController {
                 blocks = comparisonCleaningMethod.refineBlocks(blocks);
             }
 
-            BlocksPerformance blp = new BlocksPerformance(blocks, duplicatePropagation);
-            blp.setStatistics();
-            blp.printStatistics();
+            if (hasGroundTruth) {
+                BlocksPerformance blp = new BlocksPerformance(blocks, duplicatePropagation);
+                blp.setStatistics();
+                blp.printStatistics();
+            }
 
             // Step 4: Entity Matching
             RepresentationModel repModel = RepresentationModel.CHARACTER_BIGRAMS;
@@ -137,14 +147,15 @@ public class CompletedController {
             ec.setSimilarityThreshold(0.1);
             entityClusters = ec.getDuplicates(simPairs);
 
-            // Results export to CSV
             // Enable button for result export to CSV
             exportBtn.setDisable(false);
 
             // Print clustering performance
-            ClustersPerformance clp = new ClustersPerformance(entityClusters, duplicatePropagation);
-            clp.setStatistics();
-            clp.printStatistics();
+            if (hasGroundTruth) {
+                ClustersPerformance clp = new ClustersPerformance(entityClusters, duplicatePropagation);
+                clp.setStatistics();
+                clp.printStatistics();
+            }
         }
     }
 
