@@ -112,11 +112,13 @@ public class CompletedController {
         System.out.println("Original blocks\t:\t" + blocks.size());
 
         // Step 3: Block Processing
-        String bProcType = model.getBlockProcessingType();
-        List<String> bProcMethods = model.getBlockProcessingMethods();
+        String processingType = model.getBlockProcessingType();
+        if (!processingType.equals("No block processing")) {
+            List<String> processingMethods = model.getBlockProcessingMethods();
 
-        for (String currentMethod : bProcMethods) {
-            blocks = MethodMapping.processBlocks(blocks, bProcType, currentMethod);
+            for (String currentMethod : processingMethods) {
+                blocks = MethodMapping.processBlocks(blocks, processingType, currentMethod);
+            }
         }
 
         if (hasGroundTruth) {

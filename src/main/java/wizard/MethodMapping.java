@@ -107,9 +107,7 @@ public class MethodMapping {
         }
 
         // Process the blocks
-        System.out.println("Before: " + blocks.size());
         blocks = processingMethod.refineBlocks(blocks);
-        System.out.println("After: " + blocks.size());
 
         // Return the blocks
         return blocks;
