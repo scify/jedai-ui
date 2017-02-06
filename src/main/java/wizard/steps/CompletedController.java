@@ -57,30 +57,6 @@ public class CompletedController {
 
     @FXML
     public void initialize() {
-        // Add fake pie data
-        ObservableList<PieChart.Data> pieChartData1 =
-                FXCollections.observableArrayList(
-                        new PieChart.Data("Grapefruit", 13),
-                        new PieChart.Data("Oranges", 25),
-                        new PieChart.Data("Plums", 10));
-
-        ObservableList<PieChart.Data> pieChartData2 =
-                FXCollections.observableArrayList(
-                        new PieChart.Data("Grapefruit", 13),
-                        new PieChart.Data("Oranges", 25),
-                        new PieChart.Data("Plums", 10),
-                        new PieChart.Data("Pears", 22),
-                        new PieChart.Data("Apples", 30));
-
-        ObservableList<PieChart.Data> pieChartData3 =
-                FXCollections.observableArrayList(
-                        new PieChart.Data("Plums", 10),
-                        new PieChart.Data("Pears", 22),
-                        new PieChart.Data("Apples", 30));
-
-        f1MeasurePie.setData(pieChartData1);
-        recallPie.setData(pieChartData2);
-        precisionPie.setData(pieChartData3);
     }
 
     @FXML
@@ -159,13 +135,45 @@ public class CompletedController {
             // Enable button for result export to CSV
             exportBtn.setDisable(false);
 
-            //todo: set pie values and show them
-
             // Print clustering performance
             if (hasGroundTruth) {
                 ClustersPerformance clp = new ClustersPerformance(entityClusters, duplicatePropagation);
                 clp.setStatistics();
                 clp.printStatistics();
+
+                // Get clustering accuracy measures data
+                double fMeasure = clp.getFMeasure();
+                double recall = clp.getRecall();
+                double precision = clp.getPrecision();
+
+                // Create observable arraylists to give data to pies
+                ObservableList<PieChart.Data> f1MeasureData =
+                        FXCollections.observableArrayList(
+                                new PieChart.Data(String.format("F1-measure: %1$.3f", fMeasure), fMeasure),
+                                new PieChart.Data("", (1.0 - fMeasure))
+                        );
+
+                ObservableList<PieChart.Data> recallData =
+                        FXCollections.observableArrayList(
+                                new PieChart.Data(String.format("Recall: %1$.3f", recall), recall),
+                                new PieChart.Data("", (1.0 - recall))
+                        );
+
+                ObservableList<PieChart.Data> precisionData =
+                        FXCollections.observableArrayList(
+                                new PieChart.Data(String.format("Precision: %1$.3f", precision), precision),
+                                new PieChart.Data("", (1.0 - precision))
+                        );
+
+                // Give data to pies
+                f1MeasurePie.setData(f1MeasureData);
+                recallPie.setData(recallData);
+                precisionPie.setData(precisionData);
+
+                // Show pies
+                f1MeasurePie.setVisible(true);
+                recallPie.setVisible(true);
+                precisionPie.setVisible(true);
             }
         }
     }
