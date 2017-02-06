@@ -78,6 +78,8 @@ public class CompletedController {
                 .tickLabelDecimals(1)
                 .title(title)
                 .decimals(3)
+                .animated(true)
+                .animationDuration(1500)
                 .build();
     }
 
