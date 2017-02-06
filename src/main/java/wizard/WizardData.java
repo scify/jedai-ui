@@ -114,6 +114,7 @@ public class WizardData {
 
     public void reset() {
         entityProfilesPath.set("");
+        groundTruthPath.set("");
         blockBuilding.set("");
         blockProcessingType.set("");
         entityMatching.set("");

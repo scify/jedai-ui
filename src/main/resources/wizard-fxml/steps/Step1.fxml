@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <VBox fx:id="containerVBox" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-      minWidth="-Infinity" spacing="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      minWidth="-Infinity" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.91" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="wizard.steps.Step1Controller">
     <children>
         <Label text="Data Reading">
@@ -27,9 +27,9 @@
             </rowConstraints>
             <children>
                 <Button fx:id="selectEntityProfBtn" mnemonicParsing="false" onAction="#selectBtnHandler"
-                        text="Select entity profiles entityProfilesPath" GridPane.columnIndex="1"/>
+                        text="Select entity profiles" GridPane.columnIndex="1"/>
                 <Button fx:id="selectGroundTruthBtn" mnemonicParsing="false" onAction="#selectBtnHandler"
-                        text="Select ground-truth entityProfilesPath" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                        text="Select ground-truth file" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
                 <TextField fx:id="entityProfTextField"/>
                 <TextField fx:id="groundTruthTextField" GridPane.rowIndex="4"/>
             </children>
