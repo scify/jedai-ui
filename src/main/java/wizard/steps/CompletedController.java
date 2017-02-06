@@ -27,6 +27,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
@@ -45,6 +46,8 @@ public class CompletedController {
     public Button runBtn;
     public Button exportBtn;
     public VBox containerVBox;
+    public Label numOfInstancesLabel;
+    public Label numOfClustersLabel;
     private Logger log = LoggerFactory.getLogger(CompletedController.class);
 
     private List<EquivalenceCluster> entityClusters;
@@ -98,7 +101,7 @@ public class CompletedController {
                 hasGroundTruth = true;
             }
 
-            // Step 1: Data reading
+            // Step 1: Data reading (complete)
             IEntityReader eReader = new EntitySerializationReader(datasetProfiles[datasetId]);
             List<EntityProfile> profiles = eReader.getEntityProfiles();
             System.out.println("Input Entity Profiles\t:\t" + profiles.size());
@@ -110,7 +113,7 @@ public class CompletedController {
                 System.out.println("Existing Duplicates\t:\t" + duplicatePropagation.getDuplicates().size());
             }
 
-            // Step 2: Block Building
+            // Step 2: Block Building (complete)
             BlockBuildingMethod blockingWorkflow = MethodMapping.blockBuildingMethods.get(model.getBlockBuilding());
 
             IBlockBuilding blockBuildingMethod = BlockBuildingMethod.getDefaultConfiguration(blockingWorkflow);
@@ -141,13 +144,22 @@ public class CompletedController {
             IEntityMatching em = new ProfileMatcher(repModel, SimilarityMetric.JACCARD_SIMILARITY);
             SimilarityPairs simPairs = em.executeComparisons(blocks, profiles);
 
-            // Step 5: Entity Clustering
+            // Step 5: Entity Clustering (complete)
             IEntityClustering ec = MethodMapping.getEntityClusteringMethod(model.getEntityClustering());
             ec.setSimilarityThreshold(0.1);
             entityClusters = ec.getDuplicates(simPairs);
 
+            // Set label values and show them
+            numOfClustersLabel.setText("Number of clusters: " + entityClusters.size());
+            numOfClustersLabel.setVisible(true);
+
+//            numOfInstancesLabel.setText("Number of instances: " + entityClusters.size());
+            numOfInstancesLabel.setVisible(true);
+
             // Enable button for result export to CSV
             exportBtn.setDisable(false);
+
+            //todo: set pie values and show them
 
             // Print clustering performance
             if (hasGroundTruth) {

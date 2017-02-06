@@ -18,17 +18,17 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
             </rowConstraints>
             <children>
-                <Label text="Number of input instances: ###"/>
-                <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefHeight="21.0" prefWidth="270.0"
-                       text="Number of clusters: ###" textAlignment="RIGHT" GridPane.columnIndex="1"
-                       GridPane.halignment="RIGHT"/>
+                <Label fx:id="numOfInstancesLabel" text="Number of input instances: ###" visible="false"/>
+                <Label fx:id="numOfClustersLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefHeight="21.0"
+                       prefWidth="270.0" text="Number of clusters: ###" textAlignment="RIGHT" visible="false"
+                       GridPane.columnIndex="1" GridPane.halignment="RIGHT"/>
             </children>
         </GridPane>
         <HBox prefHeight="100.0" prefWidth="200.0">
             <children>
-                <PieChart fx:id="f1MeasurePie" title="F1-measure"/>
-                <PieChart fx:id="recallPie" title="Recall"/>
-                <PieChart fx:id="precisionPie" title="Precision"/>
+                <PieChart fx:id="f1MeasurePie" title="F1-measure" visible="false"/>
+                <PieChart fx:id="recallPie" title="Recall" visible="false"/>
+                <PieChart fx:id="precisionPie" title="Precision" visible="false"/>
             </children>
         </HBox>
         <Pane prefHeight="42.0" prefWidth="600.0">
