@@ -27,11 +27,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.chart.PieChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.TreeView;
+import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import wizard.WizardData;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
 
@@ -40,7 +44,12 @@ public class CompletedController {
     public PieChart recallPie;
     public PieChart precisionPie;
     public TreeView treeView;
+    public Button runBtn;
+    public Button exportBtn;
+    public VBox containerVBox;
     private Logger log = LoggerFactory.getLogger(CompletedController.class);
+
+    private List<EquivalenceCluster> entityClusters;
 
     @Inject
     WizardData model;
@@ -79,10 +88,10 @@ public class CompletedController {
 
         // Step 1: Data Reading
         String[] datasetProfiles = {
-                "C:\\Users\\Leo\\Desktop\\JedAIToolkit\\datasets\\restaurantProfiles",
+                "C:\\Users\\leots\\Documents\\JedAIToolkit\\datasets\\restaurantProfiles",
         };
         String[] datasetGroundtruth = {
-                "C:\\Users\\Leo\\Desktop\\JedAIToolkit\\datasets\\restaurantIdDuplicates",
+                "C:\\Users\\leots\\Documents\\JedAIToolkit\\datasets\\restaurantIdDuplicates",
         };
 
         for (int datasetId = 0; datasetId < datasetProfiles.length; datasetId++) {
@@ -126,19 +135,36 @@ public class CompletedController {
             // Step 5: Entity Clustering
             IEntityClustering ec = new RicochetSRClustering();
             ec.setSimilarityThreshold(0.1);
-            List<EquivalenceCluster> entityClusters = ec.getDuplicates(simPairs);
+            entityClusters = ec.getDuplicates(simPairs);
 
             // Results export to CSV
-            try {
-                PrintToFile.toCSV(entityClusters, "C:\\Users\\Leo\\Desktop\\results.csv");
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+            // Enable button for result export to CSV
+            exportBtn.setDisable(false);
 
             // Print clustering performance
             ClustersPerformance clp = new ClustersPerformance(entityClusters, duplicatePropagation);
             clp.setStatistics();
             clp.printStatistics();
+        }
+    }
+
+    public void exportBtnHandler() {
+        FileChooser fileChooser = new FileChooser();
+
+        //Set extension filter
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV File", "*.csv");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        //Show save file dialog
+        File file = fileChooser.showSaveDialog(containerVBox.getScene().getWindow());
+
+        if (file != null) {
+            // Results export to CSV
+            try {
+                PrintToFile.toCSV(entityClusters, file.getAbsolutePath());
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
