@@ -1,10 +1,19 @@
 package wizard;
 
+import BlockProcessing.BlockRefinement.BlockFiltering;
+import BlockProcessing.BlockRefinement.BlockScheduling;
+import BlockProcessing.BlockRefinement.ComparisonsBasedBlockPurging;
+import BlockProcessing.BlockRefinement.SizeBasedBlockPurging;
+import BlockProcessing.ComparisonRefinement.*;
+import BlockProcessing.IBlockProcessing;
+import DataModel.AbstractBlock;
 import EntityClustering.*;
 import Utilities.Enumerations.BlockBuildingMethod;
+import Utilities.Enumerations.WeightingScheme;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MethodMapping {
@@ -50,5 +59,59 @@ public class MethodMapping {
         }
 
         return method;
+    }
+
+    public static List<AbstractBlock> processBlocks(List<AbstractBlock> blocks, String methodType, String method) {
+        IBlockProcessing processingMethod;
+
+        // Use appropriate processing method
+        switch (method) {
+            case "Block Filtering":
+                processingMethod = new BlockFiltering();
+                break;
+            case "Block Scheduling":
+                processingMethod = new BlockScheduling();
+                break;
+            case "Size-based Block Purging":
+                processingMethod = new SizeBasedBlockPurging();
+                break;
+            case "Comparison-based Block Purging":
+                processingMethod = new ComparisonsBasedBlockPurging();
+                break;
+            case "Comparison Propagation":
+                processingMethod = new ComparisonPropagation();
+                break;
+            case "Cardinality Edge Pruning (CEP)":
+//                processingMethod = new CardinalityEdgePruning();
+//                break;
+                return blocks;
+            case "Cardinality Node Pruning (CNP)":
+                processingMethod = new CardinalityNodePruning(WeightingScheme.CBS);
+                break;
+            case "Weighed Edge Pruning (WEP)":
+                processingMethod = new WeightedEdgePruning(WeightingScheme.CBS);
+                break;
+            case "Weighed Node Pruning (WNP)":
+                processingMethod = new WeightedNodePruning(WeightingScheme.CBS);
+                break;
+            case "Reciprocal Cardinality Node Pruning (ReCNP)":
+                processingMethod = new ReciprocalCardinalityNodePruning(WeightingScheme.CBS);
+                break;
+            case "Reciprocal Weighed Node Pruning (ReWNP)":
+                processingMethod = new ReciprocalWeightedNodePruning(WeightingScheme.CBS);
+                break;
+            default:
+                System.err.println("Method not mapped??");
+
+                return blocks;
+        }
+
+        // Process the blocks
+        System.out.println("Before: " + blocks.size());
+        blocks = processingMethod.refineBlocks(blocks);
+        System.out.println("After: " + blocks.size());
+
+        // Return the blocks
+        return blocks;
     }
 }

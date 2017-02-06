@@ -1,7 +1,6 @@
 package wizard.steps;
 
 import BlockBuilding.IBlockBuilding;
-import BlockProcessing.IBlockProcessing;
 import DataModel.AbstractBlock;
 import DataModel.EntityProfile;
 import DataModel.EquivalenceCluster;
@@ -93,7 +92,7 @@ public class CompletedController {
             hasGroundTruth = true;
         }
 
-        // Step 1: Data reading (complete)
+        // Step 1: Data reading
         IEntityReader eReader = new EntitySerializationReader(datasetProfiles);
         List<EntityProfile> profiles = eReader.getEntityProfiles();
         System.out.println("Input Entity Profiles\t:\t" + profiles.size());
@@ -105,7 +104,7 @@ public class CompletedController {
             System.out.println("Existing Duplicates\t:\t" + duplicatePropagation.getDuplicates().size());
         }
 
-        // Step 2: Block Building (complete)
+        // Step 2: Block Building
         BlockBuildingMethod blockingWorkflow = MethodMapping.blockBuildingMethods.get(model.getBlockBuilding());
 
         IBlockBuilding blockBuildingMethod = BlockBuildingMethod.getDefaultConfiguration(blockingWorkflow);
@@ -113,14 +112,11 @@ public class CompletedController {
         System.out.println("Original blocks\t:\t" + blocks.size());
 
         // Step 3: Block Processing
-        IBlockProcessing blockCleaningMethod = BlockBuildingMethod.getDefaultBlockCleaning(blockingWorkflow);
-        if (blockCleaningMethod != null) {
-            blocks = blockCleaningMethod.refineBlocks(blocks);
-        }
+        String bProcType = model.getBlockProcessingType();
+        List<String> bProcMethods = model.getBlockProcessingMethods();
 
-        IBlockProcessing comparisonCleaningMethod = BlockBuildingMethod.getDefaultComparisonCleaning(blockingWorkflow);
-        if (comparisonCleaningMethod != null) {
-            blocks = comparisonCleaningMethod.refineBlocks(blocks);
+        for (String currentMethod : bProcMethods) {
+            blocks = MethodMapping.processBlocks(blocks, bProcType, currentMethod);
         }
 
         if (hasGroundTruth) {
@@ -130,13 +126,13 @@ public class CompletedController {
         }
 
         // Step 4: Entity Matching
+        //todo
         RepresentationModel repModel = RepresentationModel.CHARACTER_BIGRAMS;
-//            for (RepresentationModel repModel : RepresentationModel.values()) {
         System.out.println("\n\nCurrent model\t:\t" + repModel.toString() + "\t\t" + SimilarityMetric.getModelDefaultSimMetric(repModel));
         IEntityMatching em = new ProfileMatcher(repModel, SimilarityMetric.JACCARD_SIMILARITY);
         SimilarityPairs simPairs = em.executeComparisons(blocks, profiles);
 
-        // Step 5: Entity Clustering (complete)
+        // Step 5: Entity Clustering
         IEntityClustering ec = MethodMapping.getEntityClusteringMethod(model.getEntityClustering());
         ec.setSimilarityThreshold(0.1);
         entityClusters = ec.getDuplicates(simPairs);
@@ -170,11 +166,11 @@ public class CompletedController {
     public void exportBtnHandler() {
         FileChooser fileChooser = new FileChooser();
 
-        //Set extension filter
+        // Set extension filter
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV File", "*.csv");
         fileChooser.getExtensionFilters().add(extFilter);
 
-        //Show save file dialog
+        // Show save file dialog
         File file = fileChooser.showSaveDialog(containerVBox.getScene().getWindow());
 
         if (file != null) {
