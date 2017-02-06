@@ -11,7 +11,6 @@ import DataReader.EntityReader.IEntityReader;
 import DataReader.GroundTruthReader.GtSerializationReader;
 import DataReader.GroundTruthReader.IGroundTruthReader;
 import EntityClustering.IEntityClustering;
-import EntityClustering.RicochetSRClustering;
 import EntityMatching.IEntityMatching;
 import EntityMatching.ProfileMatcher;
 import Utilities.BlocksPerformance;
@@ -28,7 +27,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
-import javafx.scene.control.TreeView;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
@@ -44,7 +42,6 @@ public class CompletedController {
     public PieChart f1MeasurePie;
     public PieChart recallPie;
     public PieChart precisionPie;
-    public TreeView treeView;
     public Button runBtn;
     public Button exportBtn;
     public VBox containerVBox;
@@ -145,7 +142,7 @@ public class CompletedController {
             SimilarityPairs simPairs = em.executeComparisons(blocks, profiles);
 
             // Step 5: Entity Clustering
-            IEntityClustering ec = new RicochetSRClustering();
+            IEntityClustering ec = MethodMapping.getEntityClusteringMethod(model.getEntityClustering());
             ec.setSimilarityThreshold(0.1);
             entityClusters = ec.getDuplicates(simPairs);
 

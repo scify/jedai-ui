@@ -1,5 +1,6 @@
 package wizard;
 
+import EntityClustering.*;
 import Utilities.Enumerations.BlockBuildingMethod;
 
 import java.util.Collections;
@@ -20,5 +21,34 @@ public class MethodMapping {
         result.put("Suffix Arrays Blocking", BlockBuildingMethod.SUFFIX_ARRAYS);
         result.put("Suffix Arrays Blocking (Extended)", BlockBuildingMethod.EXTENDED_SUFFIX_ARRAYS);
         return Collections.unmodifiableMap(result);
+    }
+
+    public static IEntityClustering getEntityClusteringMethod(String methodStr) {
+        IEntityClustering method;
+
+        switch (methodStr) {
+            case "Center Clustering":
+                method = new CenterClustering();
+                break;
+            case "Connected Components Clustering":
+                method = new ConnectedComponentsClustering();
+                break;
+            case "Cut Clustering":
+                method = new CutClustering();
+                break;
+            case "Markov Clustering":
+                method = new MarkovClustering();
+                break;
+            case "Merge-Center Clustering":
+                method = new MergeCenterClustering();
+                break;
+            case "Ricochet SR Clustering":
+                method = new RicochetSRClustering();
+                break;
+            default:
+                method = null;
+        }
+
+        return method;
     }
 }
