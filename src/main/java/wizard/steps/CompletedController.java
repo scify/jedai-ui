@@ -29,6 +29,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -48,6 +49,7 @@ public class CompletedController {
     public Label numOfInstancesLabel;
     public Label numOfClustersLabel;
     public HBox gaugesHBox;
+    public ProgressIndicator progressIndicator;
     private Logger log = LoggerFactory.getLogger(CompletedController.class);
 
     private Gauge f1Gauge;
@@ -72,6 +74,12 @@ public class CompletedController {
         gaugesHBox.getChildren().add(precisionGauge);
     }
 
+    /**
+     * Generates a new Medusa Gauge for showing a clustering accuracy metric
+     *
+     * @param title Title of gauge
+     * @return Gauge
+     */
     private Gauge newGauge(String title) {
         return GaugeBuilder.create()
                 .skinType(SkinType.HORIZONTAL)
@@ -85,8 +93,22 @@ public class CompletedController {
                 .build();
     }
 
+    /**
+     * Updates the progress of the progressIndicator in the UI thread
+     *
+     * @param percentage Percentage to set indicator to (in range [0, 1])
+     */
+    private void updateProgress(double percentage) {
+        Platform.runLater(() -> {
+            progressIndicator.setProgress(percentage);
+        });
+    }
+
     @FXML
     private void runAlgorithmBtnHandler() {
+        // Show the progress indicator
+        progressIndicator.setVisible(true);
+
         // Runnable that will run algorithm in separate thread
         new Thread(() -> {
             // Get profiles and ground truth paths from model
@@ -109,7 +131,9 @@ public class CompletedController {
                 duplicatePropagation = new UnilateralDuplicatePropagation(gtReader.getDuplicatePairs(eReader.getEntityProfiles()));
                 System.out.println("Existing Duplicates\t:\t" + duplicatePropagation.getDuplicates().size());
             }
-            //todo: update progress
+
+            // Set progress indicator to 20%
+            updateProgress(0.2);
 
             // Step 2: Block Building
             BlockBuildingMethod blockingWorkflow = MethodMapping.blockBuildingMethods.get(model.getBlockBuilding());
@@ -117,7 +141,9 @@ public class CompletedController {
             IBlockBuilding blockBuildingMethod = BlockBuildingMethod.getDefaultConfiguration(blockingWorkflow);
             List<AbstractBlock> blocks = blockBuildingMethod.getBlocks(profiles, null);
             System.out.println("Original blocks\t:\t" + blocks.size());
-            //todo: update progress
+
+            // Set progress indicator to 40%
+            updateProgress(0.4);
 
             // Step 3: Block Processing
             String processingType = model.getBlockProcessingType();
@@ -134,7 +160,9 @@ public class CompletedController {
                 blp.setStatistics();
                 blp.printStatistics();
             }
-            //todo: update progress
+
+            // Set progress indicator to 60%
+            updateProgress(0.6);
 
             // Step 4: Entity Matching
             String entityMatchingMethodName = model.getEntityMatching();
@@ -149,13 +177,14 @@ public class CompletedController {
                 em = new ProfileMatcher(repModel, SimilarityMetric.getModelDefaultSimMetric(repModel));
             }
             SimilarityPairs simPairs = em.executeComparisons(blocks, profiles);
-            //todo: update progress
+
+            // Set progress indicator to 80%
+            updateProgress(0.8);
 
             // Step 5: Entity Clustering
             IEntityClustering ec = MethodMapping.getEntityClusteringMethod(model.getEntityClustering());
             ec.setSimilarityThreshold(0.1);
             entityClusters = ec.getDuplicates(simPairs);
-            //todo: update progress
 
             // Print clustering performance
             if (hasGroundTruth) {
@@ -171,6 +200,9 @@ public class CompletedController {
 
             // Update labels and JavaFX UI components from UI thread
             Platform.runLater(() -> {
+                // Set progress indicator to 100%
+                updateProgress(1.0);
+
                 // Set label values and show them
                 numOfClustersLabel.setText("Number of clusters: " + entityClusters.size());
                 numOfClustersLabel.setVisible(true);

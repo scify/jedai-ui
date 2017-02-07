@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <VBox fx:id="containerVBox" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-      minWidth="-Infinity" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
+      minWidth="-Infinity" spacing="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="wizard.steps.CompletedController">
     <children>
         <GridPane>
@@ -24,12 +23,14 @@
             </children>
         </GridPane>
         <HBox fx:id="gaugesHBox" prefHeight="100.0" prefWidth="200.0"/>
-        <Pane prefHeight="42.0" prefWidth="600.0">
+        <Pane prefHeight="62.0" prefWidth="600.0">
             <children>
-                <Button fx:id="runBtn" layoutX="195.0" layoutY="9.0" mnemonicParsing="false"
+                <Button fx:id="runBtn" layoutX="125.0" layoutY="16.0" mnemonicParsing="false"
                         onAction="#runAlgorithmBtnHandler" text="Run algorithm"/>
-                <Button fx:id="exportBtn" disable="true" layoutX="332.0" layoutY="9.0" mnemonicParsing="false"
+                <Button fx:id="exportBtn" disable="true" layoutX="361.0" layoutY="16.0" mnemonicParsing="false"
                         onAction="#exportBtnHandler" text="Export CSV"/>
+                <ProgressIndicator fx:id="progressIndicator" layoutX="240.0" layoutY="6.0" prefHeight="52.0"
+                                   prefWidth="121.0" progress="0.0" visible="false"/>
             </children>
         </Pane>
     </children>
