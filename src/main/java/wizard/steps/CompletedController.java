@@ -10,6 +10,7 @@ import DataReader.EntityReader.IEntityReader;
 import DataReader.GroundTruthReader.GtSerializationReader;
 import DataReader.GroundTruthReader.IGroundTruthReader;
 import EntityClustering.IEntityClustering;
+import EntityMatching.GroupLinkage;
 import EntityMatching.IEntityMatching;
 import EntityMatching.ProfileMatcher;
 import Utilities.BlocksPerformance;
@@ -130,10 +131,17 @@ public class CompletedController {
         }
 
         // Step 4: Entity Matching
-        //todo
+        String entityMatchingMethodName = model.getEntityMatching();
+
+        IEntityMatching em;
         RepresentationModel repModel = RepresentationModel.CHARACTER_BIGRAMS;
-        System.out.println("\n\nCurrent model\t:\t" + repModel.toString() + "\t\t" + SimilarityMetric.getModelDefaultSimMetric(repModel));
-        IEntityMatching em = new ProfileMatcher(repModel, SimilarityMetric.JACCARD_SIMILARITY);
+        if (entityMatchingMethodName.equals("Group Linkage")) {
+            em = new GroupLinkage(repModel, SimilarityMetric.getModelDefaultSimMetric(repModel));
+        } else {
+            // Profile Matcher
+            //todo
+            em = new ProfileMatcher(repModel, SimilarityMetric.getModelDefaultSimMetric(repModel));
+        }
         SimilarityPairs simPairs = em.executeComparisons(blocks, profiles);
 
         // Step 5: Entity Clustering
