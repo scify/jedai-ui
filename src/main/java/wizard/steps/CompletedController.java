@@ -198,11 +198,11 @@ public class CompletedController {
                 precisionGauge.setValue(clp.getPrecision());
             }
 
+            // Set progress indicator to 100%
+            updateProgress(1.0);
+
             // Update labels and JavaFX UI components from UI thread
             Platform.runLater(() -> {
-                // Set progress indicator to 100%
-                updateProgress(1.0);
-
                 // Set label values and show them
                 numOfClustersLabel.setText("Number of clusters: " + entityClusters.size());
                 numOfClustersLabel.setVisible(true);
