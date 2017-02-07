@@ -2,6 +2,8 @@
 UI for JEDAI
 
 ## Dependencies
-From Maven pom.xml, but also needs jedai-core from: https://github.com/scify/JedAIToolkit
+From pom.xml, but also: 
+* jedai-core: https://github.com/scify/JedAIToolkit
+* JINSECT: https://sourceforge.net/projects/jinsect/)
 
 Example instructions to use with Intellij IDEA: http://stackoverflow.com/a/31382388
