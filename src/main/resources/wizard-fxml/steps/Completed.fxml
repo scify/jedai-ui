@@ -5,7 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
 <VBox fx:id="containerVBox" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-      minWidth="-Infinity" spacing="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      minWidth="-Infinity" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="wizard.steps.CompletedController">
     <children>
         <GridPane>
@@ -26,8 +26,8 @@
         <HBox fx:id="gaugesHBox" prefHeight="100.0" prefWidth="200.0"/>
         <Pane prefHeight="42.0" prefWidth="600.0">
             <children>
-                <Button fx:id="runBtn" layoutX="195.0" layoutY="9.0" mnemonicParsing="false" onAction="#runAlgorithm"
-                        text="Run algorithm"/>
+                <Button fx:id="runBtn" layoutX="195.0" layoutY="9.0" mnemonicParsing="false"
+                        onAction="#runAlgorithmBtnHandler" text="Run algorithm"/>
                 <Button fx:id="exportBtn" disable="true" layoutX="332.0" layoutY="9.0" mnemonicParsing="false"
                         onAction="#exportBtnHandler" text="Export CSV"/>
             </children>

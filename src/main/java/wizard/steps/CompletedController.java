@@ -25,6 +25,7 @@ import com.google.inject.Inject;
 import eu.hansolo.medusa.Gauge;
 import eu.hansolo.medusa.Gauge.SkinType;
 import eu.hansolo.medusa.GaugeBuilder;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -85,91 +86,102 @@ public class CompletedController {
     }
 
     @FXML
-    private void runAlgorithm() {
-        // Get profiles and ground truth paths from model
-        String datasetProfiles = model.getEntityProfilesPath();
-        String datasetGroundTruth = model.getGroundTruthPath();
+    private void runAlgorithmBtnHandler() {
+        // Runnable that will run algorithm in separate thread
+        new Thread(() -> {
+            // Get profiles and ground truth paths from model
+            String datasetProfiles = model.getEntityProfilesPath();
+            String datasetGroundTruth = model.getGroundTruthPath();
 
-        boolean hasGroundTruth = false;
-        if (datasetGroundTruth != null && !datasetGroundTruth.isEmpty()) {
-            hasGroundTruth = true;
-        }
-
-        // Step 1: Data reading
-        IEntityReader eReader = new EntitySerializationReader(datasetProfiles);
-        List<EntityProfile> profiles = eReader.getEntityProfiles();
-        System.out.println("Input Entity Profiles\t:\t" + profiles.size());
-
-        AbstractDuplicatePropagation duplicatePropagation = null;
-        if (hasGroundTruth) {
-            IGroundTruthReader gtReader = new GtSerializationReader(datasetGroundTruth);
-            duplicatePropagation = new UnilateralDuplicatePropagation(gtReader.getDuplicatePairs(eReader.getEntityProfiles()));
-            System.out.println("Existing Duplicates\t:\t" + duplicatePropagation.getDuplicates().size());
-        }
-
-        // Step 2: Block Building
-        BlockBuildingMethod blockingWorkflow = MethodMapping.blockBuildingMethods.get(model.getBlockBuilding());
-
-        IBlockBuilding blockBuildingMethod = BlockBuildingMethod.getDefaultConfiguration(blockingWorkflow);
-        List<AbstractBlock> blocks = blockBuildingMethod.getBlocks(profiles, null);
-        System.out.println("Original blocks\t:\t" + blocks.size());
-
-        // Step 3: Block Processing
-        String processingType = model.getBlockProcessingType();
-        if (!processingType.equals("No block processing")) {
-            List<String> processingMethods = model.getBlockProcessingMethods();
-
-            for (String currentMethod : processingMethods) {
-                blocks = MethodMapping.processBlocks(blocks, processingType, currentMethod);
+            boolean hasGroundTruth = false;
+            if (datasetGroundTruth != null && !datasetGroundTruth.isEmpty()) {
+                hasGroundTruth = true;
             }
-        }
 
-        if (hasGroundTruth) {
-            BlocksPerformance blp = new BlocksPerformance(blocks, duplicatePropagation);
-            blp.setStatistics();
-            blp.printStatistics();
-        }
+            // Step 1: Data reading
+            IEntityReader eReader = new EntitySerializationReader(datasetProfiles);
+            List<EntityProfile> profiles = eReader.getEntityProfiles();
+            System.out.println("Input Entity Profiles\t:\t" + profiles.size());
 
-        // Step 4: Entity Matching
-        String entityMatchingMethodName = model.getEntityMatching();
+            AbstractDuplicatePropagation duplicatePropagation = null;
+            if (hasGroundTruth) {
+                IGroundTruthReader gtReader = new GtSerializationReader(datasetGroundTruth);
+                duplicatePropagation = new UnilateralDuplicatePropagation(gtReader.getDuplicatePairs(eReader.getEntityProfiles()));
+                System.out.println("Existing Duplicates\t:\t" + duplicatePropagation.getDuplicates().size());
+            }
+            //todo: update progress
 
-        IEntityMatching em;
-        RepresentationModel repModel = RepresentationModel.CHARACTER_BIGRAMS;
-        if (entityMatchingMethodName.equals("Group Linkage")) {
-            em = new GroupLinkage(repModel, SimilarityMetric.getModelDefaultSimMetric(repModel));
-        } else {
-            // Profile Matcher
-            //todo
-            em = new ProfileMatcher(repModel, SimilarityMetric.getModelDefaultSimMetric(repModel));
-        }
-        SimilarityPairs simPairs = em.executeComparisons(blocks, profiles);
+            // Step 2: Block Building
+            BlockBuildingMethod blockingWorkflow = MethodMapping.blockBuildingMethods.get(model.getBlockBuilding());
 
-        // Step 5: Entity Clustering
-        IEntityClustering ec = MethodMapping.getEntityClusteringMethod(model.getEntityClustering());
-        ec.setSimilarityThreshold(0.1);
-        entityClusters = ec.getDuplicates(simPairs);
+            IBlockBuilding blockBuildingMethod = BlockBuildingMethod.getDefaultConfiguration(blockingWorkflow);
+            List<AbstractBlock> blocks = blockBuildingMethod.getBlocks(profiles, null);
+            System.out.println("Original blocks\t:\t" + blocks.size());
+            //todo: update progress
 
-        // Set label values and show them
-        numOfClustersLabel.setText("Number of clusters: " + entityClusters.size());
-        numOfClustersLabel.setVisible(true);
+            // Step 3: Block Processing
+            String processingType = model.getBlockProcessingType();
+            if (!processingType.equals("No block processing")) {
+                List<String> processingMethods = model.getBlockProcessingMethods();
 
-        numOfInstancesLabel.setText("Number of input instances: " + profiles.size());
-        numOfInstancesLabel.setVisible(true);
+                for (String currentMethod : processingMethods) {
+                    blocks = MethodMapping.processBlocks(blocks, processingType, currentMethod);
+                }
+            }
 
-        // Enable button for result export to CSV
-        exportBtn.setDisable(false);
+            if (hasGroundTruth) {
+                BlocksPerformance blp = new BlocksPerformance(blocks, duplicatePropagation);
+                blp.setStatistics();
+                blp.printStatistics();
+            }
+            //todo: update progress
 
-        // Print clustering performance
-        if (hasGroundTruth) {
-            ClustersPerformance clp = new ClustersPerformance(entityClusters, duplicatePropagation);
-            clp.setStatistics();
-            clp.printStatistics();
+            // Step 4: Entity Matching
+            String entityMatchingMethodName = model.getEntityMatching();
 
-            // Set gauge values
-            f1Gauge.setValue(clp.getFMeasure());
-            recallGauge.setValue(clp.getRecall());
-            precisionGauge.setValue(clp.getPrecision());
-        }
+            IEntityMatching em;
+            RepresentationModel repModel = RepresentationModel.CHARACTER_BIGRAMS;
+            if (entityMatchingMethodName.equals("Group Linkage")) {
+                em = new GroupLinkage(repModel, SimilarityMetric.getModelDefaultSimMetric(repModel));
+            } else {
+                // Profile Matcher
+                //todo
+                em = new ProfileMatcher(repModel, SimilarityMetric.getModelDefaultSimMetric(repModel));
+            }
+            SimilarityPairs simPairs = em.executeComparisons(blocks, profiles);
+            //todo: update progress
+
+            // Step 5: Entity Clustering
+            IEntityClustering ec = MethodMapping.getEntityClusteringMethod(model.getEntityClustering());
+            ec.setSimilarityThreshold(0.1);
+            entityClusters = ec.getDuplicates(simPairs);
+            //todo: update progress
+
+            // Print clustering performance
+            if (hasGroundTruth) {
+                ClustersPerformance clp = new ClustersPerformance(entityClusters, duplicatePropagation);
+                clp.setStatistics();
+                clp.printStatistics();
+
+                // Set gauge values
+                f1Gauge.setValue(clp.getFMeasure());
+                recallGauge.setValue(clp.getRecall());
+                precisionGauge.setValue(clp.getPrecision());
+            }
+
+            // Update labels and JavaFX UI components from UI thread
+            Platform.runLater(() -> {
+                // Set label values and show them
+                numOfClustersLabel.setText("Number of clusters: " + entityClusters.size());
+                numOfClustersLabel.setVisible(true);
+
+                numOfInstancesLabel.setText("Number of input instances: " + profiles.size());
+                numOfInstancesLabel.setVisible(true);
+
+                // Enable button for result export to CSV
+                exportBtn.setDisable(false);
+            });
+        }).start();
     }
 
     /**
