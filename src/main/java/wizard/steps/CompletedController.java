@@ -115,10 +115,7 @@ public class CompletedController {
             String datasetProfiles = model.getEntityProfilesPath();
             String datasetGroundTruth = model.getGroundTruthPath();
 
-            boolean hasGroundTruth = false;
-            if (datasetGroundTruth != null && !datasetGroundTruth.isEmpty()) {
-                hasGroundTruth = true;
-            }
+            boolean hasGroundTruth = (datasetGroundTruth != null && !datasetGroundTruth.isEmpty());
 
             // Step 1: Data reading
             IEntityReader eReader = new EntitySerializationReader(datasetProfiles);
@@ -151,6 +148,7 @@ public class CompletedController {
                 List<String> processingMethods = model.getBlockProcessingMethods();
 
                 for (String currentMethod : processingMethods) {
+                    // Process blocks with this method
                     blocks = MethodMapping.processBlocks(blocks, processingType, currentMethod);
                 }
             }
