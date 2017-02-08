@@ -82,23 +82,22 @@ public class MethodMapping {
                 processingMethod = new ComparisonPropagation();
                 break;
             case "Cardinality Edge Pruning (CEP)":
-//                processingMethod = new CardinalityEdgePruning();
-//                break;
-                return blocks;
+                processingMethod = new CardinalityEdgePruning(WeightingScheme.ECBS);
+                break;
             case "Cardinality Node Pruning (CNP)":
-                processingMethod = new CardinalityNodePruning(WeightingScheme.CBS);
+                processingMethod = new CardinalityNodePruning(WeightingScheme.ECBS);
                 break;
             case "Weighed Edge Pruning (WEP)":
-                processingMethod = new WeightedEdgePruning(WeightingScheme.CBS);
+                processingMethod = new WeightedEdgePruning(WeightingScheme.ECBS);
                 break;
             case "Weighed Node Pruning (WNP)":
-                processingMethod = new WeightedNodePruning(WeightingScheme.CBS);
+                processingMethod = new WeightedNodePruning(WeightingScheme.ECBS);
                 break;
             case "Reciprocal Cardinality Node Pruning (ReCNP)":
-                processingMethod = new ReciprocalCardinalityNodePruning(WeightingScheme.CBS);
+                processingMethod = new ReciprocalCardinalityNodePruning(WeightingScheme.ECBS);
                 break;
             case "Reciprocal Weighed Node Pruning (ReWNP)":
-                processingMethod = new ReciprocalWeightedNodePruning(WeightingScheme.CBS);
+                processingMethod = new ReciprocalWeightedNodePruning(WeightingScheme.ECBS);
                 break;
             default:
                 System.err.println("Method not mapped??");
