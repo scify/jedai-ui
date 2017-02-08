@@ -166,7 +166,7 @@ public class CompletedController {
             String entityMatchingMethodName = model.getEntityMatching();
 
             IEntityMatching em;
-            RepresentationModel repModel = RepresentationModel.CHARACTER_BIGRAMS;
+            RepresentationModel repModel = RepresentationModel.TOKEN_UNIGRAMS;
             if (entityMatchingMethodName.equals("Group Linkage")) {
                 em = new GroupLinkage(repModel, SimilarityMetric.getModelDefaultSimMetric(repModel));
             } else {
