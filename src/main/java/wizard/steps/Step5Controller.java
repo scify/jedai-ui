@@ -77,7 +77,7 @@ public class Step5Controller {
     @Submit
     public void submit() throws Exception {
         if (log.isDebugEnabled()) {
-            log.debug("[SUBMIT] the user has completed step 4");
+            log.debug("[SUBMIT] the user has completed step 5");
         }
     }
 

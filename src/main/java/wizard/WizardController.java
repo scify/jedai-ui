@@ -65,8 +65,9 @@ public class WizardController {
         this.stepTexts.add("Step 1: Data Reading");
         this.stepTexts.add("Step 2: Block Building");
         this.stepTexts.add("Step 3: Block Processing");
-        this.stepTexts.add("Step 4: Entity Matching");
-        this.stepTexts.add("Step 5: Entity Clustering");
+        this.stepTexts.add("Step 4: Comparison Refinement");
+        this.stepTexts.add("Step 5: Entity Matching");
+        this.stepTexts.add("Step 6: Entity Clustering");
         this.stepTexts.add("Selection Confirmation");
         this.stepTexts.add("");
 
@@ -75,6 +76,7 @@ public class WizardController {
         this.stepDescriptions.add("Data reading description");
         this.stepDescriptions.add("Block Building description");
         this.stepDescriptions.add("Block Processing description");
+        this.stepDescriptions.add("Comparison Refinement description");
         this.stepDescriptions.add("Entity Matching description");
         this.stepDescriptions.add("Entity Clustering description");
         this.stepDescriptions.add("Selection Confirmation description");
@@ -144,13 +146,17 @@ public class WizardController {
         Parent step3 = fxmlLoaderStep3.load();
         step3.getProperties().put(CONTROLLER_KEY, fxmlLoaderStep3.getController());
 
-        FXMLLoader fxmlLoaderStep4 = new FXMLLoader(WizardController.class.getClassLoader().getResource("wizard-fxml/steps/Step5.fxml"), null, bf, cb);
+        FXMLLoader fxmlLoaderStep4 = new FXMLLoader(WizardController.class.getClassLoader().getResource("wizard-fxml/steps/Step4.fxml"), null, bf, cb);
         Parent step4 = fxmlLoaderStep4.load();
         step4.getProperties().put(CONTROLLER_KEY, fxmlLoaderStep4.getController());
 
-        FXMLLoader fxmlLoaderStep5 = new FXMLLoader(WizardController.class.getClassLoader().getResource("wizard-fxml/steps/Step6.fxml"), null, bf, cb);
+        FXMLLoader fxmlLoaderStep5 = new FXMLLoader(WizardController.class.getClassLoader().getResource("wizard-fxml/steps/Step5.fxml"), null, bf, cb);
         Parent step5 = fxmlLoaderStep5.load();
         step5.getProperties().put(CONTROLLER_KEY, fxmlLoaderStep5.getController());
+
+        FXMLLoader fxmlLoaderStep6 = new FXMLLoader(WizardController.class.getClassLoader().getResource("wizard-fxml/steps/Step6.fxml"), null, bf, cb);
+        Parent step6 = fxmlLoaderStep6.load();
+        step6.getProperties().put(CONTROLLER_KEY, fxmlLoaderStep6.getController());
 
         FXMLLoader fxmlLoaderConfirm = new FXMLLoader(WizardController.class.getClassLoader().getResource("wizard-fxml/steps/Confirm.fxml"), null, bf, cb);
         Parent confirm = fxmlLoaderConfirm.load();
@@ -162,7 +168,7 @@ public class WizardController {
 
         steps.addAll(Arrays.asList(
 //                completed,
-                step0, step1, step2, step3, step4, step5, confirm, completed
+                step0, step1, step2, step3, step4, step5, step6, confirm, completed
         ));
     }
 
