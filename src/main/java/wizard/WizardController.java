@@ -144,11 +144,11 @@ public class WizardController {
         Parent step3 = fxmlLoaderStep3.load();
         step3.getProperties().put(CONTROLLER_KEY, fxmlLoaderStep3.getController());
 
-        FXMLLoader fxmlLoaderStep4 = new FXMLLoader(WizardController.class.getClassLoader().getResource("wizard-fxml/steps/Step4.fxml"), null, bf, cb);
+        FXMLLoader fxmlLoaderStep4 = new FXMLLoader(WizardController.class.getClassLoader().getResource("wizard-fxml/steps/Step5.fxml"), null, bf, cb);
         Parent step4 = fxmlLoaderStep4.load();
         step4.getProperties().put(CONTROLLER_KEY, fxmlLoaderStep4.getController());
 
-        FXMLLoader fxmlLoaderStep5 = new FXMLLoader(WizardController.class.getClassLoader().getResource("wizard-fxml/steps/Step5.fxml"), null, bf, cb);
+        FXMLLoader fxmlLoaderStep5 = new FXMLLoader(WizardController.class.getClassLoader().getResource("wizard-fxml/steps/Step6.fxml"), null, bf, cb);
         Parent step5 = fxmlLoaderStep5.load();
         step5.getProperties().put(CONTROLLER_KEY, fxmlLoaderStep5.getController());
 
