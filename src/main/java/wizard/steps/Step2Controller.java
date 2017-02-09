@@ -29,11 +29,11 @@ public class Step2Controller {
                         "Standard/Token Blocking",
                         "Attribute Clustering",
                         "Sorted Neighborhood",
-                        "Sorted Neighborhood (Extended)",
+                        "Extended Sorted Neighborhood",
                         "Q-Grams Blocking",
-                        "Q-Grams Blocking (Extended)",
+                        "Extended Q-Grams Blocking",
                         "Suffix Arrays Blocking",
-                        "Suffix Arrays Blocking (Extended)"
+                        "Extended Suffix Arrays Blocking"
                 );
 
         blockBuildingCombobox.setItems(comboboxOptions);
