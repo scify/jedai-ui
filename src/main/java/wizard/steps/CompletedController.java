@@ -143,7 +143,7 @@ public class CompletedController {
             updateProgress(0.4);
 
             // Step 3: Block Processing
-            String processingType = model.getBlockProcessingType();
+            String processingType = model.getComparisonRefinementMethod();
             if (!processingType.equals("No block processing")) {
                 List<String> processingMethods = model.getBlockProcessingMethods();
 

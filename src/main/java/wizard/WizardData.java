@@ -10,7 +10,7 @@ public class WizardData {
     private final StringProperty entityProfilesPath = new SimpleStringProperty();
     private final StringProperty groundTruthPath = new SimpleStringProperty();
     private final StringProperty blockBuilding = new SimpleStringProperty();
-    private final StringProperty blockProcessingType = new SimpleStringProperty();
+    private final StringProperty comparisonRefinementMethod = new SimpleStringProperty();
     private final ListProperty<String> blockProcessingMethods = new SimpleListProperty<>();
     private final StringProperty entityMatching = new SimpleStringProperty();
     private final StringProperty profileMatcherParam = new SimpleStringProperty();
@@ -64,16 +64,16 @@ public class WizardData {
         this.blockBuilding.set(blockBuilding);
     }
 
-    public String getBlockProcessingType() {
-        return blockProcessingType.get();
+    public String getComparisonRefinementMethod() {
+        return comparisonRefinementMethod.get();
     }
 
-    public StringProperty blockProcessingTypeProperty() {
-        return blockProcessingType;
+    public StringProperty comparisonRefinementMethodProperty() {
+        return comparisonRefinementMethod;
     }
 
-    public void setBlockProcessingType(String blockProcessingType) {
-        this.blockProcessingType.set(blockProcessingType);
+    public void setComparisonRefinementMethod(String comparisonRefinementMethod) {
+        this.comparisonRefinementMethod.set(comparisonRefinementMethod);
     }
 
     public String getEntityMatching() {
@@ -116,7 +116,8 @@ public class WizardData {
         entityProfilesPath.set("");
         groundTruthPath.set("");
         blockBuilding.set("");
-        blockProcessingType.set("");
+        blockProcessingMethods.clear();
+        comparisonRefinementMethod.set("");
         entityMatching.set("");
         entityClustering.set("");
         profileMatcherParam.set("");
