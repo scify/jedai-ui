@@ -143,14 +143,16 @@ public class CompletedController {
             updateProgress(0.4);
 
             // Step 3: Block Processing
-            String processingType = model.getComparisonRefinementMethod();
-            if (!processingType.equals("No block processing")) {
-                List<String> processingMethods = model.getBlockProcessingMethods();
+            List<String> processingMethods = model.getBlockProcessingMethods();
+            for (String currentMethod : processingMethods) {
+                // Process blocks with this method
+                blocks = MethodMapping.processBlocks(blocks, currentMethod);
+            }
 
-                for (String currentMethod : processingMethods) {
-                    // Process blocks with this method
-                    blocks = MethodMapping.processBlocks(blocks, processingType, currentMethod);
-                }
+            // Step 4: Comparison Refinement method
+            String compRefMethod = model.getComparisonRefinementMethod();
+            if (compRefMethod != null && !compRefMethod.equals("No refinement")) {
+                blocks = MethodMapping.processBlocks(blocks, compRefMethod);
             }
 
             if (hasGroundTruth) {
@@ -162,7 +164,7 @@ public class CompletedController {
             // Set progress indicator to 60%
             updateProgress(0.6);
 
-            // Step 4: Entity Matching
+            // Step 5: Entity Matching
             String entityMatchingMethodName = model.getEntityMatching();
 
             IEntityMatching em;
@@ -171,7 +173,6 @@ public class CompletedController {
                 em = new GroupLinkage(repModel, SimilarityMetric.getModelDefaultSimMetric(repModel));
             } else {
                 // Profile Matcher
-                //todo
                 em = new ProfileMatcher(repModel, SimilarityMetric.getModelDefaultSimMetric(repModel));
             }
             SimilarityPairs simPairs = em.executeComparisons(blocks, profiles);
@@ -179,7 +180,7 @@ public class CompletedController {
             // Set progress indicator to 80%
             updateProgress(0.8);
 
-            // Step 5: Entity Clustering
+            // Step 6: Entity Clustering
             IEntityClustering ec = MethodMapping.getEntityClusteringMethod(model.getEntityClustering());
             ec.setSimilarityThreshold(0.1);
             entityClusters = ec.getDuplicates(simPairs);

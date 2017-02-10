@@ -61,7 +61,7 @@ public class MethodMapping {
         return method;
     }
 
-    public static List<AbstractBlock> processBlocks(List<AbstractBlock> blocks, String methodType, String method) {
+    public static List<AbstractBlock> processBlocks(List<AbstractBlock> blocks, String method) {
         IBlockProcessing processingMethod;
 
         // Use appropriate processing method

@@ -26,6 +26,7 @@ public class Step4Controller {
         // Add options to combobox
         ObservableList<String> comboboxOptions =
                 FXCollections.observableArrayList(
+                        "No refinement",
                         "Comparison Propagation",
                         "Cardinality Edge Pruning (CEP)",
                         "Cardinality Node Pruning (CNP)",
