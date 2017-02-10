@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <VBox fx:id="containerVBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-      minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="20.0" xmlns="http://javafx.com/javafx/8"
+      minWidth="-Infinity" prefHeight="300.0" prefWidth="500.0" spacing="20.0" xmlns="http://javafx.com/javafx/8.0.91"
       xmlns:fx="http://javafx.com/fxml/1" fx:controller="wizard.steps.Step4Controller">
     <children>
         <Label text="Comparison Refinement Method">

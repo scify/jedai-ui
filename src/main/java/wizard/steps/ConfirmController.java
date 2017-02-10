@@ -10,10 +10,11 @@ import wizard.WizardData;
 
 public class ConfirmController {
     public TextField pMatcherParamField;
+    public TextField groundTruthTextField;
     private Logger log = LoggerFactory.getLogger(ConfirmController.class);
 
     @FXML
-    TextField tfField1, tfField2, tfField3, tfField4, tfField5;
+    TextField entityProfilesTextField, blockBuildingTextField, compRefinementTextField, entityMatchingTextField, entityClusteringTextField;
 
     @Inject
     private
@@ -21,11 +22,12 @@ public class ConfirmController {
 
     @FXML
     public void initialize() {
-        tfField1.textProperty().bind(model.entityProfilesPathProperty());
-        tfField2.textProperty().bind(model.blockBuildingProperty());
-        tfField3.textProperty().bind(model.comparisonRefinementMethodProperty());
-        tfField4.textProperty().bind(model.entityMatchingProperty());
-        tfField5.textProperty().bind(model.entityClusteringProperty());
+        entityProfilesTextField.textProperty().bind(model.entityProfilesPathProperty());
+        blockBuildingTextField.textProperty().bind(model.blockBuildingProperty());
+        groundTruthTextField.textProperty().bind(model.groundTruthPathProperty());
+        compRefinementTextField.textProperty().bind(model.comparisonRefinementMethodProperty());
+        entityMatchingTextField.textProperty().bind(model.entityMatchingProperty());
+        entityClusteringTextField.textProperty().bind(model.entityClusteringProperty());
         pMatcherParamField.textProperty().bind(model.profileMatcherParamProperty());
     }
 
