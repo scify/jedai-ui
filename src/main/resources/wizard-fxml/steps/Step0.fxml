@@ -15,7 +15,7 @@
             </font>
         </Label>
         <TextArea editable="false" prefHeight="200.0" prefWidth="400.0"
-                  text="1. Data Reading&#10;2. Block Building&#10;3. Block Processing&#10;4. Entity Matching&#10;5. Entity Clustering"/>
+                  text="1. Data Reading&#10;2. Block Building&#10;3. Block Refinement Methods&#10;4. Comparison Refinement Method&#10;5. Entity Matching&#10;6. Entity Clustering"/>
     </children>
     <padding>
         <Insets bottom="40.0" left="40.0" right="40.0" top="40.0"/>
