@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      spacing="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      spacing="10.0" xmlns="http://javafx.com/javafx/8.0.91" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="wizard.steps.ConfirmController">
     <children>
         <Label text="Confirm">
@@ -34,7 +34,7 @@
                 <Label text="Block Building Method" GridPane.rowIndex="2"/>
                 <Label text="Comparison Refinement Method" GridPane.rowIndex="4"/>
                 <Label text="Entity Matching Method" GridPane.rowIndex="5"/>
-                <Label text="Profile Matcher Parameter" GridPane.rowIndex="6"/>
+                <Label fx:id="profileMatcherLabel" text="Profile Matcher Parameter" GridPane.rowIndex="6"/>
                 <Label text="Entity Clustering Method" GridPane.rowIndex="7"/>
                 <TextField fx:id="entityProfilesTextField" editable="false" GridPane.columnIndex="1"/>
                 <TextField fx:id="blockBuildingTextField" editable="false" GridPane.columnIndex="1"
@@ -47,7 +47,8 @@
                 <TextField fx:id="entityClusteringTextField" editable="false" GridPane.columnIndex="1"
                            GridPane.rowIndex="7"/>
                 <Label text="Block Refinement Methods" GridPane.rowIndex="3"/>
-                <ListView prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                <ListView fx:id="blockRefinementList" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1"
+                          GridPane.rowIndex="3"/>
                 <Label text="Ground Truth Dataset" GridPane.rowIndex="1"/>
                 <TextField fx:id="groundTruthTextField" editable="false" GridPane.columnIndex="1"
                            GridPane.rowIndex="1"/>
