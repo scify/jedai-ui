@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      xmlns="http://javafx.com/javafx/8.0.71" xmlns:fx="http://javafx.com/fxml/1"
+      xmlns="http://javafx.com/javafx/8.0.91" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="wizard.WizardController">
     <children>
         <GridPane prefHeight="132.0" prefWidth="568.0">
@@ -19,7 +19,7 @@
             <children>
                 <VBox prefHeight="131.0" prefWidth="366.0">
                     <children>
-                        <Label prefHeight="70.0" prefWidth="284.0" text="JedAI">
+                        <Label prefHeight="48.0" prefWidth="284.0" text="JedAI">
                             <font>
                                 <Font size="48.0"/>
                             </font>
@@ -37,10 +37,13 @@
                           text="Test text test text test text test text test text test text " wrapText="true"
                           GridPane.columnIndex="1"/>
             </children>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
         </GridPane>
-        <VBox fx:id="contentPanel" alignment="CENTER" minHeight="320.0" minWidth="568.0" VBox.vgrow="ALWAYS"/>
+        <VBox fx:id="contentPanel" alignment="CENTER" minHeight="330.0" minWidth="568.0" VBox.vgrow="ALWAYS"/>
         <Separator prefWidth="200.0"/>
-        <HBox alignment="TOP_RIGHT" spacing="4.0">
+        <HBox alignment="TOP_RIGHT" maxHeight="40.0" prefHeight="40.0" prefWidth="568.0" spacing="4.0">
             <children>
                 <Button fx:id="btnCancel" cancelButton="true" mnemonicParsing="false" onAction="#cancel" text="Cancel">
                     <HBox.margin>

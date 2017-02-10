@@ -79,8 +79,8 @@ public class WizardController {
         this.stepDescriptions.add("Comparison Refinement description");
         this.stepDescriptions.add("Entity Matching description");
         this.stepDescriptions.add("Entity Clustering description");
-        this.stepDescriptions.add("Selection Confirmation description");
-        this.stepDescriptions.add("Run complete!");
+        this.stepDescriptions.add("Confirm the selected values and press the \"Next\" button to go to the results page.");
+        this.stepDescriptions.add("Press \"Run algorithm\" to run the algorithm. You can export the results to a CSV file with the \"Export CSV\" button.");
 
         buildSteps();
         initButtons();
