@@ -237,6 +237,9 @@ public class CompletedController {
                     alert.setContentText("Details: " + e.toString() + " (" + e.getMessage() + ")");
                     alert.showAndWait();
                 });
+
+                // Print stack trace
+                e.printStackTrace();
             }
         }).start();
     }
