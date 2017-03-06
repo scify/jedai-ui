@@ -34,6 +34,7 @@ import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.ConsoleArea;
+import utils.MultiOutputStream;
 import wizard.MethodMapping;
 import wizard.WizardData;
 
@@ -77,8 +78,15 @@ public class CompletedController {
         // Setup text area as log
         ConsoleArea ca = new ConsoleArea(logTextArea);
         PrintStream ps = new PrintStream(ca, true);
-        System.setOut(ps);
-        System.setErr(ps);
+
+        MultiOutputStream multiOut = new MultiOutputStream(System.out, ps);
+        MultiOutputStream multiErr = new MultiOutputStream(System.err, ps);
+
+        PrintStream out = new PrintStream(multiOut);
+        PrintStream err = new PrintStream(multiErr);
+
+        System.setOut(out);
+        System.setErr(err);
     }
 
     /**
