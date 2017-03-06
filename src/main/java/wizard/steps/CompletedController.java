@@ -27,20 +27,19 @@ import eu.hansolo.medusa.Gauge.SkinType;
 import eu.hansolo.medusa.GaugeBuilder;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.ConsoleArea;
 import wizard.MethodMapping;
 import wizard.WizardData;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.util.List;
 
 public class CompletedController {
@@ -51,6 +50,7 @@ public class CompletedController {
     public Label numOfClustersLabel;
     public HBox gaugesHBox;
     public ProgressIndicator progressIndicator;
+    public TextArea logTextArea;
     private Logger log = LoggerFactory.getLogger(CompletedController.class);
 
     private Gauge f1Gauge;
@@ -73,6 +73,12 @@ public class CompletedController {
 
         precisionGauge = newGauge("Precision");
         gaugesHBox.getChildren().add(precisionGauge);
+
+        // Setup text area as log
+        ConsoleArea ca = new ConsoleArea(logTextArea);
+        PrintStream ps = new PrintStream(ca, true);
+        System.setOut(ps);
+        System.setErr(ps);
     }
 
     /**
@@ -215,7 +221,7 @@ public class CompletedController {
                     exportBtn.setDisable(false);
                 });
             } catch (Exception e) {
-                // Exception occured, show alert with information about it
+                // Exception occurred, show alert with information about it
                 Platform.runLater(() -> {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Exception");
