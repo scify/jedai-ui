@@ -75,7 +75,7 @@ public class WizardController {
         this.stepDescriptions.add("Welcome description");
         this.stepDescriptions.add("Data reading description");
         this.stepDescriptions.add("Block Building description");
-        this.stepDescriptions.add("Block Processing description");
+        this.stepDescriptions.add("Block Refinement description");
         this.stepDescriptions.add("Comparison Refinement description");
         this.stepDescriptions.add("Entity Matching description");
         this.stepDescriptions.add("Entity Clustering description");
