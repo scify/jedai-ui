@@ -43,9 +43,7 @@ public class Step2Controller {
 
     @Validate
     public boolean validate() throws Exception {
-        String value = model.blockBuildingProperty().getValue();
-
-        if (value == null || value.isEmpty()) {
+        if (model.getBlockBuilding() == null || model.getBlockBuilding().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Block Building Selection");
             alert.setHeaderText("Missing Field");

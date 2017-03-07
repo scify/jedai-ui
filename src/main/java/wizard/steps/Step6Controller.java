@@ -1,19 +1,21 @@
 package wizard.steps;
 
 import com.google.inject.Inject;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
+import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.RadioButtonHelper;
 import wizard.Submit;
 import wizard.Validate;
 import wizard.WizardData;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Step6Controller {
-    public ComboBox<String> entityClusteringMethodCombobox;
+    public VBox radioBtnsContainer;
     private Logger log = LoggerFactory.getLogger(Step3Controller.class);
 
     @Inject
@@ -22,25 +24,21 @@ public class Step6Controller {
 
     @FXML
     public void initialize() {
-        // Add options to combobox
-        ObservableList<String> comboboxOptions =
-                FXCollections.observableArrayList(
-                        "Center Clustering",
-                        "Connected Components Clustering",
-                        "Cut Clustering",
-                        "Markov Clustering",
-                        "Merge-Center Clustering",
-                        "Ricochet SR Clustering"
-                );
-        entityClusteringMethodCombobox.setItems(comboboxOptions);
+        List<String> options = Arrays.asList(
+                "Center Clustering",
+                "Connected Components Clustering",
+                "Cut Clustering",
+                "Markov Clustering",
+                "Merge-Center Clustering",
+                "Ricochet SR Clustering"
+        );
 
-        // Bind combobox selection to model
-        entityClusteringMethodCombobox.valueProperty().bindBidirectional(model.entityClusteringProperty());
+        RadioButtonHelper.createButtonGroup(radioBtnsContainer, options, model.entityClusteringProperty());
     }
 
     @Validate
     public boolean validate() throws Exception {
-        if (entityClusteringMethodCombobox.getValue() == null || entityClusteringMethodCombobox.getValue().isEmpty()) {
+        if (model.getEntityClustering() == null || model.getEntityClustering().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Entity Clustering Method");
             alert.setHeaderText("Missing Field");
