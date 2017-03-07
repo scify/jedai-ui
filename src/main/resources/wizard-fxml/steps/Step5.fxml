@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      spacing="10.0" xmlns="http://javafx.com/javafx/8.0.91" xmlns:fx="http://javafx.com/fxml/1"
+      spacing="10.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="wizard.steps.Step5Controller">
     <children>
         <Label text="Entity Matching">
@@ -13,6 +13,7 @@
                 <Font name="System Bold" size="24.0"/>
             </font>
         </Label>
+        <Label text="Select an Entity Matching method"/>
         <GridPane>
             <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="300.0"/>
@@ -23,15 +24,19 @@
                 <RowConstraints minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES"/>
             </rowConstraints>
             <children>
-                <ComboBox fx:id="entityMatchingMethodCombobox" onAction="#entityMatchingChangeHandler" prefWidth="290.0"
-                          promptText="Select entity matching method"/>
                 <TextArea editable="false" prefHeight="200.0" prefWidth="200.0"
                           text="Entity matching method description" wrapText="true" GridPane.columnIndex="1"/>
-                <ComboBox fx:id="pMatcherTypeCombobox" prefWidth="290.0" promptText="Select Profile Matcher parameter"
-                          GridPane.rowIndex="1"/>
                 <TextArea fx:id="pMatcherTextArea" editable="false" prefHeight="200.0" prefWidth="200.0"
                           text="(Profile Matcher selected parameter description)" wrapText="true"
                           GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <VBox fx:id="matchingMethodContainer" alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0"
+                      spacing="5.0"/>
+                <VBox fx:id="profileMatcherParameterContainer" alignment="CENTER_LEFT" prefHeight="200.0"
+                      prefWidth="100.0" spacing="5.0" GridPane.rowIndex="1">
+                    <children>
+                        <Label text="Please select a Profile Matcher parameter:"/>
+                    </children>
+                </VBox>
             </children>
         </GridPane>
     </children>

@@ -1,22 +1,24 @@
 package wizard.steps;
 
 import com.google.inject.Inject;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.RadioButtonHelper;
 import wizard.Submit;
 import wizard.Validate;
 import wizard.WizardData;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Step5Controller {
-    public ComboBox<String> entityMatchingMethodCombobox;
-    public ComboBox<String> pMatcherTypeCombobox;
     public TextArea pMatcherTextArea;
+    public VBox matchingMethodContainer;
+    public VBox profileMatcherParameterContainer;
     private Logger log = LoggerFactory.getLogger(Step3Controller.class);
 
     @Inject
@@ -25,34 +27,43 @@ public class Step5Controller {
 
     @FXML
     public void initialize() {
-        // Add options to Entity Matching method selection combobox
-        ObservableList<String> comboboxOptions =
-                FXCollections.observableArrayList(
-                        "Group Linkage",
-                        "Profile Matcher"
-                );
-        entityMatchingMethodCombobox.setItems(comboboxOptions);
+        // Create radio buttons for entity matching method
+        List<String> entityMatchingOptions = Arrays.asList(
+                "Group Linkage",
+                "Profile Matcher"
+        );
 
-        // Add options to Profile Matcher parameter selection combobox
-        ObservableList<String> pMatcherOptions =
-                FXCollections.observableArrayList(
-                        "Representation",
-                        "Similarity"
-                );
-        pMatcherTypeCombobox.setItems(pMatcherOptions);
+        RadioButtonHelper.createButtonGroup(matchingMethodContainer, entityMatchingOptions, model.entityMatchingProperty());
 
-        // Bind comboboxes' selections to model
-        entityMatchingMethodCombobox.valueProperty().bindBidirectional(model.entityMatchingProperty());
-        pMatcherTypeCombobox.valueProperty().bindBidirectional(model.profileMatcherParamProperty());
+        // Create radio buttons for profile matcher parameter
+        List<String> profileMatcherOptions = Arrays.asList(
+                "Representation",
+                "Similarity"
+        );
 
-        // Hide the profile matcher parameter selection combobox until needed
-        pMatcherTypeCombobox.setVisible(false);
+        RadioButtonHelper.createButtonGroup(profileMatcherParameterContainer, profileMatcherOptions, model.profileMatcherParamProperty());
+
+        // Hide the profile matcher parameter selection controls until needed
+        profileMatcherParameterContainer.setVisible(false);
         pMatcherTextArea.setVisible(false);
+
+        // Add listener for when entity matching method selection changes (to show/hide profile matcher controls)
+        model.entityMatchingProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.equals("Profile Matcher")) {
+                // Show profile matcher parameter selection
+                profileMatcherParameterContainer.setVisible(true);
+                pMatcherTextArea.setVisible(true);
+            } else {
+                // Hide profile matcher parameter selection
+                profileMatcherParameterContainer.setVisible(false);
+                pMatcherTextArea.setVisible(false);
+            }
+        });
     }
 
     @Validate
     public boolean validate() throws Exception {
-        if (entityMatchingMethodCombobox.getValue() == null || entityMatchingMethodCombobox.getValue().isEmpty()) {
+        if (model.getEntityMatching() == null || model.getEntityMatching().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Entity Matching Method");
             alert.setHeaderText("Missing Field");
@@ -62,7 +73,7 @@ public class Step5Controller {
         }
 
         if (model.getEntityMatching().equals("Profile Matcher") &&
-                (pMatcherTypeCombobox.getValue() == null || pMatcherTypeCombobox.getValue().isEmpty())) {
+                (model.getProfileMatcherParam() == null || model.getProfileMatcherParam().isEmpty())) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Profile Matcher Parameter");
             alert.setHeaderText("Missing Field");
@@ -78,21 +89,6 @@ public class Step5Controller {
     public void submit() throws Exception {
         if (log.isDebugEnabled()) {
             log.debug("[SUBMIT] the user has completed step 5");
-        }
-    }
-
-    /**
-     * Show or hide the controls for parameter selection of Profile Matcher depending on if it's selected or not
-     */
-    public void entityMatchingChangeHandler() {
-        if (model.getEntityMatching().equals("Profile Matcher")) {
-            // Show profile matcher parameter selection
-            pMatcherTypeCombobox.setVisible(true);
-            pMatcherTextArea.setVisible(true);
-        } else {
-            // Hide profile matcher parameter selection
-            pMatcherTypeCombobox.setVisible(false);
-            pMatcherTextArea.setVisible(false);
         }
     }
 }
