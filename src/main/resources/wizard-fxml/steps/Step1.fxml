@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <VBox fx:id="containerVBox" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-      minWidth="-Infinity" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.91" xmlns:fx="http://javafx.com/fxml/1"
+      minWidth="-Infinity" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="wizard.steps.Step1Controller">
     <children>
         <Label text="Data Reading">
@@ -13,6 +13,7 @@
                 <Font name="System Bold" size="24.0"/>
             </font>
         </Label>
+        <Label text="Select files for the entity profiles and ground-truth"/>
         <GridPane>
             <columnConstraints>
                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0"/>

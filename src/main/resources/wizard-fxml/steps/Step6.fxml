@@ -13,9 +13,10 @@
                 <Font name="System Bold" size="24.0"/>
             </font>
         </Label>
-        <VBox fx:id="radioBtnsContainer" alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="250.0" spacing="5.0"/>
+        <Label text="Select an algorithm for clustering the entities"/>
+        <VBox fx:id="radioBtnsContainer" prefHeight="200.0" prefWidth="250.0" spacing="5.0"/>
     </children>
     <padding>
-        <Insets bottom="40.0" left="40.0" right="40.0" top="40.0"/>
+        <Insets bottom="20.0" left="40.0" right="40.0" top="20.0"/>
     </padding>
 </VBox>
