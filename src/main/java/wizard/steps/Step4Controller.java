@@ -1,20 +1,20 @@
 package wizard.steps;
 
 import com.google.inject.Inject;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.RadioButtonHelper;
 import wizard.Submit;
 import wizard.Validate;
 import wizard.WizardData;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Step4Controller {
-    public VBox containerVBox;
-    public ComboBox<String> methodCombobox;
+    public VBox radioBtnsContainer;
     private Logger log = LoggerFactory.getLogger(Step4Controller.class);
 
     @Inject
@@ -23,23 +23,18 @@ public class Step4Controller {
 
     @FXML
     public void initialize() {
-        // Add options to combobox
-        ObservableList<String> comboboxOptions =
-                FXCollections.observableArrayList(
-                        "No refinement",
-                        "Comparison Propagation",
-                        "Cardinality Edge Pruning (CEP)",
-                        "Cardinality Node Pruning (CNP)",
-                        "Weighed Edge Pruning (WEP)",
-                        "Weighed Node Pruning (WNP)",
-                        "Reciprocal Cardinality Node Pruning (ReCNP)",
-                        "Reciprocal Weighed Node Pruning (ReWNP)"
-                );
+        List<String> options = Arrays.asList(
+                "No refinement",
+                "Comparison Propagation",
+                "Cardinality Edge Pruning (CEP)",
+                "Cardinality Node Pruning (CNP)",
+                "Weighed Edge Pruning (WEP)",
+                "Weighed Node Pruning (WNP)",
+                "Reciprocal Cardinality Node Pruning (ReCNP)",
+                "Reciprocal Weighed Node Pruning (ReWNP)"
+        );
 
-        methodCombobox.setItems(comboboxOptions);
-
-        // Bind combobox selection to model
-        methodCombobox.valueProperty().bindBidirectional(model.comparisonRefinementMethodProperty());
+        RadioButtonHelper.createButtonGroup(radioBtnsContainer, options, model.comparisonRefinementMethodProperty());
     }
 
     @Validate
