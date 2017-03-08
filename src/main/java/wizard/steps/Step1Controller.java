@@ -73,21 +73,32 @@ public class Step1Controller {
 
     @Validate
     public boolean validate() throws Exception {
-        //todo: update this function to take into account new text field
-        // Check that text fields have a value
-        if (entityProfTextField.getText() == null || entityProfTextField.getText().isEmpty()
-                || groundTruthTextField.getText() == null || groundTruthTextField.getText().isEmpty()) {
+        boolean ok;
+
+        String entityPath1 = model.getEntityProfilesPath();
+        String entityPath2 = model.getEntityProfilesD2Path();
+        String gTruthPath = model.getGroundTruthPath();
+
+        if (model.getErType().equals("Dirty ER")) {
+            // Only need 1 dataset and ground truth
+            ok = entityPath1 != null && !entityPath1.isEmpty() && gTruthPath != null && !gTruthPath.isEmpty();
+        } else {
+            // Also need to have 2nd dataset path
+            ok = entityPath1 != null && !entityPath1.isEmpty() && entityPath2 != null && !entityPath2.isEmpty()
+                    && gTruthPath != null && !gTruthPath.isEmpty();
+        }
+
+        // Show error if there was a problem
+        if (!ok) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Dataset Selection");
             alert.setHeaderText("Missing Field");
-            alert.setContentText("Selecting an entity profiles and ground truth dataset is required.");
+            alert.setContentText("Please fill all the enabled fields!");
             alert.showAndWait();
-            return false;
         }
 
         //todo: check that files exist because it is possible to set the paths directly from the text fields
-
-        return true;
+        return ok;
     }
 
     @Submit
