@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <VBox fx:id="containerVBox" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-      minWidth="-Infinity" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+      minWidth="-Infinity" spacing="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="wizard.steps.Step1Controller">
     <children>
         <Label text="Data Reading">
@@ -14,6 +14,7 @@
             </font>
         </Label>
         <Label text="Select files for the entity profiles and ground-truth"/>
+        <VBox fx:id="radioBtnsContainer" prefHeight="60.0" prefWidth="100.0" spacing="5.0"/>
         <GridPane>
             <columnConstraints>
                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0"/>
@@ -21,22 +22,23 @@
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES"/>
-                <RowConstraints/>
-                <RowConstraints/>
-                <RowConstraints/>
+                <RowConstraints minHeight="10.0" prefHeight="50.0"/>
                 <RowConstraints minHeight="10.0" prefHeight="50.0"/>
             </rowConstraints>
             <children>
-                <Button fx:id="selectEntityProfBtn" mnemonicParsing="false" onAction="#selectBtnHandler"
-                        text="Select entity profiles" GridPane.columnIndex="1"/>
+                <Button fx:id="selectEntityD1Btn" mnemonicParsing="false" onAction="#selectBtnHandler"
+                        text="Select entity profiles D1" GridPane.columnIndex="1"/>
                 <Button fx:id="selectGroundTruthBtn" mnemonicParsing="false" onAction="#selectBtnHandler"
-                        text="Select ground-truth file" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                        text="Select ground-truth file" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
                 <TextField fx:id="entityProfTextField"/>
-                <TextField fx:id="groundTruthTextField" GridPane.rowIndex="4"/>
+                <TextField fx:id="groundTruthTextField" GridPane.rowIndex="2"/>
+                <TextField fx:id="entityProfD2TextField" GridPane.rowIndex="1"/>
+                <Button fx:id="selectEntityD2Btn" mnemonicParsing="false" onAction="#selectBtnHandler"
+                        text="Select entity profiles D2" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
             </children>
         </GridPane>
     </children>
     <padding>
-        <Insets bottom="40.0" left="40.0" right="40.0" top="40.0"/>
+        <Insets bottom="20.0" left="40.0" right="40.0" top="20.0"/>
     </padding>
 </VBox>

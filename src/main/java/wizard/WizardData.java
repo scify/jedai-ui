@@ -7,6 +7,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 
 public class WizardData {
+    private final StringProperty erType = new SimpleStringProperty();
     private final StringProperty entityProfilesPath = new SimpleStringProperty();
     private final StringProperty groundTruthPath = new SimpleStringProperty();
     private final StringProperty blockBuilding = new SimpleStringProperty();
@@ -15,6 +16,18 @@ public class WizardData {
     private final StringProperty entityMatching = new SimpleStringProperty();
     private final StringProperty profileMatcherParam = new SimpleStringProperty();
     private final StringProperty entityClustering = new SimpleStringProperty();
+
+    public String getErType() {
+        return erType.get();
+    }
+
+    public StringProperty erTypeProperty() {
+        return erType;
+    }
+
+    public void setErType(String erType) {
+        this.erType.set(erType);
+    }
 
     public ObservableList<String> getBlockProcessingMethods() {
         return blockProcessingMethods.get();
@@ -113,6 +126,7 @@ public class WizardData {
     }
 
     public void reset() {
+        //todo: fix this
         entityProfilesPath.set("");
         groundTruthPath.set("");
         blockBuilding.set("");
