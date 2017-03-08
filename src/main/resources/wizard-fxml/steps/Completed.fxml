@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <VBox fx:id="containerVBox" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-      minWidth="-Infinity" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+      minWidth="-Infinity" spacing="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="wizard.steps.CompletedController">
     <children>
         <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
@@ -52,16 +52,15 @@
                 </Tab>
             </tabs>
         </TabPane>
-        <Pane prefHeight="62.0" prefWidth="600.0">
+        <HBox alignment="CENTER" prefHeight="62.0" prefWidth="600.0">
             <children>
-                <Button fx:id="runBtn" layoutX="125.0" layoutY="16.0" mnemonicParsing="false"
-                        onAction="#runAlgorithmBtnHandler" text="Run algorithm"/>
-                <Button fx:id="exportBtn" disable="true" layoutX="361.0" layoutY="16.0" mnemonicParsing="false"
-                        onAction="#exportBtnHandler" text="Export CSV"/>
-                <ProgressIndicator fx:id="progressIndicator" layoutX="240.0" layoutY="6.0" prefHeight="52.0"
-                                   prefWidth="121.0" progress="0.0" visible="false"/>
+                <Button fx:id="runBtn" mnemonicParsing="false" onAction="#runAlgorithmBtnHandler" text="Run algorithm"/>
+                <ProgressIndicator fx:id="progressIndicator" prefHeight="52.0" prefWidth="121.0" progress="0.0"
+                                   visible="false"/>
+                <Button fx:id="exportBtn" disable="true" mnemonicParsing="false" onAction="#exportBtnHandler"
+                        text="Export CSV"/>
             </children>
-        </Pane>
+        </HBox>
     </children>
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
