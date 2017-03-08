@@ -16,6 +16,7 @@ import EntityMatching.ProfileMatcher;
 import Utilities.BlocksPerformance;
 import Utilities.ClustersPerformance;
 import Utilities.DataStructures.AbstractDuplicatePropagation;
+import Utilities.DataStructures.BilateralDuplicatePropagation;
 import Utilities.DataStructures.UnilateralDuplicatePropagation;
 import Utilities.Enumerations.BlockBuildingMethod;
 import Utilities.Enumerations.RepresentationModel;
@@ -128,20 +129,35 @@ public class CompletedController {
         new Thread(() -> {
             try {
                 // Get profiles and ground truth paths from model
-                String datasetProfiles = model.getEntityProfilesPath();
+                String erType = model.getErType();
+                String datasetProfilesD1 = model.getEntityProfilesPath();
+                String datasetProfilesD2 = model.getEntityProfilesD2Path();
                 String datasetGroundTruth = model.getGroundTruthPath();
 
                 boolean hasGroundTruth = (datasetGroundTruth != null && !datasetGroundTruth.isEmpty());
 
                 // Step 1: Data reading
-                IEntityReader eReader = new EntitySerializationReader(datasetProfiles);
-                List<EntityProfile> profiles = eReader.getEntityProfiles();
-                System.out.println("Input Entity Profiles\t:\t" + profiles.size());
+                IEntityReader eReader = new EntitySerializationReader(datasetProfilesD1);
+                List<EntityProfile> profilesD1 = eReader.getEntityProfiles();
+                System.out.println("Input Entity Profiles\t:\t" + profilesD1.size());
+
+                // In case Clean-Clear ER was selected, also read 2nd profiles file
+                List<EntityProfile> profilesD2 = null;
+                if (erType.equals("Clean-Clean ER")) {
+                    IEntityReader eReader2 = new EntitySerializationReader(datasetProfilesD2);
+                    profilesD2 = eReader2.getEntityProfiles();
+                }
 
                 AbstractDuplicatePropagation duplicatePropagation = null;
                 if (hasGroundTruth) {
                     IGroundTruthReader gtReader = new GtSerializationReader(datasetGroundTruth);
-                    duplicatePropagation = new UnilateralDuplicatePropagation(gtReader.getDuplicatePairs(eReader.getEntityProfiles()));
+
+                    if (erType.equals("Dirty ER")) {
+                        duplicatePropagation = new UnilateralDuplicatePropagation(gtReader.getDuplicatePairs(profilesD1));
+                    } else {
+                        duplicatePropagation = new BilateralDuplicatePropagation(gtReader.getDuplicatePairs(profilesD1, profilesD2));
+                    }
+
                     System.out.println("Existing Duplicates\t:\t" + duplicatePropagation.getDuplicates().size());
                 }
 
@@ -152,7 +168,13 @@ public class CompletedController {
                 BlockBuildingMethod blockingWorkflow = MethodMapping.blockBuildingMethods.get(model.getBlockBuilding());
 
                 IBlockBuilding blockBuildingMethod = BlockBuildingMethod.getDefaultConfiguration(blockingWorkflow);
-                List<AbstractBlock> blocks = blockBuildingMethod.getBlocks(profiles, null);
+                List<AbstractBlock> blocks;
+                if (erType.equals("Dirty ER")) {
+                    blocks = blockBuildingMethod.getBlocks(profilesD1);
+                } else {
+                    blocks = blockBuildingMethod.getBlocks(profilesD1, profilesD2);
+                }
+
                 System.out.println("Original blocks\t:\t" + blocks.size());
 
                 // Set progress indicator to 40%
@@ -191,7 +213,7 @@ public class CompletedController {
                     // Profile Matcher
                     em = new ProfileMatcher(repModel, SimilarityMetric.getModelDefaultSimMetric(repModel));
                 }
-                SimilarityPairs simPairs = em.executeComparisons(blocks, profiles);
+                SimilarityPairs simPairs = em.executeComparisons(blocks, profilesD1);
 
                 // Set progress indicator to 80%
                 updateProgress(0.8);
@@ -222,7 +244,7 @@ public class CompletedController {
                     numOfClustersLabel.setText("Number of clusters: " + entityClusters.size());
                     numOfClustersLabel.setVisible(true);
 
-                    numOfInstancesLabel.setText("Number of input instances: " + profiles.size());
+                    numOfInstancesLabel.setText("Number of input instances: " + profilesD1.size());
                     numOfInstancesLabel.setVisible(true);
 
                     // Enable button for result export to CSV
