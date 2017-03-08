@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 public class WizardData {
     private final StringProperty erType = new SimpleStringProperty();
     private final StringProperty entityProfilesPath = new SimpleStringProperty();
+    private final StringProperty entityProfilesD2Path = new SimpleStringProperty();
     private final StringProperty groundTruthPath = new SimpleStringProperty();
     private final StringProperty blockBuilding = new SimpleStringProperty();
     private final StringProperty comparisonRefinementMethod = new SimpleStringProperty();
@@ -16,6 +17,18 @@ public class WizardData {
     private final StringProperty entityMatching = new SimpleStringProperty();
     private final StringProperty profileMatcherParam = new SimpleStringProperty();
     private final StringProperty entityClustering = new SimpleStringProperty();
+
+    public String getEntityProfilesD2Path() {
+        return entityProfilesD2Path.get();
+    }
+
+    public StringProperty entityProfilesD2PathProperty() {
+        return entityProfilesD2Path;
+    }
+
+    public void setEntityProfilesD2Path(String entityProfilesD2Path) {
+        this.entityProfilesD2Path.set(entityProfilesD2Path);
+    }
 
     public String getErType() {
         return erType.get();

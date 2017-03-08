@@ -39,6 +39,7 @@ public class Step1Controller {
     public void initialize() {
         // Bind text field values to the model
         entityProfTextField.textProperty().bindBidirectional(model.entityProfilesPathProperty());
+        entityProfD2TextField.textProperty().bindBidirectional(model.entityProfilesD2PathProperty());
         groundTruthTextField.textProperty().bindBidirectional(model.groundTruthPathProperty());
 
         // Create radio buttons
