@@ -41,7 +41,7 @@
                         <Font name="System Bold" size="12.0"/>
                     </font>
                 </Label>
-                <Label text="Comparison Refinement Method" GridPane.rowIndex="6">
+                <Label text="Comparison Cleaning Method" GridPane.rowIndex="6">
                     <font>
                         <Font name="System Bold" size="12.0"/>
                     </font>
@@ -61,7 +61,7 @@
                         <Font name="System Bold" size="12.0"/>
                     </font>
                 </Label>
-                <Label text="Block Refinement Methods" GridPane.rowIndex="5">
+                <Label text="Block Cleaning Methods" GridPane.rowIndex="5">
                     <font>
                         <Font name="System Bold" size="12.0"/>
                     </font>

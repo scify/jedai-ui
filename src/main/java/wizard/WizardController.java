@@ -64,8 +64,8 @@ public class WizardController {
         this.stepTexts.add("Welcome");
         this.stepTexts.add("Step 1: Data Reading");
         this.stepTexts.add("Step 2: Block Building");
-        this.stepTexts.add("Step 3: Block Processing");
-        this.stepTexts.add("Step 4: Comparison Refinement");
+        this.stepTexts.add("Step 3: Block Cleaning");
+        this.stepTexts.add("Step 4: Comparison Cleaning");
         this.stepTexts.add("Step 5: Entity Matching");
         this.stepTexts.add("Step 6: Entity Clustering");
         this.stepTexts.add("Selection Confirmation");
@@ -75,8 +75,8 @@ public class WizardController {
         this.stepDescriptions.add("Welcome description");
         this.stepDescriptions.add("Data reading description");
         this.stepDescriptions.add("Block Building description");
-        this.stepDescriptions.add("Block Refinement description");
-        this.stepDescriptions.add("Comparison Refinement description");
+        this.stepDescriptions.add("Block Cleaning description");
+        this.stepDescriptions.add("Comparison Cleaning description");
         this.stepDescriptions.add("Entity Matching description");
         this.stepDescriptions.add("Entity Clustering description");
         this.stepDescriptions.add("Confirm the selected values and press the \"Next\" button to go to the results page.");

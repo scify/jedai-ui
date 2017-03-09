@@ -7,12 +7,12 @@
       prefHeight="300.0" prefWidth="400.0" spacing="20.0" xmlns="http://javafx.com/javafx/8.0.111"
       xmlns:fx="http://javafx.com/fxml/1" fx:controller="wizard.steps.Step4Controller">
     <children>
-        <Label text="Comparison Refinement Method">
+        <Label text="Comparison Cleaning Method">
             <font>
                 <Font name="System Bold" size="24.0"/>
             </font>
         </Label>
-        <Label text="Select a comparison refinement method (optional)"/>
+        <Label text="Select a comparison cleaning method (optional)"/>
         <VBox fx:id="radioBtnsContainer" prefHeight="200.0" prefWidth="400.0" spacing="5.0"/>
     </children>
 </VBox>

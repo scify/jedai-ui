@@ -189,7 +189,7 @@ public class CompletedController {
 
                 // Step 4: Comparison Refinement method
                 String compRefMethod = model.getComparisonRefinementMethod();
-                if (compRefMethod != null && !compRefMethod.equals("No refinement")) {
+                if (compRefMethod != null && !compRefMethod.equals("No cleaning")) {
                     blocks = MethodMapping.processBlocks(blocks, compRefMethod);
                 }
 

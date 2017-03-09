@@ -24,7 +24,7 @@ public class Step4Controller {
     @FXML
     public void initialize() {
         List<String> options = Arrays.asList(
-                "No refinement",
+                "No cleaning",
                 "Comparison Propagation",
                 "Cardinality Edge Pruning (CEP)",
                 "Cardinality Node Pruning (CNP)",
