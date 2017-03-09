@@ -213,7 +213,13 @@ public class CompletedController {
                     // Profile Matcher
                     em = new ProfileMatcher(repModel, SimilarityMetric.getModelDefaultSimMetric(repModel));
                 }
-                SimilarityPairs simPairs = em.executeComparisons(blocks, profilesD1);
+                SimilarityPairs simPairs;
+
+                if (erType.equals("Dirty ER")) {
+                    simPairs = em.executeComparisons(blocks, profilesD1);
+                } else {
+                    simPairs = em.executeComparisons(blocks, profilesD1, profilesD2);
+                }
 
                 // Set progress indicator to 80%
                 updateProgress(0.8);
