@@ -241,6 +241,8 @@ public class WizardController {
         currentStep.set(0);  // first screen
         contentPanel.getChildren().add(steps.get(currentStep.get()));
 
+        setLabelAndDescription(currentStep.getValue());
+
         model.reset();
     }
 
