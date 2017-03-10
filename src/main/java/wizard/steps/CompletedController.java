@@ -183,9 +183,12 @@ public class CompletedController {
 
                 // Step 3: Block Processing
                 List<String> processingMethods = model.getBlockProcessingMethods();
-                for (String currentMethod : processingMethods) {
-                    // Process blocks with this method
-                    blocks = MethodMapping.processBlocks(blocks, currentMethod);
+
+                if (processingMethods != null) {
+                    for (String currentMethod : processingMethods) {
+                        // Process blocks with this method
+                        blocks = MethodMapping.processBlocks(blocks, currentMethod);
+                    }
                 }
 
                 // Step 4: Comparison Refinement method
