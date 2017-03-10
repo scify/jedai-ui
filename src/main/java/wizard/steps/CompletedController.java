@@ -261,7 +261,7 @@ public class CompletedController {
                 Platform.runLater(() -> {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Exception");
-                    alert.setHeaderText("An exception occured while running the workflow!");
+                    alert.setHeaderText("An exception occurred while running the workflow!");
                     alert.setContentText("Details: " + e.toString() + " (" + e.getMessage() + ")");
                     alert.showAndWait();
                 });
