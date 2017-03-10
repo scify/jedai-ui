@@ -44,23 +44,12 @@ public class Step5Controller {
 
         RadioButtonHelper.createButtonGroup(profileMatcherParameterContainer, profileMatcherOptions, model.profileMatcherParamProperty());
 
-        // Hide the profile matcher parameter selection controls until needed
-        profileMatcherParameterContainer.setVisible(false);
-        pMatcherTextArea.setVisible(false);
+        // Show profile matcher parameter controls only when Profile Matcher is selected
+        profileMatcherParameterContainer.visibleProperty()
+                .bind(model.entityMatchingProperty().isEqualTo(JedaiOptions.PROFILE_MATCHER));
+        pMatcherTextArea.visibleProperty()
+                .bind(model.entityMatchingProperty().isEqualTo(JedaiOptions.PROFILE_MATCHER));
 
-        // Add listener for when entity matching method selection changes (to show/hide profile matcher controls)
-        //todo: do this with the visibleProperty
-        model.entityMatchingProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.equals(JedaiOptions.PROFILE_MATCHER)) {
-                // Show profile matcher parameter selection
-                profileMatcherParameterContainer.setVisible(true);
-                pMatcherTextArea.setVisible(true);
-            } else {
-                // Hide profile matcher parameter selection
-                profileMatcherParameterContainer.setVisible(false);
-                pMatcherTextArea.setVisible(false);
-            }
-        });
     }
 
     @Validate
