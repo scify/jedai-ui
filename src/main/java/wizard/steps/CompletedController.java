@@ -181,20 +181,20 @@ public class CompletedController {
                 // Set progress indicator to 40%
                 updateProgress(0.4);
 
-                // Step 3: Block Processing
-                List<String> processingMethods = model.getBlockProcessingMethods();
+                // Step 3: Block Cleaning
+                List<String> blockCleaningMethods = model.getBlockCleaningMethods();
 
-                if (processingMethods != null) {
-                    for (String currentMethod : processingMethods) {
+                if (blockCleaningMethods != null) {
+                    for (String currentMethod : blockCleaningMethods) {
                         // Process blocks with this method
                         blocks = MethodMapping.processBlocks(blocks, currentMethod);
                     }
                 }
 
-                // Step 4: Comparison Refinement method
-                String compRefMethod = model.getComparisonRefinementMethod();
-                if (compRefMethod != null && !compRefMethod.equals(JedaiOptions.NO_CLEANING)) {
-                    blocks = MethodMapping.processBlocks(blocks, compRefMethod);
+                // Step 4: Comparison Cleaning
+                String compCleaningMethod = model.getComparisonCleaningMethod();
+                if (compCleaningMethod != null && !compCleaningMethod.equals(JedaiOptions.NO_CLEANING)) {
+                    blocks = MethodMapping.processBlocks(blocks, compCleaningMethod);
                 }
 
                 if (hasGroundTruth) {

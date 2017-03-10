@@ -35,7 +35,7 @@ public class Step4Controller {
                 JedaiOptions.RECIPROCAL_WEIGHED_NODE_PRUNING
         );
 
-        RadioButtonHelper.createButtonGroup(radioBtnsContainer, options, model.comparisonRefinementMethodProperty());
+        RadioButtonHelper.createButtonGroup(radioBtnsContainer, options, model.comparisonCleaningMethodProperty());
     }
 
     @Validate

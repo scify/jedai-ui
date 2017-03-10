@@ -38,8 +38,8 @@ public class Step5Controller {
 
         // Create radio buttons for profile matcher parameter
         List<String> profileMatcherOptions = Arrays.asList(
-                "Representation",
-                "Similarity"
+                JedaiOptions.REPRESENTATION,
+                JedaiOptions.SIMILARITY
         );
 
         RadioButtonHelper.createButtonGroup(profileMatcherParameterContainer, profileMatcherOptions, model.profileMatcherParamProperty());

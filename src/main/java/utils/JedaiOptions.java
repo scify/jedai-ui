@@ -35,6 +35,10 @@ public class JedaiOptions {
     public static final String GROUP_LINKAGE = "Group Linkage";
     public static final String PROFILE_MATCHER = "Profile Matcher";
 
+    // Profile Matcher parameters
+    public static final String REPRESENTATION = "Representation";
+    public static final String SIMILARITY = "Similarity";
+
     // Entity Clustering methods
     public static final String CENTER_CLUSTERING = "Center Clustering";
     public static final String CONNECTED_COMPONENTS_CLUSTERING = "Connected Components Clustering";

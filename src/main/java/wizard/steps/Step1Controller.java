@@ -8,7 +8,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
-import jfxtras.scene.control.ToggleGroupValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.JedaiOptions;
@@ -49,14 +48,11 @@ public class Step1Controller {
                 JedaiOptions.CLEAN_CLEAN_ER
         );
 
-        ToggleGroupValue tgv = RadioButtonHelper.createButtonGroup(radioBtnsContainer, buttons, model.erTypeProperty());
+        RadioButtonHelper.createButtonGroup(radioBtnsContainer, buttons, model.erTypeProperty());
 
         // Disable 2nd dataset selection when Dirty ER is selected
         entityProfD2TextField.disableProperty().bind(model.erTypeProperty().isEqualTo(JedaiOptions.DIRTY_ER));
         selectEntityD2Btn.disableProperty().bind(model.erTypeProperty().isEqualTo(JedaiOptions.DIRTY_ER));
-
-        // Make first radio button selected
-        tgv.setValue(buttons.get(0));
 
         // Set initial values to text fields (for testing...)
 //        entityProfTextField.setText("C:\\Users\\leots\\Documents\\JedAIToolkit\\datasets\\restaurantProfiles");

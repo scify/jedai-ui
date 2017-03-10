@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
+import utils.JedaiOptions;
 
 public class WizardData {
     private final StringProperty erType = new SimpleStringProperty();
@@ -12,8 +13,8 @@ public class WizardData {
     private final StringProperty entityProfilesD2Path = new SimpleStringProperty();
     private final StringProperty groundTruthPath = new SimpleStringProperty();
     private final StringProperty blockBuilding = new SimpleStringProperty();
-    private final StringProperty comparisonRefinementMethod = new SimpleStringProperty();
-    private final ListProperty<String> blockProcessingMethods = new SimpleListProperty<>();
+    private final StringProperty comparisonCleaningMethod = new SimpleStringProperty();
+    private final ListProperty<String> blockCleaningMethods = new SimpleListProperty<>();
     private final StringProperty entityMatching = new SimpleStringProperty();
     private final StringProperty profileMatcherParam = new SimpleStringProperty();
     private final StringProperty entityClustering = new SimpleStringProperty();
@@ -42,16 +43,16 @@ public class WizardData {
         this.erType.set(erType);
     }
 
-    public ObservableList<String> getBlockProcessingMethods() {
-        return blockProcessingMethods.get();
+    public ObservableList<String> getBlockCleaningMethods() {
+        return blockCleaningMethods.get();
     }
 
-    public ListProperty<String> blockProcessingMethodsProperty() {
-        return blockProcessingMethods;
+    public ListProperty<String> blockCleaningMethodsProperty() {
+        return blockCleaningMethods;
     }
 
-    public void setBlockProcessingMethods(ObservableList<String> blockProcessingMethods) {
-        this.blockProcessingMethods.set(blockProcessingMethods);
+    public void setBlockCleaningMethods(ObservableList<String> blockCleaningMethods) {
+        this.blockCleaningMethods.set(blockCleaningMethods);
     }
 
     public String getGroundTruthPath() {
@@ -90,16 +91,16 @@ public class WizardData {
         this.blockBuilding.set(blockBuilding);
     }
 
-    public String getComparisonRefinementMethod() {
-        return comparisonRefinementMethod.get();
+    public String getComparisonCleaningMethod() {
+        return comparisonCleaningMethod.get();
     }
 
-    public StringProperty comparisonRefinementMethodProperty() {
-        return comparisonRefinementMethod;
+    public StringProperty comparisonCleaningMethodProperty() {
+        return comparisonCleaningMethod;
     }
 
-    public void setComparisonRefinementMethod(String comparisonRefinementMethod) {
-        this.comparisonRefinementMethod.set(comparisonRefinementMethod);
+    public void setComparisonCleaningMethod(String comparisonCleaningMethod) {
+        this.comparisonCleaningMethod.set(comparisonCleaningMethod);
     }
 
     public String getEntityMatching() {
@@ -139,14 +140,20 @@ public class WizardData {
     }
 
     public void reset() {
-        //todo: fix this
-        entityProfilesPath.set("");
-        groundTruthPath.set("");
-        blockBuilding.set("");
-        blockProcessingMethods.clear();
-        comparisonRefinementMethod.set("");
-        entityMatching.set("");
-        entityClustering.set("");
-        profileMatcherParam.set("");
+        // Clear paths for files
+        entityProfilesPath.setValue("");
+        entityProfilesD2Path.setValue("");
+        groundTruthPath.setValue("");
+
+        // Reset block cleaning list
+        //todo: blockCleaningMethodsProperty().clear();
+
+        // Reset radio buttons
+        erTypeProperty().setValue(JedaiOptions.DIRTY_ER);
+        blockBuildingProperty().setValue(JedaiOptions.STANDARD_TOKEN_BUILDING);
+        comparisonCleaningMethodProperty().setValue(JedaiOptions.NO_CLEANING);
+        entityMatchingProperty().setValue(JedaiOptions.GROUP_LINKAGE);
+        profileMatcherParamProperty().setValue(JedaiOptions.REPRESENTATION);
+        entityClusteringProperty().setValue(JedaiOptions.CENTER_CLUSTERING);
     }
 }

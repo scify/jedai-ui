@@ -47,16 +47,16 @@ public class Step3Controller {
         for (String s : map.keySet()) {
             map.get(s).addListener((observable, oldValue, newValue) -> {
                 // If observable list has not been initialized, create it
-                if (model.getBlockProcessingMethods() == null) {
-                    model.setBlockProcessingMethods(FXCollections.observableList(new ArrayList<>()));
+                if (model.getBlockCleaningMethods() == null) {
+                    model.setBlockCleaningMethods(FXCollections.observableList(new ArrayList<>()));
                 }
 
                 // Add/remove the string to/from the model
                 if (newValue) {
                     selectedList.getItems().add(s);
-                    model.getBlockProcessingMethods().add(s);
+                    model.getBlockCleaningMethods().add(s);
                 } else {
-                    model.getBlockProcessingMethods().remove(s);
+                    model.getBlockCleaningMethods().remove(s);
                     selectedList.getItems().remove(s);
                 }
             });

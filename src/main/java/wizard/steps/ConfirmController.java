@@ -36,7 +36,7 @@ public class ConfirmController {
         entityProfilesD1Label.textProperty().bind(model.entityProfilesPathProperty());
         blockBuildingLabel.textProperty().bind(model.blockBuildingProperty());
         groundTruthLabel.textProperty().bind(model.groundTruthPathProperty());
-        compRefinementLabel.textProperty().bind(model.comparisonRefinementMethodProperty());
+        compRefinementLabel.textProperty().bind(model.comparisonCleaningMethodProperty());
         entityMatchingLabel.textProperty().bind(model.entityMatchingProperty());
         entityClusteringLabel.textProperty().bind(model.entityClusteringProperty());
 
@@ -70,8 +70,8 @@ public class ConfirmController {
         model.entityProfilesD2PathProperty().addListener(datasetPathListener);
 
         // Show block refinement methods in list
-        model.blockProcessingMethodsProperty().addListener(((observable, oldValue, newValue) -> {
-            blockRefinementList.setItems(model.getBlockProcessingMethods());
+        model.blockCleaningMethodsProperty().addListener(((observable, oldValue, newValue) -> {
+            blockRefinementList.setItems(model.getBlockCleaningMethods());
         }));
     }
 
