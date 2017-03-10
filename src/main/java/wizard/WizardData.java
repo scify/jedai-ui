@@ -146,7 +146,7 @@ public class WizardData {
         groundTruthPath.setValue("");
 
         // Reset block cleaning list
-        //todo: blockCleaningMethodsProperty().clear();
+        blockCleaningMethodsProperty().clear();
 
         // Reset radio buttons
         erTypeProperty().setValue(JedaiOptions.DIRTY_ER);
