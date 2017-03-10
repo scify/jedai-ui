@@ -35,6 +35,7 @@ import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.ConsoleArea;
+import utils.JedaiOptions;
 import utils.MultiOutputStream;
 import wizard.MethodMapping;
 import wizard.WizardData;
@@ -143,7 +144,7 @@ public class CompletedController {
 
                 // In case Clean-Clear ER was selected, also read 2nd profiles file
                 List<EntityProfile> profilesD2 = null;
-                if (erType.equals("Clean-Clean ER")) {
+                if (erType.equals(JedaiOptions.CLEAN_CLEAN_ER)) {
                     IEntityReader eReader2 = new EntitySerializationReader(datasetProfilesD2);
                     profilesD2 = eReader2.getEntityProfiles();
                 }
@@ -152,7 +153,7 @@ public class CompletedController {
                 if (hasGroundTruth) {
                     IGroundTruthReader gtReader = new GtSerializationReader(datasetGroundTruth);
 
-                    if (erType.equals("Dirty ER")) {
+                    if (erType.equals(JedaiOptions.DIRTY_ER)) {
                         duplicatePropagation = new UnilateralDuplicatePropagation(gtReader.getDuplicatePairs(profilesD1));
                     } else {
                         duplicatePropagation = new BilateralDuplicatePropagation(gtReader.getDuplicatePairs(profilesD1, profilesD2));
@@ -169,7 +170,7 @@ public class CompletedController {
 
                 IBlockBuilding blockBuildingMethod = BlockBuildingMethod.getDefaultConfiguration(blockingWorkflow);
                 List<AbstractBlock> blocks;
-                if (erType.equals("Dirty ER")) {
+                if (erType.equals(JedaiOptions.DIRTY_ER)) {
                     blocks = blockBuildingMethod.getBlocks(profilesD1);
                 } else {
                     blocks = blockBuildingMethod.getBlocks(profilesD1, profilesD2);
@@ -189,7 +190,7 @@ public class CompletedController {
 
                 // Step 4: Comparison Refinement method
                 String compRefMethod = model.getComparisonRefinementMethod();
-                if (compRefMethod != null && !compRefMethod.equals("No cleaning")) {
+                if (compRefMethod != null && !compRefMethod.equals(JedaiOptions.NO_CLEANING)) {
                     blocks = MethodMapping.processBlocks(blocks, compRefMethod);
                 }
 
@@ -207,7 +208,7 @@ public class CompletedController {
 
                 IEntityMatching em;
                 RepresentationModel repModel = RepresentationModel.TOKEN_UNIGRAMS;
-                if (entityMatchingMethodName.equals("Group Linkage")) {
+                if (entityMatchingMethodName.equals(JedaiOptions.GROUP_LINKAGE)) {
                     em = new GroupLinkage(repModel, SimilarityMetric.getModelDefaultSimMetric(repModel));
                 } else {
                     // Profile Matcher
@@ -215,7 +216,7 @@ public class CompletedController {
                 }
                 SimilarityPairs simPairs;
 
-                if (erType.equals("Dirty ER")) {
+                if (erType.equals(JedaiOptions.DIRTY_ER)) {
                     simPairs = em.executeComparisons(blocks, profilesD1);
                 } else {
                     simPairs = em.executeComparisons(blocks, profilesD1, profilesD2);

@@ -11,6 +11,7 @@ import javafx.stage.FileChooser;
 import jfxtras.scene.control.ToggleGroupValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.JedaiOptions;
 import utils.RadioButtonHelper;
 import wizard.Submit;
 import wizard.Validate;
@@ -44,15 +45,15 @@ public class Step1Controller {
 
         // Create radio buttons
         List<String> buttons = Arrays.asList(
-                "Dirty ER",
-                "Clean-Clean ER"
+                JedaiOptions.DIRTY_ER,
+                JedaiOptions.CLEAN_CLEAN_ER
         );
 
         ToggleGroupValue tgv = RadioButtonHelper.createButtonGroup(radioBtnsContainer, buttons, model.erTypeProperty());
 
         // Disable 2nd dataset selection when Dirty ER is selected
-        entityProfD2TextField.disableProperty().bind(model.erTypeProperty().isEqualTo("Dirty ER"));
-        selectEntityD2Btn.disableProperty().bind(model.erTypeProperty().isEqualTo("Dirty ER"));
+        entityProfD2TextField.disableProperty().bind(model.erTypeProperty().isEqualTo(JedaiOptions.DIRTY_ER));
+        selectEntityD2Btn.disableProperty().bind(model.erTypeProperty().isEqualTo(JedaiOptions.DIRTY_ER));
 
         // Make first radio button selected
         tgv.setValue(buttons.get(0));
@@ -70,7 +71,7 @@ public class Step1Controller {
         String entityPath2 = model.getEntityProfilesD2Path();
         String gTruthPath = model.getGroundTruthPath();
 
-        if (model.getErType().equals("Dirty ER")) {
+        if (model.getErType().equals(JedaiOptions.DIRTY_ER)) {
             // Only need 1 dataset and ground truth
             ok = entityPath1 != null && !entityPath1.isEmpty() && gTruthPath != null && !gTruthPath.isEmpty();
         } else {

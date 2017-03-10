@@ -6,6 +6,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.JedaiOptions;
 import utils.RadioButtonHelper;
 import wizard.Submit;
 import wizard.Validate;
@@ -25,12 +26,12 @@ public class Step6Controller {
     @FXML
     public void initialize() {
         List<String> options = Arrays.asList(
-                "Center Clustering",
-                "Connected Components Clustering",
-                "Cut Clustering",
-                "Markov Clustering",
-                "Merge-Center Clustering",
-                "Ricochet SR Clustering"
+                JedaiOptions.CENTER_CLUSTERING,
+                JedaiOptions.CONNECTED_COMPONENTS_CLUSTERING,
+                JedaiOptions.CUT_CLUSTERING,
+                JedaiOptions.MARKOV_CLUSTERING,
+                JedaiOptions.MERGE_CENTER_CLUSTERING,
+                JedaiOptions.RICOCHET_SR_CLUSTERING
         );
 
         RadioButtonHelper.createButtonGroup(radioBtnsContainer, options, model.entityClusteringProperty());

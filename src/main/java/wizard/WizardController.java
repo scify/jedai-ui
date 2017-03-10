@@ -167,7 +167,6 @@ public class WizardController {
         completed.getProperties().put(CONTROLLER_KEY, fxmlLoaderCompleted.getController());
 
         steps.addAll(Arrays.asList(
-//                completed,
                 step0, step1, step2, step3, step4, step5, step6, confirm, completed
         ));
     }

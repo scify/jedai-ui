@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.JedaiOptions;
 import utils.RadioButtonHelper;
 import wizard.Submit;
 import wizard.Validate;
@@ -24,14 +25,14 @@ public class Step4Controller {
     @FXML
     public void initialize() {
         List<String> options = Arrays.asList(
-                "No cleaning",
-                "Comparison Propagation",
-                "Cardinality Edge Pruning (CEP)",
-                "Cardinality Node Pruning (CNP)",
-                "Weighed Edge Pruning (WEP)",
-                "Weighed Node Pruning (WNP)",
-                "Reciprocal Cardinality Node Pruning (ReCNP)",
-                "Reciprocal Weighed Node Pruning (ReWNP)"
+                JedaiOptions.NO_CLEANING,
+                JedaiOptions.COMPARISON_PROPAGATION,
+                JedaiOptions.CARDINALITY_EDGE_PRUNING,
+                JedaiOptions.CARDINALITY_NODE_PRUNING,
+                JedaiOptions.WEIGHED_EDGE_PRUNING,
+                JedaiOptions.WEIGHED_NODE_PRUNING,
+                JedaiOptions.RECIPROCAL_CARDINALITY_NODE_PRUNING,
+                JedaiOptions.RECIPROCAL_WEIGHED_NODE_PRUNING
         );
 
         RadioButtonHelper.createButtonGroup(radioBtnsContainer, options, model.comparisonRefinementMethodProperty());

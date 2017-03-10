@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.JedaiOptions;
 import wizard.Submit;
 import wizard.WizardData;
 
@@ -51,7 +52,7 @@ public class ConfirmController {
         };
 
         ChangeListener<String> datasetPathListener = (observable, oldValue, newValue) -> {
-            if (model.getErType().equals("Clean-Clean ER")) {
+            if (model.getErType().equals(JedaiOptions.CLEAN_CLEAN_ER)) {
                 // Add the new value to the text field
                 entityProfilesD2Label.setText(model.getEntityProfilesD2Path());
             } else {

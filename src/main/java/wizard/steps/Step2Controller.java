@@ -6,6 +6,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.JedaiOptions;
 import utils.RadioButtonHelper;
 import wizard.Submit;
 import wizard.Validate;
@@ -27,14 +28,14 @@ public class Step2Controller {
     public void initialize() {
         // Create List with options
         List<String> options = Arrays.asList(
-                "Standard/Token Blocking",
-                "Attribute Clustering",
-                "Sorted Neighborhood",
-                "Extended Sorted Neighborhood",
-                "Q-Grams Blocking",
-                "Extended Q-Grams Blocking",
-                "Suffix Arrays Blocking",
-                "Extended Suffix Arrays Blocking"
+                JedaiOptions.STANDARD_TOKEN_BUILDING,
+                JedaiOptions.ATTRIBUTE_CLUSTERING,
+                JedaiOptions.SORTED_NEIGHBORHOOD,
+                JedaiOptions.SORTED_NEIGHBORHOOD_EXTENDED,
+                JedaiOptions.Q_GRAMS_BLOCKING,
+                JedaiOptions.Q_GRAMS_BLOCKING_EXTENDED,
+                JedaiOptions.SUFFIX_ARRAYS_BLOCKING,
+                JedaiOptions.SUFFIX_ARRAYS_BLOCKING_EXTENDED
         );
 
         // Create radio buttons using helper method

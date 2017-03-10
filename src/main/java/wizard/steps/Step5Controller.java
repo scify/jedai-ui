@@ -7,6 +7,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.JedaiOptions;
 import utils.RadioButtonHelper;
 import wizard.Submit;
 import wizard.Validate;
@@ -29,8 +30,8 @@ public class Step5Controller {
     public void initialize() {
         // Create radio buttons for entity matching method
         List<String> entityMatchingOptions = Arrays.asList(
-                "Group Linkage",
-                "Profile Matcher"
+                JedaiOptions.GROUP_LINKAGE,
+                JedaiOptions.PROFILE_MATCHER
         );
 
         RadioButtonHelper.createButtonGroup(matchingMethodContainer, entityMatchingOptions, model.entityMatchingProperty());
@@ -48,8 +49,9 @@ public class Step5Controller {
         pMatcherTextArea.setVisible(false);
 
         // Add listener for when entity matching method selection changes (to show/hide profile matcher controls)
+        //todo: do this with the visibleProperty
         model.entityMatchingProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.equals("Profile Matcher")) {
+            if (newValue.equals(JedaiOptions.PROFILE_MATCHER)) {
                 // Show profile matcher parameter selection
                 profileMatcherParameterContainer.setVisible(true);
                 pMatcherTextArea.setVisible(true);
@@ -72,7 +74,7 @@ public class Step5Controller {
             return false;
         }
 
-        if (model.getEntityMatching().equals("Profile Matcher") &&
+        if (model.getEntityMatching().equals(JedaiOptions.PROFILE_MATCHER) &&
                 (model.getProfileMatcherParam() == null || model.getProfileMatcherParam().isEmpty())) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Profile Matcher Parameter");

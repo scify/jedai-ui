@@ -10,6 +10,7 @@ import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.JedaiOptions;
 import wizard.Submit;
 import wizard.Validate;
 import wizard.WizardData;
@@ -31,10 +32,10 @@ public class Step3Controller {
     public void initialize() {
         // Create map with options
         Map<String, ObservableValue<Boolean>> map = new HashMap<>();
-        map.put("Block Filtering", new SimpleBooleanProperty(false));
-        map.put("Block Scheduling", new SimpleBooleanProperty(false));
-        map.put("Size-based Block Purging", new SimpleBooleanProperty(false));
-        map.put("Comparison-based Block Purging", new SimpleBooleanProperty(false));
+        map.put(JedaiOptions.BLOCK_FILTERING, new SimpleBooleanProperty(false));
+        map.put(JedaiOptions.BLOCK_SCHEDULING, new SimpleBooleanProperty(false));
+        map.put(JedaiOptions.SIZE_BASED_BLOCK_PURGING, new SimpleBooleanProperty(false));
+        map.put(JedaiOptions.COMPARISON_BASED_BLOCK_PURGING, new SimpleBooleanProperty(false));
 
         // Add items to the list
         list.getItems().addAll(map.keySet());

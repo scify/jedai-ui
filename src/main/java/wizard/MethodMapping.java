@@ -10,6 +10,7 @@ import DataModel.AbstractBlock;
 import EntityClustering.*;
 import Utilities.Enumerations.BlockBuildingMethod;
 import Utilities.Enumerations.WeightingScheme;
+import utils.JedaiOptions;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,14 +22,14 @@ public class MethodMapping {
 
     private static Map<String, BlockBuildingMethod> createMap() {
         Map<String, BlockBuildingMethod> result = new HashMap<>();
-        result.put("Standard/Token Blocking", BlockBuildingMethod.STANDARD_BLOCKING);
-        result.put("Attribute Clustering", BlockBuildingMethod.ATTRIBUTE_CLUSTERING);
-        result.put("Sorted Neighborhood", BlockBuildingMethod.SORTED_NEIGHBORHOOD);
-        result.put("Sorted Neighborhood (Extended)", BlockBuildingMethod.EXTENDED_SORTED_NEIGHBORHOOD);
-        result.put("Q-Grams Blocking", BlockBuildingMethod.Q_GRAMS_BLOCKING);
-        result.put("Q-Grams Blocking (Extended)", BlockBuildingMethod.EXTENDED_Q_GRAMS_BLOCKING);
-        result.put("Suffix Arrays Blocking", BlockBuildingMethod.SUFFIX_ARRAYS);
-        result.put("Suffix Arrays Blocking (Extended)", BlockBuildingMethod.EXTENDED_SUFFIX_ARRAYS);
+        result.put(JedaiOptions.STANDARD_TOKEN_BUILDING, BlockBuildingMethod.STANDARD_BLOCKING);
+        result.put(JedaiOptions.ATTRIBUTE_CLUSTERING, BlockBuildingMethod.ATTRIBUTE_CLUSTERING);
+        result.put(JedaiOptions.SORTED_NEIGHBORHOOD, BlockBuildingMethod.SORTED_NEIGHBORHOOD);
+        result.put(JedaiOptions.SORTED_NEIGHBORHOOD_EXTENDED, BlockBuildingMethod.EXTENDED_SORTED_NEIGHBORHOOD);
+        result.put(JedaiOptions.Q_GRAMS_BLOCKING, BlockBuildingMethod.Q_GRAMS_BLOCKING);
+        result.put(JedaiOptions.Q_GRAMS_BLOCKING_EXTENDED, BlockBuildingMethod.EXTENDED_Q_GRAMS_BLOCKING);
+        result.put(JedaiOptions.SUFFIX_ARRAYS_BLOCKING, BlockBuildingMethod.SUFFIX_ARRAYS);
+        result.put(JedaiOptions.SUFFIX_ARRAYS_BLOCKING_EXTENDED, BlockBuildingMethod.EXTENDED_SUFFIX_ARRAYS);
         return Collections.unmodifiableMap(result);
     }
 
@@ -36,22 +37,22 @@ public class MethodMapping {
         IEntityClustering method;
 
         switch (methodStr) {
-            case "Center Clustering":
+            case JedaiOptions.CENTER_CLUSTERING:
                 method = new CenterClustering();
                 break;
-            case "Connected Components Clustering":
+            case JedaiOptions.CONNECTED_COMPONENTS_CLUSTERING:
                 method = new ConnectedComponentsClustering();
                 break;
-            case "Cut Clustering":
+            case JedaiOptions.CUT_CLUSTERING:
                 method = new CutClustering();
                 break;
-            case "Markov Clustering":
+            case JedaiOptions.MARKOV_CLUSTERING:
                 method = new MarkovClustering();
                 break;
-            case "Merge-Center Clustering":
+            case JedaiOptions.MERGE_CENTER_CLUSTERING:
                 method = new MergeCenterClustering();
                 break;
-            case "Ricochet SR Clustering":
+            case JedaiOptions.RICOCHET_SR_CLUSTERING:
                 method = new RicochetSRClustering();
                 break;
             default:
@@ -66,37 +67,37 @@ public class MethodMapping {
 
         // Use appropriate processing method
         switch (method) {
-            case "Block Filtering":
+            case JedaiOptions.BLOCK_FILTERING:
                 processingMethod = new BlockFiltering();
                 break;
-            case "Block Scheduling":
+            case JedaiOptions.BLOCK_SCHEDULING:
                 processingMethod = new BlockScheduling();
                 break;
-            case "Size-based Block Purging":
+            case JedaiOptions.SIZE_BASED_BLOCK_PURGING:
                 processingMethod = new SizeBasedBlockPurging();
                 break;
-            case "Comparison-based Block Purging":
+            case JedaiOptions.COMPARISON_BASED_BLOCK_PURGING:
                 processingMethod = new ComparisonsBasedBlockPurging();
                 break;
-            case "Comparison Propagation":
+            case JedaiOptions.COMPARISON_PROPAGATION:
                 processingMethod = new ComparisonPropagation();
                 break;
-            case "Cardinality Edge Pruning (CEP)":
+            case JedaiOptions.CARDINALITY_EDGE_PRUNING:
                 processingMethod = new CardinalityEdgePruning(WeightingScheme.ECBS);
                 break;
-            case "Cardinality Node Pruning (CNP)":
+            case JedaiOptions.CARDINALITY_NODE_PRUNING:
                 processingMethod = new CardinalityNodePruning(WeightingScheme.ECBS);
                 break;
-            case "Weighed Edge Pruning (WEP)":
+            case JedaiOptions.WEIGHED_EDGE_PRUNING:
                 processingMethod = new WeightedEdgePruning(WeightingScheme.ECBS);
                 break;
-            case "Weighed Node Pruning (WNP)":
+            case JedaiOptions.WEIGHED_NODE_PRUNING:
                 processingMethod = new WeightedNodePruning(WeightingScheme.ECBS);
                 break;
-            case "Reciprocal Cardinality Node Pruning (ReCNP)":
+            case JedaiOptions.RECIPROCAL_CARDINALITY_NODE_PRUNING:
                 processingMethod = new ReciprocalCardinalityNodePruning(WeightingScheme.ECBS);
                 break;
-            case "Reciprocal Weighed Node Pruning (ReWNP)":
+            case JedaiOptions.RECIPROCAL_WEIGHED_NODE_PRUNING:
                 processingMethod = new ReciprocalWeightedNodePruning(WeightingScheme.ECBS);
                 break;
             default:
