@@ -50,18 +50,9 @@ public class Step1Controller {
 
         ToggleGroupValue tgv = RadioButtonHelper.createButtonGroup(radioBtnsContainer, buttons, model.erTypeProperty());
 
-        // Add listener to the radio buttons to enable/disable the 2nd entity file selection
-        tgv.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.equals("Dirty ER")) {
-                // Disable second dataset selection
-                entityProfD2TextField.setDisable(true);
-                selectEntityD2Btn.setDisable(true);
-            } else {
-                // Enable second dataset selection
-                entityProfD2TextField.setDisable(false);
-                selectEntityD2Btn.setDisable(false);
-            }
-        });
+        // Disable 2nd dataset selection when Dirty ER is selected
+        entityProfD2TextField.disableProperty().bind(model.erTypeProperty().isEqualTo("Dirty ER"));
+        selectEntityD2Btn.disableProperty().bind(model.erTypeProperty().isEqualTo("Dirty ER"));
 
         // Make first radio button selected
         tgv.setValue(buttons.get(0));
