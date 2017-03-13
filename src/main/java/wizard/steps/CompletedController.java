@@ -54,6 +54,7 @@ public class CompletedController {
     public HBox gaugesHBox;
     public ProgressIndicator progressIndicator;
     public TextArea logTextArea;
+    public Label totalTimeLabel;
     private Logger log = LoggerFactory.getLogger(CompletedController.class);
 
     private Gauge f1Gauge;
@@ -68,14 +69,14 @@ public class CompletedController {
     @FXML
     public void initialize() {
         // Create gauges
-        f1Gauge = newGauge("F1-measure");
-        gaugesHBox.getChildren().add(f1Gauge);
-
         recallGauge = newGauge("Recall");
         gaugesHBox.getChildren().add(recallGauge);
 
         precisionGauge = newGauge("Precision");
         gaugesHBox.getChildren().add(precisionGauge);
+
+        f1Gauge = newGauge("F1-measure");
+        gaugesHBox.getChildren().add(f1Gauge);
 
         // Setup text area as log
         ConsoleArea ca = new ConsoleArea(logTextArea);
@@ -128,6 +129,8 @@ public class CompletedController {
 
         // Runnable that will run algorithm in separate thread
         new Thread(() -> {
+            long startTime = System.currentTimeMillis();
+
             try {
                 // Get profiles and ground truth paths from model
                 String erType = model.getErType();
@@ -250,12 +253,18 @@ public class CompletedController {
 
                 // Update labels and JavaFX UI components from UI thread
                 Platform.runLater(() -> {
+                    // Get total running time
+                    double totalTimeSeconds = (System.currentTimeMillis() - startTime) / 1000.0;
+
                     // Set label values and show them
+                    numOfInstancesLabel.setText("Input instances: " + profilesD1.size());
+                    numOfInstancesLabel.setVisible(true);
+
+                    totalTimeLabel.setText("Total running time: " + String.format("%.1f", totalTimeSeconds) + " sec.");
+                    totalTimeLabel.setVisible(true);
+
                     numOfClustersLabel.setText("Number of clusters: " + entityClusters.size());
                     numOfClustersLabel.setVisible(true);
-
-                    numOfInstancesLabel.setText("Number of input instances: " + profilesD1.size());
-                    numOfInstancesLabel.setVisible(true);
 
                     // Enable button for result export to CSV
                     exportBtn.setDisable(false);

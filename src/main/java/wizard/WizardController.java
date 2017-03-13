@@ -69,7 +69,7 @@ public class WizardController {
         this.stepTexts.add("Step 5: Entity Matching");
         this.stepTexts.add("Step 6: Entity Clustering");
         this.stepTexts.add("Selection Confirmation");
-        this.stepTexts.add("");
+        this.stepTexts.add("Workflow Execution");
 
         this.stepDescriptions = new ArrayList<>();
         this.stepDescriptions.add("Welcome description");
