@@ -34,7 +34,7 @@ public class WizardMain extends Application {
             primaryStage.setScene(scene);
             primaryStage.setWidth(800);
             primaryStage.setHeight(600);
-            primaryStage.setTitle("JedAI");
+            primaryStage.setTitle("Java gEneric DAta Integration (JedAI) Toolkit");
 
             primaryStage.show();
         }
