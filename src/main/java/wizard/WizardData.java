@@ -140,11 +140,6 @@ public class WizardData {
     }
 
     public void reset() {
-        // Clear paths for files
-        entityProfilesPath.setValue("");
-        entityProfilesD2Path.setValue("");
-        groundTruthPath.setValue("");
-
         // Reset block cleaning list
         blockCleaningMethodsProperty().clear();
 
