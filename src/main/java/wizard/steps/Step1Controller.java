@@ -30,6 +30,8 @@ public class Step1Controller {
     public Button selectEntityD2Btn;
     public TextField entityProfD2TextField;
     private Logger log = LoggerFactory.getLogger(Step1Controller.class);
+    private FileChooser fileChooser;
+    private File previousFolder;
 
     @Inject
     private
@@ -37,6 +39,9 @@ public class Step1Controller {
 
     @FXML
     public void initialize() {
+        // Create FileChooser instance
+        fileChooser = new FileChooser();
+
         // Bind text field values to the model
         entityProfTextField.textProperty().bindBidirectional(model.entityProfilesPathProperty());
         entityProfD2TextField.textProperty().bindBidirectional(model.entityProfilesD2PathProperty());
@@ -101,7 +106,9 @@ public class Step1Controller {
         String btnId = ((Button) actionEvent.getTarget()).getId();
 
         // Open file chooser
-        FileChooser fileChooser = new FileChooser();
+        if (previousFolder != null) {
+            fileChooser.setInitialDirectory(previousFolder);
+        }
         File file = fileChooser.showOpenDialog(containerVBox.getScene().getWindow());
 
         if (file != null) {
@@ -117,6 +124,9 @@ public class Step1Controller {
                     groundTruthTextField.setText(file.getAbsolutePath());
                     break;
             }
+
+            // Save the file's directory to remember it if the FileChooser is opened again
+            previousFolder = file.getParentFile();
         }
     }
 }
