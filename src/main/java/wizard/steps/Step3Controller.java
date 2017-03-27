@@ -34,10 +34,10 @@ public class Step3Controller {
 
         // Create map with options
         Map<String, SimpleBooleanProperty> map = new HashMap<>();
-        map.put(JedaiOptions.BLOCK_FILTERING, new SimpleBooleanProperty(false));
-        map.put(JedaiOptions.BLOCK_SCHEDULING, new SimpleBooleanProperty(false));
         map.put(JedaiOptions.SIZE_BASED_BLOCK_PURGING, new SimpleBooleanProperty(false));
         map.put(JedaiOptions.COMPARISON_BASED_BLOCK_PURGING, new SimpleBooleanProperty(false));
+        map.put(JedaiOptions.BLOCK_FILTERING, new SimpleBooleanProperty(false));
+        map.put(JedaiOptions.BLOCK_SCHEDULING, new SimpleBooleanProperty(false));
 
         // Add items to the list
         list.getItems().addAll(map.keySet());

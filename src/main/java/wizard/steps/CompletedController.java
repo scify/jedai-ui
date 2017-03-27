@@ -34,6 +34,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.BlockCleaningCustomComparator;
 import utils.ConsoleArea;
 import utils.JedaiOptions;
 import utils.MultiOutputStream;
@@ -188,6 +189,10 @@ public class CompletedController {
                 List<String> blockCleaningMethods = model.getBlockCleaningMethods();
 
                 if (blockCleaningMethods != null) {
+                    // Sort the methods in order to execute them in correct order
+                    blockCleaningMethods.sort(new BlockCleaningCustomComparator());
+
+                    // Execute the methods
                     for (String currentMethod : blockCleaningMethods) {
                         // Process blocks with this method
                         blocks = MethodMapping.processBlocks(blocks, currentMethod);
