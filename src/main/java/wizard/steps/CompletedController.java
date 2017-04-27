@@ -312,4 +312,25 @@ public class CompletedController {
             }
         }
     }
+
+    /**
+     * Reset the view of the step
+     */
+    public void resetData() {
+        // Hide time measurements
+        numOfInstancesLabel.setVisible(false);
+        totalTimeLabel.setVisible(false);
+        numOfClustersLabel.setVisible(false);
+
+        // Make export button disabled
+        exportBtn.setDisable(true);
+
+        // Reset gauges
+        f1Gauge.setValue(0.0);
+        recallGauge.setValue(0.0);
+        precisionGauge.setValue(0.0);
+
+        // Reset Details tab
+        logTextArea.setText("");
+    }
 }
