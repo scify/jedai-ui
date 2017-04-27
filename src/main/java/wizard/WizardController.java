@@ -131,45 +131,29 @@ public class WizardController {
 
         final Callback<Class<?>, Object> cb = (clazz) -> injector.getInstance(clazz);
 
-        FXMLLoader fxmlLoaderStep0 = new FXMLLoader(WizardController.class.getClassLoader().getResource("wizard-fxml/steps/Step0.fxml"), null, bf, cb);
-        Parent step0 = fxmlLoaderStep0.load();
-        step0.getProperties().put(CONTROLLER_KEY, fxmlLoaderStep0.getController());
-
-        FXMLLoader fxmlLoaderStep1 = new FXMLLoader(WizardController.class.getClassLoader().getResource("wizard-fxml/steps/Step1.fxml"), null, bf, cb);
-        Parent step1 = fxmlLoaderStep1.load();
-        step1.getProperties().put(CONTROLLER_KEY, fxmlLoaderStep1.getController());
-
-        FXMLLoader fxmlLoaderStep2 = new FXMLLoader(WizardController.class.getClassLoader().getResource("wizard-fxml/steps/Step2.fxml"), null, bf, cb);
-        Parent step2 = fxmlLoaderStep2.load();
-        step2.getProperties().put(CONTROLLER_KEY, fxmlLoaderStep2.getController());
-
-        FXMLLoader fxmlLoaderStep3 = new FXMLLoader(WizardController.class.getClassLoader().getResource("wizard-fxml/steps/Step3.fxml"), null, bf, cb);
-        Parent step3 = fxmlLoaderStep3.load();
-        step3.getProperties().put(CONTROLLER_KEY, fxmlLoaderStep3.getController());
-
-        FXMLLoader fxmlLoaderStep4 = new FXMLLoader(WizardController.class.getClassLoader().getResource("wizard-fxml/steps/Step4.fxml"), null, bf, cb);
-        Parent step4 = fxmlLoaderStep4.load();
-        step4.getProperties().put(CONTROLLER_KEY, fxmlLoaderStep4.getController());
-
-        FXMLLoader fxmlLoaderStep5 = new FXMLLoader(WizardController.class.getClassLoader().getResource("wizard-fxml/steps/Step5.fxml"), null, bf, cb);
-        Parent step5 = fxmlLoaderStep5.load();
-        step5.getProperties().put(CONTROLLER_KEY, fxmlLoaderStep5.getController());
-
-        FXMLLoader fxmlLoaderStep6 = new FXMLLoader(WizardController.class.getClassLoader().getResource("wizard-fxml/steps/Step6.fxml"), null, bf, cb);
-        Parent step6 = fxmlLoaderStep6.load();
-        step6.getProperties().put(CONTROLLER_KEY, fxmlLoaderStep6.getController());
-
-        FXMLLoader fxmlLoaderConfirm = new FXMLLoader(WizardController.class.getClassLoader().getResource("wizard-fxml/steps/Confirm.fxml"), null, bf, cb);
-        Parent confirm = fxmlLoaderConfirm.load();
-        confirm.getProperties().put(CONTROLLER_KEY, fxmlLoaderConfirm.getController());
-
-        FXMLLoader fxmlLoaderCompleted = new FXMLLoader(WizardController.class.getClassLoader().getResource("wizard-fxml/steps/Completed.fxml"), null, bf, cb);
-        Parent completed = fxmlLoaderCompleted.load();
-        completed.getProperties().put(CONTROLLER_KEY, fxmlLoaderCompleted.getController());
-
-        steps.addAll(Arrays.asList(
-                step0, step1, step2, step3, step4, step5, step6, confirm, completed
+        // Specify step FXMLs in order that they should appear
+        ArrayList<String> controllers = new ArrayList<>(Arrays.asList(
+                "wizard-fxml/steps/Step0.fxml",
+                "wizard-fxml/steps/Step1.fxml",
+                "wizard-fxml/steps/Step2.fxml",
+                "wizard-fxml/steps/Step3.fxml",
+                "wizard-fxml/steps/Step4.fxml",
+                "wizard-fxml/steps/Step5.fxml",
+                "wizard-fxml/steps/Step6.fxml",
+                "wizard-fxml/steps/Confirm.fxml",
+                "wizard-fxml/steps/Completed.fxml"
         ));
+
+        // Create steps and add them to the list
+        for (String ctrlPath : controllers) {
+            // Create step
+            FXMLLoader loader = new FXMLLoader(WizardController.class.getClassLoader().getResource(ctrlPath), null, bf, cb);
+            Parent step = loader.load();
+            step.getProperties().put(CONTROLLER_KEY, loader.getController());
+
+            // Add step to steps list
+            steps.add(step);
+        }
     }
 
     private Circle createIndicatorCircle(int i) {
