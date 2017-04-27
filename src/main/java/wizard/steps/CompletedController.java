@@ -332,5 +332,9 @@ public class CompletedController {
 
         // Reset Details tab
         logTextArea.setText("");
+
+        // Reset progress indicator
+        progressIndicator.setVisible(false);
+        progressIndicator.setProgress(0.0);
     }
 }
