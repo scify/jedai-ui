@@ -17,6 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Callback;
+import wizard.steps.CompletedController;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -244,6 +245,13 @@ public class WizardController {
         setLabelAndDescription(currentStep.getValue());
 
         model.reset();
+
+        // Get controller of last step, to reset its data (only if it's an instance of the CompletedController)
+        Object ctrl = steps.get(steps.size() - 1).getProperties().get(CONTROLLER_KEY);
+
+        if (ctrl instanceof CompletedController) {
+            ((CompletedController) ctrl).resetData();
+        }
     }
 
     private Method getMethod(Class<? extends Annotation> an, Object obj) {
