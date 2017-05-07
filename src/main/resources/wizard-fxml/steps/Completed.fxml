@@ -13,7 +13,7 @@
                 <Font name="System Bold" size="24.0"/>
             </font>
         </Label>
-        <TabPane prefHeight="241.0" prefWidth="680.0" tabClosingPolicy="UNAVAILABLE">
+        <TabPane fx:id="resultsTabPane" prefHeight="241.0" prefWidth="680.0" tabClosingPolicy="UNAVAILABLE">
             <tabs>
                 <Tab text="Results">
                     <content>

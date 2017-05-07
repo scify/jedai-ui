@@ -56,11 +56,13 @@ public class CompletedController {
     public ProgressIndicator progressIndicator;
     public TextArea logTextArea;
     public Label totalTimeLabel;
-    private Logger log = LoggerFactory.getLogger(CompletedController.class);
+    public TabPane resultsTabPane;
 
+    private SingleSelectionModel<Tab> tabSelectionModel;
     private Gauge f1Gauge;
     private Gauge recallGauge;
     private Gauge precisionGauge;
+    private Logger log = LoggerFactory.getLogger(CompletedController.class);
 
     private List<EquivalenceCluster> entityClusters;
 
@@ -91,6 +93,9 @@ public class CompletedController {
 
         System.setOut(out);
         System.setErr(err);
+
+        // Save the TabPane's selection model to use it for resetting the selected tab later
+        tabSelectionModel = resultsTabPane.getSelectionModel();
     }
 
     /**
@@ -336,5 +341,8 @@ public class CompletedController {
         // Reset progress indicator
         progressIndicator.setVisible(false);
         progressIndicator.setProgress(0.0);
+
+        // Go to first tabset tab
+        tabSelectionModel.selectFirst();
     }
 }
