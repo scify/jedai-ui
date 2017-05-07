@@ -27,11 +27,15 @@ import eu.hansolo.medusa.Gauge;
 import eu.hansolo.medusa.Gauge.SkinType;
 import eu.hansolo.medusa.GaugeBuilder;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import model.WorkflowResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.BlockCleaningCustomComparator;
@@ -44,8 +48,9 @@ import wizard.WizardData;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CompletedController {
     public Button runBtn;
@@ -61,6 +66,8 @@ public class CompletedController {
     public TableView wbGrid;
 
     private SingleSelectionModel<Tab> tabSelectionModel;
+    private final ObservableList<WorkflowResult> tableData = FXCollections.observableArrayList();
+
     private Gauge f1Gauge;
     private Gauge recallGauge;
     private Gauge precisionGauge;
@@ -107,24 +114,26 @@ public class CompletedController {
      * Initialize the workbench grid which shows the results of previous JedAI runs
      */
     private void initGrid() {
-        // Disable grid editing
+        // Set grid properties
         wbGrid.setEditable(false);
+        wbGrid.setItems(tableData);
 
-        // Add columns for grid
-        List<String> columnNames = Arrays.asList(
-                "Run #",
-                "Recall",
-                "Precision",
-                "F1-measure",
-                "Total time",
-                "Input instances",
-                "Clusters #"
-        );
+        // Specify columns for grid
+        Map<String, String> tableCols = new HashMap<>();
+        tableCols.put("Run #", "runNumber");
+        tableCols.put("Recall", "recall");
+        tableCols.put("Precision", "precision");
+        tableCols.put("F1-measure", "f1Measure");
+        tableCols.put("Total ", "totalTime");
+        tableCols.put("Input instances", "inputInstances");
+        tableCols.put("Clusters #", "numOfClusters");
 
         // Create column objects
-        for (String colName : columnNames) {
-            //noinspection unchecked
-            wbGrid.getColumns().add(new TableColumn(colName));
+        for (String colName : tableCols.keySet()) {
+            TableColumn col = new TableColumn(colName);
+            col.setCellValueFactory(new PropertyValueFactory<WorkflowResult, String>(tableCols.get(colName)));
+
+            wbGrid.getColumns().add(col);
         }
     }
 
