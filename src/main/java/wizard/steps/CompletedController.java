@@ -44,6 +44,7 @@ import wizard.WizardData;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.List;
 
 public class CompletedController {
@@ -57,6 +58,7 @@ public class CompletedController {
     public TextArea logTextArea;
     public Label totalTimeLabel;
     public TabPane resultsTabPane;
+    public TableView wbGrid;
 
     private SingleSelectionModel<Tab> tabSelectionModel;
     private Gauge f1Gauge;
@@ -96,6 +98,34 @@ public class CompletedController {
 
         // Save the TabPane's selection model to use it for resetting the selected tab later
         tabSelectionModel = resultsTabPane.getSelectionModel();
+
+        // Setup table for previous results (Workbench)
+        initGrid();
+    }
+
+    /**
+     * Initialize the workbench grid which shows the results of previous JedAI runs
+     */
+    private void initGrid() {
+        // Disable grid editing
+        wbGrid.setEditable(false);
+
+        // Add columns for grid
+        List<String> columnNames = Arrays.asList(
+                "Run #",
+                "Recall",
+                "Precision",
+                "F1-measure",
+                "Total time",
+                "Input instances",
+                "Clusters #"
+        );
+
+        // Create column objects
+        for (String colName : columnNames) {
+            //noinspection unchecked
+            wbGrid.getColumns().add(new TableColumn(colName));
+        }
     }
 
     /**
