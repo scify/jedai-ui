@@ -2,7 +2,6 @@ package model;
 
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleLongProperty;
 
 /**
  * A workflow run result that can be shown in the Workbench
@@ -12,11 +11,11 @@ public class WorkflowResult {
     private final SimpleDoubleProperty recall;
     private final SimpleDoubleProperty precision;
     private final SimpleDoubleProperty f1Measure;
-    private final SimpleLongProperty totalTime;
+    private final SimpleDoubleProperty totalTime;
     private final SimpleIntegerProperty inputInstances;
     private final SimpleIntegerProperty numOfClusters;
 
-    public WorkflowResult(SimpleIntegerProperty runNumber, SimpleDoubleProperty recall, SimpleDoubleProperty precision, SimpleDoubleProperty f1Measure, SimpleLongProperty totalTime, SimpleIntegerProperty inputInstances, SimpleIntegerProperty numOfClusters) {
+    public WorkflowResult(SimpleIntegerProperty runNumber, SimpleDoubleProperty recall, SimpleDoubleProperty precision, SimpleDoubleProperty f1Measure, SimpleDoubleProperty totalTime, SimpleIntegerProperty inputInstances, SimpleIntegerProperty numOfClusters) {
         this.runNumber = runNumber;
         this.recall = recall;
         this.precision = precision;
@@ -58,11 +57,11 @@ public class WorkflowResult {
         return f1Measure;
     }
 
-    public long getTotalTime() {
+    public double getTotalTime() {
         return totalTime.get();
     }
 
-    public SimpleLongProperty totalTimeProperty() {
+    public SimpleDoubleProperty totalTimeProperty() {
         return totalTime;
     }
 

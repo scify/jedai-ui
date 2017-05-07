@@ -27,6 +27,8 @@ import eu.hansolo.medusa.Gauge;
 import eu.hansolo.medusa.Gauge.SkinType;
 import eu.hansolo.medusa.GaugeBuilder;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -48,7 +50,7 @@ import wizard.WizardData;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -119,12 +121,12 @@ public class CompletedController {
         wbGrid.setItems(tableData);
 
         // Specify columns for grid
-        Map<String, String> tableCols = new HashMap<>();
+        Map<String, String> tableCols = new LinkedHashMap<>();
         tableCols.put("Run #", "runNumber");
         tableCols.put("Recall", "recall");
         tableCols.put("Precision", "precision");
         tableCols.put("F1-measure", "f1Measure");
-        tableCols.put("Total ", "totalTime");
+        tableCols.put("Total time (sec.)", "totalTime");
         tableCols.put("Input instances", "inputInstances");
         tableCols.put("Clusters #", "numOfClusters");
 
@@ -183,8 +185,6 @@ public class CompletedController {
                 String datasetProfilesD2 = model.getEntityProfilesD2Path();
                 String datasetGroundTruth = model.getGroundTruthPath();
 
-                boolean hasGroundTruth = (datasetGroundTruth != null && !datasetGroundTruth.isEmpty());
-
                 // Step 1: Data reading
                 IEntityReader eReader = new EntitySerializationReader(datasetProfilesD1);
                 List<EntityProfile> profilesD1 = eReader.getEntityProfiles();
@@ -198,17 +198,15 @@ public class CompletedController {
                 }
 
                 AbstractDuplicatePropagation duplicatePropagation = null;
-                if (hasGroundTruth) {
-                    IGroundTruthReader gtReader = new GtSerializationReader(datasetGroundTruth);
+                IGroundTruthReader gtReader = new GtSerializationReader(datasetGroundTruth);
 
-                    if (erType.equals(JedaiOptions.DIRTY_ER)) {
-                        duplicatePropagation = new UnilateralDuplicatePropagation(gtReader.getDuplicatePairs(profilesD1));
-                    } else {
-                        duplicatePropagation = new BilateralDuplicatePropagation(gtReader.getDuplicatePairs(profilesD1, profilesD2));
-                    }
-
-                    System.out.println("Existing Duplicates\t:\t" + duplicatePropagation.getDuplicates().size());
+                if (erType.equals(JedaiOptions.DIRTY_ER)) {
+                    duplicatePropagation = new UnilateralDuplicatePropagation(gtReader.getDuplicatePairs(profilesD1));
+                } else {
+                    duplicatePropagation = new BilateralDuplicatePropagation(gtReader.getDuplicatePairs(profilesD1, profilesD2));
                 }
+
+                System.out.println("Existing Duplicates\t:\t" + duplicatePropagation.getDuplicates().size());
 
                 // Set progress indicator to 20%
                 updateProgress(0.2);
@@ -249,11 +247,9 @@ public class CompletedController {
                     blocks = MethodMapping.processBlocks(blocks, compCleaningMethod);
                 }
 
-                if (hasGroundTruth) {
-                    BlocksPerformance blp = new BlocksPerformance(blocks, duplicatePropagation);
-                    blp.setStatistics();
-                    blp.printStatistics();
-                }
+                BlocksPerformance blp = new BlocksPerformance(blocks, duplicatePropagation);
+                blp.setStatistics();
+                blp.printStatistics();
 
                 // Set progress indicator to 60%
                 updateProgress(0.6);
@@ -286,33 +282,47 @@ public class CompletedController {
                 entityClusters = ec.getDuplicates(simPairs);
 
                 // Print clustering performance
-                if (hasGroundTruth) {
-                    ClustersPerformance clp = new ClustersPerformance(entityClusters, duplicatePropagation);
-                    clp.setStatistics();
-                    clp.printStatistics();
+                ClustersPerformance clp = new ClustersPerformance(entityClusters, duplicatePropagation);
+                clp.setStatistics();
+                clp.printStatistics();
 
-                    // Set gauge values
-                    f1Gauge.setValue(clp.getFMeasure());
-                    recallGauge.setValue(clp.getRecall());
-                    precisionGauge.setValue(clp.getPrecision());
-                }
+                // Set gauge values
+                f1Gauge.setValue(clp.getFMeasure());
+                recallGauge.setValue(clp.getRecall());
+                precisionGauge.setValue(clp.getPrecision());
 
                 // Set progress indicator to 100%
                 updateProgress(1.0);
 
+                // Get final run values
+                double totalTimeSeconds = (System.currentTimeMillis() - startTime) / 1000.0;
+                int inputInstances = profilesD1.size();
+                int numOfClusters = entityClusters.size();
+                double recall = clp.getRecall();
+                double precision = clp.getPrecision();
+                double f1 = clp.getFMeasure();
+
+                // Create entry for Workbench table
+                tableData.add(new WorkflowResult(
+                        new SimpleIntegerProperty(tableData.size() + 1),
+                        new SimpleDoubleProperty(recall),
+                        new SimpleDoubleProperty(precision),
+                        new SimpleDoubleProperty(f1),
+                        new SimpleDoubleProperty(totalTimeSeconds),
+                        new SimpleIntegerProperty(inputInstances),
+                        new SimpleIntegerProperty(numOfClusters)
+                ));
+
                 // Update labels and JavaFX UI components from UI thread
                 Platform.runLater(() -> {
-                    // Get total running time
-                    double totalTimeSeconds = (System.currentTimeMillis() - startTime) / 1000.0;
-
                     // Set label values and show them
-                    numOfInstancesLabel.setText("Input instances: " + profilesD1.size());
+                    numOfInstancesLabel.setText("Input instances: " + inputInstances);
                     numOfInstancesLabel.setVisible(true);
 
                     totalTimeLabel.setText("Total running time: " + String.format("%.1f", totalTimeSeconds) + " sec.");
                     totalTimeLabel.setVisible(true);
 
-                    numOfClustersLabel.setText("Number of clusters: " + entityClusters.size());
+                    numOfClustersLabel.setText("Number of clusters: " + numOfClusters);
                     numOfClustersLabel.setVisible(true);
 
                     // Enable button for result export to CSV
