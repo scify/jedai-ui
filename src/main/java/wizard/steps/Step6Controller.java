@@ -51,8 +51,8 @@ public class Step6Controller {
         dirtyValue = RadioButtonHelper.createButtonGroup(dirtyErContainer, dirtyErOptions, model.entityClusteringProperty());
         cleanCleanValue = RadioButtonHelper.createButtonGroup(cleanCleanErContainer, cleanCleanErOptions, model.entityClusteringProperty());
 
-        // Default is Dirty ER
-        setErType(JedaiOptions.DIRTY_ER);
+        // Enable the appropriate radio buttons depending on default ER type
+        setErType(model.getErType());
 
         // Add listener to change the available methods depending on selected ER type
         model.erTypeProperty().addListener((observable, oldValue, newValue) -> setErType(newValue));
