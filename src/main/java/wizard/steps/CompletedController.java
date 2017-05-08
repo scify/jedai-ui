@@ -214,6 +214,8 @@ public class CompletedController {
                 // Step 2: Block Building
                 BlockBuildingMethod blockingWorkflow = MethodMapping.blockBuildingMethods.get(model.getBlockBuilding());
 
+                double overheadStart = System.currentTimeMillis();
+
                 IBlockBuilding blockBuildingMethod = BlockBuildingMethod.getDefaultConfiguration(blockingWorkflow);
                 List<AbstractBlock> blocks;
                 if (erType.equals(JedaiOptions.DIRTY_ER)) {
@@ -247,9 +249,11 @@ public class CompletedController {
                     blocks = MethodMapping.processBlocks(blocks, compCleaningMethod);
                 }
 
+                double overheadEnd = System.currentTimeMillis();
+
                 BlocksPerformance blp = new BlocksPerformance(blocks, duplicatePropagation);
                 blp.setStatistics();
-                blp.printStatistics();
+                blp.printStatistics(overheadEnd - overheadStart);
 
                 // Set progress indicator to 60%
                 updateProgress(0.6);
