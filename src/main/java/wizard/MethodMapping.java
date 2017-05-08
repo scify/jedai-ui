@@ -55,6 +55,9 @@ public class MethodMapping {
             case JedaiOptions.RICOCHET_SR_CLUSTERING:
                 method = new RicochetSRClustering();
                 break;
+            case JedaiOptions.UNIQUE_MAPPING_CLUSTERING:
+                method = new UniqueMappingClustering();
+                break;
             default:
                 method = null;
         }
