@@ -3,10 +3,11 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      spacing="10.0" xmlns="http://javafx.com/javafx/8.0.91" xmlns:fx="http://javafx.com/fxml/1"
+      spacing="10.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="wizard.steps.Step0Controller">
     <children>
         <Label text="Overview of Steps">
@@ -14,8 +15,46 @@
                 <Font name="System Bold" size="24.0"/>
             </font>
         </Label>
-        <TextArea editable="false" prefHeight="200.0" prefWidth="400.0"
-                  text="1. Data Reading&#10;2. Block Building&#10;3. Block Cleaning Methods&#10;4. Comparison Cleaning Method&#10;5. Entity Matching&#10;6. Entity Clustering"/>
+        <HBox prefHeight="250.0" prefWidth="650.0">
+            <children>
+                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="180.0" spacing="20.0">
+                    <children>
+                        <ImageView fitHeight="100.0" fitWidth="180.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../../images/PDU%20logo.png"/>
+                            </image>
+                        </ImageView>
+                        <ImageView fitHeight="100.0" fitWidth="180.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../../images/UoA%20logo.png"/>
+                            </image>
+                        </ImageView>
+                    </children>
+                    <HBox.margin>
+                        <Insets left="10.0" right="10.0"/>
+                    </HBox.margin>
+                </VBox>
+                <TextArea editable="false" prefHeight="169.0" prefWidth="250.0"
+                          text="1. Data Reading&#10;2. Block Building&#10;3. Block Cleaning Methods&#10;4. Comparison Cleaning Method&#10;5. Entity Matching&#10;6. Entity Clustering"/>
+                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="180.0" spacing="20.0">
+                    <children>
+                        <ImageView fitHeight="100.0" fitWidth="180.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../../images/SciFY%20logo.png"/>
+                            </image>
+                        </ImageView>
+                        <ImageView fitHeight="100.0" fitWidth="180.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../../images/NCSR%20logo.jpg"/>
+                            </image>
+                        </ImageView>
+                    </children>
+                    <HBox.margin>
+                        <Insets left="10.0" right="10.0"/>
+                    </HBox.margin>
+                </VBox>
+            </children>
+        </HBox>
     </children>
     <padding>
         <Insets bottom="40.0" left="40.0" right="40.0" top="40.0"/>
