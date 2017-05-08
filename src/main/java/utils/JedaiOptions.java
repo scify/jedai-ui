@@ -46,4 +46,5 @@ public class JedaiOptions {
     public static final String MARKOV_CLUSTERING = "Markov Clustering";
     public static final String MERGE_CENTER_CLUSTERING = "Merge-Center Clustering";
     public static final String RICOCHET_SR_CLUSTERING = "Ricochet SR Clustering";
+    public static final String UNIQUE_MAPPING_CLUSTERING = "Unique Mapping Clustering";
 }

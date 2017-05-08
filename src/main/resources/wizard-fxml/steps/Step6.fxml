@@ -2,10 +2,10 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      spacing="10.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+      spacing="5.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="wizard.steps.Step6Controller">
     <children>
         <Label text="Entity Clustering">
@@ -13,8 +13,27 @@
                 <Font name="System Bold" size="24.0"/>
             </font>
         </Label>
-        <Label text="Select an algorithm for clustering the entities"/>
-        <VBox fx:id="radioBtnsContainer" prefHeight="200.0" prefWidth="250.0" spacing="5.0"/>
+        <Label text="Select an algorithm for clustering the entities">
+            <VBox.margin>
+                <Insets bottom="5.0"/>
+            </VBox.margin>
+        </Label>
+        <HBox prefHeight="225.0" prefWidth="600.0">
+            <children>
+                <VBox fx:id="dirtyErContainer" prefHeight="200.0" prefWidth="300.0" spacing="5.0">
+                    <children>
+                        <Label alignment="CENTER" prefWidth="300.0" text="Algorithms for Dirty ER"
+                               textAlignment="CENTER" underline="true"/>
+                    </children>
+                </VBox>
+                <VBox fx:id="cleanCleanErContainer" prefHeight="200.0" prefWidth="300.0" spacing="5.0">
+                    <children>
+                        <Label alignment="CENTER" prefWidth="300.0" text="Algorithms for Clean-Clean ER"
+                               textAlignment="CENTER" underline="true" VBox.vgrow="NEVER"/>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
     </children>
     <padding>
         <Insets bottom="20.0" left="40.0" right="40.0" top="20.0"/>
