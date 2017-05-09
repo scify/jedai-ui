@@ -1,12 +1,15 @@
 package wizard.steps;
 
 import com.google.inject.Inject;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.BlockCleaningCustomComparator;
@@ -48,10 +51,28 @@ public class Step3Controller {
 
         // Add items to the list
         list.getItems().addAll(optionsMap.keySet());
-        updateOptions(model.getErType());
+        list.getItems().sort(listComparator);
 
         // Set list cells to have checkboxes which use the map's boolean values
-        list.setCellFactory(CheckBoxListCell.forListView(optionsMap::get));
+//        list.setCellFactory(CheckBoxListCell.forListView(optionsMap::get));
+        Callback<ListView<String>, ListCell<String>> wrappedCellFactory = list.getCellFactory();
+
+        list.setCellFactory(listView -> {
+            CheckBoxListCell<String> cell = wrappedCellFactory != null ? (CheckBoxListCell<String>) wrappedCellFactory.call(listView) : new CheckBoxListCell<>();
+            cell.setSelectedStateCallback(param -> optionsMap.get(param));
+
+            Platform.runLater(() -> {
+                if (cell.getItem() != null && cell.getItem().equals(JedaiOptions.BLOCK_SCHEDULING)) {
+                    // Add listener to disable the cell automatically if needed when the ER type changes
+                    model.erTypeProperty().addListener((observable, oldValue, newValue) -> cell.setDisable(newValue.equals(JedaiOptions.DIRTY_ER)));
+
+                    // Disable the cell if ER type is already Dirty ER
+                    cell.setDisable(model.getErType().equals(JedaiOptions.DIRTY_ER));
+                }
+            });
+
+            return cell;
+        });
 
         // Listen for changes in each BooleanProperty
         for (String s : optionsMap.keySet()) {
@@ -80,32 +101,12 @@ public class Step3Controller {
             }
         });
 
-        // Listen for ER type changes, and remove Block Scheduling in Dirty ER
-        model.erTypeProperty().addListener((observable, oldValue, newValue) -> updateOptions(newValue));
-    }
-
-    /**
-     * Update the available Block Cleaning methods, depending on which ER type is selected
-     *
-     * @param erType
-     */
-    private void updateOptions(String erType) {
-        // Check which ER method is selected
-        if (erType.equals(JedaiOptions.DIRTY_ER)) {
-            // Remove it from the list for Dirty ER
-            list.getItems().remove(JedaiOptions.BLOCK_SCHEDULING);
-
-            // Set block scheduling to deselected
-            optionsMap.get(JedaiOptions.BLOCK_SCHEDULING).setValue(false);
-        } else {
-            // For Clean Clean ER, add block scheduling to the list of options
-            if (!list.getItems().contains(JedaiOptions.BLOCK_SCHEDULING)) {
-                list.getItems().add(JedaiOptions.BLOCK_SCHEDULING);
+        // Listen for ER type changes, and deselect Block Scheduling in Dirty ER
+        model.erTypeProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.equals(JedaiOptions.DIRTY_ER)) {
+                optionsMap.get(JedaiOptions.BLOCK_SCHEDULING).setValue(false);
             }
-        }
-
-        // Sort the list
-        list.getItems().sort(listComparator);
+        });
     }
 
     @Validate
