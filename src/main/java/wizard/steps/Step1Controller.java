@@ -1,5 +1,8 @@
 package wizard.steps;
 
+import DataReader.EntityReader.EntitySerializationReader;
+import DataReader.EntityReader.IEntityReader;
+import DataReader.GroundTruthReader.GtSerializationReader;
 import com.google.inject.Inject;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,7 +21,9 @@ import wizard.WizardData;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Step1Controller {
     public Button selectGroundTruthBtn;
@@ -60,38 +65,83 @@ public class Step1Controller {
         selectEntityD2Btn.disableProperty().bind(model.erTypeProperty().isEqualTo(JedaiOptions.DIRTY_ER));
 
         // Set initial values to text fields (for testing...)
-//        entityProfTextField.setText("C:\\Users\\leots\\Documents\\JedAIToolkit\\datasets\\restaurantProfiles");
-//        groundTruthTextField.setText("C:\\Users\\leots\\Documents\\JedAIToolkit\\datasets\\restaurantIdDuplicates");
+//        entityProfTextField.setText("C:\\Users\\leots\\Documents\\JedAIToolkit\\datasets\\dirtyErFiles\\restaurantProfiles");
+//        groundTruthTextField.setText("C:\\Users\\leots\\Documents\\JedAIToolkit\\datasets\\dirtyErFiles\\restaurantIdDuplicates");
     }
 
     @Validate
     public boolean validate() throws Exception {
+        // Create HashMap with values to check (ordered)
+        Map<String, String> files = new LinkedHashMap<>();
+        files.put("entities1", model.getEntityProfilesPath());
+        if (model.getErType().equals(JedaiOptions.CLEAN_CLEAN_ER))
+            // For Clean-Clean ER, will also check that the 2nd path has been filled
+            files.put("entities2", model.getEntityProfilesD2Path());
+        files.put("ground_truth", model.getGroundTruthPath());
+
         boolean ok;
 
-        String entityPath1 = model.getEntityProfilesPath();
-        String entityPath2 = model.getEntityProfilesD2Path();
-        String gTruthPath = model.getGroundTruthPath();
+        // Check that file paths have been entered
+        ok = files.get("entities1") != null && !files.get("entities1").isEmpty()
+                && files.get("ground_truth") != null && !files.get("ground_truth").isEmpty();
 
-        if (model.getErType().equals(JedaiOptions.DIRTY_ER)) {
-            // Only need 1 dataset and ground truth
-            ok = entityPath1 != null && !entityPath1.isEmpty() && gTruthPath != null && !gTruthPath.isEmpty();
-        } else {
-            // Also need to have 2nd dataset path
-            ok = entityPath1 != null && !entityPath1.isEmpty() && entityPath2 != null && !entityPath2.isEmpty()
-                    && gTruthPath != null && !gTruthPath.isEmpty();
+        if (model.getErType().equals(JedaiOptions.CLEAN_CLEAN_ER)) {
+            ok = ok && files.get("entities2") != null && !files.get("entities2").isEmpty();
         }
 
-        // Show error if there was a problem
         if (!ok) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Dataset Selection");
-            alert.setHeaderText("Missing Field");
-            alert.setContentText("Please fill all the enabled fields!");
-            alert.showAndWait();
+            // Show missing field error
+            showError("Missing Field", "Please fill all the enabled fields!");
+            return false;
         }
 
-        //todo: check that files exist because it is possible to set the paths directly from the text fields
-        return ok;
+        // Check that the file paths given exist and are actually files
+        for (String path : files.values()) {
+            if (!new File(path).isFile()) {
+                // Show error and stop validation
+                showError("File does not exist!", "The file: \"" + path + "\"does not exist!");
+                return false;
+            }
+        }
+
+        // Check that the files can actually be read with the appropriate readers
+        for (String key : files.keySet()) {
+            String path = files.get(key);
+
+            try {
+                switch (key) {
+                    case "entities1":
+                    case "entities2":
+                        // For entities, use IEntityReader
+                        IEntityReader eReader = new EntitySerializationReader(path);
+                        eReader.getEntityProfiles();
+                        break;
+                    case "ground_truth":
+                        new GtSerializationReader(path);
+                        break;
+                }
+            } catch (Exception e) {
+                // Show invalid input file error and stop checking other files
+                showError("Invalid input file!", "The file \"" + path + "\" could not be read successfully!\n\nDetails: " + e.toString() + " (" + e.getMessage() + ")");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Show a dataset selection error popup with customizable header & text
+     *
+     * @param header Header of error message
+     * @param text   Text of error message
+     */
+    private void showError(String header, String text) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Dataset Selection");
+        alert.setHeaderText(header);
+        alert.setContentText(text);
+        alert.showAndWait();
     }
 
     @Submit
