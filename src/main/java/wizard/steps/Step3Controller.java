@@ -9,6 +9,7 @@ import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.BlockCleaningCustomComparator;
 import utils.JedaiOptions;
 import wizard.Submit;
 import wizard.Validate;
@@ -23,6 +24,7 @@ public class Step3Controller {
     public ListView<String> list;
     public ListView<String> selectedList;
 
+    private BlockCleaningCustomComparator listComparator;
     private Map<String, SimpleBooleanProperty> optionsMap;
     private Logger log = LoggerFactory.getLogger(Step3Controller.class);
 
@@ -31,6 +33,9 @@ public class Step3Controller {
 
     @FXML
     public void initialize() {
+        // Create comparator object that will be used for list sorting later
+        listComparator = new BlockCleaningCustomComparator();
+
         // Initialize block cleaning methods list
         model.setBlockCleaningMethods(FXCollections.observableList(new ArrayList<>()));
 
@@ -59,6 +64,9 @@ public class Step3Controller {
                     model.getBlockCleaningMethods().remove(s);
                     selectedList.getItems().remove(s);
                 }
+
+                // Sort the list to the correct order using the custom comparator
+                selectedList.getItems().sort(listComparator);
             });
         }
 
@@ -95,6 +103,9 @@ public class Step3Controller {
                 list.getItems().add(JedaiOptions.BLOCK_SCHEDULING);
             }
         }
+
+        // Sort the list
+        list.getItems().sort(listComparator);
     }
 
     @Validate
