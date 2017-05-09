@@ -1,8 +1,12 @@
 package wizard.steps;
 
+import DataModel.EntityProfile;
 import DataReader.EntityReader.EntitySerializationReader;
 import DataReader.EntityReader.IEntityReader;
 import DataReader.GroundTruthReader.GtSerializationReader;
+import DataReader.GroundTruthReader.IGroundTruthReader;
+import Utilities.DataStructures.BilateralDuplicatePropagation;
+import Utilities.DataStructures.UnilateralDuplicatePropagation;
 import com.google.inject.Inject;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -105,26 +109,31 @@ public class Step1Controller {
         }
 
         // Check that the files can actually be read with the appropriate readers
-        for (String key : files.keySet()) {
-            String path = files.get(key);
+        try {
+            String erType = model.getErType();
 
-            try {
-                switch (key) {
-                    case "entities1":
-                    case "entities2":
-                        // For entities, use IEntityReader
-                        IEntityReader eReader = new EntitySerializationReader(path);
-                        eReader.getEntityProfiles();
-                        break;
-                    case "ground_truth":
-                        new GtSerializationReader(path);
-                        break;
-                }
-            } catch (Exception e) {
-                // Show invalid input file error and stop checking other files
-                showError("Invalid input file!", "The file \"" + path + "\" could not be read successfully!\n\nDetails: " + e.toString() + " (" + e.getMessage() + ")");
-                return false;
+            // Read 1st profiles file
+            IEntityReader eReader = new EntitySerializationReader(files.get("entities1"));
+            List<EntityProfile> profilesD1 = eReader.getEntityProfiles();
+
+            // In case Clean-Clear ER is selected, also read 2nd profiles file
+            List<EntityProfile> profilesD2 = null;
+            if (erType.equals(JedaiOptions.CLEAN_CLEAN_ER)) {
+                IEntityReader eReader2 = new EntitySerializationReader(files.get("entities2"));
+                profilesD2 = eReader2.getEntityProfiles();
             }
+
+            IGroundTruthReader gtReader = new GtSerializationReader(files.get("ground_truth"));
+
+            if (erType.equals(JedaiOptions.DIRTY_ER)) {
+                new UnilateralDuplicatePropagation(gtReader.getDuplicatePairs(profilesD1));
+            } else {
+                new BilateralDuplicatePropagation(gtReader.getDuplicatePairs(profilesD1, profilesD2));
+            }
+        } catch (Exception e) {
+            // Show invalid input file error and stop checking other files
+            showError("Invalid input files!", "The input files could not be read successfully.\n\nDetails: " + e.toString() + " (" + e.getMessage() + ")");
+            return false;
         }
 
         return true;
