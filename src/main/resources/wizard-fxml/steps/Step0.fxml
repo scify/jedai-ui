@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      spacing="10.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+      spacing="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="wizard.steps.Step0Controller">
     <children>
         <Label text="Overview of Steps">
@@ -17,16 +17,16 @@
         </Label>
         <HBox prefHeight="250.0" prefWidth="650.0">
             <children>
-                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="180.0" spacing="20.0">
+                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="180.0" spacing="50.0">
                     <children>
                         <ImageView fitHeight="100.0" fitWidth="180.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../../images/PDU%20logo.png"/>
+                                <Image url="@../../images/UoA%20logo.png"/>
                             </image>
                         </ImageView>
                         <ImageView fitHeight="100.0" fitWidth="180.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../../images/UoA%20logo.png"/>
+                                <Image url="@../../images/NCSR%20logo.png"/>
                             </image>
                         </ImageView>
                     </children>
@@ -45,7 +45,7 @@
                         </ImageView>
                         <ImageView fitHeight="100.0" fitWidth="180.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../../images/NCSR%20logo.jpg"/>
+                                <Image url="@../../images/PDU%20logo.png"/>
                             </image>
                         </ImageView>
                     </children>
