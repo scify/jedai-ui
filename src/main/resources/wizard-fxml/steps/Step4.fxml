@@ -4,15 +4,19 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      prefHeight="300.0" prefWidth="400.0" spacing="20.0" xmlns="http://javafx.com/javafx/8.0.111"
+      prefHeight="300.0" prefWidth="400.0" spacing="20.0" xmlns="http://javafx.com/javafx/8"
       xmlns:fx="http://javafx.com/fxml/1" fx:controller="wizard.steps.Step4Controller">
     <children>
-        <Label text="Comparison Cleaning Method">
+        <Label text="Comparison Cleaning">
             <font>
                 <Font name="System Bold" size="24.0"/>
             </font>
         </Label>
-        <Label text="Select a comparison cleaning method (optional)"/>
+        <Label text="Select a comparison cleaning method (optional)">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Label>
         <VBox fx:id="radioBtnsContainer" prefHeight="200.0" prefWidth="400.0" spacing="5.0"/>
     </children>
 </VBox>

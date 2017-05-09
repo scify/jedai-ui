@@ -13,7 +13,11 @@
                 <Font name="System Bold" size="24.0"/>
             </font>
         </Label>
-        <Label text="Select files for the entity profiles and ground-truth"/>
+        <Label text="Select files for the entity profiles and ground-truth">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Label>
         <VBox fx:id="radioBtnsContainer" prefHeight="60.0" prefWidth="100.0" spacing="5.0"/>
         <GridPane>
             <columnConstraints>

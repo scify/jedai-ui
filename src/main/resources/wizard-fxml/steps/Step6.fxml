@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      spacing="5.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+      spacing="5.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="wizard.steps.Step6Controller">
     <children>
         <Label text="Entity Clustering">
@@ -17,19 +17,30 @@
             <VBox.margin>
                 <Insets bottom="5.0"/>
             </VBox.margin>
+            <font>
+                <Font size="14.0"/>
+            </font>
         </Label>
         <HBox prefHeight="225.0" prefWidth="600.0">
             <children>
                 <VBox fx:id="dirtyErContainer" prefHeight="200.0" prefWidth="300.0" spacing="5.0">
                     <children>
                         <Label alignment="CENTER" prefWidth="300.0" text="Algorithms for Dirty ER"
-                               textAlignment="CENTER" underline="true"/>
+                               textAlignment="CENTER" underline="true">
+                            <font>
+                                <Font size="13.0"/>
+                            </font>
+                        </Label>
                     </children>
                 </VBox>
                 <VBox fx:id="cleanCleanErContainer" prefHeight="200.0" prefWidth="300.0" spacing="5.0">
                     <children>
                         <Label alignment="CENTER" prefWidth="300.0" text="Algorithms for Clean-Clean ER"
-                               textAlignment="CENTER" underline="true" VBox.vgrow="NEVER"/>
+                               textAlignment="CENTER" underline="true" VBox.vgrow="NEVER">
+                            <font>
+                                <Font size="13.0"/>
+                            </font>
+                        </Label>
                     </children>
                 </VBox>
             </children>
