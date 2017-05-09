@@ -34,9 +34,11 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.util.StringConverter;
 import model.WorkflowResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +52,8 @@ import wizard.WizardData;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
+import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -130,6 +134,8 @@ public class CompletedController {
         tableCols.put("Input instances", "inputInstances");
         tableCols.put("Clusters #", "numOfClusters");
 
+        List<String> colsToFormat = Arrays.asList("Recall", "Precision", "F1-measure");
+
         int colsNum = tableCols.size();
 
         // Create column objects
@@ -139,6 +145,29 @@ public class CompletedController {
 
             // Set the width to be the same for all columns (subtract not needed but prevents horizontal scrollbar...)
             col.prefWidthProperty().bind(workbenchTable.widthProperty().multiply(1.0 / colsNum).subtract(1));
+
+            if (colsToFormat.contains(colName)) {
+                // Add number formatter which shows maximum 3 fraction digits
+                col.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<Double>() {
+                    private final NumberFormat nf = NumberFormat.getNumberInstance();
+
+                    {
+                        nf.setMaximumFractionDigits(3);
+                        nf.setMinimumFractionDigits(1);
+                    }
+
+                    @Override
+                    public String toString(Double object) {
+                        return nf.format(object);
+                    }
+
+                    @Override
+                    public Double fromString(String string) {
+                        // Not needed because we don't edit the table
+                        return null;
+                    }
+                }));
+            }
 
             // Add column to the table
             workbenchTable.getColumns().add(col);
