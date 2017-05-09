@@ -61,28 +61,29 @@ public class WizardController {
     @FXML
     public void initialize() throws Exception {
         // Initialize ArrayLists with step texts & descriptions
-        this.stepTexts = new ArrayList<>();
-        this.stepTexts.add("Welcome");
-        this.stepTexts.add("Step 1: Data Reading");
-        this.stepTexts.add("Step 2: Block Building");
-        this.stepTexts.add("Step 3: Block Cleaning");
-        this.stepTexts.add("Step 4: Comparison Cleaning");
-        this.stepTexts.add("Step 5: Entity Matching");
-        this.stepTexts.add("Step 6: Entity Clustering");
-        this.stepTexts.add("Selection Confirmation");
-        this.stepTexts.add("Workflow Execution");
+        this.stepTexts = Arrays.asList(
+                "Welcome",
+                "Step 1: Data Reading",
+                "Step 2: Block Building",
+                "Step 3: Block Cleaning",
+                "Step 4: Comparison Cleaning",
+                "Step 5: Entity Matching",
+                "Step 6: Entity Clustering",
+                "Selection Confirmation",
+                "Workflow Execution"
+        );
 
-        this.stepDescriptions = new ArrayList<>();
-        this.stepDescriptions.add("Welcome description");
-        this.stepDescriptions.add("Data reading description");
-        this.stepDescriptions.add("Block Building description");
-        this.stepDescriptions.add("Block Cleaning description");
-        this.stepDescriptions.add("Comparison Cleaning description");
-        this.stepDescriptions.add("Entity Matching description");
-        this.stepDescriptions.add("Entity Clustering description");
-        this.stepDescriptions.add("Confirm the selected values and press the \"Next\" button to go to the results page.");
-        this.stepDescriptions.add("Press \"Run algorithm\" to run the algorithm. You can export the results to a CSV file with the \"Export CSV\" button.");
-
+        this.stepDescriptions = Arrays.asList(
+                "Welcome to JedAI, an open source, high scalability toolkit that offers out-of-the-box solutions for any data integration task.",
+                "Data Reading transforms the input data into a list of entity profiles.",
+                "Block Building clusters entities into blocks in a lazy manner that relies on unsupervised blocking keys: every token in an attribute value forms a key. Blocks are then extracted, based on its equality or on its similarity with other keys.",
+                "The goal of Block Cleaning is to clean a set of blocks from unnecessary comparisons, which can be either redundant or superfluous. Its methods operate on the coarse level of entire blocks.",
+                "Similar to Block Cleaning, this step aims to clean a set of blocks from both redundant and superfluous comparisons. Unlike Block Cleaning, its methods operate on the finer granularity of individual comparisons.",
+                "Entity Matching compares pairs of entity profiles, associating every pair with a similarity in [0,1]. Its output comprises the similarity graph, i.e., an undirected, weighted graph where the nodes correspond to entities and the edges connect pairs of compared entities.",
+                "Entity Clustering takes as input the similarity graph produced by Entity Matching and partitions it into a set of equivalence clusters, with every cluster corresponding to a distinct real-world object.",
+                "Confirm the selected values and press the \"Next\" button to go to the results page.",
+                "Press \"Run algorithm\" to run the algorithm. You can export the results to a CSV file with the \"Export CSV\" button."
+        );
         buildSteps();
         initButtons();
         buildIndicatorCircles();
