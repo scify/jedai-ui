@@ -74,7 +74,7 @@
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                             <children>
-                                <TableView fx:id="wbGrid" maxHeight="1.7976931348623157E308"
+                                <TableView fx:id="workbenchTable" maxHeight="1.7976931348623157E308"
                                            maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0"
                                            AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
                                            AnchorPane.topAnchor="0.0"/>

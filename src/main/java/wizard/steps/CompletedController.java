@@ -65,7 +65,7 @@ public class CompletedController {
     public TextArea logTextArea;
     public Label totalTimeLabel;
     public TabPane resultsTabPane;
-    public TableView wbGrid;
+    public TableView workbenchTable;
 
     private SingleSelectionModel<Tab> tabSelectionModel;
     private final ObservableList<WorkflowResult> tableData = FXCollections.observableArrayList();
@@ -117,8 +117,8 @@ public class CompletedController {
      */
     private void initGrid() {
         // Set grid properties
-        wbGrid.setEditable(false);
-        wbGrid.setItems(tableData);
+        workbenchTable.setEditable(false);
+        workbenchTable.setItems(tableData);
 
         // Specify columns for grid
         Map<String, String> tableCols = new LinkedHashMap<>();
@@ -130,12 +130,18 @@ public class CompletedController {
         tableCols.put("Input instances", "inputInstances");
         tableCols.put("Clusters #", "numOfClusters");
 
+        int colsNum = tableCols.size();
+
         // Create column objects
         for (String colName : tableCols.keySet()) {
             TableColumn col = new TableColumn(colName);
             col.setCellValueFactory(new PropertyValueFactory<WorkflowResult, String>(tableCols.get(colName)));
 
-            wbGrid.getColumns().add(col);
+            // Set the width to be the same for all columns (subtract not needed but prevents horizontal scrollbar...)
+            col.prefWidthProperty().bind(workbenchTable.widthProperty().multiply(1.0 / colsNum).subtract(1));
+
+            // Add column to the table
+            workbenchTable.getColumns().add(col);
         }
     }
 
