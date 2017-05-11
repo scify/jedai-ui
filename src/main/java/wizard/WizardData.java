@@ -144,7 +144,6 @@ public class WizardData {
         blockCleaningMethodsProperty().clear();
 
         // Reset radio buttons
-        erTypeProperty().setValue(JedaiOptions.DIRTY_ER);
         blockBuildingProperty().setValue(JedaiOptions.STANDARD_TOKEN_BUILDING);
         comparisonCleaningMethodProperty().setValue(JedaiOptions.NO_CLEANING);
         entityMatchingProperty().setValue(JedaiOptions.GROUP_LINKAGE);
