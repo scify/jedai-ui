@@ -6,7 +6,6 @@ import BlockProcessing.BlockRefinement.ComparisonsBasedBlockPurging;
 import BlockProcessing.BlockRefinement.SizeBasedBlockPurging;
 import BlockProcessing.ComparisonRefinement.*;
 import BlockProcessing.IBlockProcessing;
-import DataModel.AbstractBlock;
 import EntityClustering.*;
 import Utilities.Enumerations.BlockBuildingMethod;
 import Utilities.Enumerations.WeightingScheme;
@@ -14,7 +13,6 @@ import utils.JedaiOptions;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MethodMapping {
@@ -65,10 +63,10 @@ public class MethodMapping {
         return method;
     }
 
-    public static List<AbstractBlock> processBlocks(List<AbstractBlock> blocks, String method) {
-        IBlockProcessing processingMethod;
+    public static IBlockProcessing getMethodByName(String method) {
+        IBlockProcessing processingMethod = null;
 
-        // Use appropriate processing method
+        // Get appropriate processing method
         switch (method) {
             case JedaiOptions.BLOCK_FILTERING:
                 processingMethod = new BlockFiltering();
@@ -103,16 +101,9 @@ public class MethodMapping {
             case JedaiOptions.RECIPROCAL_WEIGHED_NODE_PRUNING:
                 processingMethod = new ReciprocalWeightedNodePruning(WeightingScheme.ECBS);
                 break;
-            default:
-                System.err.println("Method not mapped??");
-
-                return blocks;
         }
 
-        // Process the blocks
-        blocks = processingMethod.refineBlocks(blocks);
-
-        // Return the blocks
-        return blocks;
+        // Return the method
+        return processingMethod;
     }
 }

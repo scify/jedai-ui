@@ -1,6 +1,7 @@
 package wizard.steps;
 
 import BlockBuilding.IBlockBuilding;
+import BlockProcessing.IBlockProcessing;
 import DataModel.AbstractBlock;
 import DataModel.EntityProfile;
 import DataModel.EquivalenceCluster;
@@ -212,6 +213,9 @@ public class CompletedController {
         // Runnable that will run algorithm in separate thread
         new Thread(() -> {
             long startTime = System.currentTimeMillis();
+            double overheadStart;
+            double overheadEnd;
+            BlocksPerformance blp;
 
             try {
                 // Get profiles and ground truth paths from model
@@ -248,8 +252,7 @@ public class CompletedController {
 
                 // Step 2: Block Building
                 BlockBuildingMethod blockingWorkflow = MethodMapping.blockBuildingMethods.get(model.getBlockBuilding());
-
-                double overheadStart = System.currentTimeMillis();
+                overheadStart = System.currentTimeMillis();
 
                 IBlockBuilding blockBuildingMethod = BlockBuildingMethod.getDefaultConfiguration(blockingWorkflow);
                 List<AbstractBlock> blocks;
@@ -260,6 +263,12 @@ public class CompletedController {
                 }
 
                 System.out.println("Original blocks\t:\t" + blocks.size());
+
+                // Print blocks performance
+                overheadEnd = System.currentTimeMillis();
+                blp = new BlocksPerformance(blocks, duplicatePropagation);
+                blp.setStatistics();
+                blp.printStatistics(overheadEnd - overheadStart, blockBuildingMethod.getMethodConfiguration(), blockBuildingMethod.getMethodName());
 
                 // Set progress indicator to 40%
                 updateProgress(0.4);
@@ -274,21 +283,33 @@ public class CompletedController {
                     // Execute the methods
                     for (String currentMethod : blockCleaningMethods) {
                         // Process blocks with this method
-                        blocks = MethodMapping.processBlocks(blocks, currentMethod);
+                        IBlockProcessing blockCleaningMethod = MethodMapping.getMethodByName(currentMethod);
+                        if (blockCleaningMethod != null) {
+                            blocks = blockCleaningMethod.refineBlocks(blocks);
+
+                            // Print blocks performance
+                            overheadEnd = System.currentTimeMillis();
+                            blp = new BlocksPerformance(blocks, duplicatePropagation);
+                            blp.setStatistics();
+                            blp.printStatistics(overheadEnd - overheadStart, blockCleaningMethod.getMethodConfiguration(), blockCleaningMethod.getMethodName());
+                        }
                     }
                 }
 
                 // Step 4: Comparison Cleaning
                 String compCleaningMethod = model.getComparisonCleaningMethod();
                 if (compCleaningMethod != null && !compCleaningMethod.equals(JedaiOptions.NO_CLEANING)) {
-                    blocks = MethodMapping.processBlocks(blocks, compCleaningMethod);
+                    IBlockProcessing comparisonCleaningMethod = MethodMapping.getMethodByName(compCleaningMethod);
+
+                    blocks = comparisonCleaningMethod.refineBlocks(blocks);
+
+
+                    // Print blocks performance
+                    overheadEnd = System.currentTimeMillis();
+                    blp = new BlocksPerformance(blocks, duplicatePropagation);
+                    blp.setStatistics();
+                    blp.printStatistics(overheadEnd - overheadStart, comparisonCleaningMethod.getMethodConfiguration(), comparisonCleaningMethod.getMethodName());
                 }
-
-                double overheadEnd = System.currentTimeMillis();
-
-                BlocksPerformance blp = new BlocksPerformance(blocks, duplicatePropagation);
-                blp.setStatistics();
-                blp.printStatistics(overheadEnd - overheadStart);
 
                 // Set progress indicator to 60%
                 updateProgress(0.6);
@@ -321,9 +342,10 @@ public class CompletedController {
                 entityClusters = ec.getDuplicates(simPairs);
 
                 // Print clustering performance
+                overheadEnd = System.currentTimeMillis();
                 ClustersPerformance clp = new ClustersPerformance(entityClusters, duplicatePropagation);
                 clp.setStatistics();
-                clp.printStatistics();
+                clp.printStatistics(overheadEnd - overheadStart, ec.getMethodName(), ec.getMethodConfiguration());
 
                 // Set gauge values
                 f1Gauge.setValue(clp.getFMeasure());
