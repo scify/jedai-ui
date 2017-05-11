@@ -7,10 +7,10 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      spacing="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      spacing="10.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="wizard.steps.Step0Controller">
     <children>
-        <Label text="Overview of Steps">
+        <Label text="Workflow Overview">
             <font>
                 <Font name="System Bold" size="24.0"/>
             </font>
@@ -35,7 +35,7 @@
                     </HBox.margin>
                 </VBox>
                 <TextArea editable="false" prefHeight="169.0" prefWidth="250.0"
-                          text="1. Data Reading&#10;2. Block Building&#10;3. Block Cleaning Methods&#10;4. Comparison Cleaning Method&#10;5. Entity Matching&#10;6. Entity Clustering"/>
+                          text="1. Data Reading&#10;2. Block Building&#10;3. Block Cleaning&#10;4. Comparison Cleaning&#10;5. Entity Matching&#10;6. Entity Clustering"/>
                 <VBox alignment="CENTER" prefHeight="200.0" prefWidth="180.0" spacing="20.0">
                     <children>
                         <ImageView fitHeight="100.0" fitWidth="180.0" pickOnBounds="true" preserveRatio="true">
