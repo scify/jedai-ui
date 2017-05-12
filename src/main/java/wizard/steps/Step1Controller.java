@@ -10,9 +10,7 @@ import Utilities.DataStructures.UnilateralDuplicatePropagation;
 import com.google.inject.Inject;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
@@ -38,6 +36,10 @@ public class Step1Controller {
     public Button selectEntityD1Btn;
     public Button selectEntityD2Btn;
     public TextField entityProfD2TextField;
+    public ComboBox<String> entitiesD1FileTypeCombo;
+    public ComboBox<String> entitiesD2FileTypeCombo;
+    public ComboBox<String> groundTruthFileTypeCombo;
+    public Label entityProfilesD2Label;
     private Logger log = LoggerFactory.getLogger(Step1Controller.class);
     private FileChooser fileChooser;
     private File previousFolder;
@@ -67,6 +69,16 @@ public class Step1Controller {
         // Disable 2nd dataset selection when Dirty ER is selected
         entityProfD2TextField.disableProperty().bind(model.erTypeProperty().isEqualTo(JedaiOptions.DIRTY_ER));
         selectEntityD2Btn.disableProperty().bind(model.erTypeProperty().isEqualTo(JedaiOptions.DIRTY_ER));
+        entitiesD2FileTypeCombo.disableProperty().bind(model.erTypeProperty().isEqualTo(JedaiOptions.DIRTY_ER));
+        entityProfilesD2Label.disableProperty().bind(model.erTypeProperty().isEqualTo(JedaiOptions.DIRTY_ER));
+
+        // Add options to the three file type comboboxes
+        List<ComboBox<String>> comboboxes = Arrays.asList(entitiesD1FileTypeCombo, entitiesD2FileTypeCombo, groundTruthFileTypeCombo);
+        List<String> fileTypeOptions = Arrays.asList("CSV", "Database", "RDF", "Serialized");
+
+        for (ComboBox<String> c : comboboxes) {
+            c.getItems().addAll(fileTypeOptions);
+        }
 
         // Set initial values to text fields (for testing...)
 //        entityProfTextField.setText("C:\\Users\\leots\\Documents\\JedAIToolkit\\datasets\\dirtyErFiles\\restaurantProfiles");
