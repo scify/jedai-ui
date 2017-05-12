@@ -282,6 +282,8 @@ public class CompletedController {
 
                     // Execute the methods
                     for (String currentMethod : blockCleaningMethods) {
+                        overheadStart = System.currentTimeMillis();
+
                         // Process blocks with this method
                         IBlockProcessing blockCleaningMethod = MethodMapping.getMethodByName(currentMethod);
                         if (blockCleaningMethod != null) {
@@ -299,10 +301,10 @@ public class CompletedController {
                 // Step 4: Comparison Cleaning
                 String compCleaningMethod = model.getComparisonCleaningMethod();
                 if (compCleaningMethod != null && !compCleaningMethod.equals(JedaiOptions.NO_CLEANING)) {
+                    overheadStart = System.currentTimeMillis();
+
                     IBlockProcessing comparisonCleaningMethod = MethodMapping.getMethodByName(compCleaningMethod);
-
                     blocks = comparisonCleaningMethod.refineBlocks(blocks);
-
 
                     // Print blocks performance
                     overheadEnd = System.currentTimeMillis();
@@ -337,6 +339,7 @@ public class CompletedController {
                 updateProgress(0.8);
 
                 // Step 6: Entity Clustering
+                overheadStart = System.currentTimeMillis();
                 IEntityClustering ec = MethodMapping.getEntityClusteringMethod(model.getEntityClustering());
                 ec.setSimilarityThreshold(0.1);
                 entityClusters = ec.getDuplicates(simPairs);
