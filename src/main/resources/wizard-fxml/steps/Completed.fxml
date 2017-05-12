@@ -8,7 +8,7 @@
       minWidth="-Infinity" prefHeight="350.0" prefWidth="700.0" spacing="5.0" xmlns="http://javafx.com/javafx/8.0.111"
       xmlns:fx="http://javafx.com/fxml/1" fx:controller="wizard.steps.CompletedController">
     <children>
-        <Label text="Workflow Execution">
+        <Label alignment="CENTER" contentDisplay="CENTER" text="Workflow Execution">
             <font>
                 <Font name="System Bold" size="24.0"/>
             </font>
@@ -84,13 +84,14 @@
                 </Tab>
             </tabs>
         </TabPane>
-        <HBox alignment="CENTER" prefHeight="62.0" prefWidth="600.0">
+        <HBox alignment="CENTER" prefHeight="56.0" prefWidth="570.0">
             <children>
-                <Button fx:id="runBtn" mnemonicParsing="false" onAction="#runAlgorithmBtnHandler" text="Run algorithm"/>
+                <Button fx:id="runBtn" mnemonicParsing="false" onAction="#runAlgorithmBtnHandler" prefWidth="125.0"
+                        text="Run workflow"/>
                 <ProgressIndicator fx:id="progressIndicator" prefHeight="52.0" prefWidth="121.0" progress="0.0"
                                    visible="false"/>
                 <Button fx:id="exportBtn" disable="true" mnemonicParsing="false" onAction="#exportBtnHandler"
-                        text="Export CSV"/>
+                        prefWidth="125.0" text="Export CSV"/>
             </children>
         </HBox>
     </children>
