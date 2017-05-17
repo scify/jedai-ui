@@ -58,6 +58,11 @@ public class Step1Controller {
         entityProfD2TextField.textProperty().bindBidirectional(model.entityProfilesD2PathProperty());
         groundTruthTextField.textProperty().bindBidirectional(model.groundTruthPathProperty());
 
+        // Bind file type combobox values to the model
+        entitiesD1FileTypeCombo.valueProperty().bindBidirectional(model.entityProfilesD1TypeProperty());
+        entitiesD2FileTypeCombo.valueProperty().bindBidirectional(model.entityProfilesD2TypeProperty());
+        groundTruthFileTypeCombo.valueProperty().bindBidirectional(model.groundTruthTypeProperty());
+
         // Create radio buttons
         List<String> buttons = Arrays.asList(
                 JedaiOptions.DIRTY_ER,

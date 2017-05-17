@@ -10,14 +10,55 @@ import utils.JedaiOptions;
 public class WizardData {
     private final StringProperty erType = new SimpleStringProperty();
     private final StringProperty entityProfilesPath = new SimpleStringProperty();
+    private final StringProperty entityProfilesD1Type = new SimpleStringProperty();
     private final StringProperty entityProfilesD2Path = new SimpleStringProperty();
+    private final StringProperty entityProfilesD2Type = new SimpleStringProperty();
     private final StringProperty groundTruthPath = new SimpleStringProperty();
+    private final StringProperty groundTruthType = new SimpleStringProperty();
+
     private final StringProperty blockBuilding = new SimpleStringProperty();
     private final StringProperty comparisonCleaningMethod = new SimpleStringProperty();
     private final ListProperty<String> blockCleaningMethods = new SimpleListProperty<>();
+
     private final StringProperty entityMatching = new SimpleStringProperty();
     private final StringProperty profileMatcherParam = new SimpleStringProperty();
     private final StringProperty entityClustering = new SimpleStringProperty();
+
+    public String getEntityProfilesD1Type() {
+        return entityProfilesD1Type.get();
+    }
+
+    public StringProperty entityProfilesD1TypeProperty() {
+        return entityProfilesD1Type;
+    }
+
+    public void setEntityProfilesD1Type(String entityProfilesD1Type) {
+        this.entityProfilesD1Type.set(entityProfilesD1Type);
+    }
+
+    public String getEntityProfilesD2Type() {
+        return entityProfilesD2Type.get();
+    }
+
+    public StringProperty entityProfilesD2TypeProperty() {
+        return entityProfilesD2Type;
+    }
+
+    public void setEntityProfilesD2Type(String entityProfilesD2Type) {
+        this.entityProfilesD2Type.set(entityProfilesD2Type);
+    }
+
+    public String getGroundTruthType() {
+        return groundTruthType.get();
+    }
+
+    public StringProperty groundTruthTypeProperty() {
+        return groundTruthType;
+    }
+
+    public void setGroundTruthType(String groundTruthType) {
+        this.groundTruthType.set(groundTruthType);
+    }
 
     public String getEntityProfilesD2Path() {
         return entityProfilesD2Path.get();
