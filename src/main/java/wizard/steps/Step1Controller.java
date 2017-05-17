@@ -1,8 +1,6 @@
 package wizard.steps;
 
 import DataModel.EntityProfile;
-import DataReader.EntityReader.EntitySerializationReader;
-import DataReader.EntityReader.IEntityReader;
 import DataReader.GroundTruthReader.GtSerializationReader;
 import DataReader.GroundTruthReader.IGroundTruthReader;
 import Utilities.DataStructures.BilateralDuplicatePropagation;
@@ -15,6 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.DataReadingHelper;
 import utils.JedaiOptions;
 import utils.RadioButtonHelper;
 import wizard.Submit;
@@ -71,19 +70,19 @@ public class Step1Controller {
 
         RadioButtonHelper.createButtonGroup(radioBtnsContainer, buttons, model.erTypeProperty());
 
+        // Add options to the three file type comboboxes
+        List<ComboBox<String>> comboboxes = Arrays.asList(entitiesD1FileTypeCombo, entitiesD2FileTypeCombo, groundTruthFileTypeCombo);
+        List<String> fileTypeOptions = Arrays.asList(JedaiOptions.CSV, JedaiOptions.DATABASE, JedaiOptions.RDF, JedaiOptions.SERIALIZED);
+
+        for (ComboBox<String> c : comboboxes) {
+            c.getItems().addAll(fileTypeOptions);
+        }
+
         // Disable 2nd dataset selection when Dirty ER is selected
         entityProfD2TextField.disableProperty().bind(model.erTypeProperty().isEqualTo(JedaiOptions.DIRTY_ER));
         selectEntityD2Btn.disableProperty().bind(model.erTypeProperty().isEqualTo(JedaiOptions.DIRTY_ER));
         entitiesD2FileTypeCombo.disableProperty().bind(model.erTypeProperty().isEqualTo(JedaiOptions.DIRTY_ER));
         entityProfilesD2Label.disableProperty().bind(model.erTypeProperty().isEqualTo(JedaiOptions.DIRTY_ER));
-
-        // Add options to the three file type comboboxes
-        List<ComboBox<String>> comboboxes = Arrays.asList(entitiesD1FileTypeCombo, entitiesD2FileTypeCombo, groundTruthFileTypeCombo);
-        List<String> fileTypeOptions = Arrays.asList("CSV", "Database", "RDF", "Serialized");
-
-        for (ComboBox<String> c : comboboxes) {
-            c.getItems().addAll(fileTypeOptions);
-        }
 
         // Set initial values to text fields (for testing...)
 //        entityProfTextField.setText("C:\\Users\\leots\\Documents\\JedAIToolkit\\datasets\\dirtyErFiles\\restaurantProfiles");
@@ -100,14 +99,20 @@ public class Step1Controller {
             files.put("entities2", model.getEntityProfilesD2Path());
         files.put("ground_truth", model.getGroundTruthPath());
 
+        // Get file types
+        String entitiesD1Type = model.getEntityProfilesD1Type();
+        String entitiesD2Type = model.getEntityProfilesD2Type();
+        String groundTruthType = model.getGroundTruthType();
+
         boolean ok;
 
-        // Check that file paths have been entered
+        // Check that file paths and types have been entered
         ok = files.get("entities1") != null && !files.get("entities1").isEmpty()
-                && files.get("ground_truth") != null && !files.get("ground_truth").isEmpty();
+                && files.get("ground_truth") != null && !files.get("ground_truth").isEmpty()
+                && entitiesD1Type != null && groundTruthType != null;
 
         if (model.getErType().equals(JedaiOptions.CLEAN_CLEAN_ER)) {
-            ok = ok && files.get("entities2") != null && !files.get("entities2").isEmpty();
+            ok = ok && files.get("entities2") != null && !files.get("entities2").isEmpty() && entitiesD2Type != null;
         }
 
         if (!ok) {
@@ -130,14 +135,12 @@ public class Step1Controller {
             String erType = model.getErType();
 
             // Read 1st profiles file
-            IEntityReader eReader = new EntitySerializationReader(files.get("entities1"));
-            List<EntityProfile> profilesD1 = eReader.getEntityProfiles();
+            List<EntityProfile> profilesD1 = DataReadingHelper.getEntities(files.get("entities1"), entitiesD1Type);
 
             // In case Clean-Clear ER is selected, also read 2nd profiles file
             List<EntityProfile> profilesD2 = null;
             if (erType.equals(JedaiOptions.CLEAN_CLEAN_ER)) {
-                IEntityReader eReader2 = new EntitySerializationReader(files.get("entities2"));
-                profilesD2 = eReader2.getEntityProfiles();
+                profilesD2 = DataReadingHelper.getEntities(files.get("entities2"), entitiesD2Type);
             }
 
             IGroundTruthReader gtReader = new GtSerializationReader(files.get("ground_truth"));

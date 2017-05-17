@@ -5,6 +5,12 @@ public class JedaiOptions {
     public static final String DIRTY_ER = "Dirty Entity Resolution";
     public static final String CLEAN_CLEAN_ER = "Clean-Clean Entity Resolution";
 
+    // File type options
+    public static final String CSV = "CSV";
+    public static final String DATABASE = "Database";
+    public static final String RDF = "RDF";
+    public static final String SERIALIZED = "Serialized";
+
     // Block Building methods
     public static final String STANDARD_TOKEN_BUILDING = "Standard/Token Blocking";
     public static final String ATTRIBUTE_CLUSTERING = "Attribute Clustering";

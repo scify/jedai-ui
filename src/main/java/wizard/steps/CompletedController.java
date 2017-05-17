@@ -6,8 +6,6 @@ import DataModel.AbstractBlock;
 import DataModel.EntityProfile;
 import DataModel.EquivalenceCluster;
 import DataModel.SimilarityPairs;
-import DataReader.EntityReader.EntitySerializationReader;
-import DataReader.EntityReader.IEntityReader;
 import DataReader.GroundTruthReader.GtSerializationReader;
 import DataReader.GroundTruthReader.IGroundTruthReader;
 import EntityClustering.IEntityClustering;
@@ -43,10 +41,7 @@ import javafx.util.StringConverter;
 import model.WorkflowResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.BlockCleaningCustomComparator;
-import utils.ConsoleArea;
-import utils.JedaiOptions;
-import utils.MultiOutputStream;
+import utils.*;
 import wizard.MethodMapping;
 import wizard.WizardData;
 
@@ -220,20 +215,21 @@ public class CompletedController {
             try {
                 // Get profiles and ground truth paths from model
                 String erType = model.getErType();
-                String datasetProfilesD1 = model.getEntityProfilesPath();
-                String datasetProfilesD2 = model.getEntityProfilesD2Path();
                 String datasetGroundTruth = model.getGroundTruthPath();
 
                 // Step 1: Data reading
-                IEntityReader eReader = new EntitySerializationReader(datasetProfilesD1);
-                List<EntityProfile> profilesD1 = eReader.getEntityProfiles();
+                List<EntityProfile> profilesD1 = DataReadingHelper.getEntities(
+                        model.getEntityProfilesPath(),
+                        model.getEntityProfilesD1Type());
                 System.out.println("Input Entity Profiles\t:\t" + profilesD1.size());
 
                 // In case Clean-Clear ER was selected, also read 2nd profiles file
                 List<EntityProfile> profilesD2 = null;
                 if (erType.equals(JedaiOptions.CLEAN_CLEAN_ER)) {
-                    IEntityReader eReader2 = new EntitySerializationReader(datasetProfilesD2);
-                    profilesD2 = eReader2.getEntityProfiles();
+                    profilesD2 = DataReadingHelper.getEntities(
+                            model.getEntityProfilesD2Path(),
+                            model.getEntityProfilesD2Type()
+                    );
                 }
 
                 AbstractDuplicatePropagation duplicatePropagation = null;
