@@ -217,5 +217,7 @@ public class WizardData {
         entityMatchingProperty().setValue(JedaiOptions.GROUP_LINKAGE);
         profileMatcherParamProperty().setValue(JedaiOptions.REPRESENTATION);
         entityClusteringProperty().setValue(JedaiOptions.CENTER_CLUSTERING);
+        representationModelProperty().setValue(JedaiOptions.CHARACTER_BIGRAMS);
+        similarityMethodProperty().setValue(JedaiOptions.ARCS_SIMILARITY);
     }
 }
