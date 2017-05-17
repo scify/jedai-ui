@@ -17,8 +17,9 @@ import java.util.*;
 
 public class MethodMapping {
     public static final Map<String, BlockBuildingMethod> blockBuildingMethods = createMap();
-    public static final Map<SimilarityMetric, String> similarityMetricToString = createSimilarityMetricsMap();
-    public static final Map<String, RepresentationModel> stringToRepresentationModel = createRepresentationModelsMap();
+    private static final Map<SimilarityMetric, String> similarityMetricToString = createSimilarityMetricsMap();
+    private static final Map<String, RepresentationModel> stringToRepresentationModel = createRepresentationModelsMap();
+    private static final Map<String, SimilarityMetric> stringToSimilarityMetric = createStringToSimMetricMap();
 
     /**
      * Return map of block building methods' String names to their enumeration values
@@ -56,6 +57,21 @@ public class MethodMapping {
         result.put(SimilarityMetric.JACCARD_SIMILARITY, JedaiOptions.JACCARD_SIMILARITY);
         result.put(SimilarityMetric.SIGMA_SIMILARITY, JedaiOptions.SIGMA_SIMILARITY);
         result.put(SimilarityMetric.WEIGHTED_JACCARD_SIMILARITY, JedaiOptions.WEIGHTED_JACCARD_SIMILARITY);
+
+        return Collections.unmodifiableMap(result);
+    }
+
+    /**
+     * Create reverse map of "similarityMetricToString"
+     *
+     * @return Map of Strings to their SimilarityMetric values
+     */
+    private static Map<String, SimilarityMetric> createStringToSimMetricMap() {
+        Map<String, SimilarityMetric> result = new HashMap<>();
+
+        for (SimilarityMetric metric : similarityMetricToString.keySet()) {
+            result.put(similarityMetricToString.get(metric), metric);
+        }
 
         return Collections.unmodifiableMap(result);
     }
@@ -101,6 +117,26 @@ public class MethodMapping {
         }
 
         return options;
+    }
+
+    /**
+     * Get a representation model by its name
+     *
+     * @param modelName Name of wanted representation model
+     * @return Representation Model
+     */
+    public static RepresentationModel getRepresentationModel(String modelName) {
+        return stringToRepresentationModel.get(modelName);
+    }
+
+    /**
+     * Get a similarity metric by its name
+     *
+     * @param metricName Name of wanted similarity metric
+     * @return Similarity Metric
+     */
+    public static SimilarityMetric getSimilarityMetric(String metricName) {
+        return stringToSimilarityMetric.get(metricName);
     }
 
     public static IEntityClustering getEntityClusteringMethod(String methodStr) {

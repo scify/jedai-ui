@@ -211,7 +211,6 @@ public class CompletedController {
             try {
                 // Get profiles and ground truth paths from model
                 String erType = model.getErType();
-                String datasetGroundTruth = model.getGroundTruthPath();
 
                 // Step 1: Data reading
                 List<EntityProfile> profilesD1 = DataReadingHelper.getEntities(
@@ -312,12 +311,14 @@ public class CompletedController {
                 String entityMatchingMethodName = model.getEntityMatching();
 
                 IEntityMatching em;
-                RepresentationModel repModel = RepresentationModel.TOKEN_UNIGRAMS;
+                RepresentationModel repModel = MethodMapping.getRepresentationModel(model.getRepresentationModel());
+                SimilarityMetric similarityMetric = MethodMapping.getSimilarityMetric(model.getSimilarityMethod());
+
                 if (entityMatchingMethodName.equals(JedaiOptions.GROUP_LINKAGE)) {
-                    em = new GroupLinkage(repModel, SimilarityMetric.getModelDefaultSimMetric(repModel));
+                    em = new GroupLinkage(repModel, similarityMetric);
                 } else {
                     // Profile Matcher
-                    em = new ProfileMatcher(repModel, SimilarityMetric.getModelDefaultSimMetric(repModel));
+                    em = new ProfileMatcher(repModel, similarityMetric);
                 }
                 SimilarityPairs simPairs;
 
