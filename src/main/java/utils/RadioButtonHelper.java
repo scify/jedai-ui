@@ -27,6 +27,7 @@ public class RadioButtonHelper {
         // Create a radio button for each option
         for (String s : radioBtns) {
             if (s.equals(JedaiOptions._RADIO_BUTTON_SEPARATOR)) {
+                // Add separator
                 container.getChildren().add(new Separator(Orientation.HORIZONTAL));
             } else {
                 // Create radio button for this option

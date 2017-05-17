@@ -34,23 +34,19 @@ public class Step5Controller {
 
     @FXML
     public void initialize() {
-        // Create radio buttons for entity matching method
+        // Create options list for entity matching method
         List<String> entityMatchingOptions = Arrays.asList(
                 JedaiOptions.GROUP_LINKAGE,
                 JedaiOptions.PROFILE_MATCHER
         );
 
-        RadioButtonHelper.createButtonGroup(matchingMethodContainer, entityMatchingOptions, model.entityMatchingProperty());
-
-        // Create radio buttons for profile matcher parameter
+        // Create options list for profile matcher parameter
         List<String> profileMatcherOptions = Arrays.asList(
                 JedaiOptions.REPRESENTATION,
                 JedaiOptions.SIMILARITY
         );
 
-        RadioButtonHelper.createButtonGroup(profileMatcherParameterContainer, profileMatcherOptions, model.profileMatcherParamProperty());
-
-        // Create Representation model radio buttons
+        // Create options list Representation model radio buttons
         List<String> representationModelOptions = Arrays.asList(
                 JedaiOptions.CHARACTER_BIGRAMS,
                 JedaiOptions.CHARACTER_FOURGRAMS,
@@ -71,9 +67,7 @@ public class Step5Controller {
                 JedaiOptions.TOKEN_UNIGRAM_GRAPHS
         );
 
-        RadioButtonHelper.createButtonGroup(representationModelContainer, representationModelOptions, model.representationModelProperty());
-
-        // Create Similarity Metric radio buttons list
+        // Create options list for Similarity Metric radio button
         List<String> similarityMethodOptions = Arrays.asList(
                 JedaiOptions.ARCS_SIMILARITY,
                 JedaiOptions.COSINE_SIMILARITY,
@@ -105,6 +99,9 @@ public class Step5Controller {
             radioBtns.put(s, btn);
         }
 
+        // Select first method by default
+        groupValue.setValue(similarityMethodOptions.get(0));
+
         // Bind the group's selection to the model
         model.similarityMethodProperty().bindBidirectional(groupValue.valueProperty());
 
@@ -134,6 +131,11 @@ public class Step5Controller {
                 }
             }
         });
+
+        // Create the rest of the radio buttons
+        RadioButtonHelper.createButtonGroup(matchingMethodContainer, entityMatchingOptions, model.entityMatchingProperty());
+        RadioButtonHelper.createButtonGroup(profileMatcherParameterContainer, profileMatcherOptions, model.profileMatcherParamProperty());
+        RadioButtonHelper.createButtonGroup(representationModelContainer, representationModelOptions, model.representationModelProperty());
     }
 
     @Validate
