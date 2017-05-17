@@ -61,6 +61,19 @@ public class JedaiOptions {
     public static final String TOKEN_TRIGRAMS_TF_IDF = "Token Trigrams TF-IDF";
     public static final String TOKEN_TRIGRAM_GRAPHS = "Token Trigram Graphs";
 
+    // Similarity Method options
+    public static final String ARCS_SIMILARITY = "Arcs Similarity";
+    public static final String COSINE_SIMILARITY = "Cosine Similarity";
+    public static final String ENHANCED_JACCARD_SIMILARITY = "Enhanced Jaccard Similarity";
+    public static final String GENERALIZED_JACCARD_SIMILARITY = "Generalized Jaccard Similarity";
+    public static final String GRAPH_CONTAINMENT_SIMILARITY = "Graph Containment Similarity";
+    public static final String GRAPH_NORMALIZED_VALUE_SIMILARITY = "Graph Normalized Value Similarity";
+    public static final String GRAPH_VALUE_SIMILARITY = "Graph Value Similarity";
+    public static final String GRAPH_OVERALL_SIMILARITY = "Graph Overall Similarity";
+    public static final String JACCARD_SIMILARITY = "Jaccard Similarity";
+    public static final String SIGMA_SIMILARITY = "Sigma Similarity";
+    public static final String WEIGHTED_JACCARD_SIMILARITY = "Weighted Jaccard Similarity";
+
     // Profile Matcher parameters
     public static final String REPRESENTATION = "Representation";
     public static final String SIMILARITY = "Similarity";

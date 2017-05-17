@@ -8,16 +8,23 @@ import BlockProcessing.ComparisonRefinement.*;
 import BlockProcessing.IBlockProcessing;
 import EntityClustering.*;
 import Utilities.Enumerations.BlockBuildingMethod;
+import Utilities.Enumerations.RepresentationModel;
+import Utilities.Enumerations.SimilarityMetric;
 import Utilities.Enumerations.WeightingScheme;
 import utils.JedaiOptions;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class MethodMapping {
     public static final Map<String, BlockBuildingMethod> blockBuildingMethods = createMap();
+    public static final Map<SimilarityMetric, String> similarityMetricToString = createSimilarityMetricsMap();
+    public static final Map<String, RepresentationModel> stringToRepresentationModel = createRepresentationModelsMap();
 
+    /**
+     * Return map of block building methods' String names to their enumeration values
+     *
+     * @return
+     */
     private static Map<String, BlockBuildingMethod> createMap() {
         Map<String, BlockBuildingMethod> result = new HashMap<>();
         result.put(JedaiOptions.STANDARD_TOKEN_BUILDING, BlockBuildingMethod.STANDARD_BLOCKING);
@@ -29,6 +36,71 @@ public class MethodMapping {
         result.put(JedaiOptions.SUFFIX_ARRAYS_BLOCKING, BlockBuildingMethod.SUFFIX_ARRAYS);
         result.put(JedaiOptions.SUFFIX_ARRAYS_BLOCKING_EXTENDED, BlockBuildingMethod.EXTENDED_SUFFIX_ARRAYS);
         return Collections.unmodifiableMap(result);
+    }
+
+    /**
+     * Return map of Similarity Metrics (from the SimilarityMetric enumeration) to their String names
+     *
+     * @return
+     */
+    private static Map<SimilarityMetric, String> createSimilarityMetricsMap() {
+        Map<SimilarityMetric, String> result = new HashMap<>();
+        result.put(SimilarityMetric.ARCS_SIMILARITY, JedaiOptions.ARCS_SIMILARITY);
+        result.put(SimilarityMetric.COSINE_SIMILARITY, JedaiOptions.COSINE_SIMILARITY);
+        result.put(SimilarityMetric.ENHANCED_JACCARD_SIMILARITY, JedaiOptions.ENHANCED_JACCARD_SIMILARITY);
+        result.put(SimilarityMetric.GENERALIZED_JACCARD_SIMILARITY, JedaiOptions.GENERALIZED_JACCARD_SIMILARITY);
+        result.put(SimilarityMetric.GRAPH_CONTAINMENT_SIMILARITY, JedaiOptions.GRAPH_CONTAINMENT_SIMILARITY);
+        result.put(SimilarityMetric.GRAPH_NORMALIZED_VALUE_SIMILARITY, JedaiOptions.GRAPH_NORMALIZED_VALUE_SIMILARITY);
+        result.put(SimilarityMetric.GRAPH_VALUE_SIMILARITY, JedaiOptions.GRAPH_VALUE_SIMILARITY);
+        result.put(SimilarityMetric.GRAPH_OVERALL_SIMILARITY, JedaiOptions.GRAPH_OVERALL_SIMILARITY);
+        result.put(SimilarityMetric.JACCARD_SIMILARITY, JedaiOptions.JACCARD_SIMILARITY);
+        result.put(SimilarityMetric.SIGMA_SIMILARITY, JedaiOptions.SIGMA_SIMILARITY);
+        result.put(SimilarityMetric.WEIGHTED_JACCARD_SIMILARITY, JedaiOptions.WEIGHTED_JACCARD_SIMILARITY);
+
+        return Collections.unmodifiableMap(result);
+    }
+
+    /**
+     * Return map of representation models' String names to their enumeration values
+     *
+     * @return
+     */
+    private static Map<String, RepresentationModel> createRepresentationModelsMap() {
+        Map<String, RepresentationModel> result = new HashMap<>();
+        result.put(JedaiOptions.CHARACTER_BIGRAMS, RepresentationModel.CHARACTER_BIGRAMS);
+        result.put(JedaiOptions.CHARACTER_BIGRAM_GRAPHS, RepresentationModel.CHARACTER_BIGRAM_GRAPHS);
+        result.put(JedaiOptions.CHARACTER_TRIGRAMS, RepresentationModel.CHARACTER_TRIGRAMS);
+        result.put(JedaiOptions.CHARACTER_TRIGRAM_GRAPHS, RepresentationModel.CHARACTER_TRIGRAM_GRAPHS);
+        result.put(JedaiOptions.CHARACTER_FOURGRAMS, RepresentationModel.CHARACTER_FOURGRAMS);
+        result.put(JedaiOptions.CHARACTER_FOURGRAM_GRAPHS, RepresentationModel.CHARACTER_FOURGRAM_GRAPHS);
+        result.put(JedaiOptions.TOKEN_UNIGRAMS, RepresentationModel.TOKEN_UNIGRAMS);
+        result.put(JedaiOptions.TOKEN_UNIGRAMS_TF_IDF, RepresentationModel.TOKEN_UNIGRAMS_TF_IDF);
+        result.put(JedaiOptions.TOKEN_UNIGRAM_GRAPHS, RepresentationModel.TOKEN_UNIGRAM_GRAPHS);
+        result.put(JedaiOptions.TOKEN_BIGRAMS, RepresentationModel.TOKEN_BIGRAMS);
+        result.put(JedaiOptions.TOKEN_BIGRAMS_TF_IDF, RepresentationModel.TOKEN_BIGRAMS_TF_IDF);
+        result.put(JedaiOptions.TOKEN_BIGRAM_GRAPHS, RepresentationModel.TOKEN_BIGRAM_GRAPHS);
+        result.put(JedaiOptions.TOKEN_TRIGRAMS, RepresentationModel.TOKEN_TRIGRAMS);
+        result.put(JedaiOptions.TOKEN_TRIGRAMS_TF_IDF, RepresentationModel.TOKEN_TRIGRAMS_TF_IDF);
+        result.put(JedaiOptions.TOKEN_TRIGRAM_GRAPHS, RepresentationModel.TOKEN_TRIGRAM_GRAPHS);
+        return Collections.unmodifiableMap(result);
+    }
+
+    /**
+     * Get the compatible similarity metrics for a representation model
+     *
+     * @param representationModel String name of representation model
+     * @return List of compatible similarity metrics (as Strings)
+     */
+    public static List<String> getAvailableMetricsForRepresentationModel(String representationModel) {
+        RepresentationModel model = stringToRepresentationModel.get(representationModel);
+        List<SimilarityMetric> availableMetrics = SimilarityMetric.getModelCompatibleSimMetrics(model);
+        List<String> options = new ArrayList<>();
+
+        for (SimilarityMetric sm : availableMetrics) {
+            options.add(similarityMetricToString.get(sm));
+        }
+
+        return options;
     }
 
     public static IEntityClustering getEntityClusteringMethod(String methodStr) {

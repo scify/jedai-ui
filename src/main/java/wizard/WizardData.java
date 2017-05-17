@@ -22,20 +22,33 @@ public class WizardData {
 
     private final StringProperty entityMatching = new SimpleStringProperty();
     private final StringProperty profileMatcherParam = new SimpleStringProperty();
-    private final StringProperty representationModelParam = new SimpleStringProperty();
+    private final StringProperty representationModel = new SimpleStringProperty();
+    private final StringProperty similarityMethod = new SimpleStringProperty();
 
     private final StringProperty entityClustering = new SimpleStringProperty();
 
-    public String getRepresentationModelParam() {
-        return representationModelParam.get();
+    public String getSimilarityMethod() {
+        return similarityMethod.get();
     }
 
-    public StringProperty representationModelParamProperty() {
-        return representationModelParam;
+    public StringProperty similarityMethodProperty() {
+        return similarityMethod;
     }
 
-    public void setRepresentationModelParam(String representationModelParam) {
-        this.representationModelParam.set(representationModelParam);
+    public void setSimilarityMethod(String similarityMethod) {
+        this.similarityMethod.set(similarityMethod);
+    }
+
+    public String getRepresentationModel() {
+        return representationModel.get();
+    }
+
+    public StringProperty representationModelProperty() {
+        return representationModel;
+    }
+
+    public void setRepresentationModel(String representationModel) {
+        this.representationModel.set(representationModel);
     }
 
     public String getEntityProfilesD1Type() {
