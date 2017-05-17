@@ -1,7 +1,9 @@
 package utils;
 
 import javafx.beans.property.StringProperty;
+import javafx.geometry.Orientation;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Separator;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
 import jfxtras.scene.control.ToggleGroupValue;
@@ -24,14 +26,18 @@ public class RadioButtonHelper {
 
         // Create a radio button for each option
         for (String s : radioBtns) {
-            // Create radio button for this option
-            RadioButton radioBtn = new RadioButton(s);
-            radioBtn.setUserData(s);
-            radioBtn.setToggleGroup(btnsGroup);
+            if (s.equals(JedaiOptions._RADIO_BUTTON_SEPARATOR)) {
+                container.getChildren().add(new Separator(Orientation.HORIZONTAL));
+            } else {
+                // Create radio button for this option
+                RadioButton radioBtn = new RadioButton(s);
+                radioBtn.setUserData(s);
+                radioBtn.setToggleGroup(btnsGroup);
 
-            // Add to RadioButton to the container pane and the ToggleGroupValue
-            container.getChildren().add(radioBtn);
-            groupValue.add(radioBtn, radioBtn.getUserData());
+                // Add to RadioButton to the container pane and the ToggleGroupValue
+                container.getChildren().add(radioBtn);
+                groupValue.add(radioBtn, radioBtn.getUserData());
+            }
         }
 
         // Bind toggle group value to model

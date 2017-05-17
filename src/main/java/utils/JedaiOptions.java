@@ -1,6 +1,9 @@
 package utils;
 
 public class JedaiOptions {
+    // Separator for radio button lists
+    public static final String _RADIO_BUTTON_SEPARATOR = "RadioBtnSeparator";
+
     // Entity resolution types
     public static final String DIRTY_ER = "Dirty Entity Resolution";
     public static final String CLEAN_CLEAN_ER = "Clean-Clean Entity Resolution";
@@ -40,6 +43,23 @@ public class JedaiOptions {
     // Entity Matching methods
     public static final String GROUP_LINKAGE = "Group Linkage";
     public static final String PROFILE_MATCHER = "Profile Matcher";
+
+    // Representation Model parameters
+    public static final String CHARACTER_BIGRAMS = "Character Bigrams";
+    public static final String CHARACTER_BIGRAM_GRAPHS = "Character Bigram Graphs";
+    public static final String CHARACTER_TRIGRAMS = "Character Trigrams";
+    public static final String CHARACTER_TRIGRAM_GRAPHS = "Character Trigram Graphs";
+    public static final String CHARACTER_FOURGRAMS = "Character Fourgrams";
+    public static final String CHARACTER_FOURGRAM_GRAPHS = "Character Fourgram Graphs";
+    public static final String TOKEN_UNIGRAMS = "Token Unigrams";
+    public static final String TOKEN_UNIGRAMS_TF_IDF = "Token Unigrams TF-IDF";
+    public static final String TOKEN_UNIGRAM_GRAPHS = "Token Unigram Graphs";
+    public static final String TOKEN_BIGRAMS = "Token Bigrams";
+    public static final String TOKEN_BIGRAMS_TF_IDF = "Token Bigrams TF-IDF";
+    public static final String TOKEN_BIGRAM_GRAPHS = "Token Bigram Graphs";
+    public static final String TOKEN_TRIGRAMS = "Token Trigrams";
+    public static final String TOKEN_TRIGRAMS_TF_IDF = "Token Trigrams TF-IDF";
+    public static final String TOKEN_TRIGRAM_GRAPHS = "Token Trigram Graphs";
 
     // Profile Matcher parameters
     public static final String REPRESENTATION = "Representation";
