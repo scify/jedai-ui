@@ -12,7 +12,6 @@ import wizard.Submit;
 import wizard.WizardData;
 
 public class ConfirmController {
-    public Label profileMatcherLabel;
     public ListView<String> blockRefinementList;
     public Label erTypeLabel;
     public Label entityProfilesD1Label;
@@ -24,6 +23,8 @@ public class ConfirmController {
     public Label pMatcherParamLabel;
     public Label entityClusteringLabel;
     public Label entityProfilesD2TitleLabel;
+    public Label representationMethodLabel;
+    public Label similarityMetricLabel;
     private Logger log = LoggerFactory.getLogger(ConfirmController.class);
 
     @Inject
@@ -39,18 +40,11 @@ public class ConfirmController {
         compRefinementLabel.textProperty().bind(model.comparisonCleaningMethodProperty());
         entityMatchingLabel.textProperty().bind(model.entityMatchingProperty());
         entityClusteringLabel.textProperty().bind(model.entityClusteringProperty());
+        pMatcherParamLabel.textProperty().bind(model.profileMatcherParamProperty());
+        representationMethodLabel.textProperty().bind(model.representationModelProperty());
+        similarityMetricLabel.textProperty().bind(model.similarityMethodProperty());
 
-        // Create listeners for profile matcher and 2nd dataset path
-        ChangeListener<String> profileMatcherListener = (observable, oldValue, newValue) -> {
-            if (model.getEntityMatching().equals("Profile Matcher")) {
-                // Profile Matcher selected, add profile matcher parameter
-                pMatcherParamLabel.setText(model.getProfileMatcherParam());
-            } else {
-                // Group Linkage selected, so prof. matcher parameter is not applicable
-                pMatcherParamLabel.setText("Not applicable");
-            }
-        };
-
+        // Add listener to show/hide 2nd dataset path depending on selected ER type
         ChangeListener<String> datasetPathListener = (observable, oldValue, newValue) -> {
             if (model.getErType().equals(JedaiOptions.CLEAN_CLEAN_ER)) {
                 // Add the new value to the text field
@@ -60,10 +54,6 @@ public class ConfirmController {
                 entityProfilesD2Label.setText("Not applicable");
             }
         };
-
-        // Add listeners for profile matcher parameter
-        model.entityMatchingProperty().addListener(profileMatcherListener);
-        model.profileMatcherParamProperty().addListener(profileMatcherListener);
 
         // Add listeners for 2nd dataset path
         model.erTypeProperty().addListener(datasetPathListener);
