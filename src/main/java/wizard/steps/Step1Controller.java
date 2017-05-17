@@ -1,10 +1,6 @@
 package wizard.steps;
 
 import DataModel.EntityProfile;
-import DataReader.GroundTruthReader.GtSerializationReader;
-import DataReader.GroundTruthReader.IGroundTruthReader;
-import Utilities.DataStructures.BilateralDuplicatePropagation;
-import Utilities.DataStructures.UnilateralDuplicatePropagation;
 import com.google.inject.Inject;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -143,13 +139,8 @@ public class Step1Controller {
                 profilesD2 = DataReadingHelper.getEntities(files.get("entities2"), entitiesD2Type);
             }
 
-            IGroundTruthReader gtReader = new GtSerializationReader(files.get("ground_truth"));
-
-            if (erType.equals(JedaiOptions.DIRTY_ER)) {
-                new UnilateralDuplicatePropagation(gtReader.getDuplicatePairs(profilesD1));
-            } else {
-                new BilateralDuplicatePropagation(gtReader.getDuplicatePairs(profilesD1, profilesD2));
-            }
+            // Read ground truth
+            DataReadingHelper.getGroundTruth(files.get("ground_truth"), groundTruthType, erType, profilesD1, profilesD2);
         } catch (Exception e) {
             // Show invalid input file error and stop checking other files
             showError("Invalid input files!", "The input files could not be read successfully.\n\nDetails: " + e.toString() + " (" + e.getMessage() + ")");

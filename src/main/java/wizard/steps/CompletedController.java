@@ -6,8 +6,6 @@ import DataModel.AbstractBlock;
 import DataModel.EntityProfile;
 import DataModel.EquivalenceCluster;
 import DataModel.SimilarityPairs;
-import DataReader.GroundTruthReader.GtSerializationReader;
-import DataReader.GroundTruthReader.IGroundTruthReader;
 import EntityClustering.IEntityClustering;
 import EntityMatching.GroupLinkage;
 import EntityMatching.IEntityMatching;
@@ -15,8 +13,6 @@ import EntityMatching.ProfileMatcher;
 import Utilities.BlocksPerformance;
 import Utilities.ClustersPerformance;
 import Utilities.DataStructures.AbstractDuplicatePropagation;
-import Utilities.DataStructures.BilateralDuplicatePropagation;
-import Utilities.DataStructures.UnilateralDuplicatePropagation;
 import Utilities.Enumerations.BlockBuildingMethod;
 import Utilities.Enumerations.RepresentationModel;
 import Utilities.Enumerations.SimilarityMetric;
@@ -232,14 +228,14 @@ public class CompletedController {
                     );
                 }
 
-                AbstractDuplicatePropagation duplicatePropagation = null;
-                IGroundTruthReader gtReader = new GtSerializationReader(datasetGroundTruth);
-
-                if (erType.equals(JedaiOptions.DIRTY_ER)) {
-                    duplicatePropagation = new UnilateralDuplicatePropagation(gtReader.getDuplicatePairs(profilesD1));
-                } else {
-                    duplicatePropagation = new BilateralDuplicatePropagation(gtReader.getDuplicatePairs(profilesD1, profilesD2));
-                }
+                // Read ground truth file
+                AbstractDuplicatePropagation duplicatePropagation = DataReadingHelper.getGroundTruth(
+                        model.getGroundTruthPath(),
+                        model.getGroundTruthType(),
+                        erType,
+                        profilesD1,
+                        profilesD2
+                );
 
                 System.out.println("Existing Duplicates\t:\t" + duplicatePropagation.getDuplicates().size());
 
