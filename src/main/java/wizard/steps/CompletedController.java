@@ -34,14 +34,17 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
-import workbench.WorkflowResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.*;
+import utils.BlockCleaningCustomComparator;
+import utils.DataReadingHelper;
+import utils.JedaiOptions;
 import utils.console_area.ConsoleArea;
 import utils.console_area.MultiOutputStream;
 import wizard.MethodMapping;
 import wizard.WizardData;
+import workbench.DetailsCell;
+import workbench.WorkflowResult;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -130,7 +133,7 @@ public class CompletedController {
 
         List<String> colsToFormat = Arrays.asList("Recall", "Precision", "F1-measure");
 
-        int colsNum = tableCols.size();
+        int colsNum = tableCols.size() + 1; // Add 1 because we add the details column later
 
         // Create column objects
         for (String colName : tableCols.keySet()) {
@@ -166,6 +169,11 @@ public class CompletedController {
             // Add column to the table
             workbenchTable.getColumns().add(col);
         }
+
+        // Add details button column
+        TableColumn detailsBtnCol = new TableColumn("Details");
+        detailsBtnCol.setCellFactory(param -> new DetailsCell());
+        workbenchTable.getColumns().add(detailsBtnCol);
     }
 
     /**
@@ -369,7 +377,8 @@ public class CompletedController {
                         new SimpleDoubleProperty(f1),
                         new SimpleDoubleProperty(totalTimeSeconds),
                         new SimpleIntegerProperty(inputInstances),
-                        new SimpleIntegerProperty(numOfClusters)
+                        new SimpleIntegerProperty(numOfClusters),
+                        new SimpleIntegerProperty(tableData.size())
                 ));
 
                 // Update labels and JavaFX UI components from UI thread

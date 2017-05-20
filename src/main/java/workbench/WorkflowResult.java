@@ -14,8 +14,12 @@ public class WorkflowResult {
     private final SimpleDoubleProperty totalTime;
     private final SimpleIntegerProperty inputInstances;
     private final SimpleIntegerProperty numOfClusters;
+    private final SimpleIntegerProperty detailsId;
 
-    public WorkflowResult(SimpleIntegerProperty runNumber, SimpleDoubleProperty recall, SimpleDoubleProperty precision, SimpleDoubleProperty f1Measure, SimpleDoubleProperty totalTime, SimpleIntegerProperty inputInstances, SimpleIntegerProperty numOfClusters) {
+    public WorkflowResult(SimpleIntegerProperty runNumber, SimpleDoubleProperty recall, SimpleDoubleProperty precision,
+                          SimpleDoubleProperty f1Measure, SimpleDoubleProperty totalTime,
+                          SimpleIntegerProperty inputInstances, SimpleIntegerProperty numOfClusters,
+                          SimpleIntegerProperty detailsId) {
         this.runNumber = runNumber;
         this.recall = recall;
         this.precision = precision;
@@ -23,6 +27,15 @@ public class WorkflowResult {
         this.totalTime = totalTime;
         this.inputInstances = inputInstances;
         this.numOfClusters = numOfClusters;
+        this.detailsId = detailsId;
+    }
+
+    public int getDetailsId() {
+        return detailsId.get();
+    }
+
+    public SimpleIntegerProperty detailsIdProperty() {
+        return detailsId;
     }
 
     public int getRunNumber() {
