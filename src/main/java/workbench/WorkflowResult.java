@@ -1,4 +1,4 @@
-package model;
+package workbench;
 
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;

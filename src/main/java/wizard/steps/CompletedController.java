@@ -34,10 +34,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
-import model.WorkflowResult;
+import workbench.WorkflowResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.*;
+import utils.console_area.ConsoleArea;
+import utils.console_area.MultiOutputStream;
 import wizard.MethodMapping;
 import wizard.WizardData;
 

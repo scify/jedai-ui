@@ -1,4 +1,4 @@
-package utils;
+package utils.console_area;
 
 import javafx.application.Platform;
 import javafx.scene.control.TextArea;

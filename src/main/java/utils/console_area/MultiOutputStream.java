@@ -1,4 +1,4 @@
-package utils;
+package utils.console_area;
 
 import java.io.IOException;
 import java.io.OutputStream;
