@@ -4,9 +4,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      spacing="5.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="wizard.steps.Step5Controller">
+<VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
+      minWidth="-Infinity" spacing="5.0" VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/8.0.111"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="wizard.steps.Step5Controller">
     <children>
         <Label text="Entity Matching">
             <font>
@@ -18,26 +18,32 @@
                 <Font size="14.0"/>
             </font>
         </Label>
-        <HBox prefHeight="250.0" prefWidth="680.0" spacing="10.0">
+        <HBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+              prefHeight="250.0" prefWidth="680.0" spacing="10.0" VBox.vgrow="ALWAYS">
             <children>
-                <VBox prefHeight="300.0" prefWidth="180.0">
+                <VBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="300.0" prefWidth="180.0"
+                      HBox.hgrow="ALWAYS">
                     <children>
                         <VBox fx:id="matchingMethodContainer" prefHeight="200.0" prefWidth="100.0" spacing="5.0">
                             <children>
-                                <Label text="Entity Matching Method" underline="true"/>
+                                <Label maxWidth="1.7976931348623157E308" text="Entity Matching Method"
+                                       underline="true"/>
                             </children>
                         </VBox>
                         <VBox fx:id="profileMatcherParameterContainer" prefHeight="200.0" prefWidth="100.0"
                               spacing="5.0">
                             <children>
-                                <Label text="Profile Matcher parameter" underline="true"/>
+                                <Label maxWidth="1.7976931348623157E308" text="Profile Matcher parameter"
+                                       underline="true"/>
                             </children>
                         </VBox>
                     </children>
                 </VBox>
-                <VBox prefHeight="200.0" prefWidth="240.0" spacing="5.0">
+                <VBox maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="240.0" spacing="5.0"
+                      HBox.hgrow="ALWAYS">
                     <children>
-                        <Label alignment="TOP_CENTER" prefWidth="240.0" text="Representation Model" underline="true"/>
+                        <Label alignment="TOP_CENTER" maxWidth="1.7976931348623157E308" prefWidth="240.0"
+                               text="Representation Model" underline="true"/>
                         <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="240.0"
                                     VBox.vgrow="ALWAYS">
                             <content>
@@ -50,9 +56,11 @@
                         </ScrollPane>
                     </children>
                 </VBox>
-                <VBox prefHeight="200.0" prefWidth="240.0" spacing="5.0">
+                <VBox maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="240.0" spacing="5.0"
+                      HBox.hgrow="ALWAYS">
                     <children>
-                        <Label alignment="TOP_CENTER" prefWidth="240.0" text="Similarity Metric" underline="true"/>
+                        <Label alignment="TOP_CENTER" maxWidth="1.7976931348623157E308" prefWidth="240.0"
+                               text="Similarity Metric" underline="true"/>
                         <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0"
                                     VBox.vgrow="ALWAYS">
                             <content>
@@ -66,6 +74,9 @@
                     </children>
                 </VBox>
             </children>
+            <VBox.margin>
+                <Insets left="20.0" right="20.0"/>
+            </VBox.margin>
         </HBox>
     </children>
     <padding>
