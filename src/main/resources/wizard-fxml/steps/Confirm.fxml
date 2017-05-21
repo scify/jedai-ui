@@ -5,8 +5,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
-      minWidth="-Infinity" spacing="5.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="wizard.steps.ConfirmController">
+      minWidth="-Infinity" prefWidth="580.0" spacing="5.0" xmlns="http://javafx.com/javafx/8.0.111"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="wizard.steps.ConfirmController">
     <children>
         <Label text="Confirm Configuration">
             <font>
@@ -14,7 +14,7 @@
             </font>
         </Label>
         <ScrollPane fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-                    prefHeight="300.0" prefWidth="500.0">
+                    prefHeight="300.0" prefWidth="500.0" VBox.vgrow="ALWAYS">
             <content>
                 <GridPane vgap="10.0">
                     <columnConstraints>
