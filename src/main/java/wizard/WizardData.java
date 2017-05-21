@@ -4,6 +4,7 @@ import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import utils.JedaiOptions;
 
@@ -45,7 +46,7 @@ public class WizardData {
         clone.setGroundTruthType(data.getGroundTruthType());
         clone.setBlockBuilding(data.getBlockBuilding());
         clone.setComparisonCleaningMethod(data.getComparisonCleaningMethod());
-        clone.setBlockCleaningMethods(data.getBlockCleaningMethods());
+        clone.setBlockCleaningMethods(FXCollections.observableArrayList(data.getBlockCleaningMethods()));
         clone.setEntityMatching(data.getEntityMatching());
         clone.setProfileMatcherParam(data.getProfileMatcherParam());
         clone.setRepresentationModel(data.getRepresentationModel());

@@ -31,6 +31,17 @@ public class ConfirmController {
     private
     WizardData model;
 
+    // Declare the change listener for the 2nd dataset path
+    private final ChangeListener<String> datasetPathListener = (observable, oldValue, newValue) -> {
+        if (model.getErType().equals(JedaiOptions.CLEAN_CLEAN_ER)) {
+            // Add the new value to the text field
+            entityProfilesD2Label.setText(model.getEntityProfilesD2Path());
+        } else {
+            // Dirty ER was selected, so 2nd dataset is not applicable
+            entityProfilesD2Label.setText("Not applicable");
+        }
+    };
+
     @FXML
     public void initialize() {
         erTypeLabel.textProperty().bind(model.erTypeProperty());
@@ -44,36 +55,39 @@ public class ConfirmController {
         representationMethodLabel.textProperty().bind(model.representationModelProperty());
         similarityMetricLabel.textProperty().bind(model.similarityMethodProperty());
 
-        // Add listener to show/hide 2nd dataset path depending on selected ER type
-        ChangeListener<String> datasetPathListener = (observable, oldValue, newValue) -> {
-            if (model.getErType().equals(JedaiOptions.CLEAN_CLEAN_ER)) {
-                // Add the new value to the text field
-                entityProfilesD2Label.setText(model.getEntityProfilesD2Path());
-            } else {
-                // Dirty ER was selected, so 2nd dataset is not applicable
-                entityProfilesD2Label.setText("Not applicable");
-            }
-        };
-
         // Add listeners for 2nd dataset path
         model.erTypeProperty().addListener(datasetPathListener);
         model.entityProfilesD2PathProperty().addListener(datasetPathListener);
 
         // Show block refinement methods in list
-        model.blockCleaningMethodsProperty().addListener(((observable, oldValue, newValue) -> {
-            blockRefinementList.setItems(model.getBlockCleaningMethods());
-        }));
+        blockRefinementList.itemsProperty().bind(model.blockCleaningMethodsProperty());
     }
 
     /**
      * Set a new model, and rerun the initialization. Useful when showing a detailed configuration in a popup.
      *
-     * @param newModel
+     * @param newModel New model to show
      */
     public void setModel(WizardData newModel) {
+        // Unbind UI items from the previous model
+        erTypeLabel.textProperty().unbind();
+        entityProfilesD1Label.textProperty().unbind();
+        blockBuildingLabel.textProperty().unbind();
+        groundTruthLabel.textProperty().unbind();
+        compRefinementLabel.textProperty().unbind();
+        entityMatchingLabel.textProperty().unbind();
+        entityClusteringLabel.textProperty().unbind();
+        pMatcherParamLabel.textProperty().unbind();
+        representationMethodLabel.textProperty().unbind();
+        similarityMetricLabel.textProperty().unbind();
+        blockRefinementList.itemsProperty().unbind();
+        model.erTypeProperty().removeListener(datasetPathListener);
+        model.entityProfilesD2PathProperty().removeListener(datasetPathListener);
+
+        // Set the new model
         this.model = newModel;
 
-        // Rerun the initialization to bind the labels etc. to the new model
+        // Rerun the initialization to bind UI items to the new model
         initialize();
     }
 
