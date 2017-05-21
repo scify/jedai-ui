@@ -18,6 +18,7 @@ import Utilities.Enumerations.RepresentationModel;
 import Utilities.Enumerations.SimilarityMetric;
 import Utilities.PrintToFile;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import eu.hansolo.medusa.Gauge;
 import eu.hansolo.medusa.Gauge.SkinType;
 import eu.hansolo.medusa.GaugeBuilder;
@@ -50,10 +51,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.text.NumberFormat;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CompletedController {
     public Button runBtn;
@@ -76,13 +74,20 @@ public class CompletedController {
     private Gauge precisionGauge;
     private Logger log = LoggerFactory.getLogger(CompletedController.class);
 
+    private List<WizardData> detailedRunData;
     private List<EquivalenceCluster> entityClusters;
+
+    @Inject
+    private Injector injector;
 
     @Inject
     private WizardData model;
 
     @FXML
     public void initialize() {
+        // Initialize list of detailed run data
+        detailedRunData = new ArrayList<>();
+
         // Create gauges
         recallGauge = newGauge("Recall");
         gaugesHBox.getChildren().add(recallGauge);
@@ -172,7 +177,7 @@ public class CompletedController {
 
         // Add details button column
         TableColumn detailsBtnCol = new TableColumn("Details");
-        detailsBtnCol.setCellFactory(param -> new DetailsCell());
+        detailsBtnCol.setCellFactory(param -> new DetailsCell(this.detailedRunData, this.injector));
         workbenchTable.getColumns().add(detailsBtnCol);
     }
 
@@ -380,6 +385,9 @@ public class CompletedController {
                         new SimpleIntegerProperty(numOfClusters),
                         new SimpleIntegerProperty(tableData.size())
                 ));
+
+                // Add a copy of current WizardData to the list
+                detailedRunData.add(WizardData.cloneData(model));
 
                 // Update labels and JavaFX UI components from UI thread
                 Platform.runLater(() -> {

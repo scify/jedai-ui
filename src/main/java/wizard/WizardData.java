@@ -27,6 +27,35 @@ public class WizardData {
 
     private final StringProperty entityClustering = new SimpleStringProperty();
 
+    /**
+     * Clone a WizardData object (return a new WizardData object, with the same properties of the given one)
+     *
+     * @param data WizardData object to clone
+     * @return New cloned WizardData object
+     */
+    public static WizardData cloneData(WizardData data) {
+        WizardData clone = new WizardData();
+
+        clone.setErType(data.getErType());
+        clone.setEntityProfilesPath(data.getEntityProfilesPath());
+        clone.setEntityProfilesD1Type(data.getEntityProfilesD1Type());
+        clone.setEntityProfilesD2Path(data.getEntityProfilesD2Path());
+        clone.setEntityProfilesD2Type(data.getEntityProfilesD2Type());
+        clone.setGroundTruthPath(data.getGroundTruthPath());
+        clone.setGroundTruthType(data.getGroundTruthType());
+        clone.setBlockBuilding(data.getBlockBuilding());
+        clone.setComparisonCleaningMethod(data.getComparisonCleaningMethod());
+        clone.setBlockCleaningMethods(data.getBlockCleaningMethods());
+        clone.setEntityMatching(data.getEntityMatching());
+        clone.setProfileMatcherParam(data.getProfileMatcherParam());
+        clone.setRepresentationModel(data.getRepresentationModel());
+        clone.setSimilarityMethod(data.getSimilarityMethod());
+        clone.setEntityClustering(data.getEntityClustering());
+
+        return clone;
+    }
+
+
     public String getSimilarityMethod() {
         return similarityMethod.get();
     }

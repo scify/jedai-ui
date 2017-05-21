@@ -65,10 +65,22 @@ public class ConfirmController {
         }));
     }
 
+    /**
+     * Set a new model, and rerun the initialization. Useful when showing a detailed configuration in a popup.
+     *
+     * @param newModel
+     */
+    public void setModel(WizardData newModel) {
+        this.model = newModel;
+
+        // Rerun the initialization to bind the labels etc. to the new model
+        initialize();
+    }
+
     @Submit
     public void submit() throws Exception {
         if (log.isDebugEnabled()) {
-            log.debug("[SUBMIT] Running algorithm with specified parameters");
+            log.debug("[SUBMIT] Confirmation step completed");
         }
     }
 }
