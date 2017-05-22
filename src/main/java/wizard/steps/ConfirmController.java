@@ -20,7 +20,6 @@ public class ConfirmController {
     public Label blockBuildingLabel;
     public Label compRefinementLabel;
     public Label entityMatchingLabel;
-    public Label pMatcherParamLabel;
     public Label entityClusteringLabel;
     public Label entityProfilesD2TitleLabel;
     public Label representationMethodLabel;
@@ -51,7 +50,6 @@ public class ConfirmController {
         compRefinementLabel.textProperty().bind(model.comparisonCleaningMethodProperty());
         entityMatchingLabel.textProperty().bind(model.entityMatchingProperty());
         entityClusteringLabel.textProperty().bind(model.entityClusteringProperty());
-        pMatcherParamLabel.textProperty().bind(model.profileMatcherParamProperty());
         representationMethodLabel.textProperty().bind(model.representationModelProperty());
         similarityMetricLabel.textProperty().bind(model.similarityMethodProperty());
 
@@ -77,7 +75,6 @@ public class ConfirmController {
         compRefinementLabel.textProperty().unbind();
         entityMatchingLabel.textProperty().unbind();
         entityClusteringLabel.textProperty().unbind();
-        pMatcherParamLabel.textProperty().unbind();
         representationMethodLabel.textProperty().unbind();
         similarityMetricLabel.textProperty().unbind();
         blockRefinementList.itemsProperty().unbind();

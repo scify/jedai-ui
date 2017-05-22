@@ -74,10 +74,6 @@ public class JedaiOptions {
     public static final String SIGMA_SIMILARITY = "Sigma Similarity";
     public static final String WEIGHTED_JACCARD_SIMILARITY = "Weighted Jaccard Similarity";
 
-    // Profile Matcher parameters
-    public static final String REPRESENTATION = "Representation";
-    public static final String SIMILARITY = "Similarity";
-
     // Entity Clustering methods
     public static final String CENTER_CLUSTERING = "Center Clustering";
     public static final String CONNECTED_COMPONENTS_CLUSTERING = "Connected Components Clustering";

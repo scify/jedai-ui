@@ -5,8 +5,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
-      minWidth="-Infinity" prefWidth="580.0" spacing="5.0" xmlns="http://javafx.com/javafx/8.0.111"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="wizard.steps.ConfirmController" VBox.vgrow="ALWAYS">
+      minWidth="-Infinity" prefWidth="580.0" spacing="5.0" VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/8"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="wizard.steps.ConfirmController">
     <children>
         <Label text="Confirm Configuration">
             <font>
@@ -28,7 +28,6 @@
                         <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
                         <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
                         <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES"/>
-                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
                         <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
                         <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
                         <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
@@ -72,22 +71,17 @@
                                 <Font name="System Bold" size="12.0"/>
                             </font>
                         </Label>
-                        <Label text="Profile Matcher Parameter" GridPane.rowIndex="8">
+                        <Label text="Representation Method" GridPane.rowIndex="8">
                             <font>
                                 <Font name="System Bold" size="12.0"/>
                             </font>
                         </Label>
-                        <Label text="Representation Method" GridPane.rowIndex="9">
+                        <Label text="Similarity Metric" GridPane.rowIndex="9">
                             <font>
                                 <Font name="System Bold" size="12.0"/>
                             </font>
                         </Label>
-                        <Label text="Similarity Metric" GridPane.rowIndex="10">
-                            <font>
-                                <Font name="System Bold" size="12.0"/>
-                            </font>
-                        </Label>
-                        <Label text="Entity Clustering Method" GridPane.rowIndex="11">
+                        <Label text="Entity Clustering Method" GridPane.rowIndex="10">
                             <font>
                                 <Font name="System Bold" size="12.0"/>
                             </font>
@@ -109,14 +103,12 @@
                                   GridPane.columnIndex="1" GridPane.rowIndex="5"/>
                         <Label fx:id="compRefinementLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
                         <Label fx:id="entityMatchingLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
-                        <Label fx:id="pMatcherParamLabel" text="Not applicable" GridPane.columnIndex="1"
-                               GridPane.rowIndex="8"/>
                         <Label fx:id="representationMethodLabel" text="Representation Method" GridPane.columnIndex="1"
-                               GridPane.rowIndex="9"/>
+                               GridPane.rowIndex="8"/>
                         <Label fx:id="similarityMetricLabel" text="Similarity Metric" GridPane.columnIndex="1"
-                               GridPane.rowIndex="10"/>
+                               GridPane.rowIndex="9"/>
                         <Label fx:id="entityClusteringLabel" text="Label" GridPane.columnIndex="1"
-                               GridPane.rowIndex="11"/>
+                               GridPane.rowIndex="10"/>
                     </children>
                 </GridPane>
             </content>

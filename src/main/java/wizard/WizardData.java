@@ -22,7 +22,6 @@ public class WizardData {
     private final ListProperty<String> blockCleaningMethods = new SimpleListProperty<>();
 
     private final StringProperty entityMatching = new SimpleStringProperty();
-    private final StringProperty profileMatcherParam = new SimpleStringProperty();
     private final StringProperty representationModel = new SimpleStringProperty();
     private final StringProperty similarityMethod = new SimpleStringProperty();
 
@@ -48,7 +47,6 @@ public class WizardData {
         clone.setComparisonCleaningMethod(data.getComparisonCleaningMethod());
         clone.setBlockCleaningMethods(FXCollections.observableArrayList(data.getBlockCleaningMethods()));
         clone.setEntityMatching(data.getEntityMatching());
-        clone.setProfileMatcherParam(data.getProfileMatcherParam());
         clone.setRepresentationModel(data.getRepresentationModel());
         clone.setSimilarityMethod(data.getSimilarityMethod());
         clone.setEntityClustering(data.getEntityClustering());
@@ -225,18 +223,6 @@ public class WizardData {
         this.entityClustering.set(entityClustering);
     }
 
-    public String getProfileMatcherParam() {
-        return profileMatcherParam.get();
-    }
-
-    public StringProperty profileMatcherParamProperty() {
-        return profileMatcherParam;
-    }
-
-    public void setProfileMatcherParam(String profileMatcherParam) {
-        this.profileMatcherParam.set(profileMatcherParam);
-    }
-
     public void reset() {
         // Reset block cleaning list
         blockCleaningMethodsProperty().clear();
@@ -245,7 +231,6 @@ public class WizardData {
         blockBuildingProperty().setValue(JedaiOptions.STANDARD_TOKEN_BUILDING);
         comparisonCleaningMethodProperty().setValue(JedaiOptions.NO_CLEANING);
         entityMatchingProperty().setValue(JedaiOptions.GROUP_LINKAGE);
-        profileMatcherParamProperty().setValue(JedaiOptions.REPRESENTATION);
         entityClusteringProperty().setValue(JedaiOptions.CENTER_CLUSTERING);
         representationModelProperty().setValue(JedaiOptions.CHARACTER_BIGRAMS);
         similarityMethodProperty().setValue(JedaiOptions.ARCS_SIMILARITY);

@@ -23,7 +23,6 @@ import java.util.Map;
 
 public class Step5Controller {
     public VBox matchingMethodContainer;
-    public VBox profileMatcherParameterContainer;
     public VBox representationModelContainer;
     public VBox similarityMetricContainer;
     private Logger log = LoggerFactory.getLogger(Step3Controller.class);
@@ -38,12 +37,6 @@ public class Step5Controller {
         List<String> entityMatchingOptions = Arrays.asList(
                 JedaiOptions.GROUP_LINKAGE,
                 JedaiOptions.PROFILE_MATCHER
-        );
-
-        // Create options list for profile matcher parameter
-        List<String> profileMatcherOptions = Arrays.asList(
-                JedaiOptions.REPRESENTATION,
-                JedaiOptions.SIMILARITY
         );
 
         // Create options list Representation model radio buttons
@@ -134,7 +127,6 @@ public class Step5Controller {
 
         // Create the rest of the radio buttons
         RadioButtonHelper.createButtonGroup(matchingMethodContainer, entityMatchingOptions, model.entityMatchingProperty());
-        RadioButtonHelper.createButtonGroup(profileMatcherParameterContainer, profileMatcherOptions, model.profileMatcherParamProperty());
         RadioButtonHelper.createButtonGroup(representationModelContainer, representationModelOptions, model.representationModelProperty());
     }
 
@@ -146,15 +138,6 @@ public class Step5Controller {
             alert.setTitle("Entity Matching Method");
             alert.setHeaderText("Missing Field");
             alert.setContentText("Selecting an Entity Matching Method is required.");
-            alert.showAndWait();
-            return false;
-        }
-
-        if (model.getProfileMatcherParam() == null || model.getProfileMatcherParam().isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Profile Matcher Parameter");
-            alert.setHeaderText("Missing Field");
-            alert.setContentText("When using Profile Matcher for Entity Matching, selecting a parameter for it is required.");
             alert.showAndWait();
             return false;
         }
