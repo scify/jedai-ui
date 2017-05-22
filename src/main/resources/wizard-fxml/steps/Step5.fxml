@@ -22,7 +22,7 @@
               prefHeight="250.0" prefWidth="680.0" spacing="10.0" VBox.vgrow="ALWAYS">
             <children>
                 <VBox fx:id="matchingMethodContainer" maxWidth="1.7976931348623157E308" prefHeight="300.0"
-                      prefWidth="180.0" HBox.hgrow="ALWAYS">
+                      prefWidth="180.0" spacing="5.0" HBox.hgrow="ALWAYS">
                     <children>
                         <Label maxWidth="1.7976931348623157E308" text="Entity Matching Method" underline="true"/>
                     </children>
