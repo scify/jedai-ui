@@ -65,10 +65,6 @@ public class DataReadingHelper {
             case JedaiOptions.CSV:
                 gtReader = new GtCSVReader(path);
                 break;
-            case JedaiOptions.DATABASE:
-                gtReader = new GtSerializationReader(path);
-                //todo: where is database ground truth reader?
-                break;
             case JedaiOptions.RDF:
                 gtReader = new GtRDFReader(path);
                 break;

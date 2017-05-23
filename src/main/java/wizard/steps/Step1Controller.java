@@ -67,12 +67,17 @@ public class Step1Controller {
         RadioButtonHelper.createButtonGroup(radioBtnsContainer, buttons, model.erTypeProperty());
 
         // Add options to the three file type comboboxes
-        List<ComboBox<String>> comboboxes = Arrays.asList(entitiesD1FileTypeCombo, entitiesD2FileTypeCombo, groundTruthFileTypeCombo);
+        List<ComboBox<String>> comboboxes = Arrays.asList(entitiesD1FileTypeCombo, entitiesD2FileTypeCombo);
         List<String> fileTypeOptions = Arrays.asList(JedaiOptions.CSV, JedaiOptions.DATABASE, JedaiOptions.RDF, JedaiOptions.SERIALIZED);
 
         for (ComboBox<String> c : comboboxes) {
             c.getItems().addAll(fileTypeOptions);
         }
+
+        // Ground truth does not have a Database reader
+        groundTruthFileTypeCombo.getItems().add(JedaiOptions.CSV);
+        groundTruthFileTypeCombo.getItems().add(JedaiOptions.RDF);
+        groundTruthFileTypeCombo.getItems().add(JedaiOptions.SERIALIZED);
 
         // Disable 2nd dataset selection when Dirty ER is selected
         entityProfD2TextField.disableProperty().bind(model.erTypeProperty().isEqualTo(JedaiOptions.DIRTY_ER));
