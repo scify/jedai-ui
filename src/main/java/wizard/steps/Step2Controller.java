@@ -90,7 +90,7 @@ public class Step2Controller {
         Stage dialog = new Stage();
         dialog.setScene(new Scene(root));
         dialog.setTitle("JedAI - Parameter Configuration");
-        dialog.initModality(Modality.WINDOW_MODAL);
+        dialog.initModality(Modality.APPLICATION_MODAL);
 
         dialog.show();
     }
