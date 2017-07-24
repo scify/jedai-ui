@@ -1,7 +1,6 @@
 package wizard.steps;
 
 import com.google.inject.Inject;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -47,7 +46,7 @@ public class Step3Controller {
         optionsMap.put(JedaiOptions.SIZE_BASED_BLOCK_PURGING, new SimpleBooleanProperty(false));
         optionsMap.put(JedaiOptions.COMPARISON_BASED_BLOCK_PURGING, new SimpleBooleanProperty(false));
         optionsMap.put(JedaiOptions.BLOCK_FILTERING, new SimpleBooleanProperty(false));
-        optionsMap.put(JedaiOptions.BLOCK_SCHEDULING, new SimpleBooleanProperty(false));
+//        optionsMap.put(JedaiOptions.BLOCK_SCHEDULING, new SimpleBooleanProperty(false));
 
         // Add items to the list
         list.getItems().addAll(optionsMap.keySet());
@@ -61,15 +60,15 @@ public class Step3Controller {
             CheckBoxListCell<String> cell = wrappedCellFactory != null ? (CheckBoxListCell<String>) wrappedCellFactory.call(listView) : new CheckBoxListCell<>();
             cell.setSelectedStateCallback(param -> optionsMap.get(param));
 
-            Platform.runLater(() -> {
-                if (cell.getItem() != null && cell.getItem().equals(JedaiOptions.BLOCK_SCHEDULING)) {
-                    // Add listener to disable the cell automatically if needed when the ER type changes
-                    model.erTypeProperty().addListener((observable, oldValue, newValue) -> cell.setDisable(newValue.equals(JedaiOptions.DIRTY_ER)));
-
-                    // Disable the cell if ER type is already Dirty ER
-                    cell.setDisable(model.getErType().equals(JedaiOptions.DIRTY_ER));
-                }
-            });
+//            Platform.runLater(() -> {
+//                if (cell.getItem() != null && cell.getItem().equals(JedaiOptions.BLOCK_SCHEDULING)) {
+//                    // Add listener to disable the cell automatically if needed when the ER type changes
+//                    model.erTypeProperty().addListener((observable, oldValue, newValue) -> cell.setDisable(newValue.equals(JedaiOptions.DIRTY_ER)));
+//
+//                    // Disable the cell if ER type is already Dirty ER
+//                    cell.setDisable(model.getErType().equals(JedaiOptions.DIRTY_ER));
+//                }
+//            });
 
             return cell;
         });
@@ -102,11 +101,11 @@ public class Step3Controller {
         });
 
         // Listen for ER type changes, and deselect Block Scheduling in Dirty ER
-        model.erTypeProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.equals(JedaiOptions.DIRTY_ER)) {
-                optionsMap.get(JedaiOptions.BLOCK_SCHEDULING).setValue(false);
-            }
-        });
+//        model.erTypeProperty().addListener((observable, oldValue, newValue) -> {
+//            if (newValue.equals(JedaiOptions.DIRTY_ER)) {
+//                optionsMap.get(JedaiOptions.BLOCK_SCHEDULING).setValue(false);
+//            }
+//        });
     }
 
     @Validate

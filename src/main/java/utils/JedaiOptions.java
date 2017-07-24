@@ -26,7 +26,7 @@ public class JedaiOptions {
 
     // Block Cleaning methods
     public static final String BLOCK_FILTERING = "Block Filtering";
-    public static final String BLOCK_SCHEDULING = "Block Scheduling";
+//    public static final String BLOCK_SCHEDULING = "Block Scheduling";
     public static final String SIZE_BASED_BLOCK_PURGING = "Size-based Block Purging";
     public static final String COMPARISON_BASED_BLOCK_PURGING = "Comparison-based Block Purging";
 
