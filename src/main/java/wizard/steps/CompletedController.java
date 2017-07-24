@@ -330,7 +330,8 @@ public class CompletedController {
                 SimilarityMetric similarityMetric = MethodMapping.getSimilarityMetric(model.getSimilarityMethod());
 
                 if (entityMatchingMethodName.equals(JedaiOptions.GROUP_LINKAGE)) {
-                    em = new GroupLinkage(repModel, similarityMetric);
+                    //todo: threshold should be specified by user...
+                    em = new GroupLinkage(0.8, repModel, similarityMetric);
                 } else {
                     // Profile Matcher
                     em = new ProfileMatcher(repModel, similarityMetric);

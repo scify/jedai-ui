@@ -51,20 +51,6 @@
             <version>0.9.2</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-core -->
-        <dependency>
-            <groupId>org.apache.lucene</groupId>
-            <artifactId>lucene-core</artifactId>
-            <version>6.0.1</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-analyzers-common -->
-        <dependency>
-            <groupId>org.apache.lucene</groupId>
-            <artifactId>lucene-analyzers-common</artifactId>
-            <version>6.0.1</version>
-        </dependency>
-
         <!-- https://mvnrepository.com/artifact/org.apache.jena/apache-jena-libs -->
         <dependency>
             <groupId>org.apache.jena</groupId>
@@ -85,5 +71,27 @@
             <artifactId>jfxtras-labs</artifactId>
             <version>8.0-r5</version>
         </dependency>
+
+        <!-- http://backend1.scify.org:60004/artifactory/pub-release-local -->
+        <dependency>
+            <groupId>gr.demokritos</groupId>
+            <artifactId>JInsect</artifactId>
+            <version>1.1</version>
+        </dependency>
+
+        <!-- http://backend1.scify.org:60004/artifactory/pub-release-local -->
+        <dependency>
+            <groupId>salvo.jesus</groupId>
+            <artifactId>OpenJGraph</artifactId>
+            <version>1.1</version>
+        </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>backend1</id>
+            <name>backend1-releases</name>
+            <url>http://backend1.scify.org:60004/artifactory/pub-release-local</url>
+        </repository>
+    </repositories>
 </project>
