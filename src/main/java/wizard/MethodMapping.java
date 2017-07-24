@@ -178,9 +178,6 @@ public class MethodMapping {
             case JedaiOptions.BLOCK_FILTERING:
                 processingMethod = new BlockFiltering();
                 break;
-//            case JedaiOptions.BLOCK_SCHEDULING:
-//                processingMethod = new BlockScheduling();
-//                break;
             case JedaiOptions.SIZE_BASED_BLOCK_PURGING:
                 processingMethod = new SizeBasedBlockPurging();
                 break;

@@ -20,8 +20,6 @@ public class BlockCleaningCustomComparator implements Comparator<String> {
                 JedaiOptions.SIZE_BASED_BLOCK_PURGING,
                 JedaiOptions.COMPARISON_BASED_BLOCK_PURGING,
                 JedaiOptions.BLOCK_FILTERING
-//                JedaiOptions.BLOCK_FILTERING,
-//                JedaiOptions.BLOCK_SCHEDULING
         );
     }
 
