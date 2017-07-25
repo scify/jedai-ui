@@ -1,9 +1,11 @@
 package wizard;
 
 import com.google.inject.Inject;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -91,7 +93,21 @@ public class DynamicConfigurationController {
 
                 break;
             default:
-                //todo: Assuming it's an enumeration, add enum controls
+                // If the type is an enumeration, create it and add radio buttons for it
+                try {
+                    Class<?> cls = Class.forName(paramType);
+
+                    if (cls.isEnum()) {
+                        // Create combobox with the enum's values
+                        ComboBox<Object> comboBox = new ComboBox<>(FXCollections.observableArrayList(cls.getEnumConstants()));
+
+                        hBoxChildren.add(comboBox);
+                    } else {
+                        throw new UnsupportedOperationException("Type " + paramType + " is unknown, and is not an enumeration!");
+                    }
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
         }
 
         // Add text area with parameter description
@@ -99,7 +115,7 @@ public class DynamicConfigurationController {
         descriptionArea.setEditable(false);
         descriptionArea.setWrapText(true);
         descriptionArea.setMaxWidth(200);
-        descriptionArea.textProperty().setValue(param.get("description").toString());
+        descriptionArea.textProperty().setValue(param.get("description").getAsString().value());
 
         hBoxChildren.add(descriptionArea);
 
