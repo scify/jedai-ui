@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.apache.jena.atlas.json.JsonArray;
@@ -55,13 +56,22 @@ public class DynamicConfigurationController {
         ObservableList<Node> hBoxChildren = hBox.getChildren();
 
         // Add label to the HBox
-        hBoxChildren.add(new Label(param.get("name").toString()));
+        hBoxChildren.add(new Label(param.get("name").getAsString().value()));
 
         // Depending on what type the parameter is, add the appropriate control for it
-        String paramType = param.get("class").toString();
+        String paramType = param.get("class").getAsString().value();
+
         switch (paramType) {
             case "java.lang.Integer":
-                //todo: Create integer controls
+                // Create integer controls
+                TextField textField = new TextField();
+                textField.textProperty().addListener((observable, oldValue, newValue) -> {
+                    if (!newValue.matches("\\d*")) {
+                        textField.setText(newValue.replaceAll("[^\\d]", ""));
+                    }
+                });
+
+                hBoxChildren.add(textField);
                 break;
             case "java.lang.Double":
                 //todo: Create double controls
