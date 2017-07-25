@@ -64,17 +64,31 @@ public class DynamicConfigurationController {
         switch (paramType) {
             case "java.lang.Integer":
                 // Create integer controls
-                TextField textField = new TextField();
-                textField.textProperty().addListener((observable, oldValue, newValue) -> {
+                TextField integerField = new TextField();
+                integerField.textProperty().addListener((observable, oldValue, newValue) -> {
                     if (!newValue.matches("\\d*")) {
-                        textField.setText(newValue.replaceAll("[^\\d]", ""));
+                        integerField.setText(newValue.replaceAll("[^\\d]", ""));
                     }
                 });
 
-                hBoxChildren.add(textField);
+                hBoxChildren.add(integerField);
+
                 break;
             case "java.lang.Double":
-                //todo: Create double controls
+                // Create double controls
+                TextField doubleField = new TextField();
+                doubleField.textProperty().addListener((observable, oldValue, newValue) -> {
+                    try {
+                        //noinspection ResultOfMethodCallIgnored
+                        Double.parseDouble(newValue);
+                    } catch (NumberFormatException e) {
+                        // Problem parsing, not a double
+                        doubleField.setText(oldValue);
+                    }
+                });
+
+                hBoxChildren.add(doubleField);
+
                 break;
             default:
                 //todo: Assuming it's an enumeration, add enum controls
