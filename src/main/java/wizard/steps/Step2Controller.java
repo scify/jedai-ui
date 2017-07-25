@@ -1,5 +1,7 @@
 package wizard.steps;
 
+import Utilities.Enumerations.BlockBuildingMethod;
+import Utilities.IDocumentation;
 import com.google.inject.Inject;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,13 +13,12 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.apache.jena.atlas.json.JsonArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.JedaiOptions;
 import utils.RadioButtonHelper;
-import wizard.Submit;
-import wizard.Validate;
-import wizard.WizardData;
+import wizard.*;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -87,11 +88,30 @@ public class Step2Controller {
         root = loader.load();
         root.getProperties().put("controller", loader.getController());
 
-        Stage dialog = new Stage();
-        dialog.setScene(new Scene(root));
-        dialog.setTitle("JedAI - Parameter Configuration");
-        dialog.initModality(Modality.APPLICATION_MODAL);
+        Object controller = loader.getController();
+        if (controller instanceof DynamicConfigurationController) {
+            // Cast the controller instance since we know it's safe here
+            DynamicConfigurationController popupController = (DynamicConfigurationController) controller;
 
-        dialog.show();
+            String methodName = model.getBlockBuilding();
+            IDocumentation method = BlockBuildingMethod.getDefaultConfiguration(
+                    MethodMapping.blockBuildingMethods.get(methodName)
+            );
+
+            // Give the configuration options to the controller
+            JsonArray params = method.getParameterConfiguration();
+            popupController.setParameters(params);
+
+            // Create the popup
+            Stage dialog = new Stage();
+            dialog.setScene(new Scene(root));
+            dialog.setTitle("JedAI - Parameter Configuration");
+            dialog.initModality(Modality.APPLICATION_MODAL);
+
+            dialog.show();
+        } else {
+            // This shouldn't ever happen.
+            System.err.println("Error when showing the parameter customization popup (Wrong controller instance?)");
+        }
     }
 }
