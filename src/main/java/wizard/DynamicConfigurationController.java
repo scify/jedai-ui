@@ -2,12 +2,10 @@ package wizard;
 
 import com.google.inject.Inject;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
@@ -16,6 +14,7 @@ import org.apache.jena.atlas.json.JsonValue;
 public class DynamicConfigurationController {
     public Label configureParamsLabel;
     public GridPane configGrid;
+    public Button saveBtn;
 
     @Inject
     private WizardData model;
@@ -26,6 +25,11 @@ public class DynamicConfigurationController {
     public void initialize() {
     }
 
+    /**
+     * Set the parameters to show in the configuration window, and create UI elements for the user to set them.
+     *
+     * @param parameters Parameters as specified by the JedAI library
+     */
     public void setParameters(JsonArray parameters) {
         this.parameters = parameters;
 
@@ -114,5 +118,14 @@ public class DynamicConfigurationController {
 
         // Add controls to the grid
         configGrid.addRow(index, label, control, descriptionArea);
+    }
+
+    /**
+     * Get the parameter values from the generated forms, save them to the model and close the window.
+     *
+     * @param actionEvent Button event
+     */
+    public void saveBtnHandler(ActionEvent actionEvent) {
+        //todo
     }
 }
