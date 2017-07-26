@@ -2,22 +2,20 @@ package wizard;
 
 import com.google.inject.Inject;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.GridPane;
 import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.atlas.json.JsonValue;
 
 public class DynamicConfigurationController {
-    public VBox configVBox;
     public Label configureParamsLabel;
+    public GridPane configGrid;
 
     @Inject
     private WizardData model;
@@ -36,10 +34,11 @@ public class DynamicConfigurationController {
             configureParamsLabel.setText("This is a parameter-free method!");
         } else {
             // Generate the form to configure the method
+            int gridRows = 0;
             for (JsonValue jsonParam : this.parameters) {
                 if (jsonParam.isObject()) {
                     // Create controls for setting this parameter
-                    addParameterControls(jsonParam.getAsObject());
+                    addParameterControls(jsonParam.getAsObject(), gridRows++);
                 } else if (jsonParam.isArray()) {
                     throw new UnsupportedOperationException("Cannot handle JSON array yet (?)");
                 }
@@ -51,16 +50,14 @@ public class DynamicConfigurationController {
      * Create the appropriate controls to set a method parameter's value, based on the given JSON specification for it.
      *
      * @param param The parameter to create controls for.
+     * @param index Grid row to add the controls to.
      */
-    private void addParameterControls(JsonObject param) {
-        // Create new HBox for this parameter's controls
-        HBox hBox = new HBox();
-        ObservableList<Node> hBoxChildren = hBox.getChildren();
+    private void addParameterControls(JsonObject param, int index) {
+        // Create the label
+        Label label = new Label(param.get("name").getAsString().value());
 
-        // Add label to the HBox
-        hBoxChildren.add(new Label(param.get("name").getAsString().value()));
-
-        // Depending on what type the parameter is, add the appropriate control for it
+        // Depending on what type the parameter is, create the appropriate control for it
+        Node control = null;
         String paramType = param.get("class").getAsString().value();
 
         switch (paramType) {
@@ -73,7 +70,7 @@ public class DynamicConfigurationController {
                     }
                 });
 
-                hBoxChildren.add(integerField);
+                control = integerField;
 
                 break;
             case "java.lang.Double":
@@ -89,7 +86,7 @@ public class DynamicConfigurationController {
                     }
                 });
 
-                hBoxChildren.add(doubleField);
+                control = doubleField;
 
                 break;
             default:
@@ -99,9 +96,7 @@ public class DynamicConfigurationController {
 
                     if (cls.isEnum()) {
                         // Create combobox with the enum's values
-                        ComboBox<Object> comboBox = new ComboBox<>(FXCollections.observableArrayList(cls.getEnumConstants()));
-
-                        hBoxChildren.add(comboBox);
+                        control = new ComboBox<>(FXCollections.observableArrayList(cls.getEnumConstants()));
                     } else {
                         throw new UnsupportedOperationException("Type " + paramType + " is unknown, and is not an enumeration!");
                     }
@@ -117,8 +112,7 @@ public class DynamicConfigurationController {
         descriptionArea.setMaxWidth(200);
         descriptionArea.textProperty().setValue(param.get("description").getAsString().value());
 
-        hBoxChildren.add(descriptionArea);
-
-        configVBox.getChildren().add(hBox);
+        // Add controls to the grid
+        configGrid.addRow(index, label, control, descriptionArea);
     }
 }
