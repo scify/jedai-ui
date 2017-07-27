@@ -10,7 +10,7 @@ import utils.JedaiOptions;
 
 public class WizardData {
     private final StringProperty erType = new SimpleStringProperty();
-    private final StringProperty entityProfilesPath = new SimpleStringProperty();
+    private final StringProperty entityProfilesD1Path = new SimpleStringProperty();
     private final StringProperty entityProfilesD1Type = new SimpleStringProperty();
     private final StringProperty entityProfilesD2Path = new SimpleStringProperty();
     private final StringProperty entityProfilesD2Type = new SimpleStringProperty();
@@ -18,6 +18,8 @@ public class WizardData {
     private final StringProperty groundTruthType = new SimpleStringProperty();
 
     private final StringProperty blockBuilding = new SimpleStringProperty();
+    private final ListProperty<Object> blockBuildingParameters = new SimpleListProperty<>();
+
     private final StringProperty comparisonCleaningMethod = new SimpleStringProperty();
     private final ListProperty<String> blockCleaningMethods = new SimpleListProperty<>();
 
@@ -37,7 +39,7 @@ public class WizardData {
         WizardData clone = new WizardData();
 
         clone.setErType(data.getErType());
-        clone.setEntityProfilesPath(data.getEntityProfilesPath());
+        clone.setEntityProfilesD1Path(data.getEntityProfilesD1Path());
         clone.setEntityProfilesD1Type(data.getEntityProfilesD1Type());
         clone.setEntityProfilesD2Path(data.getEntityProfilesD2Path());
         clone.setEntityProfilesD2Type(data.getEntityProfilesD2Type());
@@ -50,10 +52,22 @@ public class WizardData {
         clone.setRepresentationModel(data.getRepresentationModel());
         clone.setSimilarityMethod(data.getSimilarityMethod());
         clone.setEntityClustering(data.getEntityClustering());
+        //todo: clone parameter lists too
 
         return clone;
     }
 
+    public ObservableList<Object> getBlockBuildingParameters() {
+        return blockBuildingParameters.get();
+    }
+
+    public ListProperty<Object> blockBuildingParametersProperty() {
+        return blockBuildingParameters;
+    }
+
+    public void setBlockBuildingParameters(ObservableList<Object> blockBuildingParameters) {
+        this.blockBuildingParameters.set(blockBuildingParameters);
+    }
 
     public String getSimilarityMethod() {
         return similarityMethod.get();
@@ -163,16 +177,16 @@ public class WizardData {
         this.groundTruthPath.set(groundTruthPath);
     }
 
-    public String getEntityProfilesPath() {
-        return entityProfilesPath.get();
+    public String getEntityProfilesD1Path() {
+        return entityProfilesD1Path.get();
     }
 
-    public StringProperty entityProfilesPathProperty() {
-        return entityProfilesPath;
+    public StringProperty entityProfilesD1PathProperty() {
+        return entityProfilesD1Path;
     }
 
-    public void setEntityProfilesPath(String entityProfilesPath) {
-        this.entityProfilesPath.set(entityProfilesPath);
+    public void setEntityProfilesD1Path(String entityProfilesD1Path) {
+        this.entityProfilesD1Path.set(entityProfilesD1Path);
     }
 
     public String getBlockBuilding() {

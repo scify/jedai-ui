@@ -11,6 +11,9 @@ import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.atlas.json.JsonValue;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DynamicConfigurationController {
     public Label configureParamsLabel;
     public GridPane configGrid;
@@ -20,9 +23,11 @@ public class DynamicConfigurationController {
     private WizardData model;
 
     private JsonArray parameters;
+    private List<Object> parameterValues;
 
     @FXML
     public void initialize() {
+        parameterValues = new ArrayList<>();
     }
 
     /**
@@ -66,11 +71,16 @@ public class DynamicConfigurationController {
 
         switch (paramType) {
             case "java.lang.Integer":
+                parameterValues.add(-1);    // Add the initial value
+
                 // Create integer controls
                 TextField integerField = new TextField();
                 integerField.textProperty().addListener((observable, oldValue, newValue) -> {
                     if (!newValue.matches("\\d*")) {
                         integerField.setText(newValue.replaceAll("[^\\d]", ""));
+                    } else {
+                        // Save the value
+                        parameterValues.set(index, newValue);
                     }
                 });
 
@@ -78,12 +88,17 @@ public class DynamicConfigurationController {
 
                 break;
             case "java.lang.Double":
+                parameterValues.add(-1.0);
+
                 // Create double controls
                 TextField doubleField = new TextField();
                 doubleField.textProperty().addListener((observable, oldValue, newValue) -> {
                     try {
                         //noinspection ResultOfMethodCallIgnored
-                        Double.parseDouble(newValue);
+                        double value = Double.parseDouble(newValue);
+
+                        // Save the value
+                        parameterValues.set(index, value);
                     } catch (NumberFormatException e) {
                         // Problem parsing, not a double
                         doubleField.setText(oldValue);
@@ -99,8 +114,20 @@ public class DynamicConfigurationController {
                     Class<?> cls = Class.forName(paramType);
 
                     if (cls.isEnum()) {
+                        Object[] enumValues = cls.getEnumConstants();
+
+                        parameterValues.add(enumValues[0]); // Initialize the parameter value with the 1st enum constant
+
                         // Create combobox with the enum's values
-                        control = new ComboBox<>(FXCollections.observableArrayList(cls.getEnumConstants()));
+                        ComboBox<Object> comboBox = new ComboBox<>(FXCollections.observableArrayList(enumValues));
+
+                        // Add change listener to save the value when the selection changes
+                        comboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+                            // Save the value
+                            parameterValues.set(index, newValue);
+                        });
+
+                        control = comboBox;
                     } else {
                         throw new UnsupportedOperationException("Type " + paramType + " is unknown, and is not an enumeration!");
                     }
@@ -126,6 +153,6 @@ public class DynamicConfigurationController {
      * @param actionEvent Button event
      */
     public void saveBtnHandler(ActionEvent actionEvent) {
-        //todo
+        System.out.println("Values to save: " + parameterValues);
     }
 }

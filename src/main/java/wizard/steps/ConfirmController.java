@@ -44,7 +44,7 @@ public class ConfirmController {
     @FXML
     public void initialize() {
         erTypeLabel.textProperty().bind(model.erTypeProperty());
-        entityProfilesD1Label.textProperty().bind(model.entityProfilesPathProperty());
+        entityProfilesD1Label.textProperty().bind(model.entityProfilesD1PathProperty());
         blockBuildingLabel.textProperty().bind(model.blockBuildingProperty());
         groundTruthLabel.textProperty().bind(model.groundTruthPathProperty());
         compRefinementLabel.textProperty().bind(model.comparisonCleaningMethodProperty());

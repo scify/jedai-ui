@@ -229,7 +229,7 @@ public class CompletedController {
 
                 // Step 1: Data reading
                 List<EntityProfile> profilesD1 = DataReadingHelper.getEntities(
-                        model.getEntityProfilesPath(),
+                        model.getEntityProfilesD1Path(),
                         model.getEntityProfilesD1Type());
                 System.out.println("Input Entity Profiles\t:\t" + profilesD1.size());
 
