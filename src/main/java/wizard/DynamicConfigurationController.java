@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.atlas.json.JsonValue;
@@ -153,6 +154,11 @@ public class DynamicConfigurationController {
      * @param actionEvent Button event
      */
     public void saveBtnHandler(ActionEvent actionEvent) {
-        System.out.println("Values to save: " + parameterValues);
+        // Save the parameters to the model
+        model.setBlockBuildingParameters(FXCollections.observableList(parameterValues));
+
+        // Get a handle to the stage and close it
+        Stage stage = (Stage) saveBtn.getScene().getWindow();
+        stage.close();
     }
 }

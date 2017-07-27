@@ -3,9 +3,11 @@ package wizard.steps;
 import Utilities.Enumerations.BlockBuildingMethod;
 import Utilities.IDocumentation;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -31,8 +33,10 @@ public class Step2Controller {
     private Logger log = LoggerFactory.getLogger(Step2Controller.class);
 
     @Inject
-    private
-    WizardData model;
+    private WizardData model;
+
+    @Inject
+    private Injector injector;
 
     @FXML
     public void initialize() {
@@ -82,7 +86,10 @@ public class Step2Controller {
     public void customizeParameters(ActionEvent actionEvent) throws IOException {
         Parent root;
         FXMLLoader loader = new FXMLLoader(
-                getClass().getClassLoader().getResource("wizard-fxml/DynamicConfiguration.fxml")
+                getClass().getClassLoader().getResource("wizard-fxml/DynamicConfiguration.fxml"),
+                null,
+                new JavaFXBuilderFactory(),
+                injector::getInstance
         );
 
         root = loader.load();
