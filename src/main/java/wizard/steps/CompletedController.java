@@ -38,6 +38,7 @@ import javafx.util.StringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.BlockCleaningCustomComparator;
+import utils.CustomMethodConfiguration;
 import utils.DataReadingHelper;
 import utils.JedaiOptions;
 import utils.console_area.ConsoleArea;
@@ -257,10 +258,21 @@ public class CompletedController {
                 updateProgress(0.2);
 
                 // Step 2: Block Building
+                IBlockBuilding blockBuildingMethod = null;
+                ObservableList blBuParams = model.getBlockBuildingParameters();
+
                 BlockBuildingMethod blockingWorkflow = MethodMapping.blockBuildingMethods.get(model.getBlockBuilding());
                 overheadStart = System.currentTimeMillis();
 
-                IBlockBuilding blockBuildingMethod = BlockBuildingMethod.getDefaultConfiguration(blockingWorkflow);
+                // Check if the user set any custom parameters for block building
+                if (blBuParams.isEmpty()) {
+                    // No parameters found, use default configuration
+                    blockBuildingMethod = BlockBuildingMethod.getDefaultConfiguration(blockingWorkflow);
+                } else {
+                    // Create the method with the saved parameters
+                    blockBuildingMethod = CustomMethodConfiguration.configureBlockBuildingMethod(blockingWorkflow, blBuParams);
+                }
+
                 List<AbstractBlock> blocks;
                 if (erType.equals(JedaiOptions.DIRTY_ER)) {
                     blocks = blockBuildingMethod.getBlocks(profilesD1);

@@ -49,7 +49,7 @@ public class Step1Controller {
         fileChooser = new FileChooser();
 
         // Bind text field values to the model
-        entityProfTextField.textProperty().bindBidirectional(model.entityProfilesPathProperty());
+        entityProfTextField.textProperty().bindBidirectional(model.entityProfilesD1PathProperty());
         entityProfD2TextField.textProperty().bindBidirectional(model.entityProfilesD2PathProperty());
         groundTruthTextField.textProperty().bindBidirectional(model.groundTruthPathProperty());
 
@@ -94,7 +94,7 @@ public class Step1Controller {
     public boolean validate() throws Exception {
         // Create HashMap with values to check (ordered)
         Map<String, String> files = new LinkedHashMap<>();
-        files.put("entities1", model.getEntityProfilesPath());
+        files.put("entities1", model.getEntityProfilesD1Path());
         if (model.getErType().equals(JedaiOptions.CLEAN_CLEAN_ER))
             // For Clean-Clean ER, will also check that the 2nd path has been filled
             files.put("entities2", model.getEntityProfilesD2Path());
