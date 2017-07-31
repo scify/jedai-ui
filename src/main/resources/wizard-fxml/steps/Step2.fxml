@@ -20,7 +20,8 @@
             </font>
         </Label>
         <VBox fx:id="radioBtnsContainer" prefHeight="200.0" prefWidth="250.0" spacing="5.0"/>
-        <Button fx:id="paramsBtn" mnemonicParsing="false" onAction="#customizeParameters" text="Customize Parameters"/>
+        <Button fx:id="paramsBtn" mnemonicParsing="false" onAction="#customizeParameters"
+                text="Advanced Configuration"/>
     </children>
     <padding>
         <Insets bottom="20.0" left="40.0" right="40.0" top="20.0"/>

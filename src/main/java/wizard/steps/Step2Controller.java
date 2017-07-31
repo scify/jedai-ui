@@ -6,7 +6,6 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
@@ -54,15 +53,6 @@ public class Step2Controller {
 
     @Validate
     public boolean validate() throws Exception {
-        if (model.getBlockBuilding() == null || model.getBlockBuilding().isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Block Building Selection");
-            alert.setHeaderText("Missing Field");
-            alert.setContentText("Block Building Selection is required.");
-            alert.showAndWait();
-            return false;
-        }
-
         return true;
     }
 
