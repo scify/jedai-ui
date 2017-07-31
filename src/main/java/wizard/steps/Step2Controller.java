@@ -6,23 +6,19 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.JavaFXBuilderFactory;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import org.apache.jena.atlas.json.JsonArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.CustomMethodConfiguration;
 import utils.JedaiOptions;
 import utils.RadioButtonHelper;
-import wizard.*;
+import wizard.MethodMapping;
+import wizard.Submit;
+import wizard.Validate;
+import wizard.WizardData;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -81,44 +77,15 @@ public class Step2Controller {
      * Display a window for configuration of the selected method's parameters.
      *
      * @param actionEvent Button event
-     * @throws IOException In case FXML file is not found
      */
-    public void customizeParameters(ActionEvent actionEvent) throws IOException {
-        Parent root;
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getClassLoader().getResource("wizard-fxml/DynamicConfiguration.fxml"),
-                null,
-                new JavaFXBuilderFactory(),
-                injector::getInstance
+    public void customizeParameters(ActionEvent actionEvent) {
+        // Get method instance in order for the modal to get its configuration
+        String methodName = model.getBlockBuilding();
+        IDocumentation method = BlockBuildingMethod.getDefaultConfiguration(
+                MethodMapping.blockBuildingMethods.get(methodName)
         );
 
-        root = loader.load();
-        root.getProperties().put("controller", loader.getController());
-
-        Object controller = loader.getController();
-        if (controller instanceof DynamicConfigurationController) {
-            // Cast the controller instance since we know it's safe here
-            DynamicConfigurationController popupController = (DynamicConfigurationController) controller;
-
-            String methodName = model.getBlockBuilding();
-            IDocumentation method = BlockBuildingMethod.getDefaultConfiguration(
-                    MethodMapping.blockBuildingMethods.get(methodName)
-            );
-
-            // Give the configuration options to the controller
-            JsonArray params = method.getParameterConfiguration();
-            popupController.setParameters(params);
-
-            // Create the popup
-            Stage dialog = new Stage();
-            dialog.setScene(new Scene(root));
-            dialog.setTitle("JedAI - Parameter Configuration");
-            dialog.initModality(Modality.APPLICATION_MODAL);
-
-            dialog.show();
-        } else {
-            // This shouldn't ever happen.
-            System.err.println("Error when showing the parameter customization popup (Wrong controller instance?)");
-        }
+        // Display the configuration modal
+        CustomMethodConfiguration.displayModal(getClass(), injector, method);
     }
 }
