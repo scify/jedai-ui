@@ -6,6 +6,7 @@ import Utilities.Enumerations.RepresentationModel;
 import Utilities.Enumerations.SimilarityMetric;
 import Utilities.IDocumentation;
 import com.google.inject.Injector;
+import javafx.beans.property.ListProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
@@ -26,7 +27,7 @@ public class CustomMethodConfiguration {
      * @param injector    Injector to use when loading FXML, so that the model etc. are injected automatically.
      * @param method      Method that the window should display configuration options for.
      */
-    public static void displayModal(Class callerClass, Injector injector, IDocumentation method) {
+    public static void displayModal(Class callerClass, Injector injector, IDocumentation method, ListProperty<Object> paramsProperty) {
         Parent root;
         FXMLLoader loader = new FXMLLoader(
                 callerClass.getClassLoader().getResource("wizard-fxml/DynamicConfiguration.fxml"),
@@ -51,7 +52,7 @@ public class CustomMethodConfiguration {
 
             // Give the configuration options to the controller
             JsonArray params = method.getParameterConfiguration();
-            popupController.setParameters(params);
+            popupController.setParameters(params, paramsProperty);
 
             // Create the popup
             Stage dialog = new Stage();

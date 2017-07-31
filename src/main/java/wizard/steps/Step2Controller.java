@@ -76,6 +76,6 @@ public class Step2Controller {
         );
 
         // Display the configuration modal
-        CustomMethodConfiguration.displayModal(getClass(), injector, method);
+        CustomMethodConfiguration.displayModal(getClass(), injector, method, model.blockBuildingParametersProperty());
     }
 }

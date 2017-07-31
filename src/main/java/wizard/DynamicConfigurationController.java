@@ -1,6 +1,7 @@
 package wizard;
 
 import com.google.inject.Inject;
+import javafx.beans.property.ListProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -24,6 +25,7 @@ public class DynamicConfigurationController {
     private WizardData model;
 
     private JsonArray parameters;
+    private ListProperty<Object> parametersProperty;
     private List<Object> parameterValues;
 
     @FXML
@@ -36,8 +38,9 @@ public class DynamicConfigurationController {
      *
      * @param parameters Parameters as specified by the JedAI library
      */
-    public void setParameters(JsonArray parameters) {
+    public void setParameters(JsonArray parameters, ListProperty<Object> parametersProperty) {
         this.parameters = parameters;
+        this.parametersProperty = parametersProperty;
 
         // If the method is parameter-free, display it
         if (this.parameters.isEmpty()) {
@@ -155,7 +158,7 @@ public class DynamicConfigurationController {
      */
     public void saveBtnHandler(ActionEvent actionEvent) {
         // Save the parameters to the model
-        model.setBlockBuildingParameters(FXCollections.observableList(parameterValues));
+        parametersProperty.setValue(FXCollections.observableList(parameterValues));
 
         // Get a handle to the stage and close it
         Stage stage = (Stage) saveBtn.getScene().getWindow();

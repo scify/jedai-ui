@@ -20,8 +20,10 @@ public class WizardData {
     private final StringProperty blockBuilding = new SimpleStringProperty();
     private final ListProperty<Object> blockBuildingParameters = new SimpleListProperty<>();
 
-    private final StringProperty comparisonCleaningMethod = new SimpleStringProperty();
     private final ListProperty<String> blockCleaningMethods = new SimpleListProperty<>();
+
+    private final StringProperty comparisonCleaningMethod = new SimpleStringProperty();
+    private final ListProperty<Object> comparisonCleaningParameters = new SimpleListProperty<>();
 
     private final StringProperty entityMatching = new SimpleStringProperty();
     private final StringProperty representationModel = new SimpleStringProperty();
@@ -55,6 +57,18 @@ public class WizardData {
         //todo: clone parameter lists too
 
         return clone;
+    }
+
+    public ObservableList<Object> getComparisonCleaningParameters() {
+        return comparisonCleaningParameters.get();
+    }
+
+    public ListProperty<Object> comparisonCleaningParametersProperty() {
+        return comparisonCleaningParameters;
+    }
+
+    public void setComparisonCleaningParameters(ObservableList<Object> comparisonCleaningParameters) {
+        this.comparisonCleaningParameters.set(comparisonCleaningParameters);
     }
 
     public ObservableList<Object> getBlockBuildingParameters() {

@@ -72,6 +72,6 @@ public class Step4Controller {
         IDocumentation method = MethodMapping.getMethodByName(model.getComparisonCleaningMethod());
 
         // Display the configuration window
-        CustomMethodConfiguration.displayModal(getClass(), injector, method);
+        CustomMethodConfiguration.displayModal(getClass(), injector, method, model.comparisonCleaningParametersProperty());
     }
 }
