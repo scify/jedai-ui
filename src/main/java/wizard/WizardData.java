@@ -30,6 +30,7 @@ public class WizardData {
     private final StringProperty similarityMethod = new SimpleStringProperty();
 
     private final StringProperty entityClustering = new SimpleStringProperty();
+    private final ListProperty<Object> entityClusteringParameters = new SimpleListProperty<>();
 
     /**
      * Clone a WizardData object (return a new WizardData object, with the same properties of the given one)
@@ -57,6 +58,18 @@ public class WizardData {
         //todo: clone parameter lists too
 
         return clone;
+    }
+
+    public ObservableList<Object> getEntityClusteringParameters() {
+        return entityClusteringParameters.get();
+    }
+
+    public ListProperty<Object> entityClusteringParametersProperty() {
+        return entityClusteringParameters;
+    }
+
+    public void setEntityClusteringParameters(ObservableList<Object> entityClusteringParameters) {
+        this.entityClusteringParameters.set(entityClusteringParameters);
     }
 
     public ObservableList<Object> getComparisonCleaningParameters() {
@@ -262,5 +275,7 @@ public class WizardData {
         entityClusteringProperty().setValue(JedaiOptions.CENTER_CLUSTERING);
         representationModelProperty().setValue(JedaiOptions.CHARACTER_BIGRAMS);
         similarityMethodProperty().setValue(JedaiOptions.ARCS_SIMILARITY);
+
+        //todo: reset the parameter lists too
     }
 }

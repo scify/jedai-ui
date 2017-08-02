@@ -343,7 +343,7 @@ public class CompletedController {
 
                 if (entityMatchingMethodName.equals(JedaiOptions.GROUP_LINKAGE)) {
                     //todo: threshold should be specified by user...
-                    em = new GroupLinkage(0.8, repModel, similarityMetric);
+                    em = new GroupLinkage(0.5, repModel, similarityMetric);
                 } else {
                     // Profile Matcher
                     em = new ProfileMatcher(repModel, similarityMetric);

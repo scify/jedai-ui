@@ -1,14 +1,19 @@
 package wizard.steps;
 
+import Utilities.IDocumentation;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.VBox;
 import jfxtras.scene.control.ToggleGroupValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.CustomMethodConfiguration;
 import utils.JedaiOptions;
 import utils.RadioButtonHelper;
+import wizard.MethodMapping;
 import wizard.Submit;
 import wizard.Validate;
 import wizard.WizardData;
@@ -28,8 +33,10 @@ public class Step6Controller {
     private Logger log = LoggerFactory.getLogger(Step3Controller.class);
 
     @Inject
-    private
-    WizardData model;
+    private WizardData model;
+
+    @Inject
+    private Injector injector;
 
     @FXML
     public void initialize() {
@@ -95,6 +102,14 @@ public class Step6Controller {
         if (log.isDebugEnabled()) {
             log.debug("[SUBMIT] the user has completed step 6");
         }
+    }
+
+    public void advancedConfigBtnHandler(ActionEvent actionEvent) {
+        // Get selected method
+        String methodName = model.getEntityClustering();
+        IDocumentation clusteringMethod = MethodMapping.getEntityClusteringMethod(methodName);
+
+        CustomMethodConfiguration.displayModal(getClass(), injector, clusteringMethod, model.entityClusteringParametersProperty());
     }
 }
 
