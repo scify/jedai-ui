@@ -2,7 +2,6 @@ package wizard.steps;
 
 import com.google.inject.Inject;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
@@ -132,16 +131,6 @@ public class Step5Controller {
 
     @Validate
     public boolean validate() throws Exception {
-        // todo: update validation of this step
-        if (model.getEntityMatching() == null || model.getEntityMatching().isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Entity Matching Method");
-            alert.setHeaderText("Missing Field");
-            alert.setContentText("Selecting an Entity Matching Method is required.");
-            alert.showAndWait();
-            return false;
-        }
-
         return true;
     }
 
