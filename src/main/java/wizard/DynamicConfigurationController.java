@@ -80,6 +80,7 @@ public class DynamicConfigurationController {
                 // Create integer controls
                 TextField integerField = new TextField();
                 integerField.textProperty().addListener((observable, oldValue, newValue) -> {
+                    // Check that only numbers have been entered
                     if (!newValue.matches("\\d*")) {
                         integerField.setText(newValue.replaceAll("[^\\d]", ""));
                     } else {
@@ -97,6 +98,7 @@ public class DynamicConfigurationController {
                 // Create double controls
                 TextField doubleField = new TextField();
                 doubleField.textProperty().addListener((observable, oldValue, newValue) -> {
+                    // Check that the number is a double
                     try {
                         //noinspection ResultOfMethodCallIgnored
                         double value = Double.parseDouble(newValue);
@@ -104,12 +106,24 @@ public class DynamicConfigurationController {
                         // Save the value
                         parameterValues.set(index, value);
                     } catch (NumberFormatException e) {
-                        // Problem parsing, not a double
+                        // Problem parsing, so not a double. Set previous value.
                         doubleField.setText(oldValue);
                     }
                 });
 
                 control = doubleField;
+
+                break;
+            case "java.lang.String":
+                parameterValues.add("");
+
+                // Create String controls
+                TextField stringField = new TextField();
+
+                // When the text field value changes, update the parameter in the list
+                stringField.textProperty().addListener((observable, oldValue, newValue) -> parameterValues.set(index, newValue));
+
+                control = stringField;
 
                 break;
             default:
