@@ -7,14 +7,19 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.atlas.json.JsonValue;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class DynamicConfigurationController {
     public Label configureParamsLabel;
@@ -69,9 +74,30 @@ public class DynamicConfigurationController {
         // Create the label
         Label label = new Label(param.get("name").getAsString().value());
 
-        // Depending on what type the parameter is, create the appropriate control for it
-        Node control = null;
+        // Depending on what type the parameter is, get the appropriate control for it
         String paramType = param.get("class").getAsString().value();
+        Node control = getNodeForType(index, paramType);
+
+        // Add text area with parameter description
+        TextArea descriptionArea = new TextArea();
+        descriptionArea.setEditable(false);
+        descriptionArea.setWrapText(true);
+        descriptionArea.setMaxWidth(200);
+        descriptionArea.textProperty().setValue(param.get("description").getAsString().value());
+
+        // Add controls to the grid
+        configGrid.addRow(index, label, control, descriptionArea);
+    }
+
+    /**
+     * Create and return the node for setting the given parameter type
+     *
+     * @param index     Index of the parameter that the generated node is for
+     * @param paramType Type of the parameter
+     * @return Appropriate node for setting the parameter's value
+     */
+    private Node getNodeForType(int index, String paramType) {
+        Node control = null;
 
         switch (paramType) {
             case "java.lang.Integer":
@@ -166,6 +192,41 @@ public class DynamicConfigurationController {
                 control = charField;
 
                 break;
+            case "java.util.Set<Integer>":
+                // Create Set instance
+                Set<Integer> set = new HashSet<>();
+                parameterValues.add(set);
+
+                // Create the text field for numbers input
+                TextField integerListField = new TextField();
+
+                integerListField.textProperty().addListener((observable, oldValue, newValue) -> {
+                    // Allow only numbers and commas in order to separate the numbers
+                    String valuesString = newValue.replaceAll("[^\\d|,]", "");
+                    integerListField.setText(valuesString);
+
+                    // Empty the existing HashSet, and add updated values to it
+                    set.clear();
+
+                    String[] numbers = valuesString.split(",");
+                    for (String sNum : numbers) {
+                        // Only for non-empty strings
+                        if (!sNum.isEmpty()) {
+                            // Parse to integer, and add to the set
+                            set.add(Integer.parseInt(sNum));
+                        }
+                    }
+                });
+
+                control = integerListField;
+
+                break;
+            case "java.util.Set<String>":
+                parameterValues.add(null);
+                control = new TextField();
+                ((TextField) control).setBackground(new Background(new BackgroundFill(Paint.valueOf("#ff0000"), null, null)));
+                //todo: implement this
+                break;
             default:
                 // If the type is an enumeration, create it and add radio buttons for it
                 try {
@@ -194,15 +255,7 @@ public class DynamicConfigurationController {
                 }
         }
 
-        // Add text area with parameter description
-        TextArea descriptionArea = new TextArea();
-        descriptionArea.setEditable(false);
-        descriptionArea.setWrapText(true);
-        descriptionArea.setMaxWidth(200);
-        descriptionArea.textProperty().setValue(param.get("description").getAsString().value());
-
-        // Add controls to the grid
-        configGrid.addRow(index, label, control, descriptionArea);
+        return control;
     }
 
     /**
