@@ -3,14 +3,17 @@ package wizard;
 import com.google.inject.Inject;
 import javafx.beans.property.ListProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
+import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Paint;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
@@ -222,10 +225,58 @@ public class DynamicConfigurationController {
 
                 break;
             case "java.util.Set<String>":
-                parameterValues.add(null);
-                control = new TextField();
-                ((TextField) control).setBackground(new Background(new BackgroundFill(Paint.valueOf("#ff0000"), null, null)));
-                //todo: implement this
+                // Create Set instance
+                Set<String> stringSet = new HashSet<>();
+                parameterValues.add(stringSet);
+
+                // Create the list container with an add button
+                VBox stringVBox = new VBox();
+
+                // Create the editable list
+                ObservableList<String> stringList = FXCollections.observableArrayList();
+
+                ListView<String> simpleList = new ListView<>(stringList);
+                simpleList.setEditable(true);
+                simpleList.setCellFactory(TextFieldListCell.forListView());
+
+                simpleList.setOnEditCommit(t -> simpleList.getItems().set(t.getIndex(), t.getNewValue()));
+
+                // Create the add/remove item buttons
+                Button addBtn = new Button("Add");
+                addBtn.onActionProperty().setValue(event -> stringList.add("(double click to edit)"));
+
+                Button removeBtn = new Button("Remove last");
+                removeBtn.onActionProperty().setValue(event -> {
+                    ObservableList<String> list = simpleList.getItems();
+
+                    // Only try to remove if list contains at least 1 item
+                    if (list.size() > 0) {
+                        list.remove(list.size() - 1);
+                    }
+                });
+
+                HBox addRemoveHBox = new HBox();
+                addRemoveHBox.setSpacing(5);
+                addRemoveHBox.setAlignment(Pos.CENTER);
+                addRemoveHBox.getChildren().add(addBtn);
+                addRemoveHBox.getChildren().add(removeBtn);
+
+                // Add a listener to the string list, so when it changes we update the Set
+                simpleList.getItems().addListener((ListChangeListener<String>) c -> {
+                    // Clear the current set's contents, and add the new ones
+                    stringSet.clear();
+                    stringSet.addAll(simpleList.getItems());
+
+                    System.out.println("new set contents " + stringSet);
+                });
+
+                // Add buttons to the container, and return the container
+                stringVBox.setSpacing(5);
+                stringVBox.getChildren().add(simpleList);
+                stringVBox.getChildren().add(addRemoveHBox);
+
+                control = stringVBox;
+
                 break;
             default:
                 // If the type is an enumeration, create it and add radio buttons for it
