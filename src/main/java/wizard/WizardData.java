@@ -10,12 +10,18 @@ import utils.JedaiOptions;
 
 public class WizardData {
     private final StringProperty erType = new SimpleStringProperty();
+
     private final StringProperty entityProfilesD1Path = new SimpleStringProperty();
     private final StringProperty entityProfilesD1Type = new SimpleStringProperty();
+    private final ListProperty<Object> entityProfilesD1Parameters = new SimpleListProperty<>();
+
     private final StringProperty entityProfilesD2Path = new SimpleStringProperty();
     private final StringProperty entityProfilesD2Type = new SimpleStringProperty();
+    private final ListProperty<Object> entityProfilesD2Parameters = new SimpleListProperty<>();
+
     private final StringProperty groundTruthPath = new SimpleStringProperty();
     private final StringProperty groundTruthType = new SimpleStringProperty();
+    private final ListProperty<Object> groundTruthParameters = new SimpleListProperty<>();
 
     private final StringProperty blockBuilding = new SimpleStringProperty();
     private final ListProperty<Object> blockBuildingParameters = new SimpleListProperty<>();
@@ -58,6 +64,42 @@ public class WizardData {
         //todo: clone parameter lists too
 
         return clone;
+    }
+
+    public ObservableList<Object> getEntityProfilesD1Parameters() {
+        return entityProfilesD1Parameters.get();
+    }
+
+    public ListProperty<Object> entityProfilesD1ParametersProperty() {
+        return entityProfilesD1Parameters;
+    }
+
+    public void setEntityProfilesD1Parameters(ObservableList<Object> entityProfilesD1Parameters) {
+        this.entityProfilesD1Parameters.set(entityProfilesD1Parameters);
+    }
+
+    public ObservableList<Object> getEntityProfilesD2Parameters() {
+        return entityProfilesD2Parameters.get();
+    }
+
+    public ListProperty<Object> entityProfilesD2ParametersProperty() {
+        return entityProfilesD2Parameters;
+    }
+
+    public void setEntityProfilesD2Parameters(ObservableList<Object> entityProfilesD2Parameters) {
+        this.entityProfilesD2Parameters.set(entityProfilesD2Parameters);
+    }
+
+    public ObservableList<Object> getGroundTruthParameters() {
+        return groundTruthParameters.get();
+    }
+
+    public ListProperty<Object> groundTruthParametersProperty() {
+        return groundTruthParameters;
+    }
+
+    public void setGroundTruthParameters(ObservableList<Object> groundTruthParameters) {
+        this.groundTruthParameters.set(groundTruthParameters);
     }
 
     public ObservableList<Object> getEntityClusteringParameters() {
