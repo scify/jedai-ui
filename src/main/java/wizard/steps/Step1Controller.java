@@ -1,6 +1,7 @@
 package wizard.steps;
 
 import DataModel.EntityProfile;
+import Utilities.IDocumentation;
 import com.google.inject.Inject;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -23,18 +24,21 @@ import java.util.List;
 import java.util.Map;
 
 public class Step1Controller {
-    public Button selectGroundTruthBtn;
-    public TextField entityProfTextField;
+    public TextField entityProfD1TextField;
+    public TextField entityProfD2TextField;
     public TextField groundTruthTextField;
     public VBox containerVBox;
     public VBox radioBtnsContainer;
     public Button selectEntityD1Btn;
     public Button selectEntityD2Btn;
-    public TextField entityProfD2TextField;
+    public Button selectGroundTruthBtn;
     public ComboBox<String> entitiesD1FileTypeCombo;
     public ComboBox<String> entitiesD2FileTypeCombo;
     public ComboBox<String> groundTruthFileTypeCombo;
     public Label entityProfilesD2Label;
+    public Button entitiesD1ConfigBtn;
+    public Button entitiesD2ConfigBtn;
+    public Button gTruthConfigBtn;
     private Logger log = LoggerFactory.getLogger(Step1Controller.class);
     private FileChooser fileChooser;
     private File previousFolder;
@@ -49,7 +53,7 @@ public class Step1Controller {
         fileChooser = new FileChooser();
 
         // Bind text field values to the model
-        entityProfTextField.textProperty().bindBidirectional(model.entityProfilesD1PathProperty());
+        entityProfD1TextField.textProperty().bindBidirectional(model.entityProfilesD1PathProperty());
         entityProfD2TextField.textProperty().bindBidirectional(model.entityProfilesD2PathProperty());
         groundTruthTextField.textProperty().bindBidirectional(model.groundTruthPathProperty());
 
@@ -190,7 +194,7 @@ public class Step1Controller {
             // Put the selected file's path to the corresponding text field
             switch (btnId) {
                 case "selectEntityD1Btn":
-                    entityProfTextField.setText(file.getAbsolutePath());
+                    entityProfD1TextField.setText(file.getAbsolutePath());
                     break;
                 case "selectEntityD2Btn":
                     entityProfD2TextField.setText(file.getAbsolutePath());
@@ -202,6 +206,34 @@ public class Step1Controller {
 
             // Save the file's directory to remember it if the FileChooser is opened again
             previousFolder = file.getParentFile();
+        }
+    }
+
+    /**
+     * Show the advanced configuration window for the pressed button
+     *
+     * @param actionEvent Button action event
+     */
+    public void configBtnHandler(ActionEvent actionEvent) {
+        if (actionEvent.getSource() instanceof Button) {
+            // Get button ID
+            String id = ((Button) actionEvent.getSource()).getId();
+
+            String readerName = null;
+
+            //todo: Get the appropriate IDocumentation instance to give to configuration modal
+            IDocumentation reader = null;
+            switch (id) {
+                case "entitiesD1ConfigBtn":
+                    readerName = model.getEntityProfilesD1Type();
+                    break;
+                case "entitiesD2ConfigBtn":
+                    readerName = model.getEntityProfilesD2Type();
+                    break;
+                case "gTruthConfigBtn":
+                    readerName = model.getGroundTruthType();
+                    break;
+            }
         }
     }
 }
