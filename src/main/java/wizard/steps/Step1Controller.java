@@ -3,6 +3,8 @@ package wizard.steps;
 import DataModel.EntityProfile;
 import Utilities.IDocumentation;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
+import javafx.beans.property.ListProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -10,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.CustomMethodConfiguration;
 import utils.DataReadingHelper;
 import utils.JedaiOptions;
 import utils.RadioButtonHelper;
@@ -44,8 +47,10 @@ public class Step1Controller {
     private File previousFolder;
 
     @Inject
-    private
-    WizardData model;
+    private WizardData model;
+
+    @Inject
+    private Injector injector;
 
     @FXML
     public void initialize() {
@@ -219,21 +224,35 @@ public class Step1Controller {
             // Get button ID
             String id = ((Button) actionEvent.getSource()).getId();
 
-            String readerName = null;
+            // Get the required parameters to give to configuration modal
+            ListProperty<Object> modelProperty = null;
+            String readerType = null;
+            boolean groundTruth = false;
+            IDocumentation reader;
 
-            //todo: Get the appropriate IDocumentation instance to give to configuration modal
-            IDocumentation reader = null;
             switch (id) {
                 case "entitiesD1ConfigBtn":
-                    readerName = model.getEntityProfilesD1Type();
+                    readerType = model.getEntityProfilesD1Type();
+                    modelProperty = model.entityProfilesD1ParametersProperty();
+
                     break;
                 case "entitiesD2ConfigBtn":
-                    readerName = model.getEntityProfilesD2Type();
+                    readerType = model.getEntityProfilesD2Type();
+                    modelProperty = model.entityProfilesD2ParametersProperty();
+
                     break;
                 case "gTruthConfigBtn":
-                    readerName = model.getGroundTruthType();
+                    readerType = model.getGroundTruthType();
+                    modelProperty = model.groundTruthParametersProperty();
+                    groundTruth = true;
+
                     break;
             }
+
+            reader = CustomMethodConfiguration.getDataReader(groundTruth, readerType);
+
+            // Now that we have all required parameters, show the configuration window
+            CustomMethodConfiguration.displayModal(getClass(), injector, reader, modelProperty);
         }
     }
 }
