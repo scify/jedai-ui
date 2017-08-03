@@ -126,6 +126,46 @@ public class DynamicConfigurationController {
                 control = stringField;
 
                 break;
+            case "java.lang.Boolean":
+                parameterValues.add(false);
+
+                // Create Boolean controls
+                CheckBox checkBox = new CheckBox();
+
+                // When the checkbox is toggled, update the parameter in the list
+                checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> parameterValues.set(index, newValue));
+
+                control = checkBox;
+
+                break;
+            case "java.lang.Character":
+                char defaultValue = ',';
+                parameterValues.add(defaultValue);
+
+                // Create String controls
+                TextField charField = new TextField();
+
+                // When the character field value changes, update the parameter in the list
+                charField.textProperty().addListener((observable, oldValue, newValue) -> {
+                    if (newValue.length() > 1) {
+                        // Use only the last String character
+                        char val = newValue.charAt(newValue.length() - 1);
+
+                        charField.textProperty().setValue(String.valueOf(val));
+                        parameterValues.set(index, val);
+                    } else if (newValue.length() == 1) {
+                        // Set the single character as the parameter value
+                        parameterValues.set(index, newValue.charAt(0));
+                    } else {
+                        // Cannot be empty, set to the default value...
+                        charField.textProperty().setValue(String.valueOf(defaultValue));
+                        parameterValues.set(index, defaultValue);
+                    }
+                });
+
+                control = charField;
+
+                break;
             default:
                 // If the type is an enumeration, create it and add radio buttons for it
                 try {
