@@ -14,11 +14,13 @@ import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.atlas.json.JsonValue;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -35,6 +37,7 @@ public class DynamicConfigurationController {
     private JsonArray parameters;
     private ListProperty<Object> parametersProperty;
     private List<Object> parameterValues;
+    private static File previousFolder = null;
 
     @FXML
     public void initialize() {
@@ -78,7 +81,9 @@ public class DynamicConfigurationController {
         Label label = new Label(param.get("name").getAsString().value());
 
         // Depending on what type the parameter is, get the appropriate control for it
-        String paramType = param.get("class").getAsString().value();
+        // If the label is "File Path", make the type "JEDAI_FILEPATH", in order to show file selection controls
+        String paramType = param.get("name").getAsString().value().equals("File Path") ? "JEDAI_FILEPATH" : param.get("class").getAsString().value();
+
         Node control = getNodeForType(index, paramType);
 
         // Add text area with parameter description
@@ -103,6 +108,38 @@ public class DynamicConfigurationController {
         Node control = null;
 
         switch (paramType) {
+            case "JEDAI_FILEPATH":
+                parameterValues.add("");    // Add initial value
+
+                // Create HBox with text field + Browse button
+                HBox hBox = new HBox();
+                hBox.setSpacing(5.0);
+
+                TextField fileField = new TextField();
+                fileField.textProperty().addListener((observable, oldValue, newValue) -> parameterValues.set(index, newValue));
+
+                Button browseBtn = new Button("Browse");
+
+                // Setup the button action
+                FileChooser fileChooser = new FileChooser();
+                browseBtn.onActionProperty().setValue(event -> {
+                    // Open file chooser
+                    if (previousFolder != null) {
+                        fileChooser.setInitialDirectory(previousFolder);
+                    }
+                    File file = fileChooser.showOpenDialog(configGrid.getScene().getWindow());
+
+                    if (file != null) {
+                        fileField.textProperty().setValue(file.getAbsolutePath());
+                        // Save the file's directory to remember it if the FileChooser is opened again
+                        previousFolder = file.getParentFile();
+                    }
+                });
+
+                // Add nodes to HBox, and set it as the control
+                hBox.getChildren().addAll(fileField, browseBtn);
+                control = hBox;
+                break;
             case "java.lang.Integer":
                 parameterValues.add(-1);    // Add the initial value
 

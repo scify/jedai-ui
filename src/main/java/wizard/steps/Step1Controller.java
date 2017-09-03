@@ -87,69 +87,72 @@ public class Step1Controller {
         // Set initial values to text fields (for testing...)
 //        entityProfTextField.setText("C:\\Users\\leots\\Documents\\JedAIToolkit\\datasets\\dirtyErFiles\\restaurantProfiles");
 //        groundTruthTextField.setText("C:\\Users\\leots\\Documents\\JedAIToolkit\\datasets\\dirtyErFiles\\restaurantIdDuplicates");
+//        model.setEntityProfilesD1Type(JedaiOptions.SERIALIZED);
+//        model.setGroundTruthType(JedaiOptions.SERIALIZED);
     }
 
     @Validate
     public boolean validate() throws Exception {
-        // Create HashMap with values to check (ordered)
-        Map<String, String> files = new LinkedHashMap<>();
-        files.put("entities1", model.getEntityProfilesD1Path());
-        if (model.getErType().equals(JedaiOptions.CLEAN_CLEAN_ER))
-            // For Clean-Clean ER, will also check that the 2nd path has been filled
-            files.put("entities2", model.getEntityProfilesD2Path());
-        files.put("ground_truth", model.getGroundTruthPath());
-
-        // Get file types
-        String entitiesD1Type = model.getEntityProfilesD1Type();
-        String entitiesD2Type = model.getEntityProfilesD2Type();
-        String groundTruthType = model.getGroundTruthType();
-
-        boolean ok;
-
-        // Check that file paths and types have been entered
-        ok = files.get("entities1") != null && !files.get("entities1").isEmpty()
-                && files.get("ground_truth") != null && !files.get("ground_truth").isEmpty()
-                && entitiesD1Type != null && groundTruthType != null;
-
-        if (model.getErType().equals(JedaiOptions.CLEAN_CLEAN_ER)) {
-            ok = ok && files.get("entities2") != null && !files.get("entities2").isEmpty() && entitiesD2Type != null;
-        }
-
-        if (!ok) {
-            // Show missing field error
-            showError("Missing Field", "Please fill all the enabled fields!");
-            return false;
-        }
-
-        // Check that the file paths given exist and are actually files
-        for (String path : files.values()) {
-            if (!new File(path).isFile()) {
-                // Show error and stop validation
-                showError("File does not exist!", "The file: \"" + path + "\"does not exist!");
-                return false;
-            }
-        }
-
-        // Check that the files can actually be read with the appropriate readers
-        try {
-            String erType = model.getErType();
-
-            // Read 1st profiles file
-            List<EntityProfile> profilesD1 = DataReadingHelper.getEntities(files.get("entities1"), entitiesD1Type);
-
-            // In case Clean-Clear ER is selected, also read 2nd profiles file
-            List<EntityProfile> profilesD2 = null;
-            if (erType.equals(JedaiOptions.CLEAN_CLEAN_ER)) {
-                profilesD2 = DataReadingHelper.getEntities(files.get("entities2"), entitiesD2Type);
-            }
-
-            // Read ground truth
-            DataReadingHelper.getGroundTruth(files.get("ground_truth"), groundTruthType, erType, profilesD1, profilesD2);
-        } catch (Exception e) {
-            // Show invalid input file error and stop checking other files
-            showError("Invalid input files!", "The input files could not be read successfully.\n\nDetails: " + e.toString() + " (" + e.getMessage() + ")");
-            return false;
-        }
+        //todo: update this method after removing the file path text fields
+//        // Create HashMap with values to check (ordered)
+//        Map<String, String> files = new LinkedHashMap<>();
+//        files.put("entities1", model.getEntityProfilesD1Path());
+//        if (model.getErType().equals(JedaiOptions.CLEAN_CLEAN_ER))
+//            // For Clean-Clean ER, will also check that the 2nd path has been filled
+//            files.put("entities2", model.getEntityProfilesD2Path());
+//        files.put("ground_truth", model.getGroundTruthPath());
+//
+//        // Get file types
+//        String entitiesD1Type = model.getEntityProfilesD1Type();
+//        String entitiesD2Type = model.getEntityProfilesD2Type();
+//        String groundTruthType = model.getGroundTruthType();
+//
+//        boolean ok;
+//
+//        // Check that file paths and types have been entered
+//        ok = files.get("entities1") != null && !files.get("entities1").isEmpty()
+//                && files.get("ground_truth") != null && !files.get("ground_truth").isEmpty()
+//                && entitiesD1Type != null && groundTruthType != null;
+//
+//        if (model.getErType().equals(JedaiOptions.CLEAN_CLEAN_ER)) {
+//            ok = ok && files.get("entities2") != null && !files.get("entities2").isEmpty() && entitiesD2Type != null;
+//        }
+//
+//        if (!ok) {
+//            // Show missing field error
+//            showError("Missing Field", "Please fill all the enabled fields!");
+//            return false;
+//        }
+//
+//        // Check that the file paths given exist and are actually files
+//        for (String path : files.values()) {
+//            if (!new File(path).isFile()) {
+//                // Show error and stop validation
+//                showError("File does not exist!", "The file: \"" + path + "\"does not exist!");
+//                return false;
+//            }
+//        }
+//
+//        // Check that the files can actually be read with the appropriate readers
+//        try {
+//            String erType = model.getErType();
+//
+//            // Read 1st profiles file
+//            List<EntityProfile> profilesD1 = DataReadingHelper.getEntities(files.get("entities1"), entitiesD1Type);
+//
+//            // In case Clean-Clear ER is selected, also read 2nd profiles file
+//            List<EntityProfile> profilesD2 = null;
+//            if (erType.equals(JedaiOptions.CLEAN_CLEAN_ER)) {
+//                profilesD2 = DataReadingHelper.getEntities(files.get("entities2"), entitiesD2Type);
+//            }
+//
+//            // Read ground truth
+//            DataReadingHelper.getGroundTruth(files.get("ground_truth"), groundTruthType, erType, profilesD1, profilesD2);
+//        } catch (Exception e) {
+//            // Show invalid input file error and stop checking other files
+//            showError("Invalid input files!", "The input files could not be read successfully.\n\nDetails: " + e.toString() + " (" + e.getMessage() + ")");
+//            return false;
+//        }
 
         return true;
     }
@@ -169,41 +172,9 @@ public class Step1Controller {
     }
 
     @Submit
-    public void submit() throws Exception {
+    public void submit() {
         if (log.isDebugEnabled()) {
             log.debug("[SUBMIT] the user has completed step 1");
-        }
-    }
-
-    public void selectBtnHandler(ActionEvent actionEvent) {
-        // Get ID of button that was pressed
-        String btnId = ((Button) actionEvent.getTarget()).getId();
-
-        // Open file chooser
-        if (previousFolder != null) {
-            fileChooser.setInitialDirectory(previousFolder);
-        }
-        File file = fileChooser.showOpenDialog(containerVBox.getScene().getWindow());
-
-        if (file != null) {
-            // Put the selected file's path to the corresponding text field
-            switch (btnId) {
-                case "selectEntityD1Btn":
-                    //todo
-//                    entityProfD1TextField.setText(file.getAbsolutePath());
-                    break;
-                case "selectEntityD2Btn":
-                    //todo
-//                    entityProfD2TextField.setText(file.getAbsolutePath());
-                    break;
-                case "selectGroundTruthBtn":
-                    //todo
-//                    groundTruthTextField.setText(file.getAbsolutePath());
-                    break;
-            }
-
-            // Save the file's directory to remember it if the FileChooser is opened again
-            previousFolder = file.getParentFile();
         }
     }
 
