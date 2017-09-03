@@ -17,7 +17,6 @@ public class WizardData {
     private final StringProperty entityProfilesD2Type = new SimpleStringProperty();
     private final ListProperty<Object> entityProfilesD2Parameters = new SimpleListProperty<>();
 
-    private final StringProperty groundTruthPath = new SimpleStringProperty();
     private final StringProperty groundTruthType = new SimpleStringProperty();
     private final ListProperty<Object> groundTruthParameters = new SimpleListProperty<>();
 
@@ -48,7 +47,6 @@ public class WizardData {
         clone.setErType(data.getErType());
         clone.setEntityProfilesD1Type(data.getEntityProfilesD1Type());
         clone.setEntityProfilesD2Type(data.getEntityProfilesD2Type());
-        clone.setGroundTruthPath(data.getGroundTruthPath());
         clone.setGroundTruthType(data.getGroundTruthType());
         clone.setBlockBuilding(data.getBlockBuilding());
         clone.setComparisonCleaningMethod(data.getComparisonCleaningMethod());
@@ -216,18 +214,6 @@ public class WizardData {
 
     public void setBlockCleaningMethods(ObservableList<String> blockCleaningMethods) {
         this.blockCleaningMethods.set(blockCleaningMethods);
-    }
-
-    public String getGroundTruthPath() {
-        return groundTruthPath.get();
-    }
-
-    public StringProperty groundTruthPathProperty() {
-        return groundTruthPath;
-    }
-
-    public void setGroundTruthPath(String groundTruthPath) {
-        this.groundTruthPath.set(groundTruthPath);
     }
 
     public String getBlockBuilding() {

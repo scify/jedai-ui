@@ -245,8 +245,8 @@ public class CompletedController {
 
                 // Read ground truth file
                 AbstractDuplicatePropagation duplicatePropagation = DataReadingHelper.getGroundTruth(
-                        model.getGroundTruthPath(),
                         model.getGroundTruthType(),
+                        model.getGroundTruthParameters(),
                         erType,
                         profilesD1,
                         profilesD2
@@ -265,7 +265,7 @@ public class CompletedController {
                 overheadStart = System.currentTimeMillis();
 
                 // Check if the user set any custom parameters for block building
-                if (blBuParams.isEmpty()) {
+                if (blBuParams == null || blBuParams.isEmpty()) {
                     // No parameters found, use default configuration
                     blockBuildingMethod = BlockBuildingMethod.getDefaultConfiguration(blockingWorkflow);
                 } else {

@@ -46,7 +46,7 @@ public class ConfirmController {
         erTypeLabel.textProperty().bind(model.erTypeProperty());
 //        entityProfilesD1Label.textProperty().bind(model.entityProfilesD1PathProperty());
         blockBuildingLabel.textProperty().bind(model.blockBuildingProperty());
-        groundTruthLabel.textProperty().bind(model.groundTruthPathProperty());
+//        groundTruthLabel.textProperty().bind(model.groundTruthPathProperty());
         compRefinementLabel.textProperty().bind(model.comparisonCleaningMethodProperty());
         entityMatchingLabel.textProperty().bind(model.entityMatchingProperty());
         entityClusteringLabel.textProperty().bind(model.entityClusteringProperty());

@@ -20,7 +20,7 @@ public class DataReadingHelper {
      * Get a list of Entity Profiles, using the specified reader type (CSV, Database, RDF or Serialized)
      *
      * @param type       Type of reader. Available readers are specified in JedaiOptions helper class
-     * @param parameters Path of entities file, for reader
+     * @param parameters Parameters for Entity Reader
      * @return List of read entities
      */
     public static List<EntityProfile> getEntities(String type, List<Object> parameters) {
@@ -62,14 +62,23 @@ public class DataReadingHelper {
     /**
      * Read ground truth using the specified reader.
      *
-     * @param path   Path of ground truth file
-     * @param type   Type of ground truth file (see JedaiOptions)
-     * @param erType Clean-Clean or Dirty ER
+     * @param type       Type of ground truth file (see JedaiOptions)
+     * @param parameters Parameters for reader
+     * @param erType     Clean-Clean or Dirty ER
+     * @param profilesD1 Entity Profiles for Dataset 1
+     * @param profilesD2 Entity Profiles for Dataset 2
      * @return Ground truth (duplicate propagation)
      */
-    public static AbstractDuplicatePropagation getGroundTruth(String path, String type, String erType, List<EntityProfile> profilesD1, List<EntityProfile> profilesD2) {
+    public static AbstractDuplicatePropagation getGroundTruth(String type, List<Object> parameters, String erType, List<EntityProfile> profilesD1, List<EntityProfile> profilesD2) {
         AbstractDuplicatePropagation dp = null;
         IGroundTruthReader gtReader = null;
+
+        // If there are no parameters, we cannot initialize the reader
+        if (parameters.isEmpty())
+            return null;
+
+        // Get the path from the parameters (todo: do this only for Serialized...)
+        String path = parameters.get(0).toString();
 
         switch (type) {
             case JedaiOptions.CSV:
