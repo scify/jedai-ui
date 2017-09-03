@@ -274,7 +274,6 @@ public class WizardData {
         entityMatchingProperty().setValue(JedaiOptions.GROUP_LINKAGE);
         entityClusteringProperty().setValue(JedaiOptions.CENTER_CLUSTERING);
         representationModelProperty().setValue(JedaiOptions.CHARACTER_BIGRAMS);
-        similarityMethodProperty().setValue(JedaiOptions.ARCS_SIMILARITY);
 
         //todo: reset the parameter lists too
     }
