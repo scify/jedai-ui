@@ -266,8 +266,6 @@ public class DynamicConfigurationController {
                     // Clear the current set's contents, and add the new ones
                     stringSet.clear();
                     stringSet.addAll(simpleList.getItems());
-
-                    System.out.println("new set contents " + stringSet);
                 });
 
                 // Add buttons to the container, and return the container

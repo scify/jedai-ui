@@ -7,7 +7,10 @@ import com.google.inject.Injector;
 import javafx.beans.property.ListProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
@@ -27,14 +30,8 @@ import java.util.List;
 import java.util.Map;
 
 public class Step1Controller {
-    public TextField entityProfD1TextField;
-    public TextField entityProfD2TextField;
-    public TextField groundTruthTextField;
     public VBox containerVBox;
     public VBox radioBtnsContainer;
-    public Button selectEntityD1Btn;
-    public Button selectEntityD2Btn;
-    public Button selectGroundTruthBtn;
     public ComboBox<String> entitiesD1FileTypeCombo;
     public ComboBox<String> entitiesD2FileTypeCombo;
     public ComboBox<String> groundTruthFileTypeCombo;
@@ -56,11 +53,6 @@ public class Step1Controller {
     public void initialize() {
         // Create FileChooser instance
         fileChooser = new FileChooser();
-
-        // Bind text field values to the model
-        entityProfD1TextField.textProperty().bindBidirectional(model.entityProfilesD1PathProperty());
-        entityProfD2TextField.textProperty().bindBidirectional(model.entityProfilesD2PathProperty());
-        groundTruthTextField.textProperty().bindBidirectional(model.groundTruthPathProperty());
 
         // Bind file type combobox values to the model
         entitiesD1FileTypeCombo.valueProperty().bindBidirectional(model.entityProfilesD1TypeProperty());
@@ -89,8 +81,6 @@ public class Step1Controller {
         groundTruthFileTypeCombo.getItems().add(JedaiOptions.SERIALIZED);
 
         // Disable 2nd dataset selection when Dirty ER is selected
-        entityProfD2TextField.disableProperty().bind(model.erTypeProperty().isEqualTo(JedaiOptions.DIRTY_ER));
-        selectEntityD2Btn.disableProperty().bind(model.erTypeProperty().isEqualTo(JedaiOptions.DIRTY_ER));
         entitiesD2FileTypeCombo.disableProperty().bind(model.erTypeProperty().isEqualTo(JedaiOptions.DIRTY_ER));
         entityProfilesD2Label.disableProperty().bind(model.erTypeProperty().isEqualTo(JedaiOptions.DIRTY_ER));
 
@@ -199,13 +189,16 @@ public class Step1Controller {
             // Put the selected file's path to the corresponding text field
             switch (btnId) {
                 case "selectEntityD1Btn":
-                    entityProfD1TextField.setText(file.getAbsolutePath());
+                    //todo
+//                    entityProfD1TextField.setText(file.getAbsolutePath());
                     break;
                 case "selectEntityD2Btn":
-                    entityProfD2TextField.setText(file.getAbsolutePath());
+                    //todo
+//                    entityProfD2TextField.setText(file.getAbsolutePath());
                     break;
                 case "selectGroundTruthBtn":
-                    groundTruthTextField.setText(file.getAbsolutePath());
+                    //todo
+//                    groundTruthTextField.setText(file.getAbsolutePath());
                     break;
             }
 

@@ -22,8 +22,6 @@
         <GridPane>
             <columnConstraints>
                 <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="130.0"/>
-                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0"/>
-                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="140.0"/>
                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="120.0"/>
                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
             </columnConstraints>
@@ -36,27 +34,18 @@
                 <Label text="Entity profiles D1"/>
                 <Label fx:id="entityProfilesD2Label" text="Entity profiles D2" GridPane.rowIndex="1"/>
                 <Label text="Ground-truth file" GridPane.rowIndex="2"/>
-                <TextField fx:id="entityProfD1TextField" GridPane.columnIndex="1"/>
-                <TextField fx:id="entityProfD2TextField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                <TextField fx:id="groundTruthTextField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-                <Button fx:id="selectEntityD1Btn" mnemonicParsing="false" onAction="#selectBtnHandler" prefWidth="110.0"
-                        text="Browse..." GridPane.columnIndex="2"/>
-                <Button fx:id="selectEntityD2Btn" mnemonicParsing="false" onAction="#selectBtnHandler" prefWidth="110.0"
-                        text="Browse..." GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-                <Button fx:id="selectGroundTruthBtn" mnemonicParsing="false" onAction="#selectBtnHandler"
-                        prefWidth="110.0" text="Browse..." GridPane.columnIndex="2" GridPane.rowIndex="2"/>
                 <ComboBox fx:id="entitiesD1FileTypeCombo" prefWidth="150.0" promptText="Select file type"
-                          GridPane.columnIndex="3"/>
+                          GridPane.columnIndex="1"/>
                 <ComboBox fx:id="entitiesD2FileTypeCombo" prefWidth="150.0" promptText="Select file type"
-                          GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                          GridPane.columnIndex="1" GridPane.rowIndex="1"/>
                 <ComboBox fx:id="groundTruthFileTypeCombo" prefWidth="150.0" promptText="Select file type"
-                          GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+                          GridPane.columnIndex="1" GridPane.rowIndex="2"/>
                 <Button fx:id="entitiesD1ConfigBtn" mnemonicParsing="false" onAction="#configBtnHandler"
-                        text="Configure" GridPane.columnIndex="4"/>
+                        text="Configure" GridPane.columnIndex="2"/>
                 <Button fx:id="entitiesD2ConfigBtn" mnemonicParsing="false" onAction="#configBtnHandler"
-                        text="Configure" GridPane.columnIndex="4" GridPane.rowIndex="1"/>
+                        text="Configure" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
                 <Button fx:id="gTruthConfigBtn" mnemonicParsing="false" onAction="#configBtnHandler" text="Configure"
-                        GridPane.columnIndex="4" GridPane.rowIndex="2"/>
+                        GridPane.columnIndex="2" GridPane.rowIndex="2"/>
             </children>
         </GridPane>
     </children>
