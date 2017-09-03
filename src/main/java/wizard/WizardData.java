@@ -11,11 +11,9 @@ import utils.JedaiOptions;
 public class WizardData {
     private final StringProperty erType = new SimpleStringProperty();
 
-    private final StringProperty entityProfilesD1Path = new SimpleStringProperty();
     private final StringProperty entityProfilesD1Type = new SimpleStringProperty();
     private final ListProperty<Object> entityProfilesD1Parameters = new SimpleListProperty<>();
 
-    private final StringProperty entityProfilesD2Path = new SimpleStringProperty();
     private final StringProperty entityProfilesD2Type = new SimpleStringProperty();
     private final ListProperty<Object> entityProfilesD2Parameters = new SimpleListProperty<>();
 
@@ -48,9 +46,7 @@ public class WizardData {
         WizardData clone = new WizardData();
 
         clone.setErType(data.getErType());
-        clone.setEntityProfilesD1Path(data.getEntityProfilesD1Path());
         clone.setEntityProfilesD1Type(data.getEntityProfilesD1Type());
-        clone.setEntityProfilesD2Path(data.getEntityProfilesD2Path());
         clone.setEntityProfilesD2Type(data.getEntityProfilesD2Type());
         clone.setGroundTruthPath(data.getGroundTruthPath());
         clone.setGroundTruthType(data.getGroundTruthType());
@@ -198,18 +194,6 @@ public class WizardData {
         this.groundTruthType.set(groundTruthType);
     }
 
-    public String getEntityProfilesD2Path() {
-        return entityProfilesD2Path.get();
-    }
-
-    public StringProperty entityProfilesD2PathProperty() {
-        return entityProfilesD2Path;
-    }
-
-    public void setEntityProfilesD2Path(String entityProfilesD2Path) {
-        this.entityProfilesD2Path.set(entityProfilesD2Path);
-    }
-
     public String getErType() {
         return erType.get();
     }
@@ -244,18 +228,6 @@ public class WizardData {
 
     public void setGroundTruthPath(String groundTruthPath) {
         this.groundTruthPath.set(groundTruthPath);
-    }
-
-    public String getEntityProfilesD1Path() {
-        return entityProfilesD1Path.get();
-    }
-
-    public StringProperty entityProfilesD1PathProperty() {
-        return entityProfilesD1Path;
-    }
-
-    public void setEntityProfilesD1Path(String entityProfilesD1Path) {
-        this.entityProfilesD1Path.set(entityProfilesD1Path);
     }
 
     public String getBlockBuilding() {

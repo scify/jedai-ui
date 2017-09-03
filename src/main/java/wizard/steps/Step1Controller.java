@@ -1,6 +1,5 @@
 package wizard.steps;
 
-import DataModel.EntityProfile;
 import Utilities.IDocumentation;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -12,22 +11,17 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.CustomMethodConfiguration;
-import utils.DataReadingHelper;
 import utils.JedaiOptions;
 import utils.RadioButtonHelper;
 import wizard.Submit;
 import wizard.Validate;
 import wizard.WizardData;
 
-import java.io.File;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Step1Controller {
     public VBox containerVBox;
@@ -40,8 +34,6 @@ public class Step1Controller {
     public Button entitiesD2ConfigBtn;
     public Button gTruthConfigBtn;
     private Logger log = LoggerFactory.getLogger(Step1Controller.class);
-    private FileChooser fileChooser;
-    private File previousFolder;
 
     @Inject
     private WizardData model;
@@ -51,9 +43,6 @@ public class Step1Controller {
 
     @FXML
     public void initialize() {
-        // Create FileChooser instance
-        fileChooser = new FileChooser();
-
         // Bind file type combobox values to the model
         entitiesD1FileTypeCombo.valueProperty().bindBidirectional(model.entityProfilesD1TypeProperty());
         entitiesD2FileTypeCombo.valueProperty().bindBidirectional(model.entityProfilesD2TypeProperty());
@@ -85,8 +74,6 @@ public class Step1Controller {
         entityProfilesD2Label.disableProperty().bind(model.erTypeProperty().isEqualTo(JedaiOptions.DIRTY_ER));
 
         // Set initial values to text fields (for testing...)
-//        entityProfTextField.setText("C:\\Users\\leots\\Documents\\JedAIToolkit\\datasets\\dirtyErFiles\\restaurantProfiles");
-//        groundTruthTextField.setText("C:\\Users\\leots\\Documents\\JedAIToolkit\\datasets\\dirtyErFiles\\restaurantIdDuplicates");
 //        model.setEntityProfilesD1Type(JedaiOptions.SERIALIZED);
 //        model.setGroundTruthType(JedaiOptions.SERIALIZED);
     }

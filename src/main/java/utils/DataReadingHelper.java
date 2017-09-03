@@ -19,22 +19,32 @@ public class DataReadingHelper {
     /**
      * Get a list of Entity Profiles, using the specified reader type (CSV, Database, RDF or Serialized)
      *
-     * @param path Path of entities file, for reader
-     * @param type Type of reader. Available readers are specified in JedaiOptions helper class
+     * @param type       Type of reader. Available readers are specified in JedaiOptions helper class
+     * @param parameters Path of entities file, for reader
      * @return List of read entities
      */
-    public static List<EntityProfile> getEntities(String path, String type) {
+    public static List<EntityProfile> getEntities(String type, List<Object> parameters) {
         List<EntityProfile> profiles = null;
         IEntityReader eReader = null;
 
+        // If there are no parameters, we cannot initialize the reader
+        if (parameters.isEmpty())
+            return null;
+
+        // Get the path from the parameters (todo: do this only for Serialized...)
+        String path = parameters.get(0).toString();
+
         switch (type) {
             case JedaiOptions.CSV:
+                //todo: use all available parameters
                 eReader = new EntityCSVReader(path);
                 break;
             case JedaiOptions.DATABASE:
+                //todo: use all available parameters
                 eReader = new EntityDBReader(path);
                 break;
             case JedaiOptions.RDF:
+                //todo: use all available parameters
                 eReader = new EntityRDFReader(path);
                 break;
             case JedaiOptions.SERIALIZED:

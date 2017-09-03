@@ -230,16 +230,16 @@ public class CompletedController {
 
                 // Step 1: Data reading
                 List<EntityProfile> profilesD1 = DataReadingHelper.getEntities(
-                        model.getEntityProfilesD1Path(),
-                        model.getEntityProfilesD1Type());
+                        model.getEntityProfilesD1Type(),
+                        model.getEntityProfilesD1Parameters());
                 System.out.println("Input Entity Profiles\t:\t" + profilesD1.size());
 
                 // In case Clean-Clear ER was selected, also read 2nd profiles file
                 List<EntityProfile> profilesD2 = null;
                 if (erType.equals(JedaiOptions.CLEAN_CLEAN_ER)) {
                     profilesD2 = DataReadingHelper.getEntities(
-                            model.getEntityProfilesD2Path(),
-                            model.getEntityProfilesD2Type()
+                            model.getEntityProfilesD2Type(),
+                            model.getEntityProfilesD2Parameters()
                     );
                 }
 
