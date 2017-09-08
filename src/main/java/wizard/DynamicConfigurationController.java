@@ -84,7 +84,11 @@ public class DynamicConfigurationController {
         // If the label is "File Path", make the type "JEDAI_FILEPATH", in order to show file selection controls
         String paramType = param.get("name").getAsString().value().equals("File Path") ? "JEDAI_FILEPATH" : param.get("class").getAsString().value();
 
-        Node control = getNodeForType(index, paramType);
+        String defaultValue = param.get("defaultValue").getAsString().value();
+        String minValue = param.get("minValue").getAsString().value();
+        String maxValue = param.get("maxValue").getAsString().value();
+
+        Node control = getNodeForType(index, paramType, defaultValue, minValue, maxValue);
 
         // Add text area with parameter description
         TextArea descriptionArea = new TextArea();
@@ -100,11 +104,14 @@ public class DynamicConfigurationController {
     /**
      * Create and return the node for setting the given parameter type
      *
-     * @param index     Index of the parameter that the generated node is for
-     * @param paramType Type of the parameter
+     * @param index        Index of the parameter that the generated node is for
+     * @param paramType    Type of the parameter
+     * @param defaultValue Default value for the generated control
+     * @param minValue     Minimum allowed value for the input
+     * @param maxValue     Maximum allowed value for the input
      * @return Appropriate node for setting the parameter's value
      */
-    private Node getNodeForType(int index, String paramType) {
+    private Node getNodeForType(int index, String paramType, String defaultValue, String minValue, String maxValue) {
         Node control = null;
 
         switch (paramType) {
@@ -145,13 +152,58 @@ public class DynamicConfigurationController {
 
                 // Create integer controls
                 TextField integerField = new TextField();
+
+                // Get minimum and maximum Integer values
+                int min;
+                if (!minValue.equals("-")) {
+                    // Use minimum from parameters
+                    min = Integer.parseInt(minValue);
+                } else {
+                    min = Integer.MIN_VALUE;
+                }
+
+                int max;
+                if (!maxValue.equals("-")) {
+                    // Use maximum from parameters
+                    max = Integer.parseInt(maxValue);
+                } else {
+                    max = Integer.MAX_VALUE;
+                }
+
+
+                // Set default value
+                if (!defaultValue.equals("-")) {
+                    integerField.textProperty().setValue(defaultValue);
+                }
+
+                // Add change listener to restrict to numbers input only
                 integerField.textProperty().addListener((observable, oldValue, newValue) -> {
                     // Check that only numbers have been entered
                     if (!newValue.matches("\\d*")) {
                         integerField.setText(newValue.replaceAll("[^\\d]", ""));
                     } else {
-                        // Save the value
-                        parameterValues.set(index, newValue);
+                        // Check if the number is out of the minimum/maximum bounds
+                        try {
+                            int intValue = Integer.parseInt(newValue);
+                            if (intValue < min) {
+                                // Less than minimum, set to the minimum
+                                integerField.setText("" + min);
+                            } else if (intValue > max) {
+                                // Exceeds the max, set it to the max
+                                integerField.setText("" + max);
+                            }
+
+                            // Save the value
+                            parameterValues.set(index, newValue);
+                        } catch (NumberFormatException e) {
+                            if (newValue.length() == 0) {
+                                integerField.setText("");
+                            } else {
+                                // Set to maximum value
+                                integerField.setText("" + max);
+                            }
+                        }
+
                     }
                 });
 
@@ -205,8 +257,8 @@ public class DynamicConfigurationController {
 
                 break;
             case "java.lang.Character":
-                char defaultValue = ',';
-                parameterValues.add(defaultValue);
+                char defaultChar = ',';
+                parameterValues.add(defaultChar);
 
                 // Create String controls
                 TextField charField = new TextField();
@@ -224,8 +276,8 @@ public class DynamicConfigurationController {
                         parameterValues.set(index, newValue.charAt(0));
                     } else {
                         // Cannot be empty, set to the default value...
-                        charField.textProperty().setValue(String.valueOf(defaultValue));
-                        parameterValues.set(index, defaultValue);
+                        charField.textProperty().setValue(String.valueOf(defaultChar));
+                        parameterValues.set(index, defaultChar);
                     }
                 });
 
