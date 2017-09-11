@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.atlas.json.JsonValue;
+import utils.dynamic_configuration.IntegerInputChangeListener;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -188,39 +189,9 @@ public class DynamicConfigurationController {
                 }
 
                 // Add change listener to restrict to numbers input only
-                integerField.textProperty().addListener((observable, oldValue, newValue) -> {
-                    // Check that only numbers have been entered
-                    if (!newValue.matches("\\d*")) {
-                        integerField.setText(newValue.replaceAll("[^\\d]", ""));
-                    } else {
-                        // Check if the number is out of the minimum/maximum bounds
-                        try {
-                            int intValue = Integer.parseInt(newValue);
-                            String newIntValue = newValue;
-
-                            if (intValue < min) {
-                                // Less than minimum, set to the minimum
-                                newIntValue = "" + min;
-                                integerField.setText(newIntValue);
-                            } else if (intValue > max) {
-                                // Exceeds the max, set it to the max
-                                newIntValue = "" + max;
-                                integerField.setText(newIntValue);
-                            }
-
-                            // Save the value
-                            parameterValues.set(index, newIntValue);
-                        } catch (NumberFormatException e) {
-                            if (newValue.length() == 0) {
-                                integerField.setText("");
-                            } else {
-                                // Set to maximum value
-                                integerField.setText("" + max);
-                            }
-                        }
-
-                    }
-                });
+                integerField.textProperty().addListener(
+                        new IntegerInputChangeListener(integerField, min, max, index, parameterValues)
+                );
 
                 control = integerField;
 
