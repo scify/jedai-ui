@@ -186,6 +186,7 @@ public class DynamicConfigurationController {
                 // Set default value
                 if (!defaultValue.equals("-")) {
                     integerField.textProperty().setValue(defaultValue);
+                    parameterValues.set(index, Integer.parseInt(defaultValue));
                 }
 
                 // Add change listener to restrict to numbers input only
