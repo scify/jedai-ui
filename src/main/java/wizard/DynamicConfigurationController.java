@@ -1,6 +1,5 @@
 package wizard;
 
-import com.google.inject.Inject;
 import javafx.beans.property.ListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -31,10 +30,7 @@ public class DynamicConfigurationController {
     public GridPane configGrid;
     public Button saveBtn;
 
-    @Inject
-    private WizardData model;
-
-    private JsonArray parameters;
+    private JsonArray jsonParamDescriptions;
     private ListProperty<Object> parametersProperty;
     private List<Object> parameterValues;
     private static File previousFolder = null;
@@ -47,20 +43,34 @@ public class DynamicConfigurationController {
     /**
      * Set the parameters to show in the configuration window, and create UI elements for the user to set them.
      *
-     * @param parameters Parameters as specified by the JedAI library
+     * @param jsonParamDescriptions Parameters as specified by the JedAI library
      */
-    public void setParameters(JsonArray parameters, ListProperty<Object> parametersProperty) {
-        this.parameters = parameters;
+    public void setParameters(JsonArray jsonParamDescriptions, ListProperty<Object> parametersProperty) {
+        this.jsonParamDescriptions = jsonParamDescriptions;
         this.parametersProperty = parametersProperty;
 
+        // Determine if there are, and we should use previously set values for the parameters
+        ObservableList<Object> prevParams = parametersProperty.get();
+
+        boolean usePrevParams = false;
+        if (prevParams != null && !prevParams.isEmpty() && prevParams.size() == jsonParamDescriptions.size()) {
+            // We can use the previously set parameters for this
+            usePrevParams = true;
+        }
+
         // If the method is parameter-free, display it
-        if (this.parameters.isEmpty()) {
+        if (this.jsonParamDescriptions.isEmpty()) {
             configureParamsLabel.setText("This is a parameter-free method!");
         } else {
             // Generate the form to configure the method
             int gridRows = 0;
-            for (JsonValue jsonParam : this.parameters) {
+            for (JsonValue jsonParam : this.jsonParamDescriptions) {
                 if (jsonParam.isObject()) {
+                    // If we have previous values for the parameters, modify the JSON object's default value
+                    if (usePrevParams) {
+                        jsonParam.getAsObject().put("defaultValue", prevParams.get(gridRows).toString());
+                    }
+
                     // Create controls for setting this parameter
                     addParameterControls(jsonParam.getAsObject(), gridRows++);
                 } else if (jsonParam.isArray()) {
@@ -113,6 +123,7 @@ public class DynamicConfigurationController {
      */
     private Node getNodeForType(int index, String paramType, String defaultValue, String minValue, String maxValue) {
         Node control = null;
+        //todo: use default/min/max values for all types
 
         switch (paramType) {
             case "JEDAI_FILEPATH":
