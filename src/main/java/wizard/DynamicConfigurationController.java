@@ -196,16 +196,20 @@ public class DynamicConfigurationController {
                         // Check if the number is out of the minimum/maximum bounds
                         try {
                             int intValue = Integer.parseInt(newValue);
+                            String newIntValue = newValue;
+
                             if (intValue < min) {
                                 // Less than minimum, set to the minimum
-                                integerField.setText("" + min);
+                                newIntValue = "" + min;
+                                integerField.setText(newIntValue);
                             } else if (intValue > max) {
                                 // Exceeds the max, set it to the max
-                                integerField.setText("" + max);
+                                newIntValue = "" + max;
+                                integerField.setText(newIntValue);
                             }
 
                             // Save the value
-                            parameterValues.set(index, newValue);
+                            parameterValues.set(index, newIntValue);
                         } catch (NumberFormatException e) {
                             if (newValue.length() == 0) {
                                 integerField.setText("");
