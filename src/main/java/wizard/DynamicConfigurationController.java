@@ -17,10 +17,7 @@ import javafx.stage.Stage;
 import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.atlas.json.JsonValue;
-import utils.dynamic_configuration.BooleanInput;
-import utils.dynamic_configuration.DoubleInput;
-import utils.dynamic_configuration.FileSelectorInput;
-import utils.dynamic_configuration.IntegerInput;
+import utils.dynamic_configuration.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -145,14 +142,7 @@ public class DynamicConfigurationController {
             case "java.lang.String":
                 parameterValues.add("");
 
-                // Create String controls
-                TextField stringField = new TextField();
-
-                // When the text field value changes, update the parameter in the list
-                stringField.textProperty().addListener((observable, oldValue, newValue) -> parameterValues.set(index, newValue));
-
-                control = stringField;
-
+                control = new StringInput(parameterValues, index, defaultValue);
                 break;
             case "java.lang.Boolean":
                 parameterValues.add(false);
