@@ -33,8 +33,6 @@ public class DataReadingHelper {
         if (parameters.isEmpty())
             return null;
 
-        // Get the path from the parameters
-
         switch (type) {
             case JedaiOptions.CSV:
                 // Get parameters
@@ -50,15 +48,27 @@ public class DataReadingHelper {
                 csvReader.setSeparator(separator);
                 csvReader.setIdIndex(idIndex);
                 csvReader.setAttributesToExclude(Ints.toArray(indicesToExcludeSet));
-                //todo: test the above with a real csv file
 
                 eReader = csvReader;
                 break;
             case JedaiOptions.DATABASE:
-                //todo: Get parameters
+                // Get parameters
+                String url = parameters.get(0).toString();
+                String table = parameters.get(1).toString();
+                String username = parameters.get(2).toString();
+                String password = parameters.get(3).toString();
+                Set<String> excludedAttrs = (Set<String>) parameters.get(4);
+                boolean ssl = (boolean) parameters.get(5);
 
                 // Initialize the Entity reader
-                eReader = new EntityDBReader("");
+                EntityDBReader dbReader = new EntityDBReader(url);
+                dbReader.setTable(table);
+                dbReader.setUser(username);
+                dbReader.setPassword(password);
+                dbReader.setAttributesToExclude(excludedAttrs.toArray(new String[0]));
+                dbReader.setSSL(ssl);
+
+                eReader = dbReader;
                 break;
             case JedaiOptions.RDF:
                 //todo: Get parameters
