@@ -18,7 +18,7 @@ import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.atlas.json.JsonValue;
 import utils.dynamic_configuration.FileSelectorInput;
-import utils.dynamic_configuration.IntegerInputChangeListener;
+import utils.dynamic_configuration.IntegerInput;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -133,40 +133,7 @@ public class DynamicConfigurationController {
             case "java.lang.Integer":
                 parameterValues.add(-1);    // Add the initial value
 
-                // Create integer controls
-                TextField integerField = new TextField();
-
-                // Get minimum and maximum Integer values
-                int min;
-                if (!minValue.equals("-")) {
-                    // Use minimum from parameters
-                    min = Integer.parseInt(minValue);
-                } else {
-                    min = Integer.MIN_VALUE;
-                }
-
-                int max;
-                if (!maxValue.equals("-")) {
-                    // Use maximum from parameters
-                    max = Integer.parseInt(maxValue);
-                } else {
-                    max = Integer.MAX_VALUE;
-                }
-
-
-                // Set default value
-                if (!defaultValue.equals("-")) {
-                    integerField.textProperty().setValue(defaultValue);
-                    parameterValues.set(index, Integer.parseInt(defaultValue));
-                }
-
-                // Add change listener to restrict to numbers input only
-                integerField.textProperty().addListener(
-                        new IntegerInputChangeListener(integerField, min, max, index, parameterValues)
-                );
-
-                control = integerField;
-
+                control = new IntegerInput(parameterValues, index, defaultValue, minValue, maxValue);
                 break;
             case "java.lang.Double":
                 parameterValues.add(-1.0);

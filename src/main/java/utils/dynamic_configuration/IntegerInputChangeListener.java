@@ -27,6 +27,7 @@ public class IntegerInputChangeListener implements ChangeListener<String> {
     @Override
     public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
         // Check that only numbers have been entered
+        //todo: allow negative numbers...
         if (!newValue.matches("\\d*")) {
             integerField.setText(newValue.replaceAll("[^\\d]", ""));
         } else {
