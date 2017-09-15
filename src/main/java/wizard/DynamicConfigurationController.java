@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.atlas.json.JsonValue;
+import utils.dynamic_configuration.BooleanInput;
 import utils.dynamic_configuration.DoubleInput;
 import utils.dynamic_configuration.FileSelectorInput;
 import utils.dynamic_configuration.IntegerInput;
@@ -156,13 +157,7 @@ public class DynamicConfigurationController {
             case "java.lang.Boolean":
                 parameterValues.add(false);
 
-                // Create Boolean controls
-                CheckBox checkBox = new CheckBox();
-
-                // When the checkbox is toggled, update the parameter in the list
-                checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> parameterValues.set(index, newValue));
-
-                control = checkBox;
+                control = new BooleanInput(parameterValues, index, defaultValue);
 
                 break;
             case "java.lang.Character":
