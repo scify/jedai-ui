@@ -7,7 +7,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
@@ -143,7 +142,6 @@ public class DynamicConfigurationController {
                 parameterValues.add(false);
 
                 control = new BooleanInput(parameterValues, index, defaultValue);
-
                 break;
             case "java.lang.Character":
                 parameterValues.add(',');

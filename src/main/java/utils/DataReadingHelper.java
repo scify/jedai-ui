@@ -9,8 +9,10 @@ import DataReader.GroundTruthReader.IGroundTruthReader;
 import Utilities.DataStructures.AbstractDuplicatePropagation;
 import Utilities.DataStructures.BilateralDuplicatePropagation;
 import Utilities.DataStructures.UnilateralDuplicatePropagation;
+import com.google.common.primitives.Ints;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Class to help with reading the required data for the JedAI toolkit using the available UI options
@@ -31,24 +33,45 @@ public class DataReadingHelper {
         if (parameters.isEmpty())
             return null;
 
-        // Get the path from the parameters (todo: do this only for Serialized...)
-        String path = parameters.get(0).toString();
+        // Get the path from the parameters
 
         switch (type) {
             case JedaiOptions.CSV:
-                //todo: use all available parameters
-                eReader = new EntityCSVReader(path);
+                // Get parameters
+                String csvPath = parameters.get(0).toString();
+                boolean attributeNamesInFirstRow = (boolean) parameters.get(1);
+                char separator = (char) parameters.get(2);
+                int idIndex = (int) parameters.get(3);
+                Set<Integer> indicesToExcludeSet = (Set<Integer>) parameters.get(4);
+
+                // Initialize the Entity reader
+                EntityCSVReader csvReader = new EntityCSVReader(csvPath);
+                csvReader.setAttributeNamesInFirstRow(attributeNamesInFirstRow);
+                csvReader.setSeparator(separator);
+                csvReader.setIdIndex(idIndex);
+                csvReader.setAttributesToExclude(Ints.toArray(indicesToExcludeSet));
+                //todo: test the above with a real csv file
+
+                eReader = csvReader;
                 break;
             case JedaiOptions.DATABASE:
-                //todo: use all available parameters
-                eReader = new EntityDBReader(path);
+                //todo: Get parameters
+
+                // Initialize the Entity reader
+                eReader = new EntityDBReader("");
                 break;
             case JedaiOptions.RDF:
-                //todo: use all available parameters
-                eReader = new EntityRDFReader(path);
+                //todo: Get parameters
+
+                // Initialize the Entity reader
+                eReader = new EntityRDFReader("");
                 break;
             case JedaiOptions.SERIALIZED:
-                eReader = new EntitySerializationReader(path);
+                // Get parameters
+                String jsoPath = parameters.get(0).toString();
+
+                // Initialize the Entity reader
+                eReader = new EntitySerializationReader(jsoPath);
                 break;
         }
 
