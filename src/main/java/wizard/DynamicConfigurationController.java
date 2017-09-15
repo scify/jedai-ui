@@ -122,7 +122,7 @@ public class DynamicConfigurationController {
             case "JEDAI_FILEPATH":
                 parameterValues.add("");
 
-                control = new FileSelectorInput(parameterValues, index, configGrid);
+                control = new FileSelectorInput(parameterValues, index, configGrid, defaultValue);
                 break;
             case "java.lang.Integer":
                 parameterValues.add(-1);

@@ -16,8 +16,9 @@ public class FileSelectorInput extends HBox {
      * @param parameterValues List of parameters
      * @param index           Index that this input should use to set its value in the parameters list
      * @param windowNode      A Node that will be used for getting the window to show the FileChooser
+     * @param defaultValue    (Optional) Path to a previously-selected file for this input
      */
-    public FileSelectorInput(List<Object> parameterValues, int index, Node windowNode) {
+    public FileSelectorInput(List<Object> parameterValues, int index, Node windowNode, String defaultValue) {
         this.setSpacing(5.0);
 
         TextField fileField = new TextField();
@@ -43,5 +44,11 @@ public class FileSelectorInput extends HBox {
 
         // Add nodes to HBox
         this.getChildren().addAll(fileField, browseBtn);
+
+        // If there is a default value, use it
+        if (!defaultValue.equals("-")) {
+            // Set the value to the text field, which will then update the parameterValues list
+            fileField.setText(defaultValue);
+        }
     }
 }
