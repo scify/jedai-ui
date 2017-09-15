@@ -156,33 +156,9 @@ public class DynamicConfigurationController {
                 control = new CharacterInput(parameterValues, index, defaultValue);
                 break;
             case "java.util.Set<Integer>":
-                // Create Set instance
-                Set<Integer> set = new HashSet<>();
-                parameterValues.add(set);
+                parameterValues.add(null);
 
-                // Create the text field for numbers input
-                TextField integerListField = new TextField();
-
-                integerListField.textProperty().addListener((observable, oldValue, newValue) -> {
-                    // Allow only numbers and commas in order to separate the numbers
-                    String valuesString = newValue.replaceAll("[^\\d|,]", "");
-                    integerListField.setText(valuesString);
-
-                    // Empty the existing HashSet, and add updated values to it
-                    set.clear();
-
-                    String[] numbers = valuesString.split(",");
-                    for (String sNum : numbers) {
-                        // Only for non-empty strings
-                        if (!sNum.isEmpty()) {
-                            // Parse to integer, and add to the set
-                            set.add(Integer.parseInt(sNum));
-                        }
-                    }
-                });
-
-                control = integerListField;
-
+                control = new IntegerListInput(parameterValues, index, defaultValue);
                 break;
             case "java.util.Set<String>":
                 // Create Set instance
