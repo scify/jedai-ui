@@ -14,9 +14,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * String List input.
+ */
 public class StringListInput extends VBox {
     private final Set<String> set;
 
+    /**
+     * String List input constructor
+     *
+     * @param parameterValues List with all parameters
+     * @param index           Index of the parameter that the input should use.
+     * @param defaultValue    Default value for the list. Expected to be in the form "[string1, string2]" etc.
+     */
     public StringListInput(List<Object> parameterValues, int index, String defaultValue) {
         // Create HashSet instance and add it to the parameters
         set = new HashSet<>();
@@ -62,5 +72,18 @@ public class StringListInput extends VBox {
         this.setSpacing(5);
         this.getChildren().add(simpleList);
         this.getChildren().add(addRemoveHBox);
+
+        // If there is a default value for the list, add it now
+        System.out.println(defaultValue);
+        if (!defaultValue.equals("-")) {
+            // Remove first and last characters (which are expected to be square brackets)
+            defaultValue = defaultValue.substring(1, defaultValue.length() - 1);
+
+            // Split into Strings and add them to the set
+            String[] strings = defaultValue.split(", ");
+
+            // Update the list with the new strings (which also updates the HashSet because of the listener)
+            simpleList.getItems().addAll(strings);
+        }
     }
 }
