@@ -151,32 +151,9 @@ public class DynamicConfigurationController {
 
                 break;
             case "java.lang.Character":
-                char defaultChar = ',';
-                parameterValues.add(defaultChar);
+                parameterValues.add(',');
 
-                // Create String controls
-                TextField charField = new TextField();
-
-                // When the character field value changes, update the parameter in the list
-                charField.textProperty().addListener((observable, oldValue, newValue) -> {
-                    if (newValue.length() > 1) {
-                        // Use only the last String character
-                        char val = newValue.charAt(newValue.length() - 1);
-
-                        charField.textProperty().setValue(String.valueOf(val));
-                        parameterValues.set(index, val);
-                    } else if (newValue.length() == 1) {
-                        // Set the single character as the parameter value
-                        parameterValues.set(index, newValue.charAt(0));
-                    } else {
-                        // Cannot be empty, set to the default value...
-                        charField.textProperty().setValue(String.valueOf(defaultChar));
-                        parameterValues.set(index, defaultChar);
-                    }
-                });
-
-                control = charField;
-
+                control = new CharacterInput(parameterValues, index, defaultValue);
                 break;
             case "java.util.Set<Integer>":
                 // Create Set instance
