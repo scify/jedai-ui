@@ -74,7 +74,6 @@ public class StringListInput extends VBox {
         this.getChildren().add(addRemoveHBox);
 
         // If there is a default value for the list, add it now
-        System.out.println(defaultValue);
         if (!defaultValue.equals("-")) {
             // Remove first and last characters (which are expected to be square brackets)
             defaultValue = defaultValue.substring(1, defaultValue.length() - 1);

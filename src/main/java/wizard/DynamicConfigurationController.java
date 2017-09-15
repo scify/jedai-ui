@@ -116,17 +116,16 @@ public class DynamicConfigurationController {
      * @return Appropriate node for setting the parameter's value
      */
     private Node getNodeForType(int index, String paramType, String defaultValue, String minValue, String maxValue) {
-        Node control = null;
-        //todo: use default/min/max values for all types
+        Node control;
 
         switch (paramType) {
             case "JEDAI_FILEPATH":
-                parameterValues.add("");    // Add initial value
+                parameterValues.add("");
 
                 control = new FileSelectorInput(parameterValues, index, configGrid);
                 break;
             case "java.lang.Integer":
-                parameterValues.add(-1);    // Add the initial value
+                parameterValues.add(-1);
 
                 control = new IntegerInput(parameterValues, index, defaultValue, minValue, maxValue);
                 break;
@@ -162,31 +161,10 @@ public class DynamicConfigurationController {
                 control = new StringListInput(parameterValues, index, defaultValue);
                 break;
             default:
-                // If the type is an enumeration, create it and add radio buttons for it
-                try {
-                    Class<?> cls = Class.forName(paramType);
+                parameterValues.add(null);
 
-                    if (cls.isEnum()) {
-                        Object[] enumValues = cls.getEnumConstants();
-
-                        parameterValues.add(enumValues[0]); // Initialize the parameter value with the 1st enum constant
-
-                        // Create combobox with the enum's values
-                        ComboBox<Object> comboBox = new ComboBox<>(FXCollections.observableArrayList(enumValues));
-
-                        // Add change listener to save the value when the selection changes
-                        comboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-                            // Save the value
-                            parameterValues.set(index, newValue);
-                        });
-
-                        control = comboBox;
-                    } else {
-                        throw new UnsupportedOperationException("Type " + paramType + " is unknown, and is not an enumeration!");
-                    }
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
+                control = new EnumerationInput(parameterValues, index, paramType, defaultValue);
+                break;
         }
 
         return control;
