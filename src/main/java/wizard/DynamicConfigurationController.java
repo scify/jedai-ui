@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.atlas.json.JsonValue;
+import utils.dynamic_configuration.DoubleInput;
 import utils.dynamic_configuration.FileSelectorInput;
 import utils.dynamic_configuration.IntegerInput;
 
@@ -138,24 +139,7 @@ public class DynamicConfigurationController {
             case "java.lang.Double":
                 parameterValues.add(-1.0);
 
-                // Create double controls
-                TextField doubleField = new TextField();
-                doubleField.textProperty().addListener((observable, oldValue, newValue) -> {
-                    // Check that the number is a double
-                    try {
-                        //noinspection ResultOfMethodCallIgnored
-                        double value = Double.parseDouble(newValue);
-
-                        // Save the value
-                        parameterValues.set(index, value);
-                    } catch (NumberFormatException e) {
-                        // Problem parsing, so not a double. Set previous value.
-                        doubleField.setText(oldValue);
-                    }
-                });
-
-                control = doubleField;
-
+                control = new DoubleInput(parameterValues, index, defaultValue, minValue, maxValue);
                 break;
             case "java.lang.String":
                 parameterValues.add("");
