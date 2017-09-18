@@ -114,18 +114,33 @@ public class DataReadingHelper {
         if (parameters.isEmpty())
             return null;
 
-        // Get the path from the parameters (todo: do this only for Serialized...)
-        String path = parameters.get(0).toString();
-
         switch (type) {
             case JedaiOptions.CSV:
-                gtReader = new GtCSVReader(path);
+                // Get parameters
+                String csvPath = parameters.get(0).toString();
+                boolean ignoreFirstRow = (boolean) parameters.get(1);
+                char separator = (char) parameters.get(2);
+
+                // Initialize the reader
+                GtCSVReader csvReader = new GtCSVReader(csvPath);
+                csvReader.setIgnoreFirstRow(ignoreFirstRow);
+                csvReader.setSeparator(separator);
+
+                gtReader = csvReader;
                 break;
             case JedaiOptions.RDF:
-                gtReader = new GtRDFReader(path);
+                // Get parameters
+                String rdfPath = parameters.get(0).toString();
+
+                // Initialize the reader
+                gtReader = new GtRDFReader(rdfPath);
                 break;
             case JedaiOptions.SERIALIZED:
-                gtReader = new GtSerializationReader(path);
+                // Get parameters
+                String jsoPath = parameters.get(0).toString();
+
+                // Initialize the reader
+                gtReader = new GtSerializationReader(jsoPath);
                 break;
         }
 
