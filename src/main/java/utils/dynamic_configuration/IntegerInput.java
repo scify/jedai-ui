@@ -54,21 +54,22 @@ public class IntegerInput extends TextField {
                 if (intValue < min) {
                     // Less than minimum, set to the minimum
                     currStrValue = "" + min;
-                    this.setText(currStrValue);
+                    intValue = min;
 
-                    parameterValues.set(index, min);
+                    this.setText(currStrValue);
                 } else if (intValue > max) {
                     // Exceeds the max, set it to the max
                     currStrValue = "" + max;
-                    this.setText(currStrValue);
+                    intValue = max;
 
-                    parameterValues.set(index, max);
+                    this.setText(currStrValue);
                 }
 
                 // Save the value
-                parameterValues.set(index, currStrValue);
+                parameterValues.set(index, intValue);
             } catch (NumberFormatException e) {
                 if (currStrValue.length() == 0) {
+                    // String is empty, set value to zero
                     this.setText("0");
                     parameterValues.set(index, 0);
                 } else {
