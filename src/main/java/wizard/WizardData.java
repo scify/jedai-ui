@@ -268,13 +268,16 @@ public class WizardData {
         // Reset block cleaning list
         blockCleaningMethodsProperty().clear();
 
+        // Reset advanced configuration parameters (except for Data Reading)
+        blockBuildingParametersProperty().clear();
+        comparisonCleaningParametersProperty().clear();
+        entityClusteringParametersProperty().clear();
+
         // Reset radio buttons
         blockBuildingProperty().setValue(JedaiOptions.STANDARD_TOKEN_BUILDING);
         comparisonCleaningMethodProperty().setValue(JedaiOptions.NO_CLEANING);
         entityMatchingProperty().setValue(JedaiOptions.GROUP_LINKAGE);
         entityClusteringProperty().setValue(JedaiOptions.CENTER_CLUSTERING);
         representationModelProperty().setValue(JedaiOptions.CHARACTER_BIGRAMS);
-
-        //todo: reset the parameter lists too
     }
 }
