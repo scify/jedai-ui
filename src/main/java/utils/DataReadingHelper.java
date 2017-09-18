@@ -71,10 +71,14 @@ public class DataReadingHelper {
                 eReader = dbReader;
                 break;
             case JedaiOptions.RDF:
-                //todo: Get parameters
+                // Get parameters
+                String rdfPath = parameters.get(0).toString();
+                Set<String> excludedPredicates = (Set<String>) parameters.get(1);
 
                 // Initialize the Entity reader
-                eReader = new EntityRDFReader("");
+                EntityRDFReader rdfReader = new EntityRDFReader(rdfPath);
+                rdfReader.setAttributesToExclude(excludedPredicates.toArray(new String[0]));
+                eReader = rdfReader;
                 break;
             case JedaiOptions.SERIALIZED:
                 // Get parameters
