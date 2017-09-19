@@ -13,6 +13,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.BlockCleaningCustomComparator;
 import utils.JedaiOptions;
 import utils.RowHidingChangeListener;
 import wizard.Submit;
@@ -128,9 +129,13 @@ public class ConfirmController {
 
         //todo: Add Block Building parameters
 
-        // Add Block Cleaning methods
-        ListView<String> blockCleaningList = new ListView<>(model.getBlockCleaningMethods());
+        // Add Block Cleaning methods (sorted automatically)
+        ListView<String> blockCleaningList = new ListView<>(
+                model.getBlockCleaningMethods()
+                        .sorted(new BlockCleaningCustomComparator())
+        );
         blockCleaningList.setMaxHeight(80);
+
         addRow(rows++, boldLabel("Block Cleaning Methods"), blockCleaningList);
         //todo: Add Block Cleaning parameters for each method
 
