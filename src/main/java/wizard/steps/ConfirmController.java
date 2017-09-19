@@ -95,7 +95,7 @@ public class ConfirmController {
         // Create the node to show the parameters
         ListView<Object> paramsList = new ListView<>();
         paramsList.setMaxHeight(60);
-        paramsList.setPadding(new Insets(vGap, 0, vGap, 0));    //todo: doesn't work
+        //todo: add vgap to the list
 
         // Bind the ListView's items to the given parameters property
         paramsList.itemsProperty().bind(parametersProperty);

@@ -45,17 +45,34 @@ public class WizardData {
         WizardData clone = new WizardData();
 
         clone.setErType(data.getErType());
+
         clone.setEntityProfilesD1Type(data.getEntityProfilesD1Type());
+        clone.setEntityProfilesD1Parameters(FXCollections.observableList(data.getEntityProfilesD1Parameters()));
+
         clone.setEntityProfilesD2Type(data.getEntityProfilesD2Type());
+        if (data.getEntityProfilesD2Parameters() != null)
+            clone.setEntityProfilesD2Parameters(FXCollections.observableList(data.getEntityProfilesD2Parameters()));
+
         clone.setGroundTruthType(data.getGroundTruthType());
+        clone.setGroundTruthParameters(FXCollections.observableList(data.getGroundTruthParameters()));
+
         clone.setBlockBuilding(data.getBlockBuilding());
+        if (data.getBlockBuildingParameters() != null)
+            clone.setBlockBuildingParameters(FXCollections.observableList(data.getBlockBuildingParameters()));
+
         clone.setComparisonCleaning(data.getComparisonCleaning());
-        clone.setBlockCleaningMethods(FXCollections.observableArrayList(data.getBlockCleaningMethods()));
+        if (data.getComparisonCleaningParameters() != null)
+            clone.setComparisonCleaningParameters(FXCollections.observableList(data.getComparisonCleaningParameters()));
+
+        clone.setBlockCleaningMethods(FXCollections.observableList(data.getBlockCleaningMethods()));
+
         clone.setEntityMatching(data.getEntityMatching());
         clone.setRepresentationModel(data.getRepresentationModel());
         clone.setSimilarityMetric(data.getSimilarityMetric());
+
         clone.setEntityClustering(data.getEntityClustering());
-        //todo: clone parameter lists too
+        if (data.getEntityClusteringParameters() != null)
+            clone.setEntityClusteringParameters(FXCollections.observableList(data.getEntityClusteringParameters()));
 
         return clone;
     }
