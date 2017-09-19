@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Font;
@@ -127,8 +128,11 @@ public class ConfirmController {
 
         //todo: Add Block Building parameters
 
-        //todo: Add Block Cleaning methods (+parameters?)
-        addRow(rows++, boldLabel("Block Cleaning Methods"), boldLabel("[...]"));
+        // Add Block Cleaning methods
+        ListView<String> blockCleaningList = new ListView<>(model.getBlockCleaningMethods());
+        blockCleaningList.setMaxHeight(80);
+        addRow(rows++, boldLabel("Block Cleaning Methods"), blockCleaningList);
+        //todo: Add Block Cleaning parameters for each method
 
         // Add Comparison Cleaning method
         addRow(rows++, boldLabel("Comparison Cleaning Method"), boundLabel(model.comparisonCleaningProperty()));
