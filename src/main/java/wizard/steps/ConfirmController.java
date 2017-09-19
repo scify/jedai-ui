@@ -114,6 +114,9 @@ public class ConfirmController {
         ));
         model.erTypeProperty().addListener(changeListener);
 
+        // Run the changed() function once manually, to set the initial values correctly
+        changeListener.changed(model.erTypeProperty(), null, model.getErType());
+
         // Add ground truth type
         addRow(rows++, boldLabel("Ground Truth Type"), boundLabel(model.groundTruthTypeProperty()));
 
