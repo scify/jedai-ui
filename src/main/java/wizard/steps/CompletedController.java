@@ -317,7 +317,7 @@ public class CompletedController {
                 }
 
                 // Step 4: Comparison Cleaning
-                String compCleaningMethod = model.getComparisonCleaningMethod();
+                String compCleaningMethod = model.getComparisonCleaning();
                 if (compCleaningMethod != null && !compCleaningMethod.equals(JedaiOptions.NO_CLEANING)) {
                     overheadStart = System.currentTimeMillis();
 
@@ -339,7 +339,7 @@ public class CompletedController {
 
                 IEntityMatching em;
                 RepresentationModel repModel = MethodMapping.getRepresentationModel(model.getRepresentationModel());
-                SimilarityMetric similarityMetric = MethodMapping.getSimilarityMetric(model.getSimilarityMethod());
+                SimilarityMetric similarityMetric = MethodMapping.getSimilarityMetric(model.getSimilarityMetric());
 
                 if (entityMatchingMethodName.equals(JedaiOptions.GROUP_LINKAGE)) {
                     //todo: threshold should be specified by user...

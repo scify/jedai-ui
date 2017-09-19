@@ -25,12 +25,12 @@ public class WizardData {
 
     private final ListProperty<String> blockCleaningMethods = new SimpleListProperty<>();
 
-    private final StringProperty comparisonCleaningMethod = new SimpleStringProperty();
+    private final StringProperty comparisonCleaning = new SimpleStringProperty();
     private final ListProperty<Object> comparisonCleaningParameters = new SimpleListProperty<>();
 
     private final StringProperty entityMatching = new SimpleStringProperty();
     private final StringProperty representationModel = new SimpleStringProperty();
-    private final StringProperty similarityMethod = new SimpleStringProperty();
+    private final StringProperty similarityMetric = new SimpleStringProperty();
 
     private final StringProperty entityClustering = new SimpleStringProperty();
     private final ListProperty<Object> entityClusteringParameters = new SimpleListProperty<>();
@@ -49,11 +49,11 @@ public class WizardData {
         clone.setEntityProfilesD2Type(data.getEntityProfilesD2Type());
         clone.setGroundTruthType(data.getGroundTruthType());
         clone.setBlockBuilding(data.getBlockBuilding());
-        clone.setComparisonCleaningMethod(data.getComparisonCleaningMethod());
+        clone.setComparisonCleaning(data.getComparisonCleaning());
         clone.setBlockCleaningMethods(FXCollections.observableArrayList(data.getBlockCleaningMethods()));
         clone.setEntityMatching(data.getEntityMatching());
         clone.setRepresentationModel(data.getRepresentationModel());
-        clone.setSimilarityMethod(data.getSimilarityMethod());
+        clone.setSimilarityMetric(data.getSimilarityMetric());
         clone.setEntityClustering(data.getEntityClustering());
         //todo: clone parameter lists too
 
@@ -132,16 +132,16 @@ public class WizardData {
         this.blockBuildingParameters.set(blockBuildingParameters);
     }
 
-    public String getSimilarityMethod() {
-        return similarityMethod.get();
+    public String getSimilarityMetric() {
+        return similarityMetric.get();
     }
 
-    public StringProperty similarityMethodProperty() {
-        return similarityMethod;
+    public StringProperty similarityMetricProperty() {
+        return similarityMetric;
     }
 
-    public void setSimilarityMethod(String similarityMethod) {
-        this.similarityMethod.set(similarityMethod);
+    public void setSimilarityMetric(String similarityMetric) {
+        this.similarityMetric.set(similarityMetric);
     }
 
     public String getRepresentationModel() {
@@ -228,16 +228,16 @@ public class WizardData {
         this.blockBuilding.set(blockBuilding);
     }
 
-    public String getComparisonCleaningMethod() {
-        return comparisonCleaningMethod.get();
+    public String getComparisonCleaning() {
+        return comparisonCleaning.get();
     }
 
-    public StringProperty comparisonCleaningMethodProperty() {
-        return comparisonCleaningMethod;
+    public StringProperty comparisonCleaningProperty() {
+        return comparisonCleaning;
     }
 
-    public void setComparisonCleaningMethod(String comparisonCleaningMethod) {
-        this.comparisonCleaningMethod.set(comparisonCleaningMethod);
+    public void setComparisonCleaning(String comparisonCleaning) {
+        this.comparisonCleaning.set(comparisonCleaning);
     }
 
     public String getEntityMatching() {
@@ -275,7 +275,7 @@ public class WizardData {
 
         // Reset radio buttons
         blockBuildingProperty().setValue(JedaiOptions.STANDARD_TOKEN_BUILDING);
-        comparisonCleaningMethodProperty().setValue(JedaiOptions.NO_CLEANING);
+        comparisonCleaningProperty().setValue(JedaiOptions.NO_CLEANING);
         entityMatchingProperty().setValue(JedaiOptions.GROUP_LINKAGE);
         entityClusteringProperty().setValue(JedaiOptions.CENTER_CLUSTERING);
         representationModelProperty().setValue(JedaiOptions.CHARACTER_BIGRAMS);

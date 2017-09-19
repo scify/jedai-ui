@@ -95,7 +95,7 @@ public class Step5Controller {
         groupValue.setValue(similarityMethodOptions.get(0));
 
         // Bind the group's selection to the model
-        model.similarityMethodProperty().bindBidirectional(groupValue.valueProperty());
+        model.similarityMetricProperty().bindBidirectional(groupValue.valueProperty());
 
         // Add listener to enable/disable compatible similarity metric buttons depending on representation model
         model.representationModelProperty().addListener((observable, oldValue, newValue) -> {

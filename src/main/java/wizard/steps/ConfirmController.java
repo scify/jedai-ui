@@ -1,65 +1,97 @@
 package wizard.steps;
 
 import com.google.inject.Inject;
-import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.JedaiOptions;
 import wizard.Submit;
 import wizard.WizardData;
 
 public class ConfirmController {
-    public ListView<String> blockRefinementList;
-    public Label erTypeLabel;
-    public Label entityProfilesD1Label;
-    public Label entityProfilesD2Label;
-    public Label groundTruthLabel;
-    public Label blockBuildingLabel;
-    public Label compRefinementLabel;
-    public Label entityMatchingLabel;
-    public Label entityClusteringLabel;
-    public Label entityProfilesD2TitleLabel;
-    public Label representationMethodLabel;
-    public Label similarityMetricLabel;
+    public GridPane paramsGrid;
     private Logger log = LoggerFactory.getLogger(ConfirmController.class);
 
     @Inject
-    private
-    WizardData model;
+    private WizardData model;
 
-    // Declare the change listener for the 2nd dataset path
-    private final ChangeListener<String> datasetPathListener = (observable, oldValue, newValue) -> {
-        if (model.getErType().equals(JedaiOptions.CLEAN_CLEAN_ER)) {
-            // Add the new value to the text field
-//            entityProfilesD2Label.setText(model.getEntityProfilesD2Path());
-        } else {
-            // Dirty ER was selected, so 2nd dataset is not applicable
-            entityProfilesD2Label.setText("Not applicable");
-        }
-    };
+    /**
+     * Create a bold label with a specific text
+     *
+     * @param text Text to use for value
+     * @return Label with bold text
+     */
+    private Label boldLabel(String text) {
+        // Create label with the given text and set its font to bold
+        Label l = new Label(text);
+        l.setFont(Font.font("System", FontWeight.BOLD, 12));
+
+        return l;
+    }
+
+    /**
+     * Create a Label whose value is bound to an observable value.
+     *
+     * @param observable Value to bind to label text
+     * @return Label with bound value
+     */
+    private Label boundLabel(ObservableValue<? extends String> observable) {
+        // Create label
+        Label l = new Label();
+
+        // Bind its value to the observable
+        l.textProperty().bind(observable);
+
+        return l;
+    }
 
     @FXML
     public void initialize() {
-        erTypeLabel.textProperty().bind(model.erTypeProperty());
-//        entityProfilesD1Label.textProperty().bind(model.entityProfilesD1PathProperty());
-        blockBuildingLabel.textProperty().bind(model.blockBuildingProperty());
-//        groundTruthLabel.textProperty().bind(model.groundTruthPathProperty());
-        compRefinementLabel.textProperty().bind(model.comparisonCleaningMethodProperty());
-        entityMatchingLabel.textProperty().bind(model.entityMatchingProperty());
-        entityClusteringLabel.textProperty().bind(model.entityClusteringProperty());
-        representationMethodLabel.textProperty().bind(model.representationModelProperty());
-        similarityMetricLabel.textProperty().bind(model.similarityMethodProperty());
+        int rows = 0;
 
-        // Add listeners for 2nd dataset path
-        model.erTypeProperty().addListener(datasetPathListener);
-        //todo: needs update
-//        model.entityProfilesD2PathProperty().addListener(datasetPathListener);
+        // Add ER type
+        paramsGrid.addRow(rows++, boldLabel("ER Type"), boundLabel(model.erTypeProperty()));
 
-        // Show block refinement methods in list
-        blockRefinementList.itemsProperty().bind(model.blockCleaningMethodsProperty());
+        // Add Dataset 1 type
+        paramsGrid.addRow(rows++, boldLabel("Dataset 1 Type"), boundLabel(model.entityProfilesD1TypeProperty()));
+
+        //todo: Add Dataset 1 parameters
+
+        //todo: Add Dataset 2 type + parameters, only when ER type is Clean-Clean
+
+        // Add ground truth type
+        paramsGrid.addRow(rows++, boldLabel("Ground Truth Type"), boundLabel(model.groundTruthTypeProperty()));
+
+        //todo: Add Ground Truth parameters
+
+        // Add Block Building method
+        paramsGrid.addRow(rows++, boldLabel("Block Building Method"), boundLabel(model.blockBuildingProperty()));
+
+        //todo: Add Block Building parameters
+
+        //todo: Add Block Cleaning methods (+parameters?)
+        paramsGrid.addRow(rows++, boldLabel("Block Cleaning Methods"), boldLabel("[...]"));
+
+        // Add Comparison Cleaning method
+        paramsGrid.addRow(rows++, boldLabel("Comparison Cleaning Method"), boundLabel(model.comparisonCleaningProperty()));
+
+        //todo: Add Comparison Cleaning parameters
+
+        // Add Entity Matching method
+        paramsGrid.addRow(rows++, boldLabel("Entity Matching Method"), boundLabel(model.entityMatchingProperty()));
+
+        // Add Entity Matching Representation Model & Similarity Metric
+        paramsGrid.addRow(rows++, boldLabel("Representation Model"), boundLabel(model.representationModelProperty()));
+        paramsGrid.addRow(rows++, boldLabel("Similarity Metric"), boundLabel(model.similarityMetricProperty()));
+
+        // Add Entity Clustering algorithm
+        paramsGrid.addRow(rows++, boldLabel("Entity Clustering Algorithm"), boundLabel(model.entityClusteringProperty()));
+
+        //todo: Add Entity Clustering parameters
     }
 
     /**
@@ -68,25 +100,11 @@ public class ConfirmController {
      * @param newModel New model to show
      */
     public void setModel(WizardData newModel) {
-        // Unbind UI items from the previous model
-        erTypeLabel.textProperty().unbind();
-        entityProfilesD1Label.textProperty().unbind();
-        blockBuildingLabel.textProperty().unbind();
-        groundTruthLabel.textProperty().unbind();
-        compRefinementLabel.textProperty().unbind();
-        entityMatchingLabel.textProperty().unbind();
-        entityClusteringLabel.textProperty().unbind();
-        representationMethodLabel.textProperty().unbind();
-        similarityMetricLabel.textProperty().unbind();
-        blockRefinementList.itemsProperty().unbind();
-        model.erTypeProperty().removeListener(datasetPathListener);
-//        model.entityProfilesD2PathProperty().removeListener(datasetPathListener);
-        //todo: needs update
-
         // Set the new model
         this.model = newModel;
 
         // Rerun the initialization to bind UI items to the new model
+        paramsGrid.getChildren().clear();
         initialize();
     }
 

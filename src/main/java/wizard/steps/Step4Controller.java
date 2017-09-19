@@ -44,10 +44,10 @@ public class Step4Controller {
                 JedaiOptions.RECIPROCAL_WEIGHED_NODE_PRUNING
         );
 
-        RadioButtonHelper.createButtonGroup(radioBtnsContainer, options, model.comparisonCleaningMethodProperty());
+        RadioButtonHelper.createButtonGroup(radioBtnsContainer, options, model.comparisonCleaningProperty());
 
         // Disable the advanced configuration button if "No cleaning" method is selected
-        advancedConfigBtn.disableProperty().bind(model.comparisonCleaningMethodProperty().isEqualTo(JedaiOptions.NO_CLEANING));
+        advancedConfigBtn.disableProperty().bind(model.comparisonCleaningProperty().isEqualTo(JedaiOptions.NO_CLEANING));
     }
 
     @Validate
@@ -69,7 +69,7 @@ public class Step4Controller {
      */
     public void advancedConfigBtnHandler(ActionEvent actionEvent) {
         // Get the selected method
-        IDocumentation method = MethodMapping.getMethodByName(model.getComparisonCleaningMethod());
+        IDocumentation method = MethodMapping.getMethodByName(model.getComparisonCleaning());
 
         // Display the configuration window
         CustomMethodConfiguration.displayModal(getClass(), injector, method, model.comparisonCleaningParametersProperty());
