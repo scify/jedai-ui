@@ -1,6 +1,7 @@
 package wizard.steps;
 
 import com.google.inject.Inject;
+import javafx.beans.property.ListProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -25,6 +26,9 @@ public class ConfirmController {
     public GridPane paramsGrid;
     private Logger log = LoggerFactory.getLogger(ConfirmController.class);
     private RowHidingChangeListener changeListener;
+
+    // Vertical gap between rows (actual gap is double this number)
+    private final int vGap = 5;
 
     @Inject
     private WizardData model;
@@ -69,7 +73,7 @@ public class ConfirmController {
      */
     private RowConstraints addRow(int rowIndex, Label label, Node value) {
         // Set padding on the label
-        label.setPadding(new Insets(5, 0, 5, 0));
+        label.setPadding(new Insets(vGap, 0, vGap, 0));
 
         // Add the new row
         paramsGrid.addRow(rowIndex, label, value);
@@ -79,6 +83,24 @@ public class ConfirmController {
         paramsGrid.getRowConstraints().add(rowConstraints);
 
         return rowConstraints;
+    }
+
+    /**
+     * Create a node for displaying the advanced configuration parameters of a method.
+     *
+     * @param parametersProperty List property, that contains the values of the method's parameters
+     * @return Node that displays the given parameters and values
+     */
+    private Node parametersNode(ListProperty<Object> parametersProperty) {
+        // Create the node to show the parameters
+        ListView<Object> paramsList = new ListView<>();
+        paramsList.setMaxHeight(60);
+        paramsList.setPadding(new Insets(vGap, 0, vGap, 0));    //todo: doesn't work
+
+        // Bind the ListView's items to the given parameters property
+        paramsList.itemsProperty().bind(parametersProperty);
+
+        return paramsList;
     }
 
     @FXML
@@ -91,13 +113,14 @@ public class ConfirmController {
         // Add Dataset 1 type
         addRow(rows++, boldLabel("Dataset 1 Type"), boundLabel(model.entityProfilesD1TypeProperty()));
 
-        //todo: Add Dataset 1 parameters
+        // Add Dataset 1 parameters
+        addRow(rows++, boldLabel("Dataset 1 Reader Parameters"), parametersNode(model.entityProfilesD1ParametersProperty()));
 
         // Add Dataset 2 type & parameters (only shown for Clean-Clean ER)
         Label d2TypeTitle = boldLabel("Dataset 2 Type");
         Label d2TypeValue = boundLabel(model.entityProfilesD2TypeProperty());
         Label d2ParamsTitle = boldLabel("Dataset 2 Reader Parameters");
-        Label d2ParamsValue = boldLabel("[todo]");
+        Node d2ParamsValue = parametersNode(model.entityProfilesD2ParametersProperty());
 
         // Add the new nodes to their rows, and keep the row constraints objects
         RowConstraints d2TypeConstraints = addRow(rows++, d2TypeTitle, d2TypeValue);
@@ -122,12 +145,14 @@ public class ConfirmController {
         // Add ground truth type
         addRow(rows++, boldLabel("Ground Truth Type"), boundLabel(model.groundTruthTypeProperty()));
 
-        //todo: Add Ground Truth parameters
+        // Add Ground Truth parameters
+        addRow(rows++, boldLabel("Ground Truth Reader Parameters"), parametersNode(model.groundTruthParametersProperty()));
 
         // Add Block Building method
         addRow(rows++, boldLabel("Block Building Method"), boundLabel(model.blockBuildingProperty()));
 
-        //todo: Add Block Building parameters
+        // Add Block Building parameters
+        addRow(rows++, boldLabel("Block Building Parameters"), parametersNode(model.blockBuildingParametersProperty()));
 
         // Add Block Cleaning methods (sorted automatically)
         ListView<String> blockCleaningList = new ListView<>(
@@ -142,7 +167,8 @@ public class ConfirmController {
         // Add Comparison Cleaning method
         addRow(rows++, boldLabel("Comparison Cleaning Method"), boundLabel(model.comparisonCleaningProperty()));
 
-        //todo: Add Comparison Cleaning parameters
+        // Add Comparison Cleaning parameters
+        addRow(rows++, boldLabel("Comparison Cleaning Parameters"), parametersNode(model.comparisonCleaningParametersProperty()));
 
         // Add Entity Matching method
         addRow(rows++, boldLabel("Entity Matching Method"), boundLabel(model.entityMatchingProperty()));
@@ -154,7 +180,8 @@ public class ConfirmController {
         // Add Entity Clustering algorithm
         addRow(rows++, boldLabel("Entity Clustering Algorithm"), boundLabel(model.entityClusteringProperty()));
 
-        //todo: Add Entity Clustering parameters
+        // Add Entity Clustering parameters
+        addRow(rows, boldLabel("Entity Clustering Parameters"), parametersNode(model.entityClusteringParametersProperty()));
     }
 
     /**
