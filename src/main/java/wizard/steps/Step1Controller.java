@@ -75,6 +75,7 @@ public class Step1Controller {
 
         // Disable 2nd dataset selection when Dirty ER is selected
         entitiesD2FileTypeCombo.disableProperty().bind(model.erTypeProperty().isEqualTo(JedaiOptions.DIRTY_ER));
+        entitiesD2ConfigBtn.disableProperty().bind(model.erTypeProperty().isEqualTo(JedaiOptions.DIRTY_ER));
         entityProfilesD2Label.disableProperty().bind(model.erTypeProperty().isEqualTo(JedaiOptions.DIRTY_ER));
 
         // Set initial values to text fields (for testing...)
