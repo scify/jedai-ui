@@ -1,4 +1,4 @@
-package utils.dynamic_configuration;
+package utils.dynamic_configuration.input;
 
 import javafx.scene.control.CheckBox;
 

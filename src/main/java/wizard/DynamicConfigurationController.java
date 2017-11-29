@@ -8,13 +8,13 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.atlas.json.JsonValue;
-import utils.dynamic_configuration.*;
+import utils.dynamic_configuration.HelpTooltip;
+import utils.dynamic_configuration.input.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,15 +93,13 @@ public class DynamicConfigurationController {
 
         Node control = getNodeForType(index, paramType, defaultValue, minValue, maxValue);
 
-        // Add text area with parameter description
-        TextArea descriptionArea = new TextArea();
-        descriptionArea.setEditable(false);
-        descriptionArea.setWrapText(true);
-        descriptionArea.setMaxWidth(200);
-        descriptionArea.textProperty().setValue(param.get("description").getAsString().value());
+        // Create description text and add it to a HelpTooltip node
+        //todo: Add min/max values to description
+        String description = param.get("description").getAsString().value();
+        HelpTooltip help = new HelpTooltip(description);
 
         // Add controls to the grid
-        configGrid.addRow(index, label, control, descriptionArea);
+        configGrid.addRow(index, label, control, help);
     }
 
     /**

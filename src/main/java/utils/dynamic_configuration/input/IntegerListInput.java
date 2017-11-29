@@ -1,4 +1,4 @@
-package utils.dynamic_configuration;
+package utils.dynamic_configuration.input;
 
 import com.google.common.base.Joiner;
 import javafx.scene.control.TextField;
