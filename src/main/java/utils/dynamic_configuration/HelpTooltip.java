@@ -18,6 +18,8 @@ public class HelpTooltip extends Label {
 
         // Create and add tooltip (need to set its font because otherwise it's inherited from the Label)
         Tooltip descriptionTooltip = new Tooltip(tooltipText);
+        descriptionTooltip.setPrefWidth(250);
+        descriptionTooltip.setWrapText(true);
         descriptionTooltip.setFont(new Font("System", 12));
         this.setTooltip(descriptionTooltip);
     }
