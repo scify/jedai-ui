@@ -78,6 +78,11 @@ public class Step1Controller {
         entitiesD2ConfigBtn.disableProperty().bind(model.erTypeProperty().isEqualTo(JedaiOptions.DIRTY_ER));
         entityProfilesD2Label.disableProperty().bind(model.erTypeProperty().isEqualTo(JedaiOptions.DIRTY_ER));
 
+        // Disable configure buttons until a reader type is selected
+        entitiesD1ConfigBtn.disableProperty().bind(model.entityProfilesD1TypeProperty().isNull());
+        entitiesD2ConfigBtn.disableProperty().bind(model.entityProfilesD2TypeProperty().isNull());
+        gTruthConfigBtn.disableProperty().bind(model.groundTruthTypeProperty().isNull());
+
         // Set initial values to text fields (for testing...)
 //        model.setEntityProfilesD1Type(JedaiOptions.SERIALIZED);
 //        model.setGroundTruthType(JedaiOptions.SERIALIZED);
