@@ -94,8 +94,29 @@ public class DynamicConfigurationController {
         Node control = getNodeForType(index, paramType, defaultValue, minValue, maxValue);
 
         // Create description text and add it to a HelpTooltip node
-        //todo: Add min/max values to description
         String description = param.get("description").getAsString().value();
+
+        // Check if there are any minimum/maximum or default values for the parameter
+        String minMaxDefDescription = "\n";
+
+        if (!minValue.equals("-")) {
+            minMaxDefDescription += "\nMinimum value: " + minValue;
+        }
+
+        if (!maxValue.equals("-")) {
+            minMaxDefDescription += "\nMaximum value: " + maxValue;
+        }
+
+//        if (!defaultValue.equals("-")) {
+//            minMaxDefDescription += "\nDefault value: " + defaultValue;
+//            //todo: Get default value in some other way. The default value now can be a previously saved value.
+//        }
+
+        // If there is any of the min/max/default values, add the string to the description
+        if (minMaxDefDescription.length() > 1) {
+            description += minMaxDefDescription;
+        }
+
         HelpTooltip help = new HelpTooltip(description);
 
         // Add controls to the grid
