@@ -59,13 +59,22 @@ public class DynamicConfigurationController {
             int gridRows = 0;
             for (JsonValue jsonParam : this.jsonParamDescriptions) {
                 if (jsonParam.isObject()) {
+                    JsonObject jsonParamObj = jsonParam.getAsObject();
+
                     // If we have previous values for the parameters, modify the JSON object's default value
                     if (usePrevParams) {
-                        jsonParam.getAsObject().put("defaultValue", prevParams.get(gridRows).toString());
+                        // Save original default value to another parameter, in order to be able to display it
+                        JsonValue originalDefault = jsonParamObj.get("defaultValue");
+                        if (originalDefault != null) {
+                            jsonParamObj.put("defaultValueOriginal", originalDefault);
+                        }
+
+                        // Put as the new defaultValue the previous one
+                        jsonParamObj.put("defaultValue", prevParams.get(gridRows).toString());
                     }
 
                     // Create controls for setting this parameter
-                    addParameterControls(jsonParam.getAsObject(), gridRows++);
+                    addParameterControls(jsonParamObj, gridRows++);
                 } else if (jsonParam.isArray()) {
                     throw new UnsupportedOperationException("Cannot handle JSON array yet (?)");
                 }
@@ -107,10 +116,14 @@ public class DynamicConfigurationController {
             minMaxDefDescription += "\nMaximum value: " + maxValue;
         }
 
-//        if (!defaultValue.equals("-")) {
-//            minMaxDefDescription += "\nDefault value: " + defaultValue;
-//            //todo: Get default value in some other way. The default value now can be a previously saved value.
-//        }
+        // Get true default value
+        if (param.hasKey("defaultValueOriginal")) {
+            defaultValue = param.get("defaultValueOriginal").getAsString().value();
+        }
+
+        if (!defaultValue.equals("-")) {
+            minMaxDefDescription += "\nDefault value: " + defaultValue;
+        }
 
         // If there is any of the min/max/default values, add the string to the description
         if (minMaxDefDescription.length() > 1) {
