@@ -10,10 +10,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import utils.JPair;
 import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.atlas.json.JsonValue;
+import utils.JPair;
 import utils.dynamic_configuration.HelpTooltip;
 import utils.dynamic_configuration.input.*;
 
@@ -71,7 +71,7 @@ public class DynamicConfigurationController {
                         }
 
                         // Put as the new defaultValue the previous one
-                        jsonParamObj.put("defaultValue", prevParams.get(gridRows).toString());
+                        jsonParamObj.put("defaultValue", prevParams.get(gridRows).getRight().toString());
                     }
 
                     // Create controls for setting this parameter

@@ -80,36 +80,36 @@ public class CustomMethodConfiguration {
      * @param parameters Parameter values
      * @return
      */
-    public static IBlockBuilding configureBlockBuildingMethod(BlockBuildingMethod method, List<Object> parameters) {
+    public static IBlockBuilding configureBlockBuildingMethod(BlockBuildingMethod method, List<JPair<String, Object>> parameters) {
         switch (method) {
             case STANDARD_BLOCKING:
                 return new StandardBlocking();
             case SUFFIX_ARRAYS:
                 return new SuffixArraysBlocking(
-                        (int) parameters.get(0),
-                        (int) parameters.get(1)
+                        (int) parameters.get(0).getRight(),
+                        (int) parameters.get(1).getRight()
                 );
             case Q_GRAMS_BLOCKING:
                 return new QGramsBlocking(
-                        (int) parameters.get(0)
+                        (int) parameters.get(0).getRight()
                 );
             case SORTED_NEIGHBORHOOD:
                 return new SortedNeighborhoodBlocking(
-                        (int) parameters.get(0)
+                        (int) parameters.get(0).getRight()
                 );
             case EXTENDED_SUFFIX_ARRAYS:
                 return new ExtendedSuffixArraysBlocking(
-                        (int) parameters.get(0),
-                        (int) parameters.get(1)
+                        (int) parameters.get(0).getRight(),
+                        (int) parameters.get(1).getRight()
                 );
             case EXTENDED_Q_GRAMS_BLOCKING:
                 return new ExtendedQGramsBlocking(
-                        (double) parameters.get(0),
-                        (int) parameters.get(1)
+                        (double) parameters.get(0).getRight(),
+                        (int) parameters.get(1).getRight()
                 );
             case EXTENDED_SORTED_NEIGHBORHOOD:
                 return new ExtendedSortedNeighborhoodBlocking(
-                        (int) parameters.get(0)
+                        (int) parameters.get(0).getRight()
                 );
             default:
                 return null;
