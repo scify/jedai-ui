@@ -209,7 +209,6 @@ public class DynamicConfigurationController {
      */
     public void saveBtnHandler(ActionEvent actionEvent) {
         // Save the parameters to the model
-        System.out.println("param values: " + parameterValues);
         parametersProperty.setValue(FXCollections.observableList(parameterValues));
 
         // Get a handle to the stage and close it
