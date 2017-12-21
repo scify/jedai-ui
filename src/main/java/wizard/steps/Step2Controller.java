@@ -38,7 +38,6 @@ public class Step2Controller {
         // Create List with options
         List<String> options = Arrays.asList(
                 JedaiOptions.STANDARD_TOKEN_BUILDING,
-                JedaiOptions.ATTRIBUTE_CLUSTERING,
                 JedaiOptions.SORTED_NEIGHBORHOOD,
                 JedaiOptions.SORTED_NEIGHBORHOOD_EXTENDED,
                 JedaiOptions.Q_GRAMS_BLOCKING,

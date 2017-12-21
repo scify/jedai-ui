@@ -9,8 +9,6 @@ import DataReader.GroundTruthReader.GtCSVReader;
 import DataReader.GroundTruthReader.GtRDFReader;
 import DataReader.GroundTruthReader.GtSerializationReader;
 import Utilities.Enumerations.BlockBuildingMethod;
-import Utilities.Enumerations.RepresentationModel;
-import Utilities.Enumerations.SimilarityMetric;
 import Utilities.IDocumentation;
 import com.google.inject.Injector;
 import javafx.beans.property.ListProperty;
@@ -86,11 +84,6 @@ public class CustomMethodConfiguration {
         switch (method) {
             case STANDARD_BLOCKING:
                 return new StandardBlocking();
-            case ATTRIBUTE_CLUSTERING:
-                return new AttributeClusteringBlocking(
-                        (RepresentationModel) parameters.get(0),
-                        (SimilarityMetric) parameters.get(1)
-                );
             case SUFFIX_ARRAYS:
                 return new SuffixArraysBlocking(
                         (int) parameters.get(0),

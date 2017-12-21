@@ -16,7 +16,6 @@ public class JedaiOptions {
 
     // Block Building methods
     public static final String STANDARD_TOKEN_BUILDING = "Standard/Token Blocking";
-    public static final String ATTRIBUTE_CLUSTERING = "Attribute Clustering";
     public static final String SORTED_NEIGHBORHOOD = "Sorted Neighborhood";
     public static final String SORTED_NEIGHBORHOOD_EXTENDED = "Extended Sorted Neighborhood";
     public static final String Q_GRAMS_BLOCKING = "Q-Grams Blocking";

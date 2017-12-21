@@ -1,9 +1,9 @@
 package wizard;
 
-import BlockProcessing.BlockRefinement.BlockFiltering;
-import BlockProcessing.BlockRefinement.ComparisonsBasedBlockPurging;
-import BlockProcessing.BlockRefinement.SizeBasedBlockPurging;
-import BlockProcessing.ComparisonRefinement.*;
+import BlockProcessing.BlockCleaning.BlockFiltering;
+import BlockProcessing.BlockCleaning.ComparisonsBasedBlockPurging;
+import BlockProcessing.BlockCleaning.SizeBasedBlockPurging;
+import BlockProcessing.ComparisonCleaning.*;
 import BlockProcessing.IBlockProcessing;
 import EntityClustering.*;
 import Utilities.Enumerations.BlockBuildingMethod;
@@ -28,7 +28,6 @@ public class MethodMapping {
     private static Map<String, BlockBuildingMethod> createMap() {
         Map<String, BlockBuildingMethod> result = new HashMap<>();
         result.put(JedaiOptions.STANDARD_TOKEN_BUILDING, BlockBuildingMethod.STANDARD_BLOCKING);
-        result.put(JedaiOptions.ATTRIBUTE_CLUSTERING, BlockBuildingMethod.ATTRIBUTE_CLUSTERING);
         result.put(JedaiOptions.SORTED_NEIGHBORHOOD, BlockBuildingMethod.SORTED_NEIGHBORHOOD);
         result.put(JedaiOptions.SORTED_NEIGHBORHOOD_EXTENDED, BlockBuildingMethod.EXTENDED_SORTED_NEIGHBORHOOD);
         result.put(JedaiOptions.Q_GRAMS_BLOCKING, BlockBuildingMethod.Q_GRAMS_BLOCKING);
