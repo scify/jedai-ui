@@ -1,7 +1,7 @@
 package utils.dynamic_configuration.input;
 
 import javafx.scene.control.TextField;
-import org.apache.commons.lang3.tuple.MutablePair;
+import utils.JPair;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public class CharacterInput extends TextField {
      * @param index           Index of the parameter that the input should use.
      * @param defaultValue    Default value to use.
      */
-    public CharacterInput(List<MutablePair<String, Object>> parameterValues, int index, String defaultValue) {
+    public CharacterInput(List<JPair<String, Object>> parameterValues, int index, String defaultValue) {
         // Get default character
         char defaultChar;
         if (!defaultValue.equals("-") && defaultValue.length() == 1) {

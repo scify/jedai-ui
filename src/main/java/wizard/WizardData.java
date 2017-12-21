@@ -6,35 +6,35 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.apache.commons.lang3.tuple.MutablePair;
+import utils.JPair;
 import utils.JedaiOptions;
 
 public class WizardData {
     private final StringProperty erType = new SimpleStringProperty();
 
     private final StringProperty entityProfilesD1Type = new SimpleStringProperty();
-    private final ListProperty<MutablePair<String, Object>> entityProfilesD1Parameters = new SimpleListProperty<>();
+    private final ListProperty<JPair<String, Object>> entityProfilesD1Parameters = new SimpleListProperty<>();
 
     private final StringProperty entityProfilesD2Type = new SimpleStringProperty();
-    private final ListProperty<MutablePair<String, Object>> entityProfilesD2Parameters = new SimpleListProperty<>();
+    private final ListProperty<JPair<String, Object>> entityProfilesD2Parameters = new SimpleListProperty<>();
 
     private final StringProperty groundTruthType = new SimpleStringProperty();
-    private final ListProperty<MutablePair<String, Object>> groundTruthParameters = new SimpleListProperty<>();
+    private final ListProperty<JPair<String, Object>> groundTruthParameters = new SimpleListProperty<>();
 
     private final StringProperty blockBuilding = new SimpleStringProperty();
-    private final ListProperty<MutablePair<String, Object>> blockBuildingParameters = new SimpleListProperty<>();
+    private final ListProperty<JPair<String, Object>> blockBuildingParameters = new SimpleListProperty<>();
 
     private final ListProperty<String> blockCleaningMethods = new SimpleListProperty<>();
 
     private final StringProperty comparisonCleaning = new SimpleStringProperty();
-    private final ListProperty<MutablePair<String, Object>> comparisonCleaningParameters = new SimpleListProperty<>();
+    private final ListProperty<JPair<String, Object>> comparisonCleaningParameters = new SimpleListProperty<>();
 
     private final StringProperty entityMatching = new SimpleStringProperty();
     private final StringProperty representationModel = new SimpleStringProperty();
     private final StringProperty similarityMetric = new SimpleStringProperty();
 
     private final StringProperty entityClustering = new SimpleStringProperty();
-    private final ListProperty<MutablePair<String, Object>> entityClusteringParameters = new SimpleListProperty<>();
+    private final ListProperty<JPair<String, Object>> entityClusteringParameters = new SimpleListProperty<>();
 
     /**
      * Clone a WizardData object (return a new WizardData object, with the same properties of the given one)
@@ -78,75 +78,75 @@ public class WizardData {
         return clone;
     }
 
-    public ObservableList<MutablePair<String, Object>> getEntityProfilesD1Parameters() {
+    public ObservableList<JPair<String, Object>> getEntityProfilesD1Parameters() {
         return entityProfilesD1Parameters.get();
     }
 
-    public ListProperty<MutablePair<String, Object>> entityProfilesD1ParametersProperty() {
+    public ListProperty<JPair<String, Object>> entityProfilesD1ParametersProperty() {
         return entityProfilesD1Parameters;
     }
 
-    public void setEntityProfilesD1Parameters(ObservableList<MutablePair<String, Object>> entityProfilesD1Parameters) {
+    public void setEntityProfilesD1Parameters(ObservableList<JPair<String, Object>> entityProfilesD1Parameters) {
         this.entityProfilesD1Parameters.set(entityProfilesD1Parameters);
     }
 
-    public ObservableList<MutablePair<String, Object>> getEntityProfilesD2Parameters() {
+    public ObservableList<JPair<String, Object>> getEntityProfilesD2Parameters() {
         return entityProfilesD2Parameters.get();
     }
 
-    public ListProperty<MutablePair<String, Object>> entityProfilesD2ParametersProperty() {
+    public ListProperty<JPair<String, Object>> entityProfilesD2ParametersProperty() {
         return entityProfilesD2Parameters;
     }
 
-    public void setEntityProfilesD2Parameters(ObservableList<MutablePair<String, Object>> entityProfilesD2Parameters) {
+    public void setEntityProfilesD2Parameters(ObservableList<JPair<String, Object>> entityProfilesD2Parameters) {
         this.entityProfilesD2Parameters.set(entityProfilesD2Parameters);
     }
 
-    public ObservableList<MutablePair<String, Object>> getGroundTruthParameters() {
+    public ObservableList<JPair<String, Object>> getGroundTruthParameters() {
         return groundTruthParameters.get();
     }
 
-    public ListProperty<MutablePair<String, Object>> groundTruthParametersProperty() {
+    public ListProperty<JPair<String, Object>> groundTruthParametersProperty() {
         return groundTruthParameters;
     }
 
-    public void setGroundTruthParameters(ObservableList<MutablePair<String, Object>> groundTruthParameters) {
+    public void setGroundTruthParameters(ObservableList<JPair<String, Object>> groundTruthParameters) {
         this.groundTruthParameters.set(groundTruthParameters);
     }
 
-    public ObservableList<MutablePair<String, Object>> getEntityClusteringParameters() {
+    public ObservableList<JPair<String, Object>> getEntityClusteringParameters() {
         return entityClusteringParameters.get();
     }
 
-    public ListProperty<MutablePair<String, Object>> entityClusteringParametersProperty() {
+    public ListProperty<JPair<String, Object>> entityClusteringParametersProperty() {
         return entityClusteringParameters;
     }
 
-    public void setEntityClusteringParameters(ObservableList<MutablePair<String, Object>> entityClusteringParameters) {
+    public void setEntityClusteringParameters(ObservableList<JPair<String, Object>> entityClusteringParameters) {
         this.entityClusteringParameters.set(entityClusteringParameters);
     }
 
-    public ObservableList<MutablePair<String, Object>> getComparisonCleaningParameters() {
+    public ObservableList<JPair<String, Object>> getComparisonCleaningParameters() {
         return comparisonCleaningParameters.get();
     }
 
-    public ListProperty<MutablePair<String, Object>> comparisonCleaningParametersProperty() {
+    public ListProperty<JPair<String, Object>> comparisonCleaningParametersProperty() {
         return comparisonCleaningParameters;
     }
 
-    public void setComparisonCleaningParameters(ObservableList<MutablePair<String, Object>> comparisonCleaningParameters) {
+    public void setComparisonCleaningParameters(ObservableList<JPair<String, Object>> comparisonCleaningParameters) {
         this.comparisonCleaningParameters.set(comparisonCleaningParameters);
     }
 
-    public ObservableList<MutablePair<String, Object>> getBlockBuildingParameters() {
+    public ObservableList<JPair<String, Object>> getBlockBuildingParameters() {
         return blockBuildingParameters.get();
     }
 
-    public ListProperty<MutablePair<String, Object>> blockBuildingParametersProperty() {
+    public ListProperty<JPair<String, Object>> blockBuildingParametersProperty() {
         return blockBuildingParameters;
     }
 
-    public void setBlockBuildingParameters(ObservableList<MutablePair<String, Object>> blockBuildingParameters) {
+    public void setBlockBuildingParameters(ObservableList<JPair<String, Object>> blockBuildingParameters) {
         this.blockBuildingParameters.set(blockBuildingParameters);
     }
 

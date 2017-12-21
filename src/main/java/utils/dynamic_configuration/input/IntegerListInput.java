@@ -2,7 +2,7 @@ package utils.dynamic_configuration.input;
 
 import com.google.common.base.Joiner;
 import javafx.scene.control.TextField;
-import org.apache.commons.lang3.tuple.MutablePair;
+import utils.JPair;
 
 import java.util.HashSet;
 import java.util.List;
@@ -21,7 +21,7 @@ public class IntegerListInput extends TextField {
      * @param index           Index of the parameter that the input should use.
      * @param defaultValue    Default value for the list. Expected to be in the form "[1, 2, 3]" etc.
      */
-    public IntegerListInput(List<MutablePair<String, Object>> parameterValues, int index, String defaultValue) {
+    public IntegerListInput(List<JPair<String, Object>> parameterValues, int index, String defaultValue) {
         // Create HashSet instance
         set = new HashSet<>();
         parameterValues.get(index).setRight(set);

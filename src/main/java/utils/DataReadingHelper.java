@@ -10,7 +10,7 @@ import Utilities.DataStructures.AbstractDuplicatePropagation;
 import Utilities.DataStructures.BilateralDuplicatePropagation;
 import Utilities.DataStructures.UnilateralDuplicatePropagation;
 import com.google.common.primitives.Ints;
-import org.apache.commons.lang3.tuple.MutablePair;
+import utils.JPair;
 
 import java.util.List;
 import java.util.Set;
@@ -26,7 +26,7 @@ public class DataReadingHelper {
      * @param parameters Parameters for Entity Reader
      * @return List of read entities
      */
-    public static List<EntityProfile> getEntities(String type, List<MutablePair<String, Object>> parameters) {
+    public static List<EntityProfile> getEntities(String type, List<JPair<String, Object>> parameters) {
         List<EntityProfile> profiles = null;
         IEntityReader eReader = null;
 
@@ -107,7 +107,7 @@ public class DataReadingHelper {
      * @param profilesD2 Entity Profiles for Dataset 2
      * @return Ground truth (duplicate propagation)
      */
-    public static AbstractDuplicatePropagation getGroundTruth(String type, List<MutablePair<String, Object>> parameters, String erType, List<EntityProfile> profilesD1, List<EntityProfile> profilesD2) {
+    public static AbstractDuplicatePropagation getGroundTruth(String type, List<JPair<String, Object>> parameters, String erType, List<EntityProfile> profilesD1, List<EntityProfile> profilesD2) {
         AbstractDuplicatePropagation dp = null;
         IGroundTruthReader gtReader = null;
 
