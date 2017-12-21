@@ -1,6 +1,7 @@
 package utils.dynamic_configuration.input;
 
 import javafx.scene.control.TextField;
+import org.apache.commons.lang3.tuple.MutablePair;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class DoubleInput extends TextField {
      * @param minValue        Minimum allowed value. Expected to be properly formatted double.
      * @param maxValue        Maximum allowed value. Expected to be properly formatted double.
      */
-    public DoubleInput(List<Object> parameterValues, int index, String defaultValue, String minValue, String maxValue) {
+    public DoubleInput(List<MutablePair<String, Object>> parameterValues, int index, String defaultValue, String minValue, String maxValue) {
         // Parse the min/max values
         double min;
         if (!minValue.equals("-")) {
@@ -36,7 +37,7 @@ public class DoubleInput extends TextField {
         // Set default value
         if (!defaultValue.equals("-")) {
             this.textProperty().setValue(defaultValue);
-            parameterValues.set(index, Double.parseDouble(defaultValue));
+            parameterValues.get(index).setRight(Double.parseDouble(defaultValue));
         }
 
         // Add change listener
@@ -59,11 +60,11 @@ public class DoubleInput extends TextField {
                     }
 
                     // Save the value to the parameters list
-                    parameterValues.set(index, value);
+                    parameterValues.get(index).setRight(value);
                 } catch (NumberFormatException e) {
                     // Problem parsing, so not a double. Set previous value.
                     this.setText(defaultValue);
-                    parameterValues.set(index, Double.parseDouble(defaultValue));
+                    parameterValues.get(index).setRight(Double.parseDouble(defaultValue));
                 }
             }
         });

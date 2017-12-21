@@ -10,6 +10,7 @@ import Utilities.DataStructures.AbstractDuplicatePropagation;
 import Utilities.DataStructures.BilateralDuplicatePropagation;
 import Utilities.DataStructures.UnilateralDuplicatePropagation;
 import com.google.common.primitives.Ints;
+import org.apache.commons.lang3.tuple.MutablePair;
 
 import java.util.List;
 import java.util.Set;
@@ -25,7 +26,7 @@ public class DataReadingHelper {
      * @param parameters Parameters for Entity Reader
      * @return List of read entities
      */
-    public static List<EntityProfile> getEntities(String type, List<Object> parameters) {
+    public static List<EntityProfile> getEntities(String type, List<MutablePair<String, Object>> parameters) {
         List<EntityProfile> profiles = null;
         IEntityReader eReader = null;
 
@@ -36,11 +37,11 @@ public class DataReadingHelper {
         switch (type) {
             case JedaiOptions.CSV:
                 // Get parameters
-                String csvPath = parameters.get(0).toString();
-                boolean attributeNamesInFirstRow = (boolean) parameters.get(1);
-                char separator = (char) parameters.get(2);
-                int idIndex = (int) parameters.get(3);
-                Set<Integer> indicesToExcludeSet = (Set<Integer>) parameters.get(4);
+                String csvPath = parameters.get(0).getRight().toString();
+                boolean attributeNamesInFirstRow = (boolean) parameters.get(1).getRight();
+                char separator = (char) parameters.get(2).getRight();
+                int idIndex = (int) parameters.get(3).getRight();
+                Set<Integer> indicesToExcludeSet = (Set<Integer>) parameters.get(4).getRight();
 
                 // Initialize the Entity reader
                 EntityCSVReader csvReader = new EntityCSVReader(csvPath);
@@ -53,12 +54,12 @@ public class DataReadingHelper {
                 break;
             case JedaiOptions.DATABASE:
                 // Get parameters
-                String url = parameters.get(0).toString();
-                String table = parameters.get(1).toString();
-                String username = parameters.get(2).toString();
-                String password = parameters.get(3).toString();
-                Set<String> excludedAttrs = (Set<String>) parameters.get(4);
-                boolean ssl = (boolean) parameters.get(5);
+                String url = parameters.get(0).getRight().toString();
+                String table = parameters.get(1).getRight().toString();
+                String username = parameters.get(2).getRight().toString();
+                String password = parameters.get(3).getRight().toString();
+                Set<String> excludedAttrs = (Set<String>) parameters.get(4).getRight();
+                boolean ssl = (boolean) parameters.get(5).getRight();
 
                 // Initialize the Entity reader
                 EntityDBReader dbReader = new EntityDBReader(url);
@@ -72,8 +73,8 @@ public class DataReadingHelper {
                 break;
             case JedaiOptions.RDF:
                 // Get parameters
-                String rdfPath = parameters.get(0).toString();
-                Set<String> excludedPredicates = (Set<String>) parameters.get(1);
+                String rdfPath = parameters.get(0).getRight().toString();
+                Set<String> excludedPredicates = (Set<String>) parameters.get(1).getRight();
 
                 // Initialize the Entity reader
                 EntityRDFReader rdfReader = new EntityRDFReader(rdfPath);
@@ -82,7 +83,7 @@ public class DataReadingHelper {
                 break;
             case JedaiOptions.SERIALIZED:
                 // Get parameters
-                String jsoPath = parameters.get(0).toString();
+                String jsoPath = parameters.get(0).getRight().toString();
 
                 // Initialize the Entity reader
                 eReader = new EntitySerializationReader(jsoPath);
@@ -106,7 +107,7 @@ public class DataReadingHelper {
      * @param profilesD2 Entity Profiles for Dataset 2
      * @return Ground truth (duplicate propagation)
      */
-    public static AbstractDuplicatePropagation getGroundTruth(String type, List<Object> parameters, String erType, List<EntityProfile> profilesD1, List<EntityProfile> profilesD2) {
+    public static AbstractDuplicatePropagation getGroundTruth(String type, List<MutablePair<String, Object>> parameters, String erType, List<EntityProfile> profilesD1, List<EntityProfile> profilesD2) {
         AbstractDuplicatePropagation dp = null;
         IGroundTruthReader gtReader = null;
 
@@ -117,9 +118,9 @@ public class DataReadingHelper {
         switch (type) {
             case JedaiOptions.CSV:
                 // Get parameters
-                String csvPath = parameters.get(0).toString();
-                boolean ignoreFirstRow = (boolean) parameters.get(1);
-                char separator = (char) parameters.get(2);
+                String csvPath = parameters.get(0).getRight().toString();
+                boolean ignoreFirstRow = (boolean) parameters.get(1).getRight();
+                char separator = (char) parameters.get(2).getRight();
 
                 // Initialize the reader
                 GtCSVReader csvReader = new GtCSVReader(csvPath);
@@ -130,14 +131,14 @@ public class DataReadingHelper {
                 break;
             case JedaiOptions.RDF:
                 // Get parameters
-                String rdfPath = parameters.get(0).toString();
+                String rdfPath = parameters.get(0).getRight().toString();
 
                 // Initialize the reader
                 gtReader = new GtRDFReader(rdfPath);
                 break;
             case JedaiOptions.SERIALIZED:
                 // Get parameters
-                String jsoPath = parameters.get(0).toString();
+                String jsoPath = parameters.get(0).getRight().toString();
 
                 // Initialize the reader
                 gtReader = new GtSerializationReader(jsoPath);

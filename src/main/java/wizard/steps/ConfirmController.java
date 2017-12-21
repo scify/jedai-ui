@@ -12,6 +12,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.BlockCleaningCustomComparator;
@@ -91,13 +92,14 @@ public class ConfirmController {
      * @param parametersProperty List property, that contains the values of the method's parameters
      * @return Node that displays the given parameters and values
      */
-    private Node parametersNode(ListProperty<Object> parametersProperty) {
+    private Node parametersNode(ListProperty<MutablePair<String, Object>> parametersProperty) {
         // Create the node to show the parameters
-        ListView<Object> paramsList = new ListView<>();
+        ListView<MutablePair<String, Object>> paramsList = new ListView<>();
         paramsList.setMaxHeight(60);
         //todo: add vgap to the list
 
         // Bind the ListView's items to the given parameters property
+        //todo: Improve .toString() method of MutablePairs
         paramsList.itemsProperty().bind(parametersProperty);
 
         return paramsList;

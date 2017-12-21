@@ -1,6 +1,7 @@
 package utils.dynamic_configuration.input;
 
 import javafx.scene.control.CheckBox;
+import org.apache.commons.lang3.tuple.MutablePair;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class BooleanInput extends CheckBox {
      * @param index           Index of the parameter that the input should use.
      * @param defaultValue    Default value
      */
-    public BooleanInput(List<Object> parameterValues, int index, String defaultValue) {
+    public BooleanInput(List<MutablePair<String, Object>> parameterValues, int index, String defaultValue) {
         // Use the default value
         boolean defaultBool;
         try {
@@ -22,9 +23,10 @@ public class BooleanInput extends CheckBox {
         }
 
         this.setSelected(defaultBool);
-        parameterValues.set(index, defaultBool);
+        parameterValues.get(index).setRight(defaultBool);
 
         // When the checkbox is toggled, update the parameter in the list
-        this.selectedProperty().addListener((observable, oldValue, newValue) -> parameterValues.set(index, newValue));
+        this.selectedProperty().addListener((observable, oldValue, newValue)
+                -> parameterValues.get(index).setRight(newValue));
     }
 }

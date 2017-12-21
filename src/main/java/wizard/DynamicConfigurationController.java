@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.atlas.json.JsonValue;
@@ -25,8 +26,8 @@ public class DynamicConfigurationController {
     public Button saveBtn;
 
     private JsonArray jsonParamDescriptions;
-    private ListProperty<Object> parametersProperty;
-    private List<Object> parameterValues;
+    private ListProperty<MutablePair<String, Object>> parametersProperty;
+    private List<MutablePair<String, Object>> parameterValues;
 
     @FXML
     public void initialize() {
@@ -38,12 +39,12 @@ public class DynamicConfigurationController {
      *
      * @param jsonParamDescriptions Parameters as specified by the JedAI library
      */
-    public void setParameters(JsonArray jsonParamDescriptions, ListProperty<Object> parametersProperty) {
+    public void setParameters(JsonArray jsonParamDescriptions, ListProperty<MutablePair<String, Object>> parametersProperty) {
         this.jsonParamDescriptions = jsonParamDescriptions;
         this.parametersProperty = parametersProperty;
 
         // Determine if there are, and we should use previously set values for the parameters
-        ObservableList<Object> prevParams = parametersProperty.get();
+        ObservableList<MutablePair<String, Object>> prevParams = parametersProperty.get();
 
         boolean usePrevParams = false;
         if (prevParams != null && !prevParams.isEmpty() && prevParams.size() == jsonParamDescriptions.size()) {
@@ -89,18 +90,19 @@ public class DynamicConfigurationController {
      * @param index Grid row to add the controls to.
      */
     private void addParameterControls(JsonObject param, int index) {
-        // Create the label
-        Label label = new Label(param.get("name").getAsString().value());
+        // Get name of parameter & create label for it
+        String name = param.get("name").getAsString().value();
+        Label label = new Label(name);
 
         // Depending on what type the parameter is, get the appropriate control for it
         // If the label is "File Path", make the type "JEDAI_FILEPATH", in order to show file selection controls
-        String paramType = param.get("name").getAsString().value().equals("File Path") ? "JEDAI_FILEPATH" : param.get("class").getAsString().value();
+        String paramType = name.equals("File Path") ? "JEDAI_FILEPATH" : param.get("class").getAsString().value();
 
         String defaultValue = param.get("defaultValue").getAsString().value();
         String minValue = param.get("minValue").getAsString().value();
         String maxValue = param.get("maxValue").getAsString().value();
 
-        Node control = getNodeForType(index, paramType, defaultValue, minValue, maxValue);
+        Node control = getNodeForType(index, name, paramType, defaultValue, minValue, maxValue);
 
         // Create description text and add it to a HelpTooltip node
         String description = param.get("description").getAsString().value();
@@ -146,52 +148,52 @@ public class DynamicConfigurationController {
      * @param maxValue     Maximum allowed value for the input
      * @return Appropriate node for setting the parameter's value
      */
-    private Node getNodeForType(int index, String paramType, String defaultValue, String minValue, String maxValue) {
+    private Node getNodeForType(int index, String name, String paramType, String defaultValue, String minValue, String maxValue) {
         Node control;
 
         switch (paramType) {
             case "JEDAI_FILEPATH":
-                parameterValues.add("");
+                parameterValues.add(new MutablePair<>(name, ""));
 
                 control = new FileSelectorInput(parameterValues, index, configGrid, defaultValue);
                 break;
             case "java.lang.Integer":
-                parameterValues.add(-1);
+                parameterValues.add(new MutablePair<>(name, -1));
 
                 control = new IntegerInput(parameterValues, index, defaultValue, minValue, maxValue);
                 break;
             case "java.lang.Double":
-                parameterValues.add(-1.0);
+                parameterValues.add(new MutablePair<>(name, -1.0));
 
                 control = new DoubleInput(parameterValues, index, defaultValue, minValue, maxValue);
                 break;
             case "java.lang.String":
-                parameterValues.add("");
+                parameterValues.add(new MutablePair<>(name, ""));
 
                 control = new StringInput(parameterValues, index, defaultValue);
                 break;
             case "java.lang.Boolean":
-                parameterValues.add(false);
+                parameterValues.add(new MutablePair<>(name, false));
 
                 control = new BooleanInput(parameterValues, index, defaultValue);
                 break;
             case "java.lang.Character":
-                parameterValues.add(',');
+                parameterValues.add(new MutablePair<>(name, ','));
 
                 control = new CharacterInput(parameterValues, index, defaultValue);
                 break;
             case "java.util.Set<Integer>":
-                parameterValues.add(null);
+                parameterValues.add(new MutablePair<>(name, null));
 
                 control = new IntegerListInput(parameterValues, index, defaultValue);
                 break;
             case "java.util.Set<String>":
-                parameterValues.add(null);
+                parameterValues.add(new MutablePair<>(name, null));
 
                 control = new StringListInput(parameterValues, index, defaultValue);
                 break;
             default:
-                parameterValues.add(null);
+                parameterValues.add(new MutablePair<>(name, null));
 
                 control = new EnumerationInput(parameterValues, index, paramType, defaultValue);
                 break;
@@ -207,6 +209,7 @@ public class DynamicConfigurationController {
      */
     public void saveBtnHandler(ActionEvent actionEvent) {
         // Save the parameters to the model
+        System.out.println("param values: " + parameterValues);
         parametersProperty.setValue(FXCollections.observableList(parameterValues));
 
         // Get a handle to the stage and close it

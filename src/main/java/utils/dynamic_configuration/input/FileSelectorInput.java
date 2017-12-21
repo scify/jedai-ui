@@ -5,6 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
+import org.apache.commons.lang3.tuple.MutablePair;
 
 import java.io.File;
 import java.util.List;
@@ -18,11 +19,12 @@ public class FileSelectorInput extends HBox {
      * @param windowNode      A Node that will be used for getting the window to show the FileChooser
      * @param defaultValue    (Optional) Path to a previously-selected file for this input
      */
-    public FileSelectorInput(List<Object> parameterValues, int index, Node windowNode, String defaultValue) {
+    public FileSelectorInput(List<MutablePair<String, Object>> parameterValues, int index, Node windowNode, String defaultValue) {
         this.setSpacing(5.0);
 
         TextField fileField = new TextField();
-        fileField.textProperty().addListener((observable, oldValue, newValue) -> parameterValues.set(index, newValue));
+        fileField.textProperty().addListener((observable, oldValue, newValue)
+                -> parameterValues.get(index).setRight(newValue));
 
         Button browseBtn = new Button("Browse");
 

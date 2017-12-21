@@ -9,6 +9,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.apache.commons.lang3.tuple.MutablePair;
 
 import java.util.HashSet;
 import java.util.List;
@@ -27,10 +28,10 @@ public class StringListInput extends VBox {
      * @param index           Index of the parameter that the input should use.
      * @param defaultValue    Default value for the list. Expected to be in the form "[string1, string2]" etc.
      */
-    public StringListInput(List<Object> parameterValues, int index, String defaultValue) {
+    public StringListInput(List<MutablePair<String, Object>> parameterValues, int index, String defaultValue) {
         // Create HashSet instance and add it to the parameters
         set = new HashSet<>();
-        parameterValues.set(index, set);
+        parameterValues.get(index).setRight(set);
 
         // Create the editable list
         ObservableList<String> stringList = FXCollections.observableArrayList();

@@ -1,6 +1,7 @@
 package utils.dynamic_configuration.input;
 
 import javafx.scene.control.ComboBox;
+import org.apache.commons.lang3.tuple.MutablePair;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class EnumerationInput extends ComboBox {
      * @param enumName        Full name of the enumeration to show options for.
      * @param defaultValue    Default value.
      */
-    public EnumerationInput(List<Object> parameterValues, int index, String enumName, String defaultValue) {
+    public EnumerationInput(List<MutablePair<String, Object>> parameterValues, int index, String enumName, String defaultValue) {
         try {
             // Create an instance of the given class
             Class<?> cls = Class.forName(enumName);
@@ -32,7 +33,7 @@ public class EnumerationInput extends ComboBox {
                 // Add change listener to save the value when the selection changes
                 this.valueProperty().addListener((observable, oldValue, newValue) -> {
                     // Save the value
-                    parameterValues.set(index, newValue);
+                    parameterValues.get(index).setRight(newValue);
                 });
 
                 // If there is a default value specified, use it

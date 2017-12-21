@@ -18,6 +18,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.jena.atlas.json.JsonArray;
 import wizard.DynamicConfigurationController;
 
@@ -32,7 +33,7 @@ public class CustomMethodConfiguration {
      * @param injector    Injector to use when loading FXML, so that the model etc. are injected automatically.
      * @param method      Method that the window should display configuration options for.
      */
-    public static void displayModal(Class callerClass, Injector injector, IDocumentation method, ListProperty<Object> paramsProperty) {
+    public static void displayModal(Class callerClass, Injector injector, IDocumentation method, ListProperty<MutablePair<String, Object>> paramsProperty) {
         Parent root;
         FXMLLoader loader = new FXMLLoader(
                 callerClass.getClassLoader().getResource("wizard-fxml/DynamicConfiguration.fxml"),

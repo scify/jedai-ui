@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.CustomMethodConfiguration;
@@ -91,7 +92,7 @@ public class Step1Controller {
     @Validate
     public boolean validate() throws Exception {
         // Create HashMap with values to check (ordered)
-        Map<String, List<Object>> readerParams = new LinkedHashMap<>();
+        Map<String, List<MutablePair<String, Object>>> readerParams = new LinkedHashMap<>();
         readerParams.put("entities1", model.getEntityProfilesD1Parameters());
         if (model.getErType().equals(JedaiOptions.CLEAN_CLEAN_ER))
             // For Clean-Clean ER, will also check that the 2nd path has been filled
@@ -176,7 +177,7 @@ public class Step1Controller {
             String id = ((Button) actionEvent.getSource()).getId();
 
             // Get the required parameters to give to configuration modal
-            ListProperty<Object> modelProperty = null;
+            ListProperty<MutablePair<String, Object>> modelProperty = null;
             String readerType = null;
             boolean groundTruth = false;
             IDocumentation reader;

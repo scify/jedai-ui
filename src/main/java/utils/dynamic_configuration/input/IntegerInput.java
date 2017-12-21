@@ -1,6 +1,7 @@
 package utils.dynamic_configuration.input;
 
 import javafx.scene.control.TextField;
+import org.apache.commons.lang3.tuple.MutablePair;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class IntegerInput extends TextField {
      * @param minValue        Minimum allowed value. Expected to be properly formatted integer.
      * @param maxValue        Maximum allowed value. Expected to be properly formatted integer.
      */
-    public IntegerInput(List<Object> parameterValues, int index, String defaultValue, String minValue, String maxValue) {
+    public IntegerInput(List<MutablePair<String, Object>> parameterValues, int index, String defaultValue, String minValue, String maxValue) {
         // Get minimum and maximum Integer values
         int min;
         if (!minValue.equals("-")) {
@@ -38,7 +39,7 @@ public class IntegerInput extends TextField {
         // Set default value
         if (!defaultValue.equals("-")) {
             this.textProperty().setValue(defaultValue);
-            parameterValues.set(index, Integer.parseInt(defaultValue));
+            parameterValues.get(index).setRight(Integer.parseInt(defaultValue));
         }
 
         // Add listener for checking the input when focus is lost
@@ -66,16 +67,16 @@ public class IntegerInput extends TextField {
                 }
 
                 // Save the value
-                parameterValues.set(index, intValue);
+                parameterValues.get(index).setRight(intValue);
             } catch (NumberFormatException e) {
                 if (currStrValue.length() == 0) {
                     // String is empty, set value to zero
                     this.setText("0");
-                    parameterValues.set(index, 0);
+                    parameterValues.get(index).setRight(0);
                 } else {
                     // Set to maximum value
                     this.setText("" + max);
-                    parameterValues.set(index, max);
+                    parameterValues.get(index).setRight(max);
                 }
             }
         });
