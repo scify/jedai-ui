@@ -34,6 +34,7 @@ public class DetailsCell<T> extends TableCell<T, Void> {
         link.setOnAction(evt -> {
             // Get run data for this button
             int index = this.getIndex();
+            String title = "Run #" + (index + 1) + " Detailed Configuration";
 
             if (this.detailedRunData.size() > index) {
                 // Get the model for this run
@@ -57,13 +58,13 @@ public class DetailsCell<T> extends TableCell<T, Void> {
                         if (controller instanceof ConfirmController) {
                             // Set the data to the controller
                             ConfirmController confirmController = (ConfirmController) controller;
-                            confirmController.setModel(data);
+                            confirmController.setModel(data, title);
                         }
 
                         // Show the popup window
                         Stage dialog = new Stage();
                         dialog.setScene(new Scene(root));
-                        dialog.setTitle("Run #" + (index + 1) + " Detailed Configuration");
+                        dialog.setTitle(title);
 
                         dialog.show();
 

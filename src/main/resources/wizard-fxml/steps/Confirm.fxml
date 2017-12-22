@@ -9,7 +9,7 @@
       minWidth="-Infinity" prefWidth="580.0" spacing="5.0" VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/8"
       xmlns:fx="http://javafx.com/fxml/1" fx:controller="wizard.steps.ConfirmController">
     <children>
-        <Label text="Confirm Configuration">
+        <Label fx:id="titleLabel" text="Confirm Configuration">
             <font>
                 <Font name="System Bold" size="24.0"/>
             </font>

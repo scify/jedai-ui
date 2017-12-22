@@ -12,10 +12,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import utils.JPair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.BlockCleaningCustomComparator;
+import utils.JPair;
 import utils.JedaiOptions;
 import utils.RowHidingChangeListener;
 import wizard.Submit;
@@ -25,6 +25,7 @@ import java.util.Arrays;
 
 public class ConfirmController {
     public GridPane paramsGrid;
+    public Label titleLabel;
     private Logger log = LoggerFactory.getLogger(ConfirmController.class);
     private RowHidingChangeListener changeListener;
 
@@ -99,7 +100,6 @@ public class ConfirmController {
         //todo: add vgap to the list
 
         // Bind the ListView's items to the given parameters property
-        //todo: Improve .toString() method of MutablePairs
         paramsList.itemsProperty().bind(parametersProperty);
 
         return paramsList;
@@ -190,8 +190,9 @@ public class ConfirmController {
      * Set a new model, and rerun the initialization. Useful when showing a detailed configuration in a popup.
      *
      * @param newModel New model to show
+     * @param newTitle New title to show in the window. If null, the title won't be changed.
      */
-    public void setModel(WizardData newModel) {
+    public void setModel(WizardData newModel, String newTitle) {
         // Remove change listener from old model
         model.erTypeProperty().removeListener(changeListener);
 
@@ -201,6 +202,11 @@ public class ConfirmController {
         // Rerun the initialization to bind UI items to the new model
         paramsGrid.getChildren().clear();
         initialize();
+
+        // If there is a new title, set it
+        if (newTitle != null) {
+            titleLabel.setText(newTitle);
+        }
     }
 
     @Submit
