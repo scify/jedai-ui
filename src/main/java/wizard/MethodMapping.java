@@ -12,7 +12,9 @@ import Utilities.Enumerations.SimilarityMetric;
 import Utilities.Enumerations.WeightingScheme;
 import utils.JedaiOptions;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MethodMapping {
     public static final Map<String, BlockBuildingMethod> blockBuildingMethods = createMap();
@@ -97,24 +99,6 @@ public class MethodMapping {
         result.put(JedaiOptions.TOKEN_TRIGRAMS_TF_IDF, RepresentationModel.TOKEN_TRIGRAMS_TF_IDF);
         result.put(JedaiOptions.TOKEN_TRIGRAM_GRAPHS, RepresentationModel.TOKEN_TRIGRAM_GRAPHS);
         return Collections.unmodifiableMap(result);
-    }
-
-    /**
-     * Get the compatible similarity metrics for a representation model
-     *
-     * @param representationModel String name of representation model
-     * @return List of compatible similarity metrics (as Strings)
-     */
-    public static List<String> getAvailableMetricsForRepresentationModel(String representationModel) {
-        RepresentationModel model = stringToRepresentationModel.get(representationModel);
-        List<SimilarityMetric> availableMetrics = SimilarityMetric.getModelCompatibleSimMetrics(model);
-        List<String> options = new ArrayList<>();
-
-        for (SimilarityMetric sm : availableMetrics) {
-            options.add(similarityMetricToString.get(sm));
-        }
-
-        return options;
     }
 
     /**
