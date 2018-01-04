@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      spacing="5.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+      spacing="5.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="wizard.steps.Step6Controller">
     <children>
         <Label text="Entity Clustering">
@@ -21,7 +21,7 @@
                 <Font size="14.0"/>
             </font>
         </Label>
-        <HBox prefHeight="225.0" prefWidth="600.0">
+        <VBox prefHeight="225.0" prefWidth="600.0" spacing="5.0">
             <children>
                 <VBox fx:id="dirtyErContainer" prefHeight="200.0" prefWidth="300.0" spacing="5.0">
                     <children>
@@ -44,7 +44,7 @@
                     </children>
                 </VBox>
             </children>
-        </HBox>
+        </VBox>
         <Button mnemonicParsing="false" onAction="#advancedConfigBtnHandler" text="Advanced Configuration"/>
     </children>
     <padding>
