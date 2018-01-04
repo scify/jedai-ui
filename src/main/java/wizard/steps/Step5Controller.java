@@ -62,6 +62,6 @@ public class Step5Controller {
                 new GroupLinkage() : new ProfileMatcher();
 
         // Display the configuration window
-        CustomMethodConfiguration.displayModal(getClass(), injector, method, model.comparisonCleaningParametersProperty());
+        CustomMethodConfiguration.displayModal(getClass(), injector, method, model.entityMatchingParametersProperty());
     }
 }

@@ -335,20 +335,11 @@ public class CompletedController {
                 updateProgress(0.6);
 
                 // Step 5: Entity Matching
-                String entityMatchingMethodName = model.getEntityMatching();
-
-                IEntityMatching em;
-                RepresentationModel repModel = MethodMapping.getRepresentationModel(model.getRepresentationModel());
-                SimilarityMetric similarityMetric = MethodMapping.getSimilarityMetric(model.getSimilarityMetric());
-
-                if (entityMatchingMethodName.equals(JedaiOptions.GROUP_LINKAGE)) {
-                    //todo: threshold should be specified by user...
-                    em = new GroupLinkage(0.5, repModel, similarityMetric);
-                } else {
-                    // Profile Matcher
-                    em = new ProfileMatcher(repModel, similarityMetric);
-                }
+                IEntityMatching em = CustomMethodConfiguration.configureEntityMatchingMethod(model.getEntityMatching(), model.getEntityMatchingParameters());
                 SimilarityPairs simPairs;
+
+                if (em == null)
+                    throw new Exception("Entity Matching method is null!");
 
                 if (erType.equals(JedaiOptions.DIRTY_ER)) {
                     simPairs = em.executeComparisons(blocks, profilesD1);

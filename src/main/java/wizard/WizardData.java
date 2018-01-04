@@ -30,8 +30,7 @@ public class WizardData {
     private final ListProperty<JPair<String, Object>> comparisonCleaningParameters = new SimpleListProperty<>();
 
     private final StringProperty entityMatching = new SimpleStringProperty();
-    private final StringProperty representationModel = new SimpleStringProperty();
-    private final StringProperty similarityMetric = new SimpleStringProperty();
+    private final ListProperty<JPair<String, Object>> entityMatchingParameters = new SimpleListProperty<>();
 
     private final StringProperty entityClustering = new SimpleStringProperty();
     private final ListProperty<JPair<String, Object>> entityClusteringParameters = new SimpleListProperty<>();
@@ -68,8 +67,8 @@ public class WizardData {
         clone.setBlockCleaningMethods(FXCollections.observableList(data.getBlockCleaningMethods()));
 
         clone.setEntityMatching(data.getEntityMatching());
-        clone.setRepresentationModel(data.getRepresentationModel());
-        clone.setSimilarityMetric(data.getSimilarityMetric());
+        if (data.getEntityMatchingParameters() != null)
+            clone.setEntityMatchingParameters(FXCollections.observableList(data.getEntityMatchingParameters()));
 
         clone.setEntityClustering(data.getEntityClustering());
         if (data.getEntityClusteringParameters() != null)
@@ -150,28 +149,16 @@ public class WizardData {
         this.blockBuildingParameters.set(blockBuildingParameters);
     }
 
-    public String getSimilarityMetric() {
-        return similarityMetric.get();
+    public ObservableList<JPair<String, Object>> getEntityMatchingParameters() {
+        return entityMatchingParameters.get();
     }
 
-    public StringProperty similarityMetricProperty() {
-        return similarityMetric;
+    public ListProperty<JPair<String, Object>> entityMatchingParametersProperty() {
+        return entityMatchingParameters;
     }
 
-    public void setSimilarityMetric(String similarityMetric) {
-        this.similarityMetric.set(similarityMetric);
-    }
-
-    public String getRepresentationModel() {
-        return representationModel.get();
-    }
-
-    public StringProperty representationModelProperty() {
-        return representationModel;
-    }
-
-    public void setRepresentationModel(String representationModel) {
-        this.representationModel.set(representationModel);
+    public void setEntityMatchingParameters(ObservableList<JPair<String, Object>> entityMatchingParameters) {
+        this.entityMatchingParameters.set(entityMatchingParameters);
     }
 
     public String getEntityProfilesD1Type() {
@@ -290,12 +277,12 @@ public class WizardData {
         blockBuildingParametersProperty().clear();
         comparisonCleaningParametersProperty().clear();
         entityClusteringParametersProperty().clear();
+        entityMatchingParametersProperty().clear();
 
         // Reset radio buttons
         blockBuildingProperty().setValue(JedaiOptions.STANDARD_TOKEN_BUILDING);
         comparisonCleaningProperty().setValue(JedaiOptions.NO_CLEANING);
         entityMatchingProperty().setValue(JedaiOptions.GROUP_LINKAGE);
         entityClusteringProperty().setValue(JedaiOptions.CENTER_CLUSTERING);
-        representationModelProperty().setValue(JedaiOptions.CHARACTER_BIGRAMS);
     }
 }

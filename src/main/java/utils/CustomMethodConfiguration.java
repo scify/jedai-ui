@@ -8,7 +8,12 @@ import DataReader.EntityReader.EntitySerializationReader;
 import DataReader.GroundTruthReader.GtCSVReader;
 import DataReader.GroundTruthReader.GtRDFReader;
 import DataReader.GroundTruthReader.GtSerializationReader;
+import EntityMatching.GroupLinkage;
+import EntityMatching.IEntityMatching;
+import EntityMatching.ProfileMatcher;
 import Utilities.Enumerations.BlockBuildingMethod;
+import Utilities.Enumerations.RepresentationModel;
+import Utilities.Enumerations.SimilarityMetric;
 import Utilities.IDocumentation;
 import com.google.inject.Injector;
 import javafx.beans.property.ListProperty;
@@ -111,6 +116,35 @@ public class CustomMethodConfiguration {
                 return new ExtendedSortedNeighborhoodBlocking(
                         (int) parameters.get(0).getRight()
                 );
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * Create and return an Entity Matching method, with the specified parameters
+     *
+     * @param emMethodName Name of the Entity Matching method
+     * @param parameters   Parameters for the method
+     * @return Entity Matching method configured with the given parameters
+     */
+    public static IEntityMatching configureEntityMatchingMethod(String emMethodName, List<JPair<String, Object>> parameters) {
+        RepresentationModel rep;
+        SimilarityMetric simMetric;
+
+        //todo: The default values could be taken from the JSON configurations of the methods
+        switch (emMethodName) {
+            case JedaiOptions.GROUP_LINKAGE:
+                double simThr = (parameters != null) ? (double) parameters.get(2).getRight() : 0.5;
+                rep = (parameters != null) ? (RepresentationModel) parameters.get(0).getRight() : RepresentationModel.TOKEN_UNIGRAM_GRAPHS;
+                simMetric = (parameters != null) ? (SimilarityMetric) parameters.get(1).getRight() : SimilarityMetric.GRAPH_VALUE_SIMILARITY;
+
+                return new GroupLinkage(simThr, rep, simMetric);
+            case JedaiOptions.PROFILE_MATCHER:
+                rep = (parameters != null) ? (RepresentationModel) parameters.get(0).getRight() : RepresentationModel.TOKEN_UNIGRAM_GRAPHS;
+                simMetric = (parameters != null) ? (SimilarityMetric) parameters.get(1).getRight() : SimilarityMetric.GRAPH_VALUE_SIMILARITY;
+
+                return new ProfileMatcher(rep, simMetric);
             default:
                 return null;
         }
