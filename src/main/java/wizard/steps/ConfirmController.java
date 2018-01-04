@@ -175,7 +175,8 @@ public class ConfirmController {
         // Add Entity Matching method
         addRow(rows++, boldLabel("Entity Matching Method"), boundLabel(model.entityMatchingProperty()));
 
-        //todo: Show entity matching parameters
+        // Add Entity Matching parameters
+        addRow(rows++, boldLabel("Entity Matching Parameters"), parametersNode(model.entityMatchingParametersProperty()));
 
         // Add Entity Clustering algorithm
         addRow(rows++, boldLabel("Entity Clustering Algorithm"), boundLabel(model.entityClusteringProperty()));
