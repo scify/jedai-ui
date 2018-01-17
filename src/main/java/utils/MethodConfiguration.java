@@ -19,13 +19,11 @@ import com.google.inject.Injector;
 import javafx.beans.property.ListProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.jena.atlas.json.JsonArray;
-import wizard.ConfigurationTypeSelectorController;
 import wizard.DynamicConfigurationController;
 
 import java.io.IOException;
@@ -85,7 +83,7 @@ public class MethodConfiguration {
      *
      * @param method     Method to initialize
      * @param parameters Parameter values
-     * @return
+     * @return Block Building method configured with the given parameters
      */
     public static IBlockBuilding configureBlockBuildingMethod(BlockBuildingMethod method, List<JPair<String, Object>> parameters) {
         switch (method) {
@@ -187,32 +185,5 @@ public class MethodConfiguration {
 
         // If nothing was found, return null...
         return null;
-    }
-
-    /**
-     * Create a node for selecting a configuration type, and bind its selection to some property of the model.
-     *
-     * @return The node
-     */
-    public static Node getConfigurationTypeSelector() {
-        FXMLLoader loader = new FXMLLoader(
-                MethodConfiguration.class.getClassLoader().getResource("wizard-fxml/ConfigurationTypeSelector.fxml")
-        );
-
-        Node pane;
-        try {
-            pane = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-
-        ConfigurationTypeSelectorController controller =
-                loader.<ConfigurationTypeSelectorController>getController();
-
-        // todo: Bind toggle group to some property of the model
-//        controller.setProperty(someProperty);
-
-        return pane;
     }
 }

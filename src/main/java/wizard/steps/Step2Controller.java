@@ -13,10 +13,7 @@ import org.slf4j.LoggerFactory;
 import utils.JedaiOptions;
 import utils.MethodConfiguration;
 import utils.RadioButtonHelper;
-import wizard.MethodMapping;
-import wizard.Submit;
-import wizard.Validate;
-import wizard.WizardData;
+import wizard.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -51,7 +48,9 @@ public class Step2Controller {
         RadioButtonHelper.createButtonGroup(radioBtnsContainer, options, model.blockBuildingProperty());
 
         // Add default/automatic/manual configuration buttons
-        confTypeContainer.getChildren().add(MethodConfiguration.getConfigurationTypeSelector());
+        confTypeContainer.getChildren().add(
+                new ConfigurationTypeSelector(model.blockBuildingConfigTypeProperty())
+        );
     }
 
     @Validate

@@ -1,8 +1,10 @@
 package utils;
 
 public class JedaiOptions {
-    // Separator for radio button lists
-    public static final String _RADIO_BUTTON_SEPARATOR = "RadioBtnSeparator";
+    // Method configuration types
+    public static final String DEFAULT_CONFIG = "Default";
+    public static final String AUTOMATIC_CONFIG = "Automatic";
+    public static final String MANUAL_CONFIG = "Manual";
 
     // Entity resolution types
     public static final String DIRTY_ER = "Dirty Entity Resolution";
