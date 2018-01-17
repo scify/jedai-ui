@@ -11,9 +11,10 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.MethodConfiguration;
 import utils.JedaiOptions;
+import utils.MethodConfiguration;
 import utils.RadioButtonHelper;
+import wizard.ConfigurationTypeSelector;
 import wizard.Submit;
 import wizard.Validate;
 import wizard.WizardData;
@@ -24,6 +25,7 @@ import java.util.List;
 public class Step5Controller {
     public VBox matchingMethodContainer;
     public Button paramsBtn;
+    public VBox confTypeContainer;
     private Logger log = LoggerFactory.getLogger(Step3Controller.class);
 
     @Inject
@@ -42,6 +44,11 @@ public class Step5Controller {
 
         // Create the radio buttons
         RadioButtonHelper.createButtonGroup(matchingMethodContainer, entityMatchingOptions, model.entityMatchingProperty());
+
+        // Add configuration type selection control
+        confTypeContainer.getChildren().add(
+                new ConfigurationTypeSelector(model.entityMatchingConfigTypeProperty())
+        );
     }
 
     @Validate

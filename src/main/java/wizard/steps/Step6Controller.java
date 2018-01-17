@@ -10,13 +10,10 @@ import javafx.scene.layout.VBox;
 import jfxtras.scene.control.ToggleGroupValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.MethodConfiguration;
 import utils.JedaiOptions;
+import utils.MethodConfiguration;
 import utils.RadioButtonHelper;
-import wizard.MethodMapping;
-import wizard.Submit;
-import wizard.Validate;
-import wizard.WizardData;
+import wizard.*;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,6 +22,7 @@ import java.util.List;
 public class Step6Controller {
     public VBox dirtyErContainer;
     public VBox cleanCleanErContainer;
+    public VBox confTypeContainer;
 
     private List<String> dirtyErOptions;
     private List<String> cleanCleanErOptions;
@@ -63,6 +61,11 @@ public class Step6Controller {
 
         // Add listener to change the available methods depending on selected ER type
         model.erTypeProperty().addListener((observable, oldValue, newValue) -> setErType(newValue));
+
+        // Add configuration type selection control
+        confTypeContainer.getChildren().add(
+                new ConfigurationTypeSelector(model.entityClusteringConfigTypeProperty())
+        );
     }
 
     /**

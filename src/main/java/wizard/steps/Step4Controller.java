@@ -9,13 +9,10 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.MethodConfiguration;
 import utils.JedaiOptions;
+import utils.MethodConfiguration;
 import utils.RadioButtonHelper;
-import wizard.MethodMapping;
-import wizard.Submit;
-import wizard.Validate;
-import wizard.WizardData;
+import wizard.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,6 +20,7 @@ import java.util.List;
 public class Step4Controller {
     public VBox radioBtnsContainer;
     public Button advancedConfigBtn;
+    public VBox confTypeContainer;
     private Logger log = LoggerFactory.getLogger(Step4Controller.class);
 
     @Inject
@@ -48,6 +46,11 @@ public class Step4Controller {
 
         // Disable the advanced configuration button if "No cleaning" method is selected
         advancedConfigBtn.disableProperty().bind(model.comparisonCleaningProperty().isEqualTo(JedaiOptions.NO_CLEANING));
+
+        // Add configuration type selection control
+        confTypeContainer.getChildren().add(
+                new ConfigurationTypeSelector(model.comparisonCleaningConfigTypeProperty())
+        );
     }
 
     @Validate
