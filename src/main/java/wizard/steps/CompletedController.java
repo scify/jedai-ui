@@ -7,15 +7,11 @@ import DataModel.EntityProfile;
 import DataModel.EquivalenceCluster;
 import DataModel.SimilarityPairs;
 import EntityClustering.IEntityClustering;
-import EntityMatching.GroupLinkage;
 import EntityMatching.IEntityMatching;
-import EntityMatching.ProfileMatcher;
 import Utilities.BlocksPerformance;
 import Utilities.ClustersPerformance;
 import Utilities.DataStructures.AbstractDuplicatePropagation;
 import Utilities.Enumerations.BlockBuildingMethod;
-import Utilities.Enumerations.RepresentationModel;
-import Utilities.Enumerations.SimilarityMetric;
 import Utilities.PrintToFile;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -38,9 +34,9 @@ import javafx.util.StringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.BlockCleaningCustomComparator;
-import utils.CustomMethodConfiguration;
 import utils.DataReadingHelper;
 import utils.JedaiOptions;
+import utils.MethodConfiguration;
 import utils.console_area.ConsoleArea;
 import utils.console_area.MultiOutputStream;
 import wizard.MethodMapping;
@@ -270,7 +266,7 @@ public class CompletedController {
                     blockBuildingMethod = BlockBuildingMethod.getDefaultConfiguration(blockingWorkflow);
                 } else {
                     // Create the method with the saved parameters
-                    blockBuildingMethod = CustomMethodConfiguration.configureBlockBuildingMethod(blockingWorkflow, blBuParams);
+                    blockBuildingMethod = MethodConfiguration.configureBlockBuildingMethod(blockingWorkflow, blBuParams);
                 }
 
                 List<AbstractBlock> blocks;
@@ -335,7 +331,7 @@ public class CompletedController {
                 updateProgress(0.6);
 
                 // Step 5: Entity Matching
-                IEntityMatching em = CustomMethodConfiguration.configureEntityMatchingMethod(model.getEntityMatching(), model.getEntityMatchingParameters());
+                IEntityMatching em = MethodConfiguration.configureEntityMatchingMethod(model.getEntityMatching(), model.getEntityMatchingParameters());
                 SimilarityPairs simPairs;
 
                 if (em == null)

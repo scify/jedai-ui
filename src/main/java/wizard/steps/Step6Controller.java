@@ -10,7 +10,7 @@ import javafx.scene.layout.VBox;
 import jfxtras.scene.control.ToggleGroupValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.CustomMethodConfiguration;
+import utils.MethodConfiguration;
 import utils.JedaiOptions;
 import utils.RadioButtonHelper;
 import wizard.MethodMapping;
@@ -109,7 +109,7 @@ public class Step6Controller {
         String methodName = model.getEntityClustering();
         IDocumentation clusteringMethod = MethodMapping.getEntityClusteringMethod(methodName);
 
-        CustomMethodConfiguration.displayModal(getClass(), injector, clusteringMethod, model.entityClusteringParametersProperty());
+        MethodConfiguration.displayModal(getClass(), injector, clusteringMethod, model.entityClusteringParametersProperty());
     }
 }
 

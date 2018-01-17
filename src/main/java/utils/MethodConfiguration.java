@@ -19,17 +19,19 @@ import com.google.inject.Injector;
 import javafx.beans.property.ListProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.jena.atlas.json.JsonArray;
+import wizard.ConfigurationTypeSelectorController;
 import wizard.DynamicConfigurationController;
 
 import java.io.IOException;
 import java.util.List;
 
-public class CustomMethodConfiguration {
+public class MethodConfiguration {
     /**
      * Display the window with the automatically generated form that allows the user to set a method's parameters.
      *
@@ -185,5 +187,32 @@ public class CustomMethodConfiguration {
 
         // If nothing was found, return null...
         return null;
+    }
+
+    /**
+     * Create a node for selecting a configuration type, and bind its selection to some property of the model.
+     *
+     * @return The node
+     */
+    public static Node getConfigurationTypeSelector() {
+        FXMLLoader loader = new FXMLLoader(
+                MethodConfiguration.class.getClassLoader().getResource("wizard-fxml/ConfigurationTypeSelector.fxml")
+        );
+
+        Node pane;
+        try {
+            pane = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        ConfigurationTypeSelectorController controller =
+                loader.<ConfigurationTypeSelectorController>getController();
+
+        // todo: Bind toggle group to some property of the model
+//        controller.setProperty(someProperty);
+
+        return pane;
     }
 }

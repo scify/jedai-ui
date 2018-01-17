@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.*?>
+<AnchorPane prefHeight="73.0" prefWidth="175.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="wizard.ConfigurationTypeSelectorController">
+    <children>
+        <VBox alignment="CENTER_LEFT" layoutX="1.0" prefHeight="154.0" prefWidth="171.0" spacing="5.0"
+              AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+              AnchorPane.topAnchor="0.0">
+            <children>
+                <RadioButton mnemonicParsing="false" selected="true" text="Default Configuration">
+                    <toggleGroup>
+                        <ToggleGroup fx:id="configType"/>
+                    </toggleGroup>
+                </RadioButton>
+                <RadioButton mnemonicParsing="false" text="Manual Configuration" toggleGroup="$configType"/>
+                <RadioButton mnemonicParsing="false" text="Automatic Configuration" toggleGroup="$configType"/>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

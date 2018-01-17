@@ -83,6 +83,12 @@ public class Step1Controller {
         // Set initial values to text fields (for testing...)
 //        model.setEntityProfilesD1Type(JedaiOptions.SERIALIZED);
 //        model.setGroundTruthType(JedaiOptions.SERIALIZED);
+//        model.setEntityProfilesD1Parameters(FXCollections.observableArrayList(
+//                new JPair<>("File Path", "C:\\Users\\leots\\Documents\\JedAIToolkit\\datasets\\dirtyERfiles\\restaurantProfiles")
+//        ));
+//        model.setGroundTruthParameters(FXCollections.observableArrayList(
+//                new JPair<>("File Path", "C:\\Users\\leots\\Documents\\JedAIToolkit\\datasets\\dirtyERfiles\\restaurantIdDuplicates")
+//        ));
     }
 
     @Validate
@@ -197,10 +203,10 @@ public class Step1Controller {
                     break;
             }
 
-            reader = CustomMethodConfiguration.getDataReader(groundTruth, readerType);
+            reader = MethodConfiguration.getDataReader(groundTruth, readerType);
 
             // Now that we have all required parameters, show the configuration window
-            CustomMethodConfiguration.displayModal(getClass(), injector, reader, modelProperty);
+            MethodConfiguration.displayModal(getClass(), injector, reader, modelProperty);
         }
     }
 }

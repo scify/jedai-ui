@@ -10,8 +10,8 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.CustomMethodConfiguration;
 import utils.JedaiOptions;
+import utils.MethodConfiguration;
 import utils.RadioButtonHelper;
 import wizard.MethodMapping;
 import wizard.Submit;
@@ -25,6 +25,7 @@ public class Step2Controller {
     public VBox containerVBox;
     public VBox radioBtnsContainer;
     public Button paramsBtn;
+    public VBox confTypeContainer;
     private Logger log = LoggerFactory.getLogger(Step2Controller.class);
 
     @Inject
@@ -48,6 +49,9 @@ public class Step2Controller {
 
         // Create radio buttons using helper method
         RadioButtonHelper.createButtonGroup(radioBtnsContainer, options, model.blockBuildingProperty());
+
+        // Add default/automatic/manual configuration buttons
+        confTypeContainer.getChildren().add(MethodConfiguration.getConfigurationTypeSelector());
     }
 
     @Validate
@@ -75,6 +79,6 @@ public class Step2Controller {
         );
 
         // Display the configuration modal
-        CustomMethodConfiguration.displayModal(getClass(), injector, method, model.blockBuildingParametersProperty());
+        MethodConfiguration.displayModal(getClass(), injector, method, model.blockBuildingParametersProperty());
     }
 }
