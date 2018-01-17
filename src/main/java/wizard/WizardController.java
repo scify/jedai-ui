@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import javafx.beans.binding.When;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
@@ -17,14 +18,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Callback;
+import utils.JedaiOptions;
 import wizard.steps.CompletedController;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class WizardController {
     @SuppressWarnings("FieldCanBeLocal")
@@ -36,6 +36,7 @@ public class WizardController {
 
     private List<String> stepTexts;
     private List<String> stepDescriptions;
+    private Map<Integer, StringProperty> configurationTypes;
 
     @FXML
     VBox contentPanel;
@@ -47,12 +48,10 @@ public class WizardController {
     Button btnNext, btnBack, btnCancel;
 
     @Inject
-    private
-    Injector injector;
+    private Injector injector;
 
     @Inject
-    private
-    WizardData model;
+    private WizardData model;
 
     private final List<Parent> steps = new ArrayList<>();
 
@@ -84,6 +83,14 @@ public class WizardController {
                 "Confirm the selected values and press the \"Next\" button to go to the results page.",
                 "Press \"Run algorithm\" to run the algorithm. You can export the results to a CSV file with the \"Export CSV\" button."
         );
+
+        // Initialize hashmap with configuration types
+        this.configurationTypes = new HashMap<>();
+        this.configurationTypes.put(2, model.blockBuildingConfigTypeProperty());
+        this.configurationTypes.put(4, model.comparisonCleaningConfigTypeProperty());
+        this.configurationTypes.put(5, model.entityMatchingConfigTypeProperty());
+        this.configurationTypes.put(6, model.entityClusteringConfigTypeProperty());
+
         buildSteps();
         initButtons();
         buildIndicatorCircles();
@@ -95,9 +102,7 @@ public class WizardController {
         btnNext.disableProperty().bind(currentStep.greaterThanOrEqualTo(steps.size() - 1));
 
         btnCancel.textProperty().bind(
-                new When(
-                        currentStep.lessThan(steps.size() - 1)
-                )
+                new When(currentStep.lessThan(steps.size() - 1))
                         .then("Cancel")
                         .otherwise("Start Over")
         );
@@ -183,7 +188,6 @@ public class WizardController {
                 if (retval != null && !((Boolean) retval)) {
                     return;
                 }
-
             } catch (IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }
@@ -200,6 +204,14 @@ public class WizardController {
         }
 
         if (currentStep.get() < (steps.size() - 1)) {
+            // Check if configuration is manual, and show manual configuration window before next step
+            if (this.configurationTypes.containsKey(currentStep.get())
+                    && this.configurationTypes.get(currentStep.get()).getValue().equals(JedaiOptions.MANUAL_CONFIG)) {
+                //todo: show manual configuration window
+//                System.out.println("Should manually configure step " + currentStep.get());
+            }
+
+            // Go to next step
             contentPanel.getChildren().remove(steps.get(currentStep.get()));
             currentStep.set(currentStep.get() + 1);
             contentPanel.getChildren().add(steps.get(currentStep.get()));
