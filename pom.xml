@@ -23,39 +23,20 @@
     </build>
 
     <dependencies>
+        <!--JedAI-core library-->
+        <dependency>
+            <groupId>gr.scify</groupId>
+            <artifactId>jedai-core</artifactId>
+            <version>1.0.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/jedaiLibrary.jar</systemPath>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/com.google.inject/guice -->
         <dependency>
             <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
             <version>4.0</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-simple -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.7.22</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.22</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.jgrapht/jgrapht-core -->
-        <dependency>
-            <groupId>org.jgrapht</groupId>
-            <artifactId>jgrapht-core</artifactId>
-            <version>0.9.2</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.apache.jena/apache-jena-libs -->
-        <dependency>
-            <groupId>org.apache.jena</groupId>
-            <artifactId>apache-jena-libs</artifactId>
-            <version>3.1.1</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/eu.hansolo/Medusa -->
@@ -71,40 +52,5 @@
             <artifactId>jfxtras-labs</artifactId>
             <version>8.0-r5</version>
         </dependency>
-
-        <!-- http://backend1.scify.org:60004/artifactory/pub-release-local -->
-        <dependency>
-            <groupId>gr.demokritos</groupId>
-            <artifactId>JInsect</artifactId>
-            <version>1.1</version>
-        </dependency>
-
-        <!-- http://backend1.scify.org:60004/artifactory/pub-release-local -->
-        <dependency>
-            <groupId>salvo.jesus</groupId>
-            <artifactId>OpenJGraph</artifactId>
-            <version>1.1</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/net.sf.trove4j/trove4j -->
-        <dependency>
-            <groupId>net.sf.trove4j</groupId>
-            <artifactId>trove4j</artifactId>
-            <version>3.0.3</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.esotericsoftware.minlog</groupId>
-            <artifactId>minlog</artifactId>
-            <version>1.2-slf4j-jdanbrown-0</version>
-        </dependency>
     </dependencies>
-
-    <repositories>
-        <repository>
-            <id>backend1</id>
-            <name>backend1-releases</name>
-            <url>http://backend1.scify.org:60004/artifactory/pub-release-local</url>
-        </repository>
-    </repositories>
 </project>
