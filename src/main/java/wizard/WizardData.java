@@ -54,6 +54,7 @@ public class WizardData {
     public static WizardData cloneData(WizardData data) {
         WizardData clone = new WizardData();
 
+        // Step 1: Data Reading
         clone.setErType(data.getErType());
 
         clone.setEntityProfilesD1Type(data.getEntityProfilesD1Type());
@@ -66,21 +67,30 @@ public class WizardData {
         clone.setGroundTruthType(data.getGroundTruthType());
         clone.setGroundTruthParameters(FXCollections.observableList(data.getGroundTruthParameters()));
 
+        // Step 2: Block Building
         clone.setBlockBuilding(data.getBlockBuilding());
+        clone.setBlockBuildingConfigType(data.getBlockBuildingConfigType());
         if (data.getBlockBuildingParameters() != null)
             clone.setBlockBuildingParameters(FXCollections.observableList(data.getBlockBuildingParameters()));
 
+        // Step 3: Block Cleaning
+        clone.setBlockCleaningMethods(FXCollections.observableList(data.getBlockCleaningMethods()));
+
+        // Step 4: Comparison Cleaning
         clone.setComparisonCleaning(data.getComparisonCleaning());
+        clone.setComparisonCleaningConfigType(data.getComparisonCleaningConfigType());
         if (data.getComparisonCleaningParameters() != null)
             clone.setComparisonCleaningParameters(FXCollections.observableList(data.getComparisonCleaningParameters()));
 
-        clone.setBlockCleaningMethods(FXCollections.observableList(data.getBlockCleaningMethods()));
-
+        // Step 5: Entity Matching
         clone.setEntityMatching(data.getEntityMatching());
+        clone.setEntityMatchingConfigType(data.getEntityMatchingConfigType());
         if (data.getEntityMatchingParameters() != null)
             clone.setEntityMatchingParameters(FXCollections.observableList(data.getEntityMatchingParameters()));
 
+        // Step 6: Entity Clustering
         clone.setEntityClustering(data.getEntityClustering());
+        clone.setEntityClusteringConfigType(data.getEntityClusteringConfigType());
         if (data.getEntityClusteringParameters() != null)
             clone.setEntityClusteringParameters(FXCollections.observableList(data.getEntityClusteringParameters()));
 
@@ -105,6 +115,12 @@ public class WizardData {
         comparisonCleaningProperty().setValue(JedaiOptions.NO_CLEANING);
         entityMatchingProperty().setValue(JedaiOptions.GROUP_LINKAGE);
         entityClusteringProperty().setValue(JedaiOptions.CENTER_CLUSTERING);
+
+        // Reset configuration type radio buttons
+        blockBuildingConfigTypeProperty().setValue(JedaiOptions.DEFAULT_CONFIG);
+        comparisonCleaningConfigTypeProperty().setValue(JedaiOptions.DEFAULT_CONFIG);
+        entityMatchingConfigTypeProperty().setValue(JedaiOptions.DEFAULT_CONFIG);
+        entityClusteringConfigTypeProperty().setValue(JedaiOptions.DEFAULT_CONFIG);
     }
 
     ///////////////////////////////////////////////////
