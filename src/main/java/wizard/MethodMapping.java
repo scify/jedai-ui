@@ -7,8 +7,6 @@ import BlockProcessing.ComparisonCleaning.*;
 import BlockProcessing.IBlockProcessing;
 import EntityClustering.*;
 import Utilities.Enumerations.BlockBuildingMethod;
-import Utilities.Enumerations.RepresentationModel;
-import Utilities.Enumerations.SimilarityMetric;
 import Utilities.Enumerations.WeightingScheme;
 import utils.JedaiOptions;
 
@@ -18,14 +16,11 @@ import java.util.Map;
 
 public class MethodMapping {
     public static final Map<String, BlockBuildingMethod> blockBuildingMethods = createMap();
-    private static final Map<SimilarityMetric, String> similarityMetricToString = createSimilarityMetricsMap();
-    private static final Map<String, RepresentationModel> stringToRepresentationModel = createRepresentationModelsMap();
-    private static final Map<String, SimilarityMetric> stringToSimilarityMetric = createStringToSimMetricMap();
 
     /**
      * Return map of block building methods' String names to their enumeration values
      *
-     * @return
+     * @return Mapping of block building method names to enum values
      */
     private static Map<String, BlockBuildingMethod> createMap() {
         Map<String, BlockBuildingMethod> result = new HashMap<>();
@@ -37,88 +32,6 @@ public class MethodMapping {
         result.put(JedaiOptions.SUFFIX_ARRAYS_BLOCKING, BlockBuildingMethod.SUFFIX_ARRAYS);
         result.put(JedaiOptions.SUFFIX_ARRAYS_BLOCKING_EXTENDED, BlockBuildingMethod.EXTENDED_SUFFIX_ARRAYS);
         return Collections.unmodifiableMap(result);
-    }
-
-    /**
-     * Return map of Similarity Metrics (from the SimilarityMetric enumeration) to their String names
-     *
-     * @return
-     */
-    private static Map<SimilarityMetric, String> createSimilarityMetricsMap() {
-        Map<SimilarityMetric, String> result = new HashMap<>();
-        result.put(SimilarityMetric.ARCS_SIMILARITY, JedaiOptions.ARCS_SIMILARITY);
-        result.put(SimilarityMetric.COSINE_SIMILARITY, JedaiOptions.COSINE_SIMILARITY);
-        result.put(SimilarityMetric.ENHANCED_JACCARD_SIMILARITY, JedaiOptions.ENHANCED_JACCARD_SIMILARITY);
-        result.put(SimilarityMetric.GENERALIZED_JACCARD_SIMILARITY, JedaiOptions.GENERALIZED_JACCARD_SIMILARITY);
-        result.put(SimilarityMetric.GRAPH_CONTAINMENT_SIMILARITY, JedaiOptions.GRAPH_CONTAINMENT_SIMILARITY);
-        result.put(SimilarityMetric.GRAPH_NORMALIZED_VALUE_SIMILARITY, JedaiOptions.GRAPH_NORMALIZED_VALUE_SIMILARITY);
-        result.put(SimilarityMetric.GRAPH_VALUE_SIMILARITY, JedaiOptions.GRAPH_VALUE_SIMILARITY);
-        result.put(SimilarityMetric.GRAPH_OVERALL_SIMILARITY, JedaiOptions.GRAPH_OVERALL_SIMILARITY);
-        result.put(SimilarityMetric.JACCARD_SIMILARITY, JedaiOptions.JACCARD_SIMILARITY);
-        result.put(SimilarityMetric.SIGMA_SIMILARITY, JedaiOptions.SIGMA_SIMILARITY);
-        result.put(SimilarityMetric.WEIGHTED_JACCARD_SIMILARITY, JedaiOptions.WEIGHTED_JACCARD_SIMILARITY);
-
-        return Collections.unmodifiableMap(result);
-    }
-
-    /**
-     * Create reverse map of "similarityMetricToString"
-     *
-     * @return Map of Strings to their SimilarityMetric values
-     */
-    private static Map<String, SimilarityMetric> createStringToSimMetricMap() {
-        Map<String, SimilarityMetric> result = new HashMap<>();
-
-        for (SimilarityMetric metric : similarityMetricToString.keySet()) {
-            result.put(similarityMetricToString.get(metric), metric);
-        }
-
-        return Collections.unmodifiableMap(result);
-    }
-
-    /**
-     * Return map of representation models' String names to their enumeration values
-     *
-     * @return
-     */
-    private static Map<String, RepresentationModel> createRepresentationModelsMap() {
-        Map<String, RepresentationModel> result = new HashMap<>();
-        result.put(JedaiOptions.CHARACTER_BIGRAMS, RepresentationModel.CHARACTER_BIGRAMS);
-        result.put(JedaiOptions.CHARACTER_BIGRAM_GRAPHS, RepresentationModel.CHARACTER_BIGRAM_GRAPHS);
-        result.put(JedaiOptions.CHARACTER_TRIGRAMS, RepresentationModel.CHARACTER_TRIGRAMS);
-        result.put(JedaiOptions.CHARACTER_TRIGRAM_GRAPHS, RepresentationModel.CHARACTER_TRIGRAM_GRAPHS);
-        result.put(JedaiOptions.CHARACTER_FOURGRAMS, RepresentationModel.CHARACTER_FOURGRAMS);
-        result.put(JedaiOptions.CHARACTER_FOURGRAM_GRAPHS, RepresentationModel.CHARACTER_FOURGRAM_GRAPHS);
-        result.put(JedaiOptions.TOKEN_UNIGRAMS, RepresentationModel.TOKEN_UNIGRAMS);
-        result.put(JedaiOptions.TOKEN_UNIGRAMS_TF_IDF, RepresentationModel.TOKEN_UNIGRAMS_TF_IDF);
-        result.put(JedaiOptions.TOKEN_UNIGRAM_GRAPHS, RepresentationModel.TOKEN_UNIGRAM_GRAPHS);
-        result.put(JedaiOptions.TOKEN_BIGRAMS, RepresentationModel.TOKEN_BIGRAMS);
-        result.put(JedaiOptions.TOKEN_BIGRAMS_TF_IDF, RepresentationModel.TOKEN_BIGRAMS_TF_IDF);
-        result.put(JedaiOptions.TOKEN_BIGRAM_GRAPHS, RepresentationModel.TOKEN_BIGRAM_GRAPHS);
-        result.put(JedaiOptions.TOKEN_TRIGRAMS, RepresentationModel.TOKEN_TRIGRAMS);
-        result.put(JedaiOptions.TOKEN_TRIGRAMS_TF_IDF, RepresentationModel.TOKEN_TRIGRAMS_TF_IDF);
-        result.put(JedaiOptions.TOKEN_TRIGRAM_GRAPHS, RepresentationModel.TOKEN_TRIGRAM_GRAPHS);
-        return Collections.unmodifiableMap(result);
-    }
-
-    /**
-     * Get a representation model by its name
-     *
-     * @param modelName Name of wanted representation model
-     * @return Representation Model
-     */
-    public static RepresentationModel getRepresentationModel(String modelName) {
-        return stringToRepresentationModel.get(modelName);
-    }
-
-    /**
-     * Get a similarity metric by its name
-     *
-     * @param metricName Name of wanted similarity metric
-     * @return Similarity Metric
-     */
-    public static SimilarityMetric getSimilarityMetric(String metricName) {
-        return stringToSimilarityMetric.get(metricName);
     }
 
     public static IEntityClustering getEntityClusteringMethod(String methodStr) {
@@ -158,6 +71,7 @@ public class MethodMapping {
 
         // Get appropriate processing method
         switch (method) {
+            // Block Building methods
             case JedaiOptions.BLOCK_FILTERING:
                 processingMethod = new BlockFiltering();
                 break;
@@ -167,6 +81,7 @@ public class MethodMapping {
             case JedaiOptions.COMPARISON_BASED_BLOCK_PURGING:
                 processingMethod = new ComparisonsBasedBlockPurging();
                 break;
+            // Below: Comparison Cleaning methods
             case JedaiOptions.COMPARISON_PROPAGATION:
                 processingMethod = new ComparisonPropagation();
                 break;

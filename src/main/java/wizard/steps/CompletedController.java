@@ -251,7 +251,7 @@ public class CompletedController {
                 updateProgress(0.2);
 
                 // Step 2: Block Building
-                IBlockBuilding blockBuildingMethod = null;
+                IBlockBuilding blockBuildingMethod;
 
                 BlockBuildingMethod blockingWorkflow = MethodMapping.blockBuildingMethods.get(model.getBlockBuilding());
                 overheadStart = System.currentTimeMillis();
@@ -310,12 +310,22 @@ public class CompletedController {
                 }
 
                 // Step 4: Comparison Cleaning
-                String compCleaningMethod = model.getComparisonCleaning();
-                //todo: configure method with manual parameters
-                if (compCleaningMethod != null && !compCleaningMethod.equals(JedaiOptions.NO_CLEANING)) {
+                String coClMethod = model.getComparisonCleaning();
+                if (coClMethod != null && !coClMethod.equals(JedaiOptions.NO_CLEANING)) {
                     overheadStart = System.currentTimeMillis();
 
-                    IBlockProcessing comparisonCleaningMethod = MethodMapping.getMethodByName(compCleaningMethod);
+                    // Create comparison cleaning method
+                    IBlockProcessing comparisonCleaningMethod;
+
+                    if (!model.getComparisonCleaningConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
+                        // Auto or default configuration selected: use default configuration
+                        comparisonCleaningMethod = MethodConfiguration.configureComparisonCleaningMethod(coClMethod, null);
+                    } else {
+                        // Manual configuration selected, create method with the saved parameters
+                        ObservableList<JPair<String, Object>> coClParams = model.getComparisonCleaningParameters();
+                        comparisonCleaningMethod = MethodConfiguration.configureComparisonCleaningMethod(coClMethod, coClParams);
+                    }
+
                     blocks = comparisonCleaningMethod.refineBlocks(blocks);
 
                     // Print blocks performance

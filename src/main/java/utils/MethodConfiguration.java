@@ -1,6 +1,8 @@
 package utils;
 
 import BlockBuilding.*;
+import BlockProcessing.ComparisonCleaning.*;
+import BlockProcessing.IBlockProcessing;
 import DataReader.EntityReader.EntityCSVReader;
 import DataReader.EntityReader.EntityDBReader;
 import DataReader.EntityReader.EntityRDFReader;
@@ -14,6 +16,7 @@ import EntityMatching.ProfileMatcher;
 import Utilities.Enumerations.BlockBuildingMethod;
 import Utilities.Enumerations.RepresentationModel;
 import Utilities.Enumerations.SimilarityMetric;
+import Utilities.Enumerations.WeightingScheme;
 import Utilities.IDocumentation;
 import com.google.inject.Injector;
 import javafx.beans.property.ListProperty;
@@ -120,6 +123,46 @@ public class MethodConfiguration {
             default:
                 return null;
         }
+    }
+
+    /**
+     * Given a Comparison Cleaning method name and a list of parameters, initialize and return that method with these
+     * parameters. Assumes the parameters are of the correct type (they are cast) and correct number.
+     *
+     * @param methodName Name of comparison cleaning method
+     * @param parameters Parameters for method
+     * @return Configured comparison cleaning method
+     */
+    public static IBlockProcessing configureComparisonCleaningMethod(String methodName, List<JPair<String, Object>> parameters) {
+        IBlockProcessing processingMethod = null;
+
+        // Get appropriate processing method
+        //todo: actually configure the methods
+        switch (methodName) {
+            case JedaiOptions.COMPARISON_PROPAGATION:
+                processingMethod = new ComparisonPropagation();
+                break;
+            case JedaiOptions.CARDINALITY_EDGE_PRUNING:
+                processingMethod = new CardinalityEdgePruning(WeightingScheme.ECBS);
+                break;
+            case JedaiOptions.CARDINALITY_NODE_PRUNING:
+                processingMethod = new CardinalityNodePruning(WeightingScheme.ECBS);
+                break;
+            case JedaiOptions.WEIGHED_EDGE_PRUNING:
+                processingMethod = new WeightedEdgePruning(WeightingScheme.ECBS);
+                break;
+            case JedaiOptions.WEIGHED_NODE_PRUNING:
+                processingMethod = new WeightedNodePruning(WeightingScheme.ECBS);
+                break;
+            case JedaiOptions.RECIPROCAL_CARDINALITY_NODE_PRUNING:
+                processingMethod = new ReciprocalCardinalityNodePruning(WeightingScheme.ECBS);
+                break;
+            case JedaiOptions.RECIPROCAL_WEIGHED_NODE_PRUNING:
+                processingMethod = new ReciprocalWeightedNodePruning(WeightingScheme.ECBS);
+                break;
+        }
+
+        return processingMethod;
     }
 
     /**
