@@ -33,10 +33,7 @@ import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.BlockCleaningCustomComparator;
-import utils.DataReadingHelper;
-import utils.JedaiOptions;
-import utils.MethodConfiguration;
+import utils.*;
 import utils.console_area.ConsoleArea;
 import utils.console_area.MultiOutputStream;
 import wizard.MethodMapping;
@@ -255,18 +252,17 @@ public class CompletedController {
 
                 // Step 2: Block Building
                 IBlockBuilding blockBuildingMethod = null;
-                ObservableList blBuParams = model.getBlockBuildingParameters();
 
                 BlockBuildingMethod blockingWorkflow = MethodMapping.blockBuildingMethods.get(model.getBlockBuilding());
                 overheadStart = System.currentTimeMillis();
 
                 // Check if the user set any custom parameters for block building
-                //todo: check with model property (e.g. blockBuildingParametersProperty), not parameters list (in all steps)
-                if (blBuParams == null || blBuParams.isEmpty()) {
-                    // No parameters found, use default configuration
+                if (!model.getBlockBuildingConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
+                    // Auto or default configuration selected: use default configuration
                     blockBuildingMethod = BlockBuildingMethod.getDefaultConfiguration(blockingWorkflow);
                 } else {
-                    // Create the method with the saved parameters
+                    // Manual configuration selected, create method with the saved parameters
+                    ObservableList<JPair<String, Object>> blBuParams = model.getBlockBuildingParameters();
                     blockBuildingMethod = MethodConfiguration.configureBlockBuildingMethod(blockingWorkflow, blBuParams);
                 }
 
@@ -315,6 +311,7 @@ public class CompletedController {
 
                 // Step 4: Comparison Cleaning
                 String compCleaningMethod = model.getComparisonCleaning();
+                //todo: configure method with manual parameters
                 if (compCleaningMethod != null && !compCleaningMethod.equals(JedaiOptions.NO_CLEANING)) {
                     overheadStart = System.currentTimeMillis();
 
@@ -332,7 +329,17 @@ public class CompletedController {
                 updateProgress(0.6);
 
                 // Step 5: Entity Matching
-                IEntityMatching em = MethodConfiguration.configureEntityMatchingMethod(model.getEntityMatching(), model.getEntityMatchingParameters());
+                String entityMatchingMethod = model.getEntityMatching();
+
+                IEntityMatching em;
+                if (!model.getEntityMatchingConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
+                    // Default or automatic config, use default values
+                    em = MethodConfiguration.configureEntityMatchingMethod(entityMatchingMethod, null);
+                } else {
+                    // Manual configuration, use given parameters
+                    ObservableList<JPair<String, Object>> emParams = model.getEntityMatchingParameters();
+                    em = MethodConfiguration.configureEntityMatchingMethod(entityMatchingMethod, emParams);
+                }
                 SimilarityPairs simPairs;
 
                 if (em == null)
@@ -348,6 +355,7 @@ public class CompletedController {
                 updateProgress(0.8);
 
                 // Step 6: Entity Clustering
+                //todo: configure method with manual parameters
                 overheadStart = System.currentTimeMillis();
                 IEntityClustering ec = MethodMapping.getEntityClusteringMethod(model.getEntityClustering());
                 ec.setSimilarityThreshold(0.1);
