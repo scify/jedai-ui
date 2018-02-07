@@ -365,10 +365,21 @@ public class CompletedController {
                 updateProgress(0.8);
 
                 // Step 6: Entity Clustering
-                //todo: configure method with manual parameters
+                String entityClusteringMethod = model.getEntityClustering();
                 overheadStart = System.currentTimeMillis();
-                IEntityClustering ec = MethodMapping.getEntityClusteringMethod(model.getEntityClustering());
-                ec.setSimilarityThreshold(0.1);
+
+                // Create entity clustering method
+                IEntityClustering ec;
+
+                if (!model.getEntityClusteringConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
+                    // Auto or default configuration selected: use default configuration
+                    ec = MethodMapping.getEntityClusteringMethod(entityClusteringMethod);
+                } else {
+                    // Manual configuration selected, create method with the saved parameters
+                    ObservableList<JPair<String, Object>> ecParams = model.getEntityClusteringParameters();
+                    ec = MethodConfiguration.configureEntityClusteringMethod(entityClusteringMethod, ecParams);
+                }
+
                 entityClusters = ec.getDuplicates(simPairs);
 
                 // Print clustering performance

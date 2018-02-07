@@ -10,6 +10,7 @@ import DataReader.EntityReader.EntitySerializationReader;
 import DataReader.GroundTruthReader.GtCSVReader;
 import DataReader.GroundTruthReader.GtRDFReader;
 import DataReader.GroundTruthReader.GtSerializationReader;
+import EntityClustering.*;
 import EntityMatching.GroupLinkage;
 import EntityMatching.IEntityMatching;
 import EntityMatching.ProfileMatcher;
@@ -163,6 +164,63 @@ public class MethodConfiguration {
         }
 
         return processingMethod;
+    }
+
+    /**
+     * Given a Entity Clustering method name and a list of parameters, initialize and return that method with these
+     * parameters. Assumes the parameters are of the correct type (they are cast) and correct number.
+     *
+     * @param methodName Name of entity clustering method
+     * @param parameters Parameters for method
+     * @return Configured entity clustering method
+     */
+    public static IEntityClustering configureEntityClusteringMethod(String methodName, List<JPair<String, Object>> parameters) {
+        IEntityClustering ecMethod = null;
+
+        // Get appropriate processing method
+        switch (methodName) {
+            case JedaiOptions.CENTER_CLUSTERING:
+                ecMethod = new CenterClustering(
+                        (double) parameters.get(0).getRight()
+                );
+                break;
+            case JedaiOptions.CONNECTED_COMPONENTS_CLUSTERING:
+                ecMethod = new ConnectedComponentsClustering(
+                        (double) parameters.get(0).getRight()
+                );
+                break;
+            case JedaiOptions.CUT_CLUSTERING:
+                ecMethod = new CutClustering(
+                        (double) parameters.get(1).getRight(),  // Acap is first parameter in CutClustering, but 2nd in JedAI library
+                        (double) parameters.get(0).getRight()
+                );
+                break;
+            case JedaiOptions.MARKOV_CLUSTERING:
+                ecMethod = new MarkovClustering(
+                        (double) parameters.get(1).getRight(),  // Cluster Threshold
+                        (double) parameters.get(2).getRight(),  // Matrix Similarity Threshold
+                        (int) parameters.get(3).getRight(),     // Similarity Checks Limit
+                        (double) parameters.get(0).getRight()   // Similarity Threshold
+                );
+                break;
+            case JedaiOptions.MERGE_CENTER_CLUSTERING:
+                ecMethod = new MergeCenterClustering(
+                        (double) parameters.get(0).getRight()
+                );
+                break;
+            case JedaiOptions.RICOCHET_SR_CLUSTERING:
+                ecMethod = new RicochetSRClustering(
+                        (double) parameters.get(0).getRight()
+                );
+                break;
+            case JedaiOptions.UNIQUE_MAPPING_CLUSTERING:
+                ecMethod = new UniqueMappingClustering(
+                        (double) parameters.get(0).getRight()
+                );
+                break;
+        }
+
+        return ecMethod;
     }
 
     /**
