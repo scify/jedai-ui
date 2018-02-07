@@ -1,9 +1,14 @@
 package wizard;
 
+import EntityMatching.GroupLinkage;
+import EntityMatching.ProfileMatcher;
+import Utilities.Enumerations.BlockBuildingMethod;
+import Utilities.IDocumentation;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import javafx.beans.binding.When;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
@@ -18,7 +23,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Callback;
+import utils.JPair;
 import utils.JedaiOptions;
+import utils.MethodConfiguration;
 import wizard.steps.CompletedController;
 
 import java.lang.annotation.Annotation;
@@ -207,8 +214,55 @@ public class WizardController {
             // Check if configuration is manual, and show manual configuration window before next step
             if (this.configurationTypes.containsKey(currentStep.get())
                     && this.configurationTypes.get(currentStep.get()).getValue().equals(JedaiOptions.MANUAL_CONFIG)) {
-                //todo: show manual configuration window
-//                System.out.println("Should manually configure step " + currentStep.get());
+//                System.out.println("Manually configuring step " + currentStep.get());
+
+                // Get method instance & model parameter property in order to show the configuration modal
+                IDocumentation method = null;
+                String methodName;
+                ListProperty<JPair<String, Object>> parametersProperty = null;
+
+                switch (currentStep.get()) {
+                    case 2:
+                        // Block Building
+                        parametersProperty = model.blockBuildingParametersProperty();
+
+                        methodName = model.getBlockBuilding();
+                        method = BlockBuildingMethod.getDefaultConfiguration(
+                                MethodMapping.blockBuildingMethods.get(methodName)
+                        );
+
+                        break;
+                    case 4:
+                        // Comparison Cleaning
+                        parametersProperty = model.comparisonCleaningParametersProperty();
+
+                        methodName = model.getComparisonCleaning();
+                        method = MethodMapping.getMethodByName(methodName);
+
+                        break;
+                    case 5:
+                        // Entity Matching
+                        parametersProperty = model.entityMatchingParametersProperty();
+
+                        methodName = model.getEntityMatching();
+                        method = (methodName.equals(JedaiOptions.GROUP_LINKAGE)) ?
+                                new GroupLinkage() : new ProfileMatcher();
+
+                        break;
+                    case 6:
+                        // Entity Clustering
+                        parametersProperty = model.entityClusteringParametersProperty();
+
+                        methodName = model.getEntityClustering();
+                        method = MethodMapping.getEntityClusteringMethod(methodName);
+
+                        break;
+                }
+
+                // Display the configuration modal
+                MethodConfiguration.displayModal(getClass(), injector, method, parametersProperty);
+
+                //todo: if configuration failed, don't go to next step
             }
 
             // Go to next step

@@ -70,7 +70,8 @@ public class MethodConfiguration {
             dialog.setTitle("JedAI - Parameter Configuration");
             dialog.initModality(Modality.APPLICATION_MODAL);
 
-            dialog.show();
+//            dialog.show();
+            dialog.showAndWait();
         } else {
             // This shouldn't ever happen.
             System.err.println("Error when showing the parameter customization popup (Wrong controller instance?)");

@@ -261,6 +261,7 @@ public class CompletedController {
                 overheadStart = System.currentTimeMillis();
 
                 // Check if the user set any custom parameters for block building
+                //todo: check with model property (e.g. blockBuildingParametersProperty), not parameters list (in all steps)
                 if (blBuParams == null || blBuParams.isEmpty()) {
                     // No parameters found, use default configuration
                     blockBuildingMethod = BlockBuildingMethod.getDefaultConfiguration(blockingWorkflow);
