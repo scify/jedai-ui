@@ -36,14 +36,14 @@
         <dependency>
             <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
-            <version>4.0</version>
+            <version>4.1.0</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/eu.hansolo/Medusa -->
         <dependency>
             <groupId>eu.hansolo</groupId>
             <artifactId>Medusa</artifactId>
-            <version>7.5</version>
+            <version>7.9</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.jfxtras/jfxtras-labs -->
