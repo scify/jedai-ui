@@ -58,7 +58,6 @@
                 </VBox>
             </children>
         </HBox>
-        <Button mnemonicParsing="false" onAction="#advancedConfigBtnHandler" text="Advanced Configuration"/>
     </children>
     <padding>
         <Insets bottom="10.0" left="40.0" right="40.0" top="20.0"/>

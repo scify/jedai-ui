@@ -1,18 +1,10 @@
 package wizard.steps;
 
-import EntityMatching.GroupLinkage;
-import EntityMatching.ProfileMatcher;
-import Utilities.IDocumentation;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.JedaiOptions;
-import utils.MethodConfiguration;
 import utils.RadioButtonHelper;
 import wizard.ConfigurationTypeSelector;
 import wizard.Submit;
@@ -24,17 +16,12 @@ import java.util.List;
 
 public class Step5Controller {
     public VBox matchingMethodContainer;
-    public Button paramsBtn;
     public VBox confTypeContainer;
-    private Logger log = LoggerFactory.getLogger(Step3Controller.class);
+    private Logger log = LoggerFactory.getLogger(Step5Controller.class);
 
     @Inject
     private WizardData model;
 
-    @Inject
-    private Injector injector;
-
-    @FXML
     public void initialize() {
         // Create options list for entity matching method
         List<String> entityMatchingOptions = Arrays.asList(
@@ -61,14 +48,5 @@ public class Step5Controller {
         if (log.isDebugEnabled()) {
             log.debug("[SUBMIT] the user has completed step 5");
         }
-    }
-
-    public void customizeParameters(ActionEvent actionEvent) {
-        // Get the selected method
-        IDocumentation method = (model.getEntityMatching().equals(JedaiOptions.GROUP_LINKAGE)) ?
-                new GroupLinkage() : new ProfileMatcher();
-
-        // Display the configuration window
-        MethodConfiguration.displayModal(getClass(), injector, method, model.entityMatchingParametersProperty());
     }
 }

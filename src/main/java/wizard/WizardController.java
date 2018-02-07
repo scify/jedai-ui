@@ -234,6 +234,7 @@ public class WizardController {
                         break;
                     case 4:
                         // Comparison Cleaning
+                        //todo: don't configure anything if "No cleaning" method is selected (model.comparisonCleaningProperty().isEqualTo(JedaiOptions.NO_CLEANING)))
                         parametersProperty = model.comparisonCleaningParametersProperty();
 
                         methodName = model.getComparisonCleaning();
