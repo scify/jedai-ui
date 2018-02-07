@@ -138,28 +138,39 @@ public class MethodConfiguration {
         IBlockProcessing processingMethod = null;
 
         // Get appropriate processing method
-        //todo: actually configure the methods
         switch (methodName) {
             case JedaiOptions.COMPARISON_PROPAGATION:
-                processingMethod = new ComparisonPropagation();
+                processingMethod = new ComparisonPropagation(); // Parameter-free
                 break;
             case JedaiOptions.CARDINALITY_EDGE_PRUNING:
-                processingMethod = new CardinalityEdgePruning(WeightingScheme.ECBS);
+                processingMethod = new CardinalityEdgePruning(
+                        (WeightingScheme) parameters.get(0).getRight()
+                );
                 break;
             case JedaiOptions.CARDINALITY_NODE_PRUNING:
-                processingMethod = new CardinalityNodePruning(WeightingScheme.ECBS);
+                processingMethod = new CardinalityNodePruning(
+                        (WeightingScheme) parameters.get(0).getRight()
+                );
                 break;
             case JedaiOptions.WEIGHED_EDGE_PRUNING:
-                processingMethod = new WeightedEdgePruning(WeightingScheme.ECBS);
+                processingMethod = new WeightedEdgePruning(
+                        (WeightingScheme) parameters.get(0).getRight()
+                );
                 break;
             case JedaiOptions.WEIGHED_NODE_PRUNING:
-                processingMethod = new WeightedNodePruning(WeightingScheme.ECBS);
+                processingMethod = new WeightedNodePruning(
+                        (WeightingScheme) parameters.get(0).getRight()
+                );
                 break;
             case JedaiOptions.RECIPROCAL_CARDINALITY_NODE_PRUNING:
-                processingMethod = new ReciprocalCardinalityNodePruning(WeightingScheme.ECBS);
+                processingMethod = new ReciprocalCardinalityNodePruning(
+                        (WeightingScheme) parameters.get(0).getRight()
+                );
                 break;
             case JedaiOptions.RECIPROCAL_WEIGHED_NODE_PRUNING:
-                processingMethod = new ReciprocalWeightedNodePruning(WeightingScheme.ECBS);
+                processingMethod = new ReciprocalWeightedNodePruning(
+                        (WeightingScheme) parameters.get(0).getRight()
+                );
                 break;
         }
 
