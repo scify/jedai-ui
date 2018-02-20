@@ -1,4 +1,4 @@
-package wizard;
+package utils.dynamic_configuration;
 
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;

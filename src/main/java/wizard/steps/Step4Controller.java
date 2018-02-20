@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.JedaiOptions;
 import utils.RadioButtonHelper;
-import wizard.ConfigurationTypeSelector;
+import utils.dynamic_configuration.ConfigurationTypeSelector;
 import wizard.Submit;
 import wizard.Validate;
 import wizard.WizardData;
