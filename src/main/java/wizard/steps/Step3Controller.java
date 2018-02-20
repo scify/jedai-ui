@@ -23,7 +23,6 @@ import java.util.Map;
 public class Step3Controller {
     public VBox containerVBox;
     public ListView<String> list;
-    public ListView<String> selectedList;
 
     private BlockCleaningCustomComparator listComparator;
     private Map<String, SimpleBooleanProperty> optionsMap;
@@ -66,34 +65,6 @@ public class Step3Controller {
 
         // Set list cells to have checkboxes which use the map's boolean values
         list.setCellFactory(CheckBoxListCell.forListView(optionsMap::get));
-
-        // Listen for changes in each BooleanProperty
-        for (String s : optionsMap.keySet()) {
-            optionsMap.get(s).addListener((observable, oldValue, newValue) -> {
-                // Add/remove the string to/from the model
-                //todo: update for new object type
-                if (newValue) {
-//                    selectedList.getItems().add(s);
-//                    model.getBlockCleaningMethods().add(s);
-                } else {
-//                    model.getBlockCleaningMethods().remove(s);
-//                    selectedList.getItems().remove(s);
-                }
-
-                // Sort the list to the correct order using the custom comparator
-                selectedList.getItems().sort(listComparator);
-            });
-        }
-
-        // Listen for changes in the model, and change the values of the boolean properties
-        model.blockCleaningMethodsProperty().addListener((observable, oldValue, newValue) -> {
-            // Set the value of each checkbox to true or false depending on if it's in the list or not
-            for (String method : optionsMap.keySet()) {
-                optionsMap.get(method).setValue(
-                        newValue.contains(method)
-                );
-            }
-        });
     }
 
     @Validate
