@@ -57,7 +57,6 @@ public class Step3Controller {
         }
 
         /*
-         * todo: change BlClMethodConfiguration object to use StringProperty for configuration type
          * todo: set configuration type with a ConfigurationTypeSelector (now that it's a string property)
          */
 

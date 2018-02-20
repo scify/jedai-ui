@@ -1,6 +1,7 @@
 package utils;
 
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.StringProperty;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ import java.util.List;
 public class BlClMethodConfiguration {
     private SimpleBooleanProperty methodEnabled;
     private String methodName;
-    private String configurationType;
+    private StringProperty configurationType;
     private List<JPair<String, Object>> manualParameters;
 
     public BlClMethodConfiguration(String methodName) {
@@ -44,11 +45,15 @@ public class BlClMethodConfiguration {
     }
 
     public String getConfigurationType() {
+        return configurationType.get();
+    }
+
+    public StringProperty configurationTypeProperty() {
         return configurationType;
     }
 
     public void setConfigurationType(String configurationType) {
-        this.configurationType = configurationType;
+        this.configurationType.set(configurationType);
     }
 
     public List<JPair<String, Object>> getManualParameters() {
