@@ -9,6 +9,7 @@ import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.BlClMethodConfiguration;
 import utils.BlockCleaningCustomComparator;
 import utils.JedaiOptions;
 import wizard.Submit;
@@ -39,11 +40,26 @@ public class Step3Controller {
         // Initialize block cleaning methods list
         model.setBlockCleaningMethods(FXCollections.observableList(new ArrayList<>()));
 
-        // Create map with options
+        // Add BlClMethodConfiguration objects to the model
+        model.getBlockCleaningMethods().addAll(
+                new BlClMethodConfiguration(JedaiOptions.SIZE_BASED_BLOCK_PURGING),
+                new BlClMethodConfiguration(JedaiOptions.COMPARISON_BASED_BLOCK_PURGING),
+                new BlClMethodConfiguration(JedaiOptions.BLOCK_FILTERING)
+        );
+
+        // Create map with method names -> BlClMethodConfiguration objects and method names -> boolean properties
+        Map<String, BlClMethodConfiguration> methodDetails = new HashMap<>();
         optionsMap = new HashMap<>();
-        optionsMap.put(JedaiOptions.SIZE_BASED_BLOCK_PURGING, new SimpleBooleanProperty(false));
-        optionsMap.put(JedaiOptions.COMPARISON_BASED_BLOCK_PURGING, new SimpleBooleanProperty(false));
-        optionsMap.put(JedaiOptions.BLOCK_FILTERING, new SimpleBooleanProperty(false));
+
+        for (BlClMethodConfiguration bcmc : model.getBlockCleaningMethods()) {
+            methodDetails.put(bcmc.getMethodName(), bcmc);
+            optionsMap.put(bcmc.getMethodName(), bcmc.methodEnabledProperty());
+        }
+
+        /*
+         * todo: change BlClMethodConfiguration object to use StringProperty for configuration type
+         * todo: set configuration type with a ConfigurationTypeSelector (now that it's a string property)
+         */
 
         // Add items to the list
         list.getItems().addAll(optionsMap.keySet());
@@ -56,12 +72,13 @@ public class Step3Controller {
         for (String s : optionsMap.keySet()) {
             optionsMap.get(s).addListener((observable, oldValue, newValue) -> {
                 // Add/remove the string to/from the model
+                //todo: update for new object type
                 if (newValue) {
-                    selectedList.getItems().add(s);
-                    model.getBlockCleaningMethods().add(s);
+//                    selectedList.getItems().add(s);
+//                    model.getBlockCleaningMethods().add(s);
                 } else {
-                    model.getBlockCleaningMethods().remove(s);
-                    selectedList.getItems().remove(s);
+//                    model.getBlockCleaningMethods().remove(s);
+//                    selectedList.getItems().remove(s);
                 }
 
                 // Sort the list to the correct order using the custom comparator

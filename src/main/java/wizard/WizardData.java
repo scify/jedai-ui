@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import utils.BlClMethodConfiguration;
 import utils.JPair;
 import utils.JedaiOptions;
 
@@ -28,7 +29,7 @@ public class WizardData {
     private final ListProperty<JPair<String, Object>> blockBuildingParameters = new SimpleListProperty<>();
 
     // Step 3: Block Cleaning
-    private final ListProperty<String> blockCleaningMethods = new SimpleListProperty<>();
+    private final ListProperty<BlClMethodConfiguration> blockCleaningMethods = new SimpleListProperty<>();
 
     // Step 4: Comparison Cleaning
     private final StringProperty comparisonCleaning = new SimpleStringProperty();
@@ -247,15 +248,15 @@ public class WizardData {
         this.blockBuildingParameters.set(blockBuildingParameters);
     }
 
-    public ObservableList<String> getBlockCleaningMethods() {
+    public ObservableList<BlClMethodConfiguration> getBlockCleaningMethods() {
         return blockCleaningMethods.get();
     }
 
-    public ListProperty<String> blockCleaningMethodsProperty() {
+    public ListProperty<BlClMethodConfiguration> blockCleaningMethodsProperty() {
         return blockCleaningMethods;
     }
 
-    public void setBlockCleaningMethods(ObservableList<String> blockCleaningMethods) {
+    public void setBlockCleaningMethods(ObservableList<BlClMethodConfiguration> blockCleaningMethods) {
         this.blockCleaningMethods.set(blockCleaningMethods);
     }
 

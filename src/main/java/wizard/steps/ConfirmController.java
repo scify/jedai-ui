@@ -157,13 +157,14 @@ public class ConfirmController {
         addRow(rows++, boldLabel("Block Building Parameters"), parametersNode(model.blockBuildingParametersProperty()));
 
         // Block Cleaning methods (sorted automatically)
-        ListView<String> blockCleaningList = new ListView<>(
-                model.getBlockCleaningMethods()
-                        .sorted(new BlockCleaningCustomComparator())
-        );
-        blockCleaningList.setMaxHeight(80);
-
-        addRow(rows++, boldLabel("Block Cleaning Methods"), blockCleaningList);
+//        ListView<String> blockCleaningList = new ListView<>(
+//                model.getBlockCleaningMethods()
+//                        .sorted(new BlockCleaningCustomComparator())
+//        );
+//        blockCleaningList.setMaxHeight(80);
+//
+//        addRow(rows++, boldLabel("Block Cleaning Methods"), blockCleaningList);
+        //todo: Update for new step 3 objects
         //todo: Add Block Cleaning parameters for each method
 
         // Comparison Cleaning method

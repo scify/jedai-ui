@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <VBox fx:id="containerVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-      minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.111"
+      minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" xmlns="http://javafx.com/javafx/8"
       xmlns:fx="http://javafx.com/fxml/1" fx:controller="wizard.steps.Step3Controller">
     <padding>
         <Insets bottom="40.0" left="40.0" right="40.0" top="40.0"/>
@@ -37,15 +37,9 @@
                         <Font name="System Bold" size="13.0"/>
                     </font>
                 </Label>
-                <Label alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="254.0"
-                       text="Current Selection" GridPane.columnIndex="1">
-                    <font>
-                        <Font name="System Bold" size="13.0"/>
-                    </font>
-                </Label>
                 <ListView fx:id="list" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1"/>
-                <ListView fx:id="selectedList" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1"
-                          GridPane.rowIndex="1"/>
+                <Label text="[configuration selectors?]" GridPane.columnIndex="1" GridPane.halignment="CENTER"
+                       GridPane.rowIndex="1"/>
             </children>
         </GridPane>
     </children>

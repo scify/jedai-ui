@@ -285,29 +285,30 @@ public class CompletedController {
                 updateProgress(0.4);
 
                 // Step 3: Block Cleaning
-                List<String> blockCleaningMethods = model.getBlockCleaningMethods();
-
-                if (blockCleaningMethods != null) {
-                    // Sort the methods in order to execute them in correct order
-                    blockCleaningMethods.sort(new BlockCleaningCustomComparator());
-
-                    // Execute the methods
-                    for (String currentMethod : blockCleaningMethods) {
-                        overheadStart = System.currentTimeMillis();
-
-                        // Process blocks with this method
-                        IBlockProcessing blockCleaningMethod = MethodMapping.getMethodByName(currentMethod);
-                        if (blockCleaningMethod != null) {
-                            blocks = blockCleaningMethod.refineBlocks(blocks);
-
-                            // Print blocks performance
-                            overheadEnd = System.currentTimeMillis();
-                            blp = new BlocksPerformance(blocks, duplicatePropagation);
-                            blp.setStatistics();
-                            blp.printStatistics(overheadEnd - overheadStart, blockCleaningMethod.getMethodConfiguration(), blockCleaningMethod.getMethodName());
-                        }
-                    }
-                }
+                //todo: Update for new step 3 objects
+//                List<String> blockCleaningMethods = model.getBlockCleaningMethods();
+//
+//                if (blockCleaningMethods != null) {
+//                    // Sort the methods in order to execute them in correct order
+//                    blockCleaningMethods.sort(new BlockCleaningCustomComparator());
+//
+//                    // Execute the methods
+//                    for (String currentMethod : blockCleaningMethods) {
+//                        overheadStart = System.currentTimeMillis();
+//
+//                        // Process blocks with this method
+//                        IBlockProcessing blockCleaningMethod = MethodMapping.getMethodByName(currentMethod);
+//                        if (blockCleaningMethod != null) {
+//                            blocks = blockCleaningMethod.refineBlocks(blocks);
+//
+//                            // Print blocks performance
+//                            overheadEnd = System.currentTimeMillis();
+//                            blp = new BlocksPerformance(blocks, duplicatePropagation);
+//                            blp.setStatistics();
+//                            blp.printStatistics(overheadEnd - overheadStart, blockCleaningMethod.getMethodConfiguration(), blockCleaningMethod.getMethodName());
+//                        }
+//                    }
+//                }
 
                 // Step 4: Comparison Cleaning
                 String coClMethod = model.getComparisonCleaning();
