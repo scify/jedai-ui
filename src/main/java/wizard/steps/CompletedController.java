@@ -33,7 +33,10 @@ import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.*;
+import utils.DataReadingHelper;
+import utils.JPair;
+import utils.JedaiOptions;
+import utils.MethodConfiguration;
 import utils.console_area.ConsoleArea;
 import utils.console_area.MultiOutputStream;
 import wizard.MethodMapping;
@@ -110,6 +113,8 @@ public class CompletedController {
 
         // Setup table for previous results (Workbench)
         initGrid();
+
+        //todo: clear output of console area when switching to this step/running workflow, to remove manual config. prints
     }
 
     /**

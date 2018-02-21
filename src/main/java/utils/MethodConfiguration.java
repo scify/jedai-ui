@@ -42,6 +42,7 @@ public class MethodConfiguration {
      * @param method      Method that the window should display configuration options for.
      */
     public static void displayModal(Class callerClass, Injector injector, IDocumentation method, ListProperty<JPair<String, Object>> paramsProperty) {
+        //todo: Show the name of the method that is being configured (to be more clear in Step 3 with multiple methods)
         Parent root;
         FXMLLoader loader = new FXMLLoader(
                 callerClass.getClassLoader().getResource("wizard-fxml/DynamicConfiguration.fxml"),

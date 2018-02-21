@@ -1,10 +1,7 @@
 package utils;
 
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-
-import java.util.List;
+import javafx.beans.property.*;
+import javafx.collections.ObservableList;
 
 /**
  * Block Cleaning Method configuration object.
@@ -18,12 +15,15 @@ public class BlClMethodConfiguration {
     private SimpleBooleanProperty enabled;
     private String name;
     private StringProperty configurationType;
-    private List<JPair<String, Object>> manualParameters;
+    private ListProperty<JPair<String, Object>> manualParameters;
 
     public BlClMethodConfiguration(String methodName) {
         this.name = methodName;
+
+        // Initialize properties
         this.enabled = new SimpleBooleanProperty(false);
         this.configurationType = new SimpleStringProperty();
+        this.manualParameters = new SimpleListProperty<>();
     }
 
     public boolean isEnabled() {
@@ -54,11 +54,15 @@ public class BlClMethodConfiguration {
         this.configurationType.set(configurationType);
     }
 
-    public List<JPair<String, Object>> getManualParameters() {
+    public ObservableList<JPair<String, Object>> getManualParameters() {
+        return manualParameters.get();
+    }
+
+    public ListProperty<JPair<String, Object>> manualParametersProperty() {
         return manualParameters;
     }
 
-    public void setManualParameters(List<JPair<String, Object>> manualParameters) {
-        this.manualParameters = manualParameters;
+    public void setManualParameters(ObservableList<JPair<String, Object>> manualParameters) {
+        this.manualParameters.set(manualParameters);
     }
 }

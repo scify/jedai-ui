@@ -23,6 +23,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Callback;
+import utils.BlClMethodConfiguration;
 import utils.JPair;
 import utils.JedaiOptions;
 import utils.MethodConfiguration;
@@ -94,7 +95,6 @@ public class WizardController {
         // Initialize hashmap with configuration types
         this.configurationTypes = new HashMap<>();
         this.configurationTypes.put(2, model.blockBuildingConfigTypeProperty());
-        //todo: add step 3
         this.configurationTypes.put(4, model.comparisonCleaningConfigTypeProperty());
         this.configurationTypes.put(5, model.entityMatchingConfigTypeProperty());
         this.configurationTypes.put(6, model.entityClusteringConfigTypeProperty());
@@ -233,7 +233,6 @@ public class WizardController {
                         );
 
                         break;
-                    //todo: add step 3
                     case 4:
                         // Comparison Cleaning
                         parametersProperty = model.comparisonCleaningParametersProperty();
@@ -267,6 +266,19 @@ public class WizardController {
                 }
 
                 //todo: if configuration failed, don't go to next step
+            } else if (currentStep.get() == 3) {
+                // Special case: Block Cleaning can have multiple methods. We need to check each one separately
+                for (BlClMethodConfiguration bcmc : model.getBlockCleaningMethods()) {
+                    // If the method is enabled and its configuration type is set to manual...
+                    if (bcmc.isEnabled() && bcmc.getConfigurationType().equals(JedaiOptions.MANUAL_CONFIG)) {
+                        // Get an instance of the method
+                        IDocumentation method = MethodMapping.getMethodByName(bcmc.getName());
+
+                        // Configure the method
+                        MethodConfiguration.displayModal(getClass(), injector, method, bcmc.manualParametersProperty());
+                        //todo: if configuration failed, abort
+                    }
+                }
             }
 
             // Go to next step
