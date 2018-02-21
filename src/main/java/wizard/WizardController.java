@@ -94,6 +94,7 @@ public class WizardController {
         // Initialize hashmap with configuration types
         this.configurationTypes = new HashMap<>();
         this.configurationTypes.put(2, model.blockBuildingConfigTypeProperty());
+        //todo: add step 3
         this.configurationTypes.put(4, model.comparisonCleaningConfigTypeProperty());
         this.configurationTypes.put(5, model.entityMatchingConfigTypeProperty());
         this.configurationTypes.put(6, model.entityClusteringConfigTypeProperty());
@@ -232,6 +233,7 @@ public class WizardController {
                         );
 
                         break;
+                    //todo: add step 3
                     case 4:
                         // Comparison Cleaning
                         parametersProperty = model.comparisonCleaningParametersProperty();
