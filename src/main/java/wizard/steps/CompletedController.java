@@ -110,8 +110,6 @@ public class CompletedController {
 
         // Setup table for previous results (Workbench)
         initGrid();
-
-        //todo: clear output of console area when switching to this step/running workflow, to remove manual config. prints
     }
 
     /**
@@ -211,6 +209,10 @@ public class CompletedController {
     private void runAlgorithmBtnHandler() {
         // Show the progress indicator
         progressIndicator.setVisible(true);
+        progressIndicator.setProgress(0.0);
+
+        // Reset console area
+        logTextArea.clear();
 
         // Runnable that will run algorithm in separate thread
         new Thread(() -> {
