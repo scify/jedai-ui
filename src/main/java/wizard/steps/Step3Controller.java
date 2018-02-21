@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import utils.BlClMethodConfiguration;
 import utils.BlockCleaningCustomComparator;
 import utils.JedaiOptions;
+import utils.dynamic_configuration.ConfigurationTypeSelector;
 import wizard.Submit;
 import wizard.Validate;
 import wizard.WizardData;
@@ -23,6 +24,7 @@ import java.util.Map;
 public class Step3Controller {
     public VBox containerVBox;
     public ListView<String> list;
+    public VBox methodConfContainer;
 
     private BlockCleaningCustomComparator listComparator;
     private Map<String, SimpleBooleanProperty> optionsMap;
@@ -51,13 +53,18 @@ public class Step3Controller {
         optionsMap = new HashMap<>();
 
         for (BlClMethodConfiguration bcmc : model.getBlockCleaningMethods()) {
-            methodDetails.put(bcmc.getMethodName(), bcmc);
-            optionsMap.put(bcmc.getMethodName(), bcmc.methodEnabledProperty());
-        }
+            // Add to Method Details HashMap (name -> BlClMethodConfiguration object)
+            methodDetails.put(bcmc.getName(), bcmc);
 
-        /*
-         * todo: set configuration type with a ConfigurationTypeSelector (now that it's a string property)
-         */
+            // Add to options HashMap (name -> boolean selection property)
+            optionsMap.put(bcmc.getName(), bcmc.enabledProperty());
+
+            // Add configuration type selector for this method
+            // todo: Make configuration type selectors horizontal
+            methodConfContainer.getChildren().add(
+                    new ConfigurationTypeSelector(bcmc.configurationTypeProperty())
+            );
+        }
 
         // Add items to the list
         list.getItems().addAll(optionsMap.keySet());

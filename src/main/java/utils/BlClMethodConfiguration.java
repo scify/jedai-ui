@@ -1,6 +1,7 @@
 package utils;
 
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 import java.util.List;
@@ -14,34 +15,31 @@ import java.util.List;
  * - For manual configuration, the selected parameters
  */
 public class BlClMethodConfiguration {
-    private SimpleBooleanProperty methodEnabled;
-    private String methodName;
+    private SimpleBooleanProperty enabled;
+    private String name;
     private StringProperty configurationType;
     private List<JPair<String, Object>> manualParameters;
 
     public BlClMethodConfiguration(String methodName) {
-        this.methodName = methodName;
-        this.methodEnabled = new SimpleBooleanProperty(false);
+        this.name = methodName;
+        this.enabled = new SimpleBooleanProperty(false);
+        this.configurationType = new SimpleStringProperty();
     }
 
-    public boolean isMethodEnabled() {
-        return methodEnabled.get();
+    public boolean isEnabled() {
+        return enabled.get();
     }
 
-    public SimpleBooleanProperty methodEnabledProperty() {
-        return methodEnabled;
+    public SimpleBooleanProperty enabledProperty() {
+        return enabled;
     }
 
-    public void setMethodEnabled(boolean methodEnabled) {
-        this.methodEnabled.set(methodEnabled);
+    public void setEnabled(boolean enabled) {
+        this.enabled.set(enabled);
     }
 
-    public String getMethodName() {
-        return methodName;
-    }
-
-    public void setMethodName(String methodName) {
-        this.methodName = methodName;
+    public String getName() {
+        return name;
     }
 
     public String getConfigurationType() {
