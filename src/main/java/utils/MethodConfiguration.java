@@ -1,6 +1,9 @@
 package utils;
 
 import BlockBuilding.*;
+import BlockProcessing.BlockCleaning.BlockFiltering;
+import BlockProcessing.BlockCleaning.ComparisonsBasedBlockPurging;
+import BlockProcessing.BlockCleaning.SizeBasedBlockPurging;
 import BlockProcessing.ComparisonCleaning.*;
 import BlockProcessing.IBlockProcessing;
 import DataReader.EntityReader.EntityCSVReader;
@@ -171,6 +174,39 @@ public class MethodConfiguration {
             case JedaiOptions.RECIPROCAL_WEIGHED_NODE_PRUNING:
                 processingMethod = new ReciprocalWeightedNodePruning(
                         (WeightingScheme) parameters.get(0).getRight()
+                );
+                break;
+        }
+
+        return processingMethod;
+    }
+
+    /**
+     * Given a Block Cleaning method configuration object, create an instance of the method, configured with the
+     * specified parameters. Assumes that configuration type is manual.
+     *
+     * @param methodName Name of the block cleaning method
+     * @param parameters Parameters for method
+     * @return Configured block cleaning method
+     */
+    public static IBlockProcessing configureBlockCleaningMethod(String methodName, List<JPair<String, Object>> parameters) {
+        IBlockProcessing processingMethod = null;
+
+        // Get appropriate processing method
+        switch (methodName) {
+            case JedaiOptions.BLOCK_FILTERING:
+                processingMethod = new BlockFiltering(
+                        (double) parameters.get(0).getRight()
+                );
+                break;
+            case JedaiOptions.SIZE_BASED_BLOCK_PURGING:
+                processingMethod = new SizeBasedBlockPurging(
+                        (double) parameters.get(0).getRight()
+                );
+                break;
+            case JedaiOptions.COMPARISON_BASED_BLOCK_PURGING:
+                processingMethod = new ComparisonsBasedBlockPurging(
+                        (double) parameters.get(0).getRight()
                 );
                 break;
         }

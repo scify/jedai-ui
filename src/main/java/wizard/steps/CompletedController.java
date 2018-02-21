@@ -33,10 +33,7 @@ import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.DataReadingHelper;
-import utils.JPair;
-import utils.JedaiOptions;
-import utils.MethodConfiguration;
+import utils.*;
 import utils.console_area.ConsoleArea;
 import utils.console_area.MultiOutputStream;
 import wizard.MethodMapping;
@@ -290,30 +287,35 @@ public class CompletedController {
                 updateProgress(0.4);
 
                 // Step 3: Block Cleaning
-                //todo: Update for new step 3 objects
-//                List<String> blockCleaningMethods = model.getBlockCleaningMethods();
-//
-//                if (blockCleaningMethods != null) {
-//                    // Sort the methods in order to execute them in correct order
-//                    blockCleaningMethods.sort(new BlockCleaningCustomComparator());
-//
-//                    // Execute the methods
-//                    for (String currentMethod : blockCleaningMethods) {
-//                        overheadStart = System.currentTimeMillis();
-//
-//                        // Process blocks with this method
-//                        IBlockProcessing blockCleaningMethod = MethodMapping.getMethodByName(currentMethod);
-//                        if (blockCleaningMethod != null) {
-//                            blocks = blockCleaningMethod.refineBlocks(blocks);
-//
-//                            // Print blocks performance
-//                            overheadEnd = System.currentTimeMillis();
-//                            blp = new BlocksPerformance(blocks, duplicatePropagation);
-//                            blp.setStatistics();
-//                            blp.printStatistics(overheadEnd - overheadStart, blockCleaningMethod.getMethodConfiguration(), blockCleaningMethod.getMethodName());
-//                        }
-//                    }
-//                }
+                List<BlClMethodConfiguration> blClMethods = model.getBlockCleaningMethods();
+
+                if (blClMethods != null) {
+                    // Execute the methods
+                    for (BlClMethodConfiguration currentMethod : blClMethods) {
+                        overheadStart = System.currentTimeMillis();
+
+                        // Process blocks with this method
+                        IBlockProcessing blockCleaningMethod;
+                        if (!currentMethod.getConfigurationType().equals(JedaiOptions.MANUAL_CONFIG)) {
+                            // Auto or default configuration selected: use default configuration
+                            blockCleaningMethod = MethodMapping.getMethodByName(currentMethod.getName());
+                        } else {
+                            // Manual configuration selected, create method with the saved parameters
+                            blockCleaningMethod = MethodConfiguration.configureBlockCleaningMethod(
+                                    currentMethod.getName(), currentMethod.getManualParameters());
+                        }
+
+                        if (blockCleaningMethod != null) {
+                            blocks = blockCleaningMethod.refineBlocks(blocks);
+
+                            // Print blocks performance
+                            overheadEnd = System.currentTimeMillis();
+                            blp = new BlocksPerformance(blocks, duplicatePropagation);
+                            blp.setStatistics();
+                            blp.printStatistics(overheadEnd - overheadStart, blockCleaningMethod.getMethodConfiguration(), blockCleaningMethod.getMethodName());
+                        }
+                    }
+                }
 
                 // Step 4: Comparison Cleaning
                 String coClMethod = model.getComparisonCleaning();
