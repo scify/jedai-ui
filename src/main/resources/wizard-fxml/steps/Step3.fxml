@@ -38,8 +38,8 @@
                     </font>
                 </Label>
                 <ListView fx:id="list" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1"/>
-                <VBox fx:id="methodConfContainer" prefHeight="200.0" prefWidth="100.0" spacing="5.0"
-                      GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <VBox fx:id="methodConfContainer" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1"
+                      GridPane.rowIndex="1"/>
                 <Label alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="252.0"
                        text="Method Configuration" GridPane.columnIndex="1">
                     <font>

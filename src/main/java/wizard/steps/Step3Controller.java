@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Separator;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
@@ -13,12 +14,14 @@ import utils.BlClMethodConfiguration;
 import utils.BlockCleaningCustomComparator;
 import utils.JedaiOptions;
 import utils.dynamic_configuration.ConfigurationTypeSelector;
+import utils.dynamic_configuration.ConfigurationTypeSelectorHorizontal;
 import wizard.Submit;
 import wizard.Validate;
 import wizard.WizardData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Step3Controller {
@@ -48,23 +51,24 @@ public class Step3Controller {
                 new BlClMethodConfiguration(JedaiOptions.BLOCK_FILTERING)
         );
 
-        // Create map with method names -> BlClMethodConfiguration objects and method names -> boolean properties
-        Map<String, BlClMethodConfiguration> methodDetails = new HashMap<>();
+        // Create map with method names -> boolean properties and add ConfigurationTypeSelectors
         optionsMap = new HashMap<>();
 
-        for (BlClMethodConfiguration bcmc : model.getBlockCleaningMethods()) {
-            // Add to Method Details HashMap (name -> BlClMethodConfiguration object)
-            methodDetails.put(bcmc.getName(), bcmc);
-
-            // Add to options HashMap (name -> boolean selection property)
+        List<BlClMethodConfiguration> blClMethods = model.getBlockCleaningMethods();
+        for (BlClMethodConfiguration bcmc : blClMethods) {
+            // Add to options HashMap
             optionsMap.put(bcmc.getName(), bcmc.enabledProperty());
 
             // Add configuration type selector for this method
-            // todo: Make configuration type selectors horizontal
-            ConfigurationTypeSelector cts = new ConfigurationTypeSelector(bcmc.configurationTypeProperty());
+            ConfigurationTypeSelector cts = new ConfigurationTypeSelectorHorizontal(bcmc.configurationTypeProperty());
             cts.bindEnabled(bcmc.enabledProperty());
 
             methodConfContainer.getChildren().add(cts);
+
+            // Add separators between selectors
+            if (blClMethods.indexOf(bcmc) < blClMethods.size() - 1) {
+                methodConfContainer.getChildren().add(new Separator());
+            }
         }
 
         // Add items to the list
