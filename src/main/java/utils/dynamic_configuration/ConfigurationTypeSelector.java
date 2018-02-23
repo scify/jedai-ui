@@ -1,5 +1,6 @@
 package utils.dynamic_configuration;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.scene.layout.VBox;
@@ -20,5 +21,14 @@ public class ConfigurationTypeSelector extends VBox {
         );
 
         RadioButtonHelper.createButtonGroup(this, buttons, modelProperty);
+    }
+
+    /**
+     * Enable or disable the configuration selector by binding its disable property to a custom boolean property.
+     *
+     * @param booleanProperty Boolean property to bind to
+     */
+    public void bindEnabled(BooleanProperty booleanProperty) {
+        this.disableProperty().bind(booleanProperty.not());
     }
 }

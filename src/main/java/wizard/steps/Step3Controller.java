@@ -61,9 +61,10 @@ public class Step3Controller {
 
             // Add configuration type selector for this method
             // todo: Make configuration type selectors horizontal
-            methodConfContainer.getChildren().add(
-                    new ConfigurationTypeSelector(bcmc.configurationTypeProperty())
-            );
+            ConfigurationTypeSelector cts = new ConfigurationTypeSelector(bcmc.configurationTypeProperty());
+            cts.bindEnabled(bcmc.enabledProperty());
+
+            methodConfContainer.getChildren().add(cts);
         }
 
         // Add items to the list
