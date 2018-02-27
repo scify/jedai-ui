@@ -24,8 +24,8 @@ public class DynamicConfigurationController {
     public Label configureParamsLabel;
     public GridPane configGrid;
     public Button saveBtn;
+    public Label methodNameLabel;
 
-    private JsonArray jsonParamDescriptions;
     private ListProperty<JPair<String, Object>> parametersProperty;
     private List<JPair<String, Object>> parameterValues;
 
@@ -35,12 +35,20 @@ public class DynamicConfigurationController {
     }
 
     /**
+     * Set the method name that will be displayed.
+     *
+     * @param methodName Method name to display.
+     */
+    public void setMethodName(String methodName) {
+        methodNameLabel.setText(methodName);
+    }
+
+    /**
      * Set the parameters to show in the configuration window, and create UI elements for the user to set them.
      *
      * @param jsonParamDescriptions Parameters as specified by the JedAI library
      */
     public void setParameters(JsonArray jsonParamDescriptions, ListProperty<JPair<String, Object>> parametersProperty) {
-        this.jsonParamDescriptions = jsonParamDescriptions;
         this.parametersProperty = parametersProperty;
 
         // Determine if there are, and we should use previously set values for the parameters
@@ -53,12 +61,12 @@ public class DynamicConfigurationController {
         }
 
         // If the method is parameter-free, display it
-        if (this.jsonParamDescriptions.isEmpty()) {
+        if (jsonParamDescriptions.isEmpty()) {
             configureParamsLabel.setText("This is a parameter-free method!");
         } else {
             // Generate the form to configure the method
             int gridRows = 0;
-            for (JsonValue jsonParam : this.jsonParamDescriptions) {
+            for (JsonValue jsonParam : jsonParamDescriptions) {
                 if (jsonParam.isObject()) {
                     JsonObject jsonParamObj = jsonParam.getAsObject();
 

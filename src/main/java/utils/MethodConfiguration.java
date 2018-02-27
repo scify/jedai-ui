@@ -44,8 +44,8 @@ public class MethodConfiguration {
      * @param injector    Injector to use when loading FXML, so that the model etc. are injected automatically.
      * @param method      Method that the window should display configuration options for.
      */
-    public static void displayModal(Class callerClass, Injector injector, IDocumentation method, ListProperty<JPair<String, Object>> paramsProperty) {
-        //todo: Show the name of the method that is being configured (to be more clear in Step 3 with multiple methods)
+    public static void displayModal(Class callerClass, Injector injector, IDocumentation method,
+                                    ListProperty<JPair<String, Object>> paramsProperty) {
         Parent root;
         FXMLLoader loader = new FXMLLoader(
                 callerClass.getClassLoader().getResource("wizard-fxml/DynamicConfiguration.fxml"),
@@ -69,13 +69,15 @@ public class MethodConfiguration {
             DynamicConfigurationController popupController = (DynamicConfigurationController) controller;
 
             // Give the configuration options to the controller
+            String methodName = method.getMethodName();
             JsonArray params = method.getParameterConfiguration();
             popupController.setParameters(params, paramsProperty);
+            popupController.setMethodName(methodName);
 
             // Create the popup
             Stage dialog = new Stage();
             dialog.setScene(new Scene(root));
-            dialog.setTitle("JedAI - Parameter Configuration");
+            dialog.setTitle("JedAI - " + methodName + " Parameter Configuration");
             dialog.initModality(Modality.APPLICATION_MODAL);
 
 //            dialog.show();
@@ -94,7 +96,8 @@ public class MethodConfiguration {
      * @param parameters Parameter values
      * @return Block Building method configured with the given parameters
      */
-    public static IBlockBuilding configureBlockBuildingMethod(BlockBuildingMethod method, List<JPair<String, Object>> parameters) {
+    public static IBlockBuilding configureBlockBuildingMethod(BlockBuildingMethod method,
+                                                              List<JPair<String, Object>> parameters) {
         switch (method) {
             case STANDARD_BLOCKING:
                 return new StandardBlocking();
@@ -138,7 +141,8 @@ public class MethodConfiguration {
      * @param parameters Parameters for method
      * @return Configured comparison cleaning method
      */
-    public static IBlockProcessing configureComparisonCleaningMethod(String methodName, List<JPair<String, Object>> parameters) {
+    public static IBlockProcessing configureComparisonCleaningMethod(String methodName,
+                                                                     List<JPair<String, Object>> parameters) {
         IBlockProcessing processingMethod = null;
 
         // Get appropriate processing method
@@ -189,7 +193,8 @@ public class MethodConfiguration {
      * @param parameters Parameters for method
      * @return Configured block cleaning method
      */
-    public static IBlockProcessing configureBlockCleaningMethod(String methodName, List<JPair<String, Object>> parameters) {
+    public static IBlockProcessing configureBlockCleaningMethod(String methodName,
+                                                                List<JPair<String, Object>> parameters) {
         IBlockProcessing processingMethod = null;
 
         // Get appropriate processing method
@@ -222,7 +227,8 @@ public class MethodConfiguration {
      * @param parameters Parameters for method
      * @return Configured entity clustering method
      */
-    public static IEntityClustering configureEntityClusteringMethod(String methodName, List<JPair<String, Object>> parameters) {
+    public static IEntityClustering configureEntityClusteringMethod(String methodName,
+                                                                    List<JPair<String, Object>> parameters) {
         IEntityClustering ecMethod = null;
 
         // Get appropriate processing method
@@ -239,7 +245,7 @@ public class MethodConfiguration {
                 break;
             case JedaiOptions.CUT_CLUSTERING:
                 ecMethod = new CutClustering(
-                        (double) parameters.get(1).getRight(),  // Acap is first parameter in CutClustering, but 2nd in JedAI library
+                        (double) parameters.get(1).getRight(),  // 1st parameter of CutClustering, but 2nd in JedAI-core
                         (double) parameters.get(0).getRight()
                 );
                 break;
@@ -278,7 +284,8 @@ public class MethodConfiguration {
      * @param parameters   Parameters for the method
      * @return Entity Matching method configured with the given parameters
      */
-    public static IEntityMatching configureEntityMatchingMethod(String emMethodName, List<JPair<String, Object>> parameters) {
+    public static IEntityMatching configureEntityMatchingMethod(String emMethodName,
+                                                                List<JPair<String, Object>> parameters) {
         RepresentationModel rep;
         SimilarityMetric simMetric;
 
@@ -286,13 +293,17 @@ public class MethodConfiguration {
         switch (emMethodName) {
             case JedaiOptions.GROUP_LINKAGE:
                 double simThr = (parameters != null) ? (double) parameters.get(2).getRight() : 0.5;
-                rep = (parameters != null) ? (RepresentationModel) parameters.get(0).getRight() : RepresentationModel.TOKEN_UNIGRAM_GRAPHS;
-                simMetric = (parameters != null) ? (SimilarityMetric) parameters.get(1).getRight() : SimilarityMetric.GRAPH_VALUE_SIMILARITY;
+                rep = (parameters != null) ?
+                        (RepresentationModel) parameters.get(0).getRight() : RepresentationModel.TOKEN_UNIGRAM_GRAPHS;
+                simMetric = (parameters != null) ?
+                        (SimilarityMetric) parameters.get(1).getRight() : SimilarityMetric.GRAPH_VALUE_SIMILARITY;
 
                 return new GroupLinkage(simThr, rep, simMetric);
             case JedaiOptions.PROFILE_MATCHER:
-                rep = (parameters != null) ? (RepresentationModel) parameters.get(0).getRight() : RepresentationModel.TOKEN_UNIGRAM_GRAPHS;
-                simMetric = (parameters != null) ? (SimilarityMetric) parameters.get(1).getRight() : SimilarityMetric.GRAPH_VALUE_SIMILARITY;
+                rep = (parameters != null) ?
+                        (RepresentationModel) parameters.get(0).getRight() : RepresentationModel.TOKEN_UNIGRAM_GRAPHS;
+                simMetric = (parameters != null) ?
+                        (SimilarityMetric) parameters.get(1).getRight() : SimilarityMetric.GRAPH_VALUE_SIMILARITY;
 
                 return new ProfileMatcher(rep, simMetric);
             default:
@@ -301,8 +312,8 @@ public class MethodConfiguration {
     }
 
     /**
-     * Get the IDocumentation instance for a specified Data Reader (either for Entities, or Ground Truth). Useful for getting
-     * the parameters for a reader.
+     * Get the IDocumentation instance for a specified Data Reader (either for Entities, or Ground Truth).
+     * Useful for getting the parameters for a reader.
      *
      * @param groundTruth Set to true if you want a ground truth reader. If false, Entity Readers will be used instead
      * @param type        The type of reader

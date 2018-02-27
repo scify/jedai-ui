@@ -165,7 +165,6 @@ public class ConfirmController {
 //
 //        addRow(rows++, boldLabel("Block Cleaning Methods"), blockCleaningList);
         //todo: Update for new step 3 objects
-        //todo: Add Block Cleaning parameters for each method
 
         // Comparison Cleaning method
         addRow(rows++, boldLabel("Comparison Cleaning Method"), boundLabel(model.comparisonCleaningProperty()));
