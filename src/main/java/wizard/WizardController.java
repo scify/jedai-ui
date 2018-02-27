@@ -265,7 +265,10 @@ public class WizardController {
                     MethodConfiguration.displayModal(getClass(), injector, method, parametersProperty);
                 }
 
-                //todo: if configuration failed, don't go to next step
+                // If configuration failed, don't go to next step
+                if (!MethodConfiguration.configurationOk(method, parametersProperty.get())) {
+                    return;
+                }
             } else if (currentStep.get() == 3) {
                 // Special case: Block Cleaning can have multiple methods. We need to check each one separately
                 for (BlClMethodConfiguration bcmc : model.getBlockCleaningMethods()) {
@@ -276,7 +279,11 @@ public class WizardController {
 
                         // Configure the method
                         MethodConfiguration.displayModal(getClass(), injector, method, bcmc.manualParametersProperty());
-                        //todo: if configuration failed, abort
+
+                        // If configuration failed, don't go to next step
+                        if (!MethodConfiguration.configurationOk(method, bcmc.getManualParameters())) {
+                            return;
+                        }
                     }
                 }
             }

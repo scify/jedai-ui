@@ -91,6 +91,18 @@ public class MethodConfiguration {
     }
 
     /**
+     * Check if a method is configured correctly.
+     *
+     * @param method Method to check
+     * @param params Parameters for method
+     * @return True if configuration seems correct, false otherwise
+     */
+    public static boolean configurationOk(IDocumentation method, List<JPair<String, Object>> params) {
+        //todo: Implement
+        return true;
+    }
+
+    /**
      * Given a Block Building method and a list of parameters, initialize and return that method with the given
      * parameters. Assumes the parameters are of the correct type (they are cast) and correct number.
      *
