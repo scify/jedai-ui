@@ -26,7 +26,7 @@ import javafx.util.Callback;
 import utils.BlClMethodConfiguration;
 import utils.JPair;
 import utils.JedaiOptions;
-import utils.MethodConfiguration;
+import utils.dynamic_configuration.MethodConfiguration;
 import wizard.steps.CompletedController;
 
 import java.lang.annotation.Annotation;

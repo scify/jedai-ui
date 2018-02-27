@@ -1,4 +1,4 @@
-package utils;
+package utils.dynamic_configuration;
 
 import BlockBuilding.*;
 import BlockProcessing.BlockCleaning.BlockFiltering;
@@ -31,6 +31,8 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.jena.atlas.json.JsonArray;
+import utils.JPair;
+import utils.JedaiOptions;
 import wizard.DynamicConfigurationController;
 
 import java.io.IOException;

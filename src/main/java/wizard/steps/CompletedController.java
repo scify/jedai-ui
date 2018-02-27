@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import utils.*;
 import utils.console_area.ConsoleArea;
 import utils.console_area.MultiOutputStream;
+import utils.dynamic_configuration.MethodConfiguration;
 import wizard.MethodMapping;
 import wizard.WizardData;
 import workbench.DetailsCell;
