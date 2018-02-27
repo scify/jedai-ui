@@ -31,6 +31,7 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.jena.atlas.json.JsonArray;
+import org.apache.jena.atlas.json.JsonObject;
 import utils.JPair;
 import utils.JedaiOptions;
 import wizard.DynamicConfigurationController;
@@ -98,7 +99,30 @@ public class MethodConfiguration {
      * @return True if configuration seems correct, false otherwise
      */
     public static boolean configurationOk(IDocumentation method, List<JPair<String, Object>> params) {
-        //todo: Implement
+        // Get the expected parameter configuration
+        JsonArray paramDetails = method.getParameterConfiguration();
+
+        // Check that the arrays aren't null and have the same size
+        if (params == null || paramDetails == null || params.size() != paramDetails.size()) {
+            return false;
+        }
+
+        // Check if each parameter has a valid value
+        for (int i = 0; i < paramDetails.size(); i++) {
+            JsonObject paramDescription = paramDetails.get(i).getAsObject();
+            JPair<String, Object> paramConfig = params.get(i);
+//            System.out.println(paramDescription);
+//            System.out.println(paramConfig + "\n");
+
+            // Check that the parameter names are the same
+            if (!paramDescription.get("name").getAsString().value().equals(paramConfig.getLeft())) {
+                return false;
+            }
+
+            //todo: Check that value is of correct type
+//            System.out.println("------");
+        }
+
         return true;
     }
 
