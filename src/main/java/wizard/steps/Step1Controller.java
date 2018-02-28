@@ -1,7 +1,5 @@
 package wizard.steps;
 
-import DataModel.EntityProfile;
-import Utilities.IDocumentation;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import javafx.beans.property.ListProperty;
@@ -12,6 +10,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import org.scify.jedai.datamodel.EntityProfile;
+import org.scify.jedai.utilities.IDocumentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.DataReadingHelper;

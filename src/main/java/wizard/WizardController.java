@@ -1,9 +1,5 @@
 package wizard;
 
-import EntityMatching.GroupLinkage;
-import EntityMatching.ProfileMatcher;
-import Utilities.Enumerations.BlockBuildingMethod;
-import Utilities.IDocumentation;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import javafx.beans.binding.When;
@@ -23,6 +19,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Callback;
+import org.scify.jedai.entitymatching.GroupLinkage;
+import org.scify.jedai.entitymatching.ProfileMatcher;
+import org.scify.jedai.utilities.IDocumentation;
+import org.scify.jedai.utilities.enumerations.BlockBuildingMethod;
 import utils.BlClMethodConfiguration;
 import utils.JPair;
 import utils.JedaiOptions;

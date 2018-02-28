@@ -1,16 +1,15 @@
 package utils;
 
-import DataModel.EntityProfile;
-import DataReader.EntityReader.*;
-import DataReader.GroundTruthReader.GtCSVReader;
-import DataReader.GroundTruthReader.GtRDFReader;
-import DataReader.GroundTruthReader.GtSerializationReader;
-import DataReader.GroundTruthReader.IGroundTruthReader;
-import Utilities.DataStructures.AbstractDuplicatePropagation;
-import Utilities.DataStructures.BilateralDuplicatePropagation;
-import Utilities.DataStructures.UnilateralDuplicatePropagation;
 import com.google.common.primitives.Ints;
-import utils.JPair;
+import org.scify.jedai.datamodel.EntityProfile;
+import org.scify.jedai.datareader.entityreader.*;
+import org.scify.jedai.datareader.groundtruthreader.GtCSVReader;
+import org.scify.jedai.datareader.groundtruthreader.GtRDFReader;
+import org.scify.jedai.datareader.groundtruthreader.GtSerializationReader;
+import org.scify.jedai.datareader.groundtruthreader.IGroundTruthReader;
+import org.scify.jedai.utilities.datastructures.AbstractDuplicatePropagation;
+import org.scify.jedai.utilities.datastructures.BilateralDuplicatePropagation;
+import org.scify.jedai.utilities.datastructures.UnilateralDuplicatePropagation;
 
 import java.util.List;
 import java.util.Set;

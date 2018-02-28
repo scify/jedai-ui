@@ -1,13 +1,13 @@
 package wizard;
 
-import BlockProcessing.BlockCleaning.BlockFiltering;
-import BlockProcessing.BlockCleaning.ComparisonsBasedBlockPurging;
-import BlockProcessing.BlockCleaning.SizeBasedBlockPurging;
-import BlockProcessing.ComparisonCleaning.*;
-import BlockProcessing.IBlockProcessing;
-import EntityClustering.*;
-import Utilities.Enumerations.BlockBuildingMethod;
-import Utilities.Enumerations.WeightingScheme;
+import org.scify.jedai.blockprocessing.IBlockProcessing;
+import org.scify.jedai.blockprocessing.blockcleaning.BlockFiltering;
+import org.scify.jedai.blockprocessing.blockcleaning.ComparisonsBasedBlockPurging;
+import org.scify.jedai.blockprocessing.blockcleaning.SizeBasedBlockPurging;
+import org.scify.jedai.blockprocessing.comparisoncleaning.*;
+import org.scify.jedai.entityclustering.*;
+import org.scify.jedai.utilities.enumerations.BlockBuildingMethod;
+import org.scify.jedai.utilities.enumerations.WeightingScheme;
 import utils.JedaiOptions;
 
 import java.util.Collections;
