@@ -7,7 +7,7 @@
 <VBox fx:id="containerVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
       minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="700.0" spacing="5.0" VBox.vgrow="ALWAYS"
       xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="wizard.steps.CompletedController">
+      fx:controller="org.scify.jedai.gui.wizard.steps.CompletedController">
     <children>
         <Label alignment="CENTER" contentDisplay="CENTER" text="Workflow Execution">
             <font>

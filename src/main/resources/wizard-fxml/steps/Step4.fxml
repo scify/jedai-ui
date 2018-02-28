@@ -6,7 +6,7 @@
 <?import javafx.scene.text.Font?>
 <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
       prefHeight="300.0" prefWidth="450.0" spacing="10.0" xmlns="http://javafx.com/javafx/8"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="wizard.steps.Step4Controller">
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.scify.jedai.gui.wizard.steps.Step4Controller">
     <children>
         <Label text="Comparison Cleaning">
             <font>

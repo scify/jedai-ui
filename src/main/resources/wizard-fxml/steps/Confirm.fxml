@@ -7,7 +7,7 @@
 <?import javafx.scene.text.Font?>
 <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
       minWidth="-Infinity" prefWidth="580.0" spacing="5.0" VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/8"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="wizard.steps.ConfirmController">
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.scify.jedai.gui.wizard.steps.ConfirmController">
     <children>
         <Label fx:id="titleLabel" text="Confirm Configuration">
             <font>

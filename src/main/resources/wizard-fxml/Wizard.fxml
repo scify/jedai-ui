@@ -6,7 +6,7 @@
 <?import javafx.scene.text.Font?>
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
       xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="wizard.WizardController">
+      fx:controller="org.scify.jedai.gui.wizard.WizardController">
     <children>
         <GridPane prefHeight="132.0" prefWidth="568.0">
             <columnConstraints>
