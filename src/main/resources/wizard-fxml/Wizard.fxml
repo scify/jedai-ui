@@ -2,10 +2,11 @@
 
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+      xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="org.scify.jedai.gui.wizard.WizardController">
     <children>
         <GridPane prefHeight="132.0" prefWidth="568.0">
@@ -19,16 +20,21 @@
             <children>
                 <VBox prefHeight="131.0" prefWidth="366.0">
                     <children>
-                        <Label prefHeight="48.0" prefWidth="284.0" text="JedAI">
-                            <font>
-                                <Font size="48.0"/>
-                            </font>
-                        </Label>
+                        <Pane prefHeight="65.0" prefWidth="200.0">
+                            <children>
+                                <ImageView cache="true" fitHeight="150.0" fitWidth="216.0" layoutY="-61.0"
+                                           pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../images/JedAI_logo.png"/>
+                                    </image>
+                                </ImageView>
+                            </children>
+                        </Pane>
                         <Label fx:id="stepsLabel" prefHeight="21.0" prefWidth="295.0" text="Subtitle"/>
-                        <HBox fx:id="hboxIndicators" alignment="CENTER" prefHeight="40.0" prefWidth="299.0"
+                        <HBox fx:id="hboxIndicators" alignment="CENTER" prefHeight="25.0" prefWidth="299.0"
                               spacing="2.0">
                             <padding>
-                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+                                <Insets left="20.0" right="20.0"/>
                             </padding>
                         </HBox>
                     </children>
