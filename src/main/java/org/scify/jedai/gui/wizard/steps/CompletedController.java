@@ -26,13 +26,6 @@ import org.scify.jedai.datamodel.EquivalenceCluster;
 import org.scify.jedai.datamodel.SimilarityPairs;
 import org.scify.jedai.entityclustering.IEntityClustering;
 import org.scify.jedai.entitymatching.IEntityMatching;
-import org.scify.jedai.utilities.BlocksPerformance;
-import org.scify.jedai.utilities.ClustersPerformance;
-import org.scify.jedai.utilities.PrintToFile;
-import org.scify.jedai.utilities.datastructures.AbstractDuplicatePropagation;
-import org.scify.jedai.utilities.enumerations.BlockBuildingMethod;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.scify.jedai.gui.utilities.BlClMethodConfiguration;
 import org.scify.jedai.gui.utilities.DataReadingHelper;
 import org.scify.jedai.gui.utilities.JPair;
@@ -44,6 +37,13 @@ import org.scify.jedai.gui.wizard.MethodMapping;
 import org.scify.jedai.gui.wizard.WizardData;
 import org.scify.jedai.gui.workbench.DetailsCell;
 import org.scify.jedai.gui.workbench.WorkflowResult;
+import org.scify.jedai.utilities.BlocksPerformance;
+import org.scify.jedai.utilities.ClustersPerformance;
+import org.scify.jedai.utilities.PrintToFile;
+import org.scify.jedai.utilities.datastructures.AbstractDuplicatePropagation;
+import org.scify.jedai.utilities.enumerations.BlockBuildingMethod;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -298,6 +298,11 @@ public class CompletedController {
                 if (blClMethods != null) {
                     // Execute the methods
                     for (BlClMethodConfiguration currentMethod : blClMethods) {
+                        // Only run the method if it is enabled
+                        if (!currentMethod.isEnabled()) {
+                            continue;
+                        }
+
                         overheadStart = System.currentTimeMillis();
 
                         // Process blocks with this method
