@@ -338,7 +338,7 @@ public class CompletedController {
 
                     if (!model.getComparisonCleaningConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
                         // Auto or default configuration selected: use default configuration
-                        comparisonCleaningMethod = MethodConfiguration.configureComparisonCleaningMethod(coClMethod, null);
+                        comparisonCleaningMethod = MethodMapping.getMethodByName(coClMethod);
                     } else {
                         // Manual configuration selected, create method with the saved parameters
                         ObservableList<JPair<String, Object>> coClParams = model.getComparisonCleaningParameters();
