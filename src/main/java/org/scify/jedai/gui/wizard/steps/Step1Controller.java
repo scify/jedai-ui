@@ -5,10 +5,9 @@ import com.google.inject.Injector;
 import javafx.beans.property.ListProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import org.scify.jedai.datamodel.EntityProfile;
 import org.scify.jedai.gui.utilities.DataReadingHelper;
@@ -38,6 +37,7 @@ public class Step1Controller {
     public Button entitiesD1ConfigBtn;
     public Button entitiesD2ConfigBtn;
     public Button gTruthConfigBtn;
+    public GridPane controlsGrid;
     private Logger log = LoggerFactory.getLogger(Step1Controller.class);
 
     @Inject
@@ -84,6 +84,11 @@ public class Step1Controller {
         entitiesD2ConfigBtn.disableProperty().bind(model.entityProfilesD2TypeProperty().isNull());
         gTruthConfigBtn.disableProperty().bind(model.groundTruthTypeProperty().isNull());
 
+        // Add lists of parameters
+        controlsGrid.add(parametersNode(model.entityProfilesD1ParametersProperty()), 3, 0);
+        controlsGrid.add(parametersNode(model.entityProfilesD2ParametersProperty()), 3, 1);
+        controlsGrid.add(parametersNode(model.groundTruthParametersProperty()), 3, 2);
+
         // Set initial values to text fields (for testing...)
 //        model.setEntityProfilesD1Type(JedaiOptions.SERIALIZED);
 //        model.setGroundTruthType(JedaiOptions.SERIALIZED);
@@ -93,6 +98,25 @@ public class Step1Controller {
 //        model.setGroundTruthParameters(FXCollections.observableArrayList(
 //                new JPair<>("File Path", "C:\\Users\\leots\\Documents\\JedAIToolkit\\datasets\\dirtyERfiles\\restaurantIdDuplicates")
 //        ));
+    }
+
+
+    /**
+     * Create a node for displaying the advanced configuration parameters of a method.
+     *
+     * @param parametersProperty List property, that contains the values of the method's parameters
+     * @return Node that displays the given parameters and values
+     */
+    private Node parametersNode(ListProperty<JPair<String, Object>> parametersProperty) {
+        //todo: this function is the same as in ConfirmController, put it somewhere else and use the same on both
+        // Create the node to show the parameters
+        ListView<JPair<String, Object>> paramsList = new ListView<>();
+        paramsList.setMaxHeight(60);
+
+        // Bind the ListView's items to the given parameters property
+        paramsList.itemsProperty().bind(parametersProperty);
+
+        return paramsList;
     }
 
     @Validate
