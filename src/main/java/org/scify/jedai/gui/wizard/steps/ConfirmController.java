@@ -90,6 +90,64 @@ public class ConfirmController {
         return rowConstraints;
     }
 
+    /**
+     * Get a list view that displays the block cleaning methods. Items are updated automatically by using an extractor,
+     * and they are displayed using a custom ListCell.
+     *
+     * @return ListView for block cleaning methods
+     */
+    private ListView<BlClMethodConfiguration> getBlockCleaningMethodsListView() {
+        // Create new ListView for BlClMethodConfiguration objects
+        ListView<BlClMethodConfiguration> blockCleaningList = new ListView<>();
+
+        // Set its CellFactory to a custom one that formats BlClMethodConfiguration objects
+        blockCleaningList.setCellFactory(param -> new ListCell<BlClMethodConfiguration>() {
+            @Override
+            protected void updateItem(BlClMethodConfiguration item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    String representation = item.getName() + ": " + (item.isEnabled() ? "Enabled" : "Disabled")
+                            + ", Configuration: " + item.getConfigurationType();
+
+                    if (item.getConfigurationType().equals(JedaiOptions.MANUAL_CONFIG)) {
+                        // Manual configuration selected, show parameters
+                        representation += ", Parameters: " + item.getManualParameters();
+                    }
+
+                    // Set the text
+                    setText(representation);
+                }
+            }
+        });
+
+        // Create an ObservableList that contains the model's BlClMethodConfiguration items, but has a custom extractor
+        // that checks for changes on their properties. (thanks https://stackoverflow.com/a/23828608)
+        ObservableList<BlClMethodConfiguration> extractorList = FXCollections.observableArrayList(
+                param -> new Observable[]{
+                        param.enabledProperty(),
+                        param.manualParametersProperty(),
+                        param.configurationTypeProperty()
+                }
+        );
+
+        extractorList.addAll(model.getBlockCleaningMethods());
+
+        // Set the ListView's items to a filtered version of the ObservableList, which removes disabled methods
+        blockCleaningList.setItems(extractorList.filtered(
+                blClMethodConfiguration -> blClMethodConfiguration.enabledProperty().
+
+                        get()
+        ));
+
+        // Set max height of ListView and return it
+        blockCleaningList.setMaxHeight(80);
+
+        return blockCleaningList;
+    }
+
     @FXML
     public void initialize() {
         int rows = 0;
@@ -144,42 +202,8 @@ public class ConfirmController {
         addRow(rows++, boldLabel("Block Building Parameters"),
                 MethodConfiguration.newParamsNode(model.blockBuildingParametersProperty()));
 
-        // Block Cleaning methods (sorted automatically)
-        ListView<BlClMethodConfiguration> blockCleaningList = new ListView<>();
-        blockCleaningList.setCellFactory(param -> new ListCell<BlClMethodConfiguration>() {
-            @Override
-            protected void updateItem(BlClMethodConfiguration item, boolean empty) {
-                super.updateItem(item, empty);
-
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item.getName() + ": " + item.isEnabled());
-                }
-            }
-        });
-
-        //todo: could this be done in the modeL?
-        ObservableList<BlClMethodConfiguration> obsList = FXCollections.observableArrayList(
-                param -> new Observable[]{
-                        param.enabledProperty(),
-                        param.manualParametersProperty(),
-                        param.configurationTypeProperty()
-                }
-        );
-
-        obsList.addAll(model.getBlockCleaningMethods());
-
-//        blockCleaningList.setItems(model.getBlockCleaningMethods());
-        blockCleaningList.setItems(obsList);
-        blockCleaningList.setMaxHeight(80);
-//        blockCleaningList.itemsProperty().bind(
-//                model.blockCleaningMethodsProperty()
-//                        .filtered(BlClMethodConfiguration::isEnabled)
-//                        .sorted(new BlockCleaningObjectComparator())
-//        );
-
-        addRow(rows++, boldLabel("Block Cleaning Methods"), blockCleaningList);
+        // Block Cleaning methods list
+        addRow(rows++, boldLabel("Block Cleaning Methods"), getBlockCleaningMethodsListView());
 
         // Comparison Cleaning method
         addRow(rows++, boldLabel("Comparison Cleaning Method"), boundLabel(model.comparisonCleaningProperty()));
