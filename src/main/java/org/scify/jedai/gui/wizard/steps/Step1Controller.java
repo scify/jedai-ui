@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import javafx.beans.property.ListProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -83,17 +84,22 @@ public class Step1Controller {
 
         // Disable 2nd dataset selection when Dirty ER is selected
         entitiesD2FileTypeCombo.disableProperty().bind(model.erTypeProperty().isEqualTo(JedaiOptions.DIRTY_ER));
-        entitiesD2ConfigBtn.disableProperty().bind(model.erTypeProperty().isEqualTo(JedaiOptions.DIRTY_ER));
+        entitiesD2ConfigBtn.disableProperty().bind(
+                model.erTypeProperty().isEqualTo(JedaiOptions.DIRTY_ER)
+                        .or(model.entityProfilesD2TypeProperty().isNull()));
         entityProfilesD2Label.disableProperty().bind(model.erTypeProperty().isEqualTo(JedaiOptions.DIRTY_ER));
 
-        // Disable configure buttons until a reader type is selected
+        // Disable configure buttons until a reader type is selected (for 2nd dataset it is done above)
         entitiesD1ConfigBtn.disableProperty().bind(model.entityProfilesD1TypeProperty().isNull());
-        entitiesD2ConfigBtn.disableProperty().bind(model.entityProfilesD2TypeProperty().isNull());
         gTruthConfigBtn.disableProperty().bind(model.groundTruthTypeProperty().isNull());
+
+        // Create parameters list node for 2nd dataset (which becomes disabled when Dirty ER is selected)
+        Node d2ParamsList = MethodConfiguration.newParamsNode(model.entityProfilesD2ParametersProperty());
+        d2ParamsList.disableProperty().bind(model.erTypeProperty().isEqualTo(JedaiOptions.DIRTY_ER));
 
         // Add lists of parameters
         controlsGrid.add(MethodConfiguration.newParamsNode(model.entityProfilesD1ParametersProperty()), 3, 0);
-        controlsGrid.add(MethodConfiguration.newParamsNode(model.entityProfilesD2ParametersProperty()), 3, 1);
+        controlsGrid.add(d2ParamsList, 3, 1);
         controlsGrid.add(MethodConfiguration.newParamsNode(model.groundTruthParametersProperty()), 3, 2);
 
         // Set initial values to text fields (for testing...)
