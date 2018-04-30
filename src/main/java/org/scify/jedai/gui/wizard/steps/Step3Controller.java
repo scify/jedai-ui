@@ -8,16 +8,16 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Separator;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.VBox;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.scify.jedai.gui.utilities.BlClMethodConfiguration;
-import org.scify.jedai.gui.utilities.BlockCleaningCustomComparator;
+import org.scify.jedai.gui.utilities.BlockCleaningComparator;
 import org.scify.jedai.gui.utilities.JedaiOptions;
 import org.scify.jedai.gui.utilities.dynamic_configuration.ConfigurationTypeSelector;
 import org.scify.jedai.gui.utilities.dynamic_configuration.ConfigurationTypeSelectorHorizontal;
 import org.scify.jedai.gui.wizard.Submit;
 import org.scify.jedai.gui.wizard.Validate;
 import org.scify.jedai.gui.wizard.WizardData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +29,7 @@ public class Step3Controller {
     public ListView<String> list;
     public VBox methodConfContainer;
 
-    private BlockCleaningCustomComparator listComparator;
+    private BlockCleaningComparator listComparator;
     private Map<String, SimpleBooleanProperty> optionsMap;
     private Logger log = LoggerFactory.getLogger(Step3Controller.class);
 
@@ -39,7 +39,7 @@ public class Step3Controller {
     @FXML
     public void initialize() {
         // Create comparator object that will be used for list sorting later
-        listComparator = new BlockCleaningCustomComparator();
+        listComparator = new BlockCleaningComparator();
 
         // Initialize block cleaning methods list
         model.setBlockCleaningMethods(FXCollections.observableList(new ArrayList<>()));

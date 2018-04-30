@@ -8,13 +8,13 @@ import java.util.List;
  * Compares Block Cleaning method names, to put them in the correct order.
  * If Strings are included which are not Block Cleaning methods, they are put
  * after the Block Cleaning methods, in alphabetical order.
- *
+ * <p>
  * Note: this comparator imposes orderings that are inconsistent with equals.
  */
-public class BlockCleaningCustomComparator implements Comparator<String> {
+public class BlockCleaningComparator implements Comparator<String> {
     private final List<String> correctOrder;
 
-    public BlockCleaningCustomComparator() {
+    public BlockCleaningComparator() {
         // Add strings in order
         correctOrder = Arrays.asList(
                 JedaiOptions.SIZE_BASED_BLOCK_PURGING,

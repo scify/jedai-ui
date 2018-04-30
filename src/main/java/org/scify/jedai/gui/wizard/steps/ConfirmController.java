@@ -6,10 +6,13 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import org.scify.jedai.gui.utilities.BlClMethodConfiguration;
+import org.scify.jedai.gui.utilities.BlockCleaningObjectComparator;
 import org.scify.jedai.gui.utilities.JedaiOptions;
 import org.scify.jedai.gui.utilities.RowHidingChangeListener;
 import org.scify.jedai.gui.utilities.dynamic_configuration.MethodConfiguration;
@@ -139,14 +142,13 @@ public class ConfirmController {
                 MethodConfiguration.newParamsNode(model.blockBuildingParametersProperty()));
 
         // Block Cleaning methods (sorted automatically)
-//        ListView<String> blockCleaningList = new ListView<>(
-//                model.getBlockCleaningMethods()
-//                        .sorted(new BlockCleaningCustomComparator())
-//        );
-//        blockCleaningList.setMaxHeight(80);
-//
-//        addRow(rows++, boldLabel("Block Cleaning Methods"), blockCleaningList);
-        //todo: Update for new step 3 objects
+        ListView<BlClMethodConfiguration> blockCleaningList = new ListView<>(
+                model.getBlockCleaningMethods()
+                        .sorted(new BlockCleaningObjectComparator())
+        );
+        blockCleaningList.setMaxHeight(80);
+
+        addRow(rows++, boldLabel("Block Cleaning Methods"), blockCleaningList);
 
         // Comparison Cleaning method
         addRow(rows++, boldLabel("Comparison Cleaning Method"), boundLabel(model.comparisonCleaningProperty()));
