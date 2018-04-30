@@ -75,6 +75,7 @@ public class WizardData {
             clone.setBlockBuildingParameters(FXCollections.observableList(data.getBlockBuildingParameters()));
 
         // Step 3: Block Cleaning
+        // todo: Check if objects are actually cloned and don't change on the parameter view window of previous runs
         clone.setBlockCleaningMethods(FXCollections.observableList(data.getBlockCleaningMethods()));
 
         // Step 4: Comparison Cleaning
@@ -103,7 +104,9 @@ public class WizardData {
      */
     public void reset() {
         // Reset block cleaning list
-        blockCleaningMethodsProperty().clear();
+        for (BlClMethodConfiguration mConfig : this.getBlockCleaningMethods()) {
+            mConfig.reset();
+        }
 
         // Reset advanced configuration parameters (except for Data Reading)
         blockBuildingParametersProperty().clear();

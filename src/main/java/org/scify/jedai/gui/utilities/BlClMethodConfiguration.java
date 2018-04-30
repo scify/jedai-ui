@@ -26,6 +26,15 @@ public class BlClMethodConfiguration {
         this.manualParameters = new SimpleListProperty<>();
     }
 
+    /**
+     * Reset the values of this method configuration
+     */
+    public void reset() {
+        this.setEnabled(false);
+        this.setManualParameters(new SimpleListProperty<>());
+        this.setConfigurationType(JedaiOptions.DEFAULT_CONFIG);
+    }
+
     public boolean isEnabled() {
         return enabled.get();
     }
