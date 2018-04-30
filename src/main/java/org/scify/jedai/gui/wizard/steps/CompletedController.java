@@ -204,9 +204,7 @@ public class CompletedController {
      * @param percentage Percentage to set indicator to (in range [0, 1])
      */
     private void updateProgress(double percentage) {
-        Platform.runLater(() -> {
-            progressIndicator.setProgress(percentage);
-        });
+        Platform.runLater(() -> progressIndicator.setProgress(percentage));
     }
 
     @FXML
@@ -275,10 +273,15 @@ public class CompletedController {
                 }
 
                 List<AbstractBlock> blocks;
-                if (erType.equals(JedaiOptions.DIRTY_ER)) {
-                    blocks = blockBuildingMethod.getBlocks(profilesD1);
+                if (blockBuildingMethod != null) {
+                    if (erType.equals(JedaiOptions.DIRTY_ER)) {
+                        blocks = blockBuildingMethod.getBlocks(profilesD1);
+                    } else {
+                        blocks = blockBuildingMethod.getBlocks(profilesD1, profilesD2);
+                    }
                 } else {
-                    blocks = blockBuildingMethod.getBlocks(profilesD1, profilesD2);
+                    // todo: Do something?
+                    return;
                 }
 
                 System.out.println("Original blocks\t:\t" + blocks.size());

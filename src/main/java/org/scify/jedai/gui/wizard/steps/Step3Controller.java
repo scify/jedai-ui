@@ -80,12 +80,12 @@ public class Step3Controller {
     }
 
     @Validate
-    public boolean validate() throws Exception {
+    public boolean validate() {
         return true;
     }
 
     @Submit
-    public void submit() throws Exception {
+    public void submit() {
         if (log.isDebugEnabled()) {
             log.debug("[SUBMIT] the user has completed step 3");
         }

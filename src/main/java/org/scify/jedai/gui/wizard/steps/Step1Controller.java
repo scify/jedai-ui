@@ -108,7 +108,7 @@ public class Step1Controller {
     }
 
     @Validate
-    public boolean validate() throws Exception {
+    public boolean validate() {
         // Create HashMap with values to check (ordered)
         Map<String, List<JPair<String, Object>>> readerParams = new LinkedHashMap<>();
         readerParams.put("entities1", model.getEntityProfilesD1Parameters());

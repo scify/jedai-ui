@@ -1,7 +1,7 @@
 package org.scify.jedai.gui.wizard;
 
-/**
- * Created by carl on 4/30/16.
+/*
+  Created by carl on 4/30/16.
  */
 
 import java.lang.annotation.ElementType;

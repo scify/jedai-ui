@@ -5,14 +5,14 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.VBox;
 import jfxtras.scene.control.ToggleGroupValue;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.scify.jedai.gui.utilities.JedaiOptions;
 import org.scify.jedai.gui.utilities.RadioButtonHelper;
 import org.scify.jedai.gui.utilities.dynamic_configuration.ConfigurationTypeSelector;
 import org.scify.jedai.gui.wizard.Submit;
 import org.scify.jedai.gui.wizard.Validate;
 import org.scify.jedai.gui.wizard.WizardData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -83,7 +83,7 @@ public class Step6Controller {
     }
 
     @Validate
-    public boolean validate() throws Exception {
+    public boolean validate() {
         if (model.getEntityClustering() == null || model.getEntityClustering().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Entity Clustering Method");
@@ -97,7 +97,7 @@ public class Step6Controller {
     }
 
     @Submit
-    public void submit() throws Exception {
+    public void submit() {
         if (log.isDebugEnabled()) {
             log.debug("[SUBMIT] the user has completed step 6");
         }
