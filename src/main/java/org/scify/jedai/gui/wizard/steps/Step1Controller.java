@@ -5,8 +5,10 @@ import com.google.inject.Injector;
 import javafx.beans.property.ListProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import org.scify.jedai.datamodel.EntityProfile;
@@ -63,7 +65,12 @@ public class Step1Controller {
 
         // Add options to the three file type comboboxes
         List<ComboBox<String>> comboboxes = Arrays.asList(entitiesD1FileTypeCombo, entitiesD2FileTypeCombo);
-        List<String> fileTypeOptions = Arrays.asList(JedaiOptions.CSV, JedaiOptions.DATABASE, JedaiOptions.RDF, JedaiOptions.SERIALIZED);
+        List<String> fileTypeOptions = Arrays.asList(
+                JedaiOptions.CSV,
+                JedaiOptions.DATABASE,
+                JedaiOptions.RDF,
+                JedaiOptions.SERIALIZED
+        );
 
         for (ComboBox<String> c : comboboxes) {
             c.getItems().addAll(fileTypeOptions);
@@ -85,38 +92,19 @@ public class Step1Controller {
         gTruthConfigBtn.disableProperty().bind(model.groundTruthTypeProperty().isNull());
 
         // Add lists of parameters
-        controlsGrid.add(parametersNode(model.entityProfilesD1ParametersProperty()), 3, 0);
-        controlsGrid.add(parametersNode(model.entityProfilesD2ParametersProperty()), 3, 1);
-        controlsGrid.add(parametersNode(model.groundTruthParametersProperty()), 3, 2);
+        controlsGrid.add(MethodConfiguration.newParamsNode(model.entityProfilesD1ParametersProperty()), 3, 0);
+        controlsGrid.add(MethodConfiguration.newParamsNode(model.entityProfilesD2ParametersProperty()), 3, 1);
+        controlsGrid.add(MethodConfiguration.newParamsNode(model.groundTruthParametersProperty()), 3, 2);
 
         // Set initial values to text fields (for testing...)
 //        model.setEntityProfilesD1Type(JedaiOptions.SERIALIZED);
 //        model.setGroundTruthType(JedaiOptions.SERIALIZED);
 //        model.setEntityProfilesD1Parameters(FXCollections.observableArrayList(
-//                new JPair<>("File Path", "C:\\Users\\leots\\Documents\\JedAIToolkit\\datasets\\dirtyERfiles\\restaurantProfiles")
+//                new JPair<>("File Path", "C:\\Users\\leots\\Documents\\JedAIToolkit\\jedai-core\\data\\dirtyErDatasets\\restaurantProfiles")
 //        ));
 //        model.setGroundTruthParameters(FXCollections.observableArrayList(
-//                new JPair<>("File Path", "C:\\Users\\leots\\Documents\\JedAIToolkit\\datasets\\dirtyERfiles\\restaurantIdDuplicates")
+//                new JPair<>("File Path", "C:\\Users\\leots\\Documents\\JedAIToolkit\\jedai-core\\data\\dirtyErDatasets\\\\restaurantIdDuplicates")
 //        ));
-    }
-
-
-    /**
-     * Create a node for displaying the advanced configuration parameters of a method.
-     *
-     * @param parametersProperty List property, that contains the values of the method's parameters
-     * @return Node that displays the given parameters and values
-     */
-    private Node parametersNode(ListProperty<JPair<String, Object>> parametersProperty) {
-        //todo: this function is the same as in ConfirmController, put it somewhere else and use the same on both
-        // Create the node to show the parameters
-        ListView<JPair<String, Object>> paramsList = new ListView<>();
-        paramsList.setMaxHeight(60);
-
-        // Bind the ListView's items to the given parameters property
-        paramsList.itemsProperty().bind(parametersProperty);
-
-        return paramsList;
     }
 
     @Validate
@@ -142,7 +130,9 @@ public class Step1Controller {
                 && entitiesD1Type != null && groundTruthType != null;
 
         if (model.getErType().equals(JedaiOptions.CLEAN_CLEAN_ER)) {
-            ok = ok && readerParams.get("entities2") != null && !readerParams.get("entities2").isEmpty() && entitiesD2Type != null;
+            ok = ok && readerParams.get("entities2") != null
+                    && !readerParams.get("entities2").isEmpty()
+                    && entitiesD2Type != null;
         }
 
         if (!ok) {
@@ -156,7 +146,8 @@ public class Step1Controller {
             String erType = model.getErType();
 
             // Read 1st profiles file
-            List<EntityProfile> profilesD1 = DataReadingHelper.getEntities(entitiesD1Type, readerParams.get("entities1"));
+            List<EntityProfile> profilesD1 =
+                    DataReadingHelper.getEntities(entitiesD1Type, readerParams.get("entities1"));
 
             // In case Clean-Clear ER is selected, also read 2nd profiles file
             List<EntityProfile> profilesD2 = null;
@@ -165,10 +156,12 @@ public class Step1Controller {
             }
 
             // Read ground truth
-            DataReadingHelper.getGroundTruth(groundTruthType, readerParams.get("ground_truth"), erType, profilesD1, profilesD2);
+            DataReadingHelper
+                    .getGroundTruth(groundTruthType, readerParams.get("ground_truth"), erType, profilesD1, profilesD2);
         } catch (Exception e) {
             // Show invalid input file error and stop checking other files
-            showError("Invalid input files!", "The input files could not be read successfully.\n\nDetails: " + e.toString() + " (" + e.getMessage() + ")");
+            showError("Invalid input files!",
+                    "The input files could not be read successfully.\n\nDetails: " + e.toString() + " (" + e.getMessage() + ")");
             return false;
         }
 

@@ -1,24 +1,22 @@
 package org.scify.jedai.gui.wizard.steps;
 
 import com.google.inject.Inject;
-import javafx.beans.property.ListProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.scify.jedai.gui.utilities.JPair;
 import org.scify.jedai.gui.utilities.JedaiOptions;
 import org.scify.jedai.gui.utilities.RowHidingChangeListener;
+import org.scify.jedai.gui.utilities.dynamic_configuration.MethodConfiguration;
 import org.scify.jedai.gui.wizard.Submit;
 import org.scify.jedai.gui.wizard.WizardData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
@@ -86,24 +84,6 @@ public class ConfirmController {
         return rowConstraints;
     }
 
-    /**
-     * Create a node for displaying the advanced configuration parameters of a method.
-     *
-     * @param parametersProperty List property, that contains the values of the method's parameters
-     * @return Node that displays the given parameters and values
-     */
-    private Node parametersNode(ListProperty<JPair<String, Object>> parametersProperty) {
-        // Create the node to show the parameters
-        ListView<JPair<String, Object>> paramsList = new ListView<>();
-        paramsList.setMaxHeight(60);
-        //todo: add vgap to the list
-
-        // Bind the ListView's items to the given parameters property
-        paramsList.itemsProperty().bind(parametersProperty);
-
-        return paramsList;
-    }
-
     @FXML
     public void initialize() {
         int rows = 0;
@@ -115,13 +95,14 @@ public class ConfirmController {
         addRow(rows++, boldLabel("Dataset 1 Type"), boundLabel(model.entityProfilesD1TypeProperty()));
 
         // Dataset 1 parameters
-        addRow(rows++, boldLabel("Dataset 1 Reader Parameters"), parametersNode(model.entityProfilesD1ParametersProperty()));
+        addRow(rows++, boldLabel("Dataset 1 Reader Parameters"),
+                MethodConfiguration.newParamsNode(model.entityProfilesD1ParametersProperty()));
 
         // Dataset 2 type & parameters (only shown for Clean-Clean ER)
         Label d2TypeTitle = boldLabel("Dataset 2 Type");
         Label d2TypeValue = boundLabel(model.entityProfilesD2TypeProperty());
         Label d2ParamsTitle = boldLabel("Dataset 2 Reader Parameters");
-        Node d2ParamsValue = parametersNode(model.entityProfilesD2ParametersProperty());
+        Node d2ParamsValue = MethodConfiguration.newParamsNode(model.entityProfilesD2ParametersProperty());
 
         // Add the new nodes to their rows, and keep the row constraints objects
         RowConstraints d2TypeConstraints = addRow(rows++, d2TypeTitle, d2TypeValue);
@@ -147,13 +128,15 @@ public class ConfirmController {
         addRow(rows++, boldLabel("Ground Truth Type"), boundLabel(model.groundTruthTypeProperty()));
 
         // Ground Truth parameters
-        addRow(rows++, boldLabel("Ground Truth Reader Parameters"), parametersNode(model.groundTruthParametersProperty()));
+        addRow(rows++, boldLabel("Ground Truth Reader Parameters"),
+                MethodConfiguration.newParamsNode(model.groundTruthParametersProperty()));
 
         // Block Building method
         addRow(rows++, boldLabel("Block Building Method"), boundLabel(model.blockBuildingProperty()));
 
         // Block Building parameters
-        addRow(rows++, boldLabel("Block Building Parameters"), parametersNode(model.blockBuildingParametersProperty()));
+        addRow(rows++, boldLabel("Block Building Parameters"),
+                MethodConfiguration.newParamsNode(model.blockBuildingParametersProperty()));
 
         // Block Cleaning methods (sorted automatically)
 //        ListView<String> blockCleaningList = new ListView<>(
@@ -169,28 +152,34 @@ public class ConfirmController {
         addRow(rows++, boldLabel("Comparison Cleaning Method"), boundLabel(model.comparisonCleaningProperty()));
 
         // Comparison Cleaning configuration type
-        addRow(rows++, boldLabel("Comparison Cleaning Configuration"), boundLabel(model.comparisonCleaningConfigTypeProperty()));
+        addRow(rows++, boldLabel("Comparison Cleaning Configuration"),
+                boundLabel(model.comparisonCleaningConfigTypeProperty()));
 
         // Comparison Cleaning parameters
-        addRow(rows++, boldLabel("Comparison Cleaning Parameters"), parametersNode(model.comparisonCleaningParametersProperty()));
+        addRow(rows++, boldLabel("Comparison Cleaning Parameters"),
+                MethodConfiguration.newParamsNode(model.comparisonCleaningParametersProperty()));
 
         // Entity Matching method
         addRow(rows++, boldLabel("Entity Matching Method"), boundLabel(model.entityMatchingProperty()));
 
         // Entity Matching configuration type
-        addRow(rows++, boldLabel("Entity Matching Configuration"), boundLabel(model.entityMatchingConfigTypeProperty()));
+        addRow(rows++, boldLabel("Entity Matching Configuration"),
+                boundLabel(model.entityMatchingConfigTypeProperty()));
 
         // Entity Matching parameters
-        addRow(rows++, boldLabel("Entity Matching Parameters"), parametersNode(model.entityMatchingParametersProperty()));
+        addRow(rows++, boldLabel("Entity Matching Parameters"),
+                MethodConfiguration.newParamsNode(model.entityMatchingParametersProperty()));
 
         // Entity Clustering algorithm
         addRow(rows++, boldLabel("Entity Clustering Algorithm"), boundLabel(model.entityClusteringProperty()));
 
         // Entity Clustering configuration type
-        addRow(rows++, boldLabel("Entity Clustering Configuration"), boundLabel(model.entityClusteringConfigTypeProperty()));
+        addRow(rows++, boldLabel("Entity Clustering Configuration"),
+                boundLabel(model.entityClusteringConfigTypeProperty()));
 
         // Entity Clustering parameters
-        addRow(rows, boldLabel("Entity Clustering Parameters"), parametersNode(model.entityClusteringParametersProperty()));
+        addRow(rows, boldLabel("Entity Clustering Parameters"),
+                MethodConfiguration.newParamsNode(model.entityClusteringParametersProperty()));
     }
 
     /**

@@ -4,8 +4,10 @@ import com.google.inject.Injector;
 import javafx.beans.property.ListProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ListView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.jena.atlas.json.JsonArray;
@@ -27,14 +29,14 @@ import org.scify.jedai.entityclustering.*;
 import org.scify.jedai.entitymatching.GroupLinkage;
 import org.scify.jedai.entitymatching.IEntityMatching;
 import org.scify.jedai.entitymatching.ProfileMatcher;
+import org.scify.jedai.gui.utilities.JPair;
+import org.scify.jedai.gui.utilities.JedaiOptions;
+import org.scify.jedai.gui.wizard.DynamicConfigurationController;
 import org.scify.jedai.utilities.IDocumentation;
 import org.scify.jedai.utilities.enumerations.BlockBuildingMethod;
 import org.scify.jedai.utilities.enumerations.RepresentationModel;
 import org.scify.jedai.utilities.enumerations.SimilarityMetric;
 import org.scify.jedai.utilities.enumerations.WeightingScheme;
-import org.scify.jedai.gui.utilities.JPair;
-import org.scify.jedai.gui.utilities.JedaiOptions;
-import org.scify.jedai.gui.wizard.DynamicConfigurationController;
 
 import java.io.IOException;
 import java.util.List;
@@ -124,6 +126,23 @@ public class MethodConfiguration {
         }
 
         return true;
+    }
+
+    /**
+     * Create a (GUI) node that displays manual configuration parameters for any method.
+     *
+     * @param parametersProperty Parameters of method
+     * @return Node with list of parameters
+     */
+    public static Node newParamsNode(ListProperty<JPair<String, Object>> parametersProperty) {
+        // Create the node to show the parameters
+        ListView<JPair<String, Object>> paramsList = new ListView<>();
+        paramsList.setMaxHeight(60);
+
+        // Bind the ListView's items to the given parameters property
+        paramsList.itemsProperty().bind(parametersProperty);
+
+        return paramsList;
     }
 
     /**
