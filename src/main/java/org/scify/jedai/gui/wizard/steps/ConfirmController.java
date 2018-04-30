@@ -137,9 +137,7 @@ public class ConfirmController {
 
         // Set the ListView's items to a filtered version of the ObservableList, which removes disabled methods
         blockCleaningList.setItems(extractorList.filtered(
-                blClMethodConfiguration -> blClMethodConfiguration.enabledProperty().
-
-                        get()
+                blClMethodConfiguration -> blClMethodConfiguration.enabledProperty().get()
         ));
 
         // Set max height of ListView and return it

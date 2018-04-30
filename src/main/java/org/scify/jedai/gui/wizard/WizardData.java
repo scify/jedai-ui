@@ -75,8 +75,12 @@ public class WizardData {
             clone.setBlockBuildingParameters(FXCollections.observableList(data.getBlockBuildingParameters()));
 
         // Step 3: Block Cleaning
-        // todo: Check if objects are actually cloned and don't change on the parameter view window of previous runs
-        clone.setBlockCleaningMethods(FXCollections.observableList(data.getBlockCleaningMethods()));
+        ObservableList<BlClMethodConfiguration> newBlClMethods = FXCollections.observableArrayList();
+        for (BlClMethodConfiguration method : data.getBlockCleaningMethods()) {
+            // Create new object with the old one's properties to add to the new list
+            newBlClMethods.add(new BlClMethodConfiguration(method));
+        }
+        clone.setBlockCleaningMethods(newBlClMethods);
 
         // Step 4: Comparison Cleaning
         clone.setComparisonCleaning(data.getComparisonCleaning());

@@ -27,6 +27,18 @@ public class BlClMethodConfiguration {
     }
 
     /**
+     * Constructor that gets this item's properties from another BlClMethodConfiguration object
+     *
+     * @param source Source BlClMethodConfiguration object
+     */
+    public BlClMethodConfiguration(BlClMethodConfiguration source) {
+        this.name = source.getName();
+        this.enabled = new SimpleBooleanProperty(source.isEnabled());
+        this.configurationType = new SimpleStringProperty(source.getConfigurationType());
+        this.manualParameters = new SimpleListProperty<>(source.getManualParameters());
+    }
+
+    /**
      * Reset the values of this method configuration
      */
     public void reset() {
