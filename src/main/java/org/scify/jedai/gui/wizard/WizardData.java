@@ -59,20 +59,21 @@ public class WizardData {
         clone.setErType(data.getErType());
 
         clone.setEntityProfilesD1Type(data.getEntityProfilesD1Type());
-        clone.setEntityProfilesD1Parameters(FXCollections.observableList(data.getEntityProfilesD1Parameters()));
+        clone.setEntityProfilesD1Parameters(FXCollections.observableArrayList(data.getEntityProfilesD1Parameters()));
 
         clone.setEntityProfilesD2Type(data.getEntityProfilesD2Type());
         if (data.getEntityProfilesD2Parameters() != null)
-            clone.setEntityProfilesD2Parameters(FXCollections.observableList(data.getEntityProfilesD2Parameters()));
+            clone.setEntityProfilesD2Parameters(
+                    FXCollections.observableArrayList(data.getEntityProfilesD2Parameters()));
 
         clone.setGroundTruthType(data.getGroundTruthType());
-        clone.setGroundTruthParameters(FXCollections.observableList(data.getGroundTruthParameters()));
+        clone.setGroundTruthParameters(FXCollections.observableArrayList(data.getGroundTruthParameters()));
 
         // Step 2: Block Building
         clone.setBlockBuilding(data.getBlockBuilding());
         clone.setBlockBuildingConfigType(data.getBlockBuildingConfigType());
         if (data.getBlockBuildingParameters() != null)
-            clone.setBlockBuildingParameters(FXCollections.observableList(data.getBlockBuildingParameters()));
+            clone.setBlockBuildingParameters(FXCollections.observableArrayList(data.getBlockBuildingParameters()));
 
         // Step 3: Block Cleaning
         ObservableList<BlClMethodConfiguration> newBlClMethods = FXCollections.observableArrayList();
@@ -86,19 +87,21 @@ public class WizardData {
         clone.setComparisonCleaning(data.getComparisonCleaning());
         clone.setComparisonCleaningConfigType(data.getComparisonCleaningConfigType());
         if (data.getComparisonCleaningParameters() != null)
-            clone.setComparisonCleaningParameters(FXCollections.observableList(data.getComparisonCleaningParameters()));
+            clone.setComparisonCleaningParameters(
+                    FXCollections.observableArrayList(data.getComparisonCleaningParameters()));
 
         // Step 5: Entity Matching
         clone.setEntityMatching(data.getEntityMatching());
         clone.setEntityMatchingConfigType(data.getEntityMatchingConfigType());
         if (data.getEntityMatchingParameters() != null)
-            clone.setEntityMatchingParameters(FXCollections.observableList(data.getEntityMatchingParameters()));
+            clone.setEntityMatchingParameters(FXCollections.observableArrayList(data.getEntityMatchingParameters()));
 
         // Step 6: Entity Clustering
         clone.setEntityClustering(data.getEntityClustering());
         clone.setEntityClusteringConfigType(data.getEntityClusteringConfigType());
         if (data.getEntityClusteringParameters() != null)
-            clone.setEntityClusteringParameters(FXCollections.observableList(data.getEntityClusteringParameters()));
+            clone.setEntityClusteringParameters(
+                    FXCollections.observableArrayList(data.getEntityClusteringParameters()));
 
         return clone;
     }

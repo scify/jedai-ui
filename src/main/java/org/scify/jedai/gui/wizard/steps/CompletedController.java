@@ -117,7 +117,7 @@ public class CompletedController {
     }
 
     /**
-     * Initialize the org.scify.jedai.gui.workbench grid which shows the results of previous JedAI runs
+     * Initialize the workbench grid which shows the results of previous JedAI runs
      */
     private void initGrid() {
         // Set grid properties
@@ -180,7 +180,7 @@ public class CompletedController {
     }
 
     /**
-     * Generates a new Medusa Gauge for showing a clustering accuracy metric
+     * Generate a new Medusa Gauge for showing a clustering accuracy metric
      *
      * @param title Title of gauge
      * @return Gauge
@@ -199,7 +199,7 @@ public class CompletedController {
     }
 
     /**
-     * Updates the progress of the progressIndicator in the UI thread
+     * Update the progress of the progressIndicator in the UI thread
      *
      * @param percentage Percentage to set indicator to (in range [0, 1])
      */
@@ -473,7 +473,7 @@ public class CompletedController {
     }
 
     /**
-     * Asks the user for a filename with a save file dialog, and saves a CSV with the entity clusters
+     * Ask the user for a filename with a save file dialog, and save a CSV with the entity clusters
      */
     public void exportBtnHandler() {
         FileChooser fileChooser = new FileChooser();
