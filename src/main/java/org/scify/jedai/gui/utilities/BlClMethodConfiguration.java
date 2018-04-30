@@ -35,6 +35,16 @@ public class BlClMethodConfiguration {
         this.setConfigurationType(JedaiOptions.DEFAULT_CONFIG);
     }
 
+    @Override
+    public String toString() {
+        return "BlClMethodConfiguration{" +
+                "enabled=" + enabled +
+                ", name='" + name + '\'' +
+                ", configurationType=" + configurationType +
+                ", manualParameters=" + manualParameters +
+                '}';
+    }
+
     public boolean isEnabled() {
         return enabled.get();
     }

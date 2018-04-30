@@ -1,18 +1,21 @@
 package org.scify.jedai.gui.wizard.steps;
 
 import com.google.inject.Inject;
+import javafx.beans.Observable;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import org.scify.jedai.gui.utilities.BlClMethodConfiguration;
-import org.scify.jedai.gui.utilities.BlockCleaningObjectComparator;
 import org.scify.jedai.gui.utilities.JedaiOptions;
 import org.scify.jedai.gui.utilities.RowHidingChangeListener;
 import org.scify.jedai.gui.utilities.dynamic_configuration.MethodConfiguration;
@@ -142,11 +145,39 @@ public class ConfirmController {
                 MethodConfiguration.newParamsNode(model.blockBuildingParametersProperty()));
 
         // Block Cleaning methods (sorted automatically)
-        ListView<BlClMethodConfiguration> blockCleaningList = new ListView<>(
-                model.getBlockCleaningMethods()
-                        .sorted(new BlockCleaningObjectComparator())
+        ListView<BlClMethodConfiguration> blockCleaningList = new ListView<>();
+        blockCleaningList.setCellFactory(param -> new ListCell<BlClMethodConfiguration>() {
+            @Override
+            protected void updateItem(BlClMethodConfiguration item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item.getName() + ": " + item.isEnabled());
+                }
+            }
+        });
+
+        //todo: could this be done in the modeL?
+        ObservableList<BlClMethodConfiguration> obsList = FXCollections.observableArrayList(
+                param -> new Observable[]{
+                        param.enabledProperty(),
+                        param.manualParametersProperty(),
+                        param.configurationTypeProperty()
+                }
         );
+
+        obsList.addAll(model.getBlockCleaningMethods());
+
+//        blockCleaningList.setItems(model.getBlockCleaningMethods());
+        blockCleaningList.setItems(obsList);
         blockCleaningList.setMaxHeight(80);
+//        blockCleaningList.itemsProperty().bind(
+//                model.blockCleaningMethodsProperty()
+//                        .filtered(BlClMethodConfiguration::isEnabled)
+//                        .sorted(new BlockCleaningObjectComparator())
+//        );
 
         addRow(rows++, boldLabel("Block Cleaning Methods"), blockCleaningList);
 
@@ -208,7 +239,7 @@ public class ConfirmController {
     }
 
     @Submit
-    public void submit() throws Exception {
+    public void submit() {
         if (log.isDebugEnabled()) {
             log.debug("[SUBMIT] Confirmation step completed");
         }
