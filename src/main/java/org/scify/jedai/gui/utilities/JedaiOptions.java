@@ -15,6 +15,7 @@ public class JedaiOptions {
     public static final String DATABASE = "Database";
     public static final String RDF = "RDF";
     public static final String SERIALIZED = "Serialized";
+    public static final String XML = "XML";
 
     // Block Building methods
     public static final String STANDARD_TOKEN_BUILDING = "Standard/Token Blocking";

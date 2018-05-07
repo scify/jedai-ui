@@ -64,20 +64,21 @@ public class Step1Controller {
 
         RadioButtonHelper.createButtonGroup(radioBtnsContainer, buttons, model.erTypeProperty());
 
-        // Add options to the three file type comboboxes
+        // Add options to the 2 dataset file type comboboxes
         List<ComboBox<String>> comboboxes = Arrays.asList(entitiesD1FileTypeCombo, entitiesD2FileTypeCombo);
         List<String> fileTypeOptions = Arrays.asList(
                 JedaiOptions.CSV,
                 JedaiOptions.DATABASE,
                 JedaiOptions.RDF,
-                JedaiOptions.SERIALIZED
+                JedaiOptions.SERIALIZED,
+                JedaiOptions.XML
         );
 
         for (ComboBox<String> c : comboboxes) {
             c.getItems().addAll(fileTypeOptions);
         }
 
-        // Ground truth does not have a Database reader
+        // Add options to the ground truth combobox
         groundTruthFileTypeCombo.getItems().add(JedaiOptions.CSV);
         groundTruthFileTypeCombo.getItems().add(JedaiOptions.RDF);
         groundTruthFileTypeCombo.getItems().add(JedaiOptions.SERIALIZED);

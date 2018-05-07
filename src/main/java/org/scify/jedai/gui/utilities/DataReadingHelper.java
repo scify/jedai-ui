@@ -87,6 +87,17 @@ public class DataReadingHelper {
                 // Initialize the Entity reader
                 eReader = new EntitySerializationReader(jsoPath);
                 break;
+            case JedaiOptions.XML:
+                // Get parameters
+                String xmlPath = parameters.get(0).getRight().toString();
+                Set<String> excludedAttributes = (Set<String>) parameters.get(1).getRight();
+
+                // Initialize the Entity reader
+                EntityXMLreader xmlReader = new EntityXMLreader(xmlPath);
+                xmlReader.setAttributesToExclude(
+                        excludedAttributes.toArray(new String[excludedAttributes.size()]));
+                eReader = xmlReader;
+                break;
         }
 
         if (eReader != null) {

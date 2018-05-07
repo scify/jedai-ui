@@ -18,10 +18,7 @@ import org.scify.jedai.blockprocessing.blockcleaning.BlockFiltering;
 import org.scify.jedai.blockprocessing.blockcleaning.ComparisonsBasedBlockPurging;
 import org.scify.jedai.blockprocessing.blockcleaning.SizeBasedBlockPurging;
 import org.scify.jedai.blockprocessing.comparisoncleaning.*;
-import org.scify.jedai.datareader.entityreader.EntityCSVReader;
-import org.scify.jedai.datareader.entityreader.EntityDBReader;
-import org.scify.jedai.datareader.entityreader.EntityRDFReader;
-import org.scify.jedai.datareader.entityreader.EntitySerializationReader;
+import org.scify.jedai.datareader.entityreader.*;
 import org.scify.jedai.datareader.groundtruthreader.GtCSVReader;
 import org.scify.jedai.datareader.groundtruthreader.GtRDFReader;
 import org.scify.jedai.datareader.groundtruthreader.GtSerializationReader;
@@ -398,6 +395,8 @@ public class MethodConfiguration {
                     return new EntityRDFReader("");
                 case JedaiOptions.DATABASE:
                     return new EntityDBReader("");
+                case JedaiOptions.XML:
+                    return new EntityXMLreader("");
             }
         }
 
