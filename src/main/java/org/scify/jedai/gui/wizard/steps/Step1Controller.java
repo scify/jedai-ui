@@ -70,8 +70,8 @@ public class Step1Controller {
                 JedaiOptions.CSV,
                 JedaiOptions.DATABASE,
                 JedaiOptions.RDF,
-                JedaiOptions.SERIALIZED,
-                JedaiOptions.XML
+                JedaiOptions.XML,
+                JedaiOptions.SERIALIZED
         );
 
         for (ComboBox<String> c : comboboxes) {
