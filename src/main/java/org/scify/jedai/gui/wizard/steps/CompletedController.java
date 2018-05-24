@@ -74,6 +74,8 @@ public class CompletedController {
 
     private List<WizardData> detailedRunData;
     private List<EquivalenceCluster> entityClusters;
+    private List<EntityProfile> profilesD1;
+    private List<EntityProfile> profilesD2;
 
     @Inject
     private Injector injector;
@@ -228,13 +230,13 @@ public class CompletedController {
                 String erType = model.getErType();
 
                 // Step 1: Data reading
-                List<EntityProfile> profilesD1 = DataReadingHelper.getEntities(
+                profilesD1 = DataReadingHelper.getEntities(
                         model.getEntityProfilesD1Type(),
                         model.getEntityProfilesD1Parameters());
                 System.out.println("Input Entity Profiles\t:\t" + profilesD1.size());
 
                 // In case Clean-Clear ER was selected, also read 2nd profiles file
-                List<EntityProfile> profilesD2 = null;
+                profilesD2 = null;
                 if (erType.equals(JedaiOptions.CLEAN_CLEAN_ER)) {
                     profilesD2 = DataReadingHelper.getEntities(
                             model.getEntityProfilesD2Type(),
@@ -488,7 +490,7 @@ public class CompletedController {
         if (file != null) {
             // Results export to CSV
             try {
-                PrintToFile.toCSV(entityClusters, file.getAbsolutePath());
+                PrintToFile.toCSV(profilesD1, profilesD2, entityClusters, file.getAbsolutePath());
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
