@@ -73,7 +73,7 @@ public class CompletedController {
     private Logger log = LoggerFactory.getLogger(CompletedController.class);
 
     private List<WizardData> detailedRunData;
-    private List<EquivalenceCluster> entityClusters;
+    private EquivalenceCluster[] entityClusters;
     private List<EntityProfile> profilesD1;
     private List<EntityProfile> profilesD2;
 
@@ -423,7 +423,7 @@ public class CompletedController {
                 // Get final run values
                 double totalTimeSeconds = (System.currentTimeMillis() - startTime) / 1000.0;
                 int inputInstances = profilesD1.size();
-                int numOfClusters = entityClusters.size();
+                int numOfClusters = entityClusters.length;
                 double recall = clp.getRecall();
                 double precision = clp.getPrecision();
                 double f1 = clp.getFMeasure();
