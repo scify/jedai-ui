@@ -41,6 +41,9 @@ public class Step1Controller {
     public Button entitiesD2ConfigBtn;
     public Button gTruthConfigBtn;
     public GridPane controlsGrid;
+    public Button exploreD1Btn;
+    public Button exploreD2Btn;
+    public Button exploreGtBtn;
     private Logger log = LoggerFactory.getLogger(Step1Controller.class);
 
     @Inject
@@ -99,9 +102,9 @@ public class Step1Controller {
         d2ParamsList.disableProperty().bind(model.erTypeProperty().isEqualTo(JedaiOptions.DIRTY_ER));
 
         // Add lists of parameters
-        controlsGrid.add(MethodConfiguration.newParamsNode(model.entityProfilesD1ParametersProperty()), 3, 0);
-        controlsGrid.add(d2ParamsList, 3, 1);
-        controlsGrid.add(MethodConfiguration.newParamsNode(model.groundTruthParametersProperty()), 3, 2);
+        controlsGrid.add(MethodConfiguration.newParamsNode(model.entityProfilesD1ParametersProperty()), 4, 0);
+        controlsGrid.add(d2ParamsList, 4, 1);
+        controlsGrid.add(MethodConfiguration.newParamsNode(model.groundTruthParametersProperty()), 4, 2);
 
         // Set initial values to text fields (for testing...)
 //        model.setEntityProfilesD1Type(JedaiOptions.SERIALIZED);

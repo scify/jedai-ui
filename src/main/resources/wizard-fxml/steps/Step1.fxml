@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <VBox fx:id="containerVBox" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-      minWidth="-Infinity" spacing="5.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+      minWidth="-Infinity" spacing="5.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="org.scify.jedai.gui.wizard.steps.Step1Controller">
     <children>
         <Label text="Data Reading">
@@ -23,8 +23,9 @@
             <columnConstraints>
                 <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="130.0"/>
                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="120.0"/>
-                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="250.0"/>
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="80.0"/>
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="60.0"/>
+                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="250.0"/>
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES"/>
@@ -47,6 +48,11 @@
                         text="Configure" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
                 <Button fx:id="gTruthConfigBtn" mnemonicParsing="false" onAction="#configBtnHandler" text="Configure"
                         GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                <Button fx:id="exploreD1Btn" mnemonicParsing="false" text="Explore" GridPane.columnIndex="3"/>
+                <Button fx:id="exploreD2Btn" mnemonicParsing="false" text="Explore" GridPane.columnIndex="3"
+                        GridPane.rowIndex="1"/>
+                <Button fx:id="exploreGtBtn" mnemonicParsing="false" text="Explore" GridPane.columnIndex="3"
+                        GridPane.rowIndex="2"/>
             </children>
         </GridPane>
     </children>
