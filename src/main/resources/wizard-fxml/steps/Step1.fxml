@@ -48,11 +48,12 @@
                         text="Configure" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
                 <Button fx:id="gTruthConfigBtn" mnemonicParsing="false" onAction="#configBtnHandler" text="Configure"
                         GridPane.columnIndex="2" GridPane.rowIndex="2"/>
-                <Button fx:id="exploreD1Btn" mnemonicParsing="false" text="Explore" GridPane.columnIndex="3"/>
-                <Button fx:id="exploreD2Btn" mnemonicParsing="false" text="Explore" GridPane.columnIndex="3"
-                        GridPane.rowIndex="1"/>
-                <Button fx:id="exploreGtBtn" mnemonicParsing="false" text="Explore" GridPane.columnIndex="3"
-                        GridPane.rowIndex="2"/>
+                <Button fx:id="exploreD1Btn" mnemonicParsing="false" onAction="#exploreDataset" text="Explore"
+                        GridPane.columnIndex="3"/>
+                <Button fx:id="exploreD2Btn" mnemonicParsing="false" onAction="#exploreDataset" text="Explore"
+                        GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                <Button fx:id="exploreGtBtn" mnemonicParsing="false" onAction="#exploreGroundTruth" text="Explore"
+                        GridPane.columnIndex="3" GridPane.rowIndex="2"/>
             </children>
         </GridPane>
     </children>

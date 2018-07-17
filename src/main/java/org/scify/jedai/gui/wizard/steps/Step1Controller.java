@@ -240,4 +240,36 @@ public class Step1Controller {
             MethodConfiguration.displayModal(getClass(), injector, reader, modelProperty);
         }
     }
+
+    /**
+     * Explore a ground truth dataset
+     *
+     * @param actionEvent Button action
+     */
+    public void exploreGroundTruth(ActionEvent actionEvent) {
+        // todo: implement
+        System.out.println("Explore ground truth");
+    }
+
+    /**
+     * Explore a selected dataset
+     *
+     * @param actionEvent Button action (used to detect which dataset to explore)
+     */
+    public void exploreDataset(ActionEvent actionEvent) {
+        Object src = actionEvent.getSource();
+        if (src instanceof Button) {
+            String btnId = ((Button) src).getId();
+            if (btnId.equals("exploreD1Btn")) {
+                // todo: Dataset 1 actions
+                System.out.println("Explore dataset 1");
+            } else if (btnId.equals("exploreD2Btn")) {
+                // todo: Dataset 2 actions
+                System.out.println("Explore dataset 2");
+            }
+        } else {
+            // Not a button instance? Something went wrong...
+            return;
+        }
+    }
 }
