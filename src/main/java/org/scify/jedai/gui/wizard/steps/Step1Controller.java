@@ -5,19 +5,26 @@ import com.google.inject.Injector;
 import javafx.beans.property.ListProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import org.scify.jedai.datamodel.EntityProfile;
 import org.scify.jedai.gui.utilities.DataReadingHelper;
 import org.scify.jedai.gui.utilities.JPair;
 import org.scify.jedai.gui.utilities.JedaiOptions;
 import org.scify.jedai.gui.utilities.RadioButtonHelper;
 import org.scify.jedai.gui.utilities.dynamic_configuration.MethodConfiguration;
+import org.scify.jedai.gui.wizard.DatasetExplorationController;
 import org.scify.jedai.gui.wizard.Submit;
 import org.scify.jedai.gui.wizard.Validate;
 import org.scify.jedai.gui.wizard.WizardData;
@@ -25,6 +32,7 @@ import org.scify.jedai.utilities.IDocumentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -105,6 +113,8 @@ public class Step1Controller {
         controlsGrid.add(MethodConfiguration.newParamsNode(model.entityProfilesD1ParametersProperty()), 4, 0);
         controlsGrid.add(d2ParamsList, 4, 1);
         controlsGrid.add(MethodConfiguration.newParamsNode(model.groundTruthParametersProperty()), 4, 2);
+
+        // todo: Disable exploration buttons when there are no options selected
 
         // Set initial values to text fields (for testing...)
 //        model.setEntityProfilesD1Type(JedaiOptions.SERIALIZED);
@@ -280,5 +290,50 @@ public class Step1Controller {
         }
 
         System.out.println("Dataset type:" + datasetType + "\nParams:" + datasetParams);
+
+        // Display exploration window
+        Parent root;
+        FXMLLoader loader = new FXMLLoader(
+                this.getClass().getClassLoader().getResource("wizard-fxml/DatasetExploration.fxml"),
+                null,
+                new JavaFXBuilderFactory(),
+                injector::getInstance
+        );
+
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        root.getProperties().put("controller", loader.getController());
+
+        Object controller = loader.getController();
+        if (controller instanceof DatasetExplorationController) {
+            // Cast the controller instance since we know it's safe here
+            DatasetExplorationController popupController = (DatasetExplorationController) controller;
+
+            // Give the configuration options to the controller
+            popupController.setDatasetType(datasetType);
+            popupController.setDatasetParams(datasetParams);
+
+            // Create the popup
+            Stage dialog = new Stage();
+            dialog.setScene(new Scene(root));
+
+//            String filename =
+            assert datasetParams != null;
+            // todo: Make this use just the filename not entire path
+            dialog.setTitle("JedAI - " + datasetParams.get(0).getRight() + " Parameter Configuration");
+            // todo: Check if this shouldn't be APPLICATION_MODAL
+            dialog.initModality(Modality.APPLICATION_MODAL);
+
+//            dialog.show();
+            dialog.showAndWait();
+        } else {
+            // This shouldn't ever happen.
+            System.err.println("Error when showing the dataset exploration popup (Wrong controller instance?)");
+        }
     }
 }
