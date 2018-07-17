@@ -258,18 +258,27 @@ public class Step1Controller {
      */
     public void exploreDataset(ActionEvent actionEvent) {
         Object src = actionEvent.getSource();
+
+        String datasetType = null;
+        List<JPair<String, Object>> datasetParams = null;
+
         if (src instanceof Button) {
+            // Get the button ID
             String btnId = ((Button) src).getId();
+
+            // Check if it was the button for the 1st or 2nd dataset and get its type and parameters
             if (btnId.equals("exploreD1Btn")) {
-                // todo: Dataset 1 actions
-                System.out.println("Explore dataset 1");
+                datasetType = model.getEntityProfilesD1Type();
+                datasetParams = model.getEntityProfilesD1Parameters();
             } else if (btnId.equals("exploreD2Btn")) {
-                // todo: Dataset 2 actions
-                System.out.println("Explore dataset 2");
+                datasetType = model.getEntityProfilesD2Type();
+                datasetParams = model.getEntityProfilesD2Parameters();
             }
         } else {
             // Not a button instance? Something went wrong...
             return;
         }
+
+        System.out.println("Dataset type:" + datasetType + "\nParams:" + datasetParams);
     }
 }
