@@ -269,6 +269,7 @@ public class Step1Controller {
     public void exploreDataset(ActionEvent actionEvent) {
         Object src = actionEvent.getSource();
 
+        int datasetNum = -1;
         String datasetType = null;
         List<JPair<String, Object>> datasetParams = null;
 
@@ -280,9 +281,11 @@ public class Step1Controller {
             if (btnId.equals("exploreD1Btn")) {
                 datasetType = model.getEntityProfilesD1Type();
                 datasetParams = model.getEntityProfilesD1Parameters();
+                datasetNum = 1;
             } else if (btnId.equals("exploreD2Btn")) {
                 datasetType = model.getEntityProfilesD2Type();
                 datasetParams = model.getEntityProfilesD2Parameters();
+                datasetNum = 2;
             }
         } else {
             // Not a button instance? Something went wrong...
@@ -324,8 +327,7 @@ public class Step1Controller {
 
 //            String filename =
             assert datasetParams != null;
-            // todo: Make this use just the filename not entire path
-            dialog.setTitle("JedAI - " + datasetParams.get(0).getRight() + " Parameter Configuration");
+            dialog.setTitle("JedAI - Dataset " + datasetNum + " Exploration");
             // todo: Check if this shouldn't be APPLICATION_MODAL
             dialog.initModality(Modality.APPLICATION_MODAL);
 
