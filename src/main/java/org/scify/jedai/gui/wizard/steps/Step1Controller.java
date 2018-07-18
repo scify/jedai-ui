@@ -325,14 +325,11 @@ public class Step1Controller {
             Stage dialog = new Stage();
             dialog.setScene(new Scene(root));
 
-//            String filename =
             assert datasetParams != null;
             dialog.setTitle("JedAI - Dataset " + datasetNum + " Exploration");
-            // todo: Check if this shouldn't be APPLICATION_MODAL
-            dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.initModality(Modality.WINDOW_MODAL);
 
-//            dialog.show();
-            dialog.showAndWait();
+            dialog.show();
         } else {
             // This shouldn't ever happen.
             System.err.println("Error when showing the dataset exploration popup (Wrong controller instance?)");
