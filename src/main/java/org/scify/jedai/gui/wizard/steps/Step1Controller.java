@@ -292,8 +292,6 @@ public class Step1Controller {
             return;
         }
 
-        System.out.println("Dataset type:" + datasetType + "\nParams:" + datasetParams);
-
         // Display exploration window
         Parent root;
         FXMLLoader loader = new FXMLLoader(
