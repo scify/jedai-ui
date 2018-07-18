@@ -42,10 +42,11 @@ public class EntityProfileNode extends VBox {
                         if (empty) {
                             setText(null);
                         } else {
-                            setText(item.toString());
+                            setText(item.getName() + ": " + item.getValue());
                         }
                     }
                 });
+        // todo: Maybe sort the list of attributes by key?
         attrsList.getItems().addAll(this.entity.getAttributes());
 
         // Add title & attribute nodes to the entity profile node
