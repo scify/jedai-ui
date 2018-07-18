@@ -8,7 +8,6 @@ import org.scify.jedai.gui.utilities.DataReadingHelper;
 import org.scify.jedai.gui.utilities.EntityProfileNode;
 import org.scify.jedai.gui.utilities.JPair;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DatasetExplorationController {
@@ -30,8 +29,15 @@ public class DatasetExplorationController {
         List<EntityProfile> entities = DataReadingHelper.getEntities(this.datasetType, this.datasetParams);
 
         // Find number of pages we need to show 10 entities per page
-        int pagesNum = (entities == null) ? 0 : entities.size() / pageSize;
-        // todo: Check if we need +1 page
+        int pagesNum = 0;
+        if (entities != null) {
+            pagesNum = entities.size() / pageSize;
+
+            // Add last page if there are remaining items
+            if (entities.size() % pageSize > 0) {
+                pagesNum++;
+            }
+        }
 
         // Setup pagination
         entityPagination.setPageCount(pagesNum);
@@ -40,8 +46,10 @@ public class DatasetExplorationController {
             VBox vBox = new VBox();
 
             // Get the entities to show
-            List<EntityProfile> pageEntities = (entities == null) ?
-                    new ArrayList<>() : entities.subList(pageIndex * pageSize, (pageIndex + 1) * pageSize);
+            int firstEntity = pageIndex * pageSize;
+            assert entities != null;
+            int lastEntity = Math.min((pageIndex + 1) * pageSize, entities.size());
+            List<EntityProfile> pageEntities = entities.subList(firstEntity, lastEntity);
 
             // Generate an entity profile node for each entity
             for (EntityProfile ep : pageEntities) {
