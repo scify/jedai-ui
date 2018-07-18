@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Pagination?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.scify.jedai.gui.wizard.DatasetExplorationController">
@@ -12,5 +13,8 @@
                 <Font size="36.0"/>
             </font>
         </Label>
+        <Pagination fx:id="entityPagination" layoutX="200.0" layoutY="53.0" prefHeight="347.0" prefWidth="600.0"
+                    AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                    AnchorPane.topAnchor="53.0"/>
     </children>
 </AnchorPane>

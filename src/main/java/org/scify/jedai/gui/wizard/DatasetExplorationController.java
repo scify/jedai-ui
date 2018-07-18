@@ -1,6 +1,9 @@
 package org.scify.jedai.gui.wizard;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.control.Pagination;
+import javafx.scene.layout.VBox;
 import org.scify.jedai.datamodel.EntityProfile;
 import org.scify.jedai.gui.utilities.DataReadingHelper;
 import org.scify.jedai.gui.utilities.JPair;
@@ -8,6 +11,9 @@ import org.scify.jedai.gui.utilities.JPair;
 import java.util.List;
 
 public class DatasetExplorationController {
+    private final int pageSize = 10;
+
+    public Pagination entityPagination;
     private String datasetType = null;
     private List<JPair<String, Object>> datasetParams = null;
 
@@ -21,7 +27,29 @@ public class DatasetExplorationController {
     private void updateView() {
         // Read dataset
         List<EntityProfile> entities = DataReadingHelper.getEntities(this.datasetType, this.datasetParams);
-//        System.out.println(entities.get(0));
+
+        // Find number of pages we need to show 10 entities per page
+        int pagesNum = (entities == null) ? 0 : entities.size() / pageSize;
+        // todo: Check if we need +1 page
+
+        // Setup pagination
+        entityPagination.setPageCount(pagesNum);
+        entityPagination.setPageFactory(pageIndex -> {
+            // Create node that we will add entities to
+            VBox vBox = new VBox();
+
+            // Get the entities to show
+            List<EntityProfile> pageEntities = entities.subList(pageIndex * pageSize, (pageIndex + 1) * pageSize);
+
+            // Generate a node for each entity profile
+            for (EntityProfile ep : pageEntities) {
+                // todo: Use something that is not a label here
+                vBox.getChildren().add(new Label(ep.toString()));
+            }
+
+            // Return generated node for this page
+            return vBox;
+        });
     }
 
     public void setDatasetType(String datasetType) {
