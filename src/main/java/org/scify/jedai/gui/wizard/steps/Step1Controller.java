@@ -325,7 +325,6 @@ public class Step1Controller {
             Stage dialog = new Stage();
             dialog.setScene(new Scene(root));
 
-            assert datasetParams != null;
             dialog.setTitle("JedAI - Dataset " + datasetNum + " Exploration");
             dialog.initModality(Modality.WINDOW_MODAL);
 

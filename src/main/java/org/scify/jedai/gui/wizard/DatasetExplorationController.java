@@ -1,13 +1,14 @@
 package org.scify.jedai.gui.wizard;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
 import javafx.scene.layout.VBox;
 import org.scify.jedai.datamodel.EntityProfile;
 import org.scify.jedai.gui.utilities.DataReadingHelper;
+import org.scify.jedai.gui.utilities.EntityProfileNode;
 import org.scify.jedai.gui.utilities.JPair;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DatasetExplorationController {
@@ -39,12 +40,12 @@ public class DatasetExplorationController {
             VBox vBox = new VBox();
 
             // Get the entities to show
-            List<EntityProfile> pageEntities = entities.subList(pageIndex * pageSize, (pageIndex + 1) * pageSize);
+            List<EntityProfile> pageEntities = (entities == null) ?
+                    new ArrayList<>() : entities.subList(pageIndex * pageSize, (pageIndex + 1) * pageSize);
 
-            // Generate a node for each entity profile
+            // Generate an entity profile node for each entity
             for (EntityProfile ep : pageEntities) {
-                // todo: Use something that is not a label here
-                vBox.getChildren().add(new Label(ep.toString()));
+                vBox.getChildren().add(new EntityProfileNode(ep));
             }
 
             // Return generated node for this page
