@@ -45,15 +45,22 @@ public class DatasetExplorationController {
             // Create node that we will add entities to
             VBox vBox = new VBox();
 
-            // Get the entities to show
-            int firstEntity = pageIndex * pageSize;
-            assert entities != null;
-            int lastEntity = Math.min((pageIndex + 1) * pageSize, entities.size());
-            List<EntityProfile> pageEntities = entities.subList(firstEntity, lastEntity);
+            // Check that we have entities
+            if (entities != null) {
+                // Get the entities to show
+                int firstEntity = pageIndex * pageSize;
+                int lastEntity = Math.min((pageIndex + 1) * pageSize, entities.size());
+                List<EntityProfile> pageEntities = entities.subList(firstEntity, lastEntity);
 
-            // Generate an entity profile node for each entity
-            for (EntityProfile ep : pageEntities) {
-                vBox.getChildren().add(new EntityProfileNode(ep));
+                // Generate an entity profile node for each entity. Their IDs start at firstEntity + 1 (to start from 1)
+                int entityId = firstEntity + 1;
+                for (EntityProfile ep : pageEntities) {
+                    // Add the new entity profile node to the page
+                    vBox.getChildren().add(new EntityProfileNode(entityId, ep));
+
+                    // Increment the entity ID counter
+                    entityId++;
+                }
             }
 
             // Return generated node for this page

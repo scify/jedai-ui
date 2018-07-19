@@ -1,14 +1,17 @@
 package org.scify.jedai.gui.utilities;
 
 import javafx.geometry.Insets;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import org.scify.jedai.datamodel.Attribute;
 import org.scify.jedai.datamodel.EntityProfile;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Node that displays a single Entity Profile
@@ -16,17 +19,23 @@ import org.scify.jedai.datamodel.EntityProfile;
 public class EntityProfileNode extends VBox {
     private static final Insets zeroPadding = new Insets(0, 0, 0, 0);
     private static final Font cellFont = Font.font("Arial", 11);
-    private final EntityProfile entity;
 
-    public EntityProfileNode(EntityProfile entity) {
-        this.entity = entity;
+    public EntityProfileNode(int entityId, EntityProfile entity) {
+        // The title will have the entity ID and URL
+        TextFlow entityTitle = new TextFlow();
+        List<String> titleItems = Arrays.asList(
+                "Entity ID: ", String.valueOf(entityId),
+                "\t\tURL: ", entity.getEntityUrl());
 
-        // Add HBox for entity name & URL
-        HBox entityTitle = new HBox();
-        entityTitle.getChildren().addAll(
-                // todo: Entity ID?
-                new Label("Entity: " + this.entity.getEntityUrl())
-        );
+        boolean makeBold = true;
+        for (String s : titleItems) {
+            Text titlePart = new Text(s);
+            titlePart.setStyle(makeBold ? "-fx-font-weight: bold" : "");
+            entityTitle.getChildren().add(titlePart);
+
+            // Make the items alternate between bold and regular font (to make "titles" bold)
+            makeBold = !makeBold;
+        }
 
         // Create node for showing the entity's attributes
         ListView<Attribute> attrsList = new ListView<>();
@@ -47,7 +56,7 @@ public class EntityProfileNode extends VBox {
                     }
                 });
         // todo: Maybe sort the list of attributes by key?
-        attrsList.getItems().addAll(this.entity.getAttributes());
+        attrsList.getItems().addAll(entity.getAttributes());
 
         // Add title & attribute nodes to the entity profile node
         this.getChildren().addAll(entityTitle, attrsList);
