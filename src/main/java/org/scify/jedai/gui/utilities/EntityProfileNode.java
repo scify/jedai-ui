@@ -10,7 +10,9 @@ import javafx.scene.text.TextFlow;
 import org.scify.jedai.datamodel.Attribute;
 import org.scify.jedai.datamodel.EntityProfile;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -29,7 +31,10 @@ public class EntityProfileNode extends VBox {
 
         boolean makeBold = true;
         for (String s : titleItems) {
+            // Create text node
             Text titlePart = new Text(s);
+
+            // Make it bold if needed and add it to the entity title
             titlePart.setStyle(makeBold ? "-fx-font-weight: bold" : "");
             entityTitle.getChildren().add(titlePart);
 
@@ -55,8 +60,13 @@ public class EntityProfileNode extends VBox {
                         }
                     }
                 });
-        // todo: Maybe sort the list of attributes by key?
-        attrsList.getItems().addAll(entity.getAttributes());
+
+        // Sort the attributes by their names
+        List<Attribute> sortedAttrs = new ArrayList<>(entity.getAttributes());
+        sortedAttrs.sort(Comparator.comparing(Attribute::getName));
+
+        // Add the attributes to the list
+        attrsList.getItems().addAll(sortedAttrs);
 
         // Add title & attribute nodes to the entity profile node
         this.getChildren().addAll(entityTitle, attrsList);
