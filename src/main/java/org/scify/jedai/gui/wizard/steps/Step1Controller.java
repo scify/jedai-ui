@@ -257,8 +257,11 @@ public class Step1Controller {
      * @param actionEvent Button action
      */
     public void exploreGroundTruth(ActionEvent actionEvent) {
-        // todo: implement
-        System.out.println("Explore ground truth");
+        // Get ground truth reader type and parameters
+        String gtType = model.getGroundTruthType();
+        List<JPair<String, Object>> gtParams = model.getGroundTruthParameters();
+
+//        DataReadingHelper.getGroundTruth(...)
     }
 
     /**
