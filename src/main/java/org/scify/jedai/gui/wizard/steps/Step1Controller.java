@@ -29,6 +29,7 @@ import org.scify.jedai.gui.wizard.Submit;
 import org.scify.jedai.gui.wizard.Validate;
 import org.scify.jedai.gui.wizard.WizardData;
 import org.scify.jedai.utilities.IDocumentation;
+import org.scify.jedai.utilities.datastructures.AbstractDuplicatePropagation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -261,7 +262,29 @@ public class Step1Controller {
         String gtType = model.getGroundTruthType();
         List<JPair<String, Object>> gtParams = model.getGroundTruthParameters();
 
-//        DataReadingHelper.getGroundTruth(...)
+        // Get ER type (to know if we need to read 2nd dataset or not)
+        String erType = model.getErType();
+
+        // Read dataset 1
+        List<EntityProfile> entitiesD1 = DataReadingHelper.getEntities(
+                model.getEntityProfilesD1Type(),
+                model.getEntityProfilesD1Parameters()
+        );
+
+        // Read dataset 2 (if needed)
+        List<EntityProfile> entitiesD2 = null;
+        if (erType.equals(JedaiOptions.CLEAN_CLEAN_ER)) {
+            entitiesD2 = DataReadingHelper.getEntities(
+                    model.getEntityProfilesD2Type(),
+                    model.getEntityProfilesD2Parameters()
+            );
+        }
+
+        // Get ground truth
+        AbstractDuplicatePropagation groundTruth =
+                DataReadingHelper.getGroundTruth(gtType, gtParams, erType, entitiesD1, entitiesD2);
+
+        System.out.println(groundTruth);
     }
 
     /**

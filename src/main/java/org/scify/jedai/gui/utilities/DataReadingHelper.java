@@ -117,7 +117,9 @@ public class DataReadingHelper {
      * @param profilesD2 Entity Profiles for Dataset 2
      * @return Ground truth (duplicate propagation)
      */
-    public static AbstractDuplicatePropagation getGroundTruth(String type, List<JPair<String, Object>> parameters, String erType, List<EntityProfile> profilesD1, List<EntityProfile> profilesD2) {
+    public static AbstractDuplicatePropagation getGroundTruth(String type, List<JPair<String, Object>> parameters,
+                                                              String erType, List<EntityProfile> profilesD1,
+                                                              List<EntityProfile> profilesD2) {
         AbstractDuplicatePropagation dp = null;
         IGroundTruthReader gtReader = null;
 
