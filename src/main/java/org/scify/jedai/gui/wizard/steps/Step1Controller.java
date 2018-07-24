@@ -163,26 +163,45 @@ public class Step1Controller {
         }
 
         // Check that the files can actually be read with the appropriate readers
+        List<EntityProfile> profilesD1;
+        List<EntityProfile> profilesD2 = null;
+        AbstractDuplicatePropagation groundTruth;
         try {
             String erType = model.getErType();
 
             // Read 1st profiles file
-            List<EntityProfile> profilesD1 =
-                    DataReadingHelper.getEntities(entitiesD1Type, readerParams.get("entities1"));
+            profilesD1 = DataReadingHelper.getEntities(entitiesD1Type, readerParams.get("entities1"));
 
             // In case Clean-Clear ER is selected, also read 2nd profiles file
-            List<EntityProfile> profilesD2 = null;
             if (erType.equals(JedaiOptions.CLEAN_CLEAN_ER)) {
                 profilesD2 = DataReadingHelper.getEntities(entitiesD2Type, readerParams.get("entities2"));
             }
 
             // Read ground truth
-            DataReadingHelper
+            groundTruth = DataReadingHelper
                     .getGroundTruth(groundTruthType, readerParams.get("ground_truth"), erType, profilesD1, profilesD2);
         } catch (Exception e) {
             // Show invalid input file error and stop checking other files
             showError("Invalid input files!",
                     "The input files could not be read successfully.\n\nDetails: " + e.toString() + " (" + e.getMessage() + ")");
+            return false;
+        }
+
+        // Check that dataset 1 is not empty
+        if (profilesD1 != null && profilesD1.isEmpty()) {
+            showError("Dataset 1 is empty!", "The 1st dataset contains 0 entities!");
+            return false;
+        }
+
+        // Check that dataset 2 is not empty
+        if (profilesD2 != null && profilesD2.isEmpty()) {
+            showError("Dataset 2 is empty!", "The 2nd dataset contains 0 entities!");
+            return false;
+        }
+
+        // Check that the ground truth is not empty
+        if (groundTruth != null && groundTruth.getDuplicates().isEmpty()) {
+            showError("Ground truth is empty!", "The ground truth file contains 0 duplicates!");
             return false;
         }
 
