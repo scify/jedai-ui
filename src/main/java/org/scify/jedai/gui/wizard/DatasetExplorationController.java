@@ -1,6 +1,7 @@
 package org.scify.jedai.gui.wizard;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
 import javafx.scene.layout.VBox;
 import org.scify.jedai.datamodel.EntityProfile;
@@ -13,6 +14,7 @@ import java.util.List;
 public class DatasetExplorationController {
     private final int pageSize = 10;
 
+    public VBox containerVBox;
     public Pagination entityPagination;
     private String datasetType = null;
     private List<JPair<String, Object>> datasetParams = null;
@@ -30,13 +32,16 @@ public class DatasetExplorationController {
 
         // Find number of pages we need to show 10 entities per page
         int pagesNum = 0;
-        if (entities != null) {
+        if (entities != null && !entities.isEmpty()) {
             pagesNum = entities.size() / pageSize;
 
             // Add last page if there are remaining items
             if (entities.size() % pageSize > 0) {
                 pagesNum++;
             }
+        } else {
+            // Show no data message (by replacing the pagination component with a message label)
+            containerVBox.getChildren().set(1, new Label("The dataset is empty!"));
         }
 
         // Setup pagination

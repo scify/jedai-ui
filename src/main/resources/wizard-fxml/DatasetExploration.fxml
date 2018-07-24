@@ -2,19 +2,18 @@
 
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Pagination?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<AnchorPane prefHeight="550.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.scify.jedai.gui.wizard.DatasetExplorationController">
+<VBox fx:id="containerVBox" alignment="TOP_CENTER" prefHeight="550.0" prefWidth="600.0"
+      xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.scify.jedai.gui.wizard.DatasetExplorationController">
     <children>
         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="26.0" prefWidth="600.0" text="Dataset Exploration"
-               textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+               textAlignment="CENTER">
             <font>
                 <Font name="System Bold" size="18.0"/>
             </font>
         </Label>
-        <Pagination fx:id="entityPagination" layoutX="200.0" layoutY="26.0" prefHeight="522.0" prefWidth="600.0"
-                    AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                    AnchorPane.topAnchor="26.0"/>
+        <Pagination fx:id="entityPagination" prefHeight="522.0" prefWidth="600.0" VBox.vgrow="ALWAYS"/>
     </children>
-</AnchorPane>
+</VBox>
