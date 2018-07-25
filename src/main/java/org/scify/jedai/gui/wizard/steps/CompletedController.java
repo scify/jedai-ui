@@ -479,7 +479,7 @@ public class CompletedController {
                 model.setWorkflowRunning(false);
             }
 
-            // Workflow ran, Set workflowRunning boolean to false
+            // Workflow ran, set workflowRunning boolean to false
             model.setWorkflowRunning(false);
         }).start();
     }

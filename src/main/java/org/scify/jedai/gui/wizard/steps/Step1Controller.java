@@ -19,25 +19,20 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.scify.jedai.datamodel.EntityProfile;
+import org.scify.jedai.datamodel.IdDuplicates;
 import org.scify.jedai.gui.utilities.DataReadingHelper;
 import org.scify.jedai.gui.utilities.JPair;
 import org.scify.jedai.gui.utilities.JedaiOptions;
 import org.scify.jedai.gui.utilities.RadioButtonHelper;
 import org.scify.jedai.gui.utilities.dynamic_configuration.MethodConfiguration;
-import org.scify.jedai.gui.wizard.DatasetExplorationController;
-import org.scify.jedai.gui.wizard.Submit;
-import org.scify.jedai.gui.wizard.Validate;
-import org.scify.jedai.gui.wizard.WizardData;
+import org.scify.jedai.gui.wizard.*;
 import org.scify.jedai.utilities.IDocumentation;
 import org.scify.jedai.utilities.datastructures.AbstractDuplicatePropagation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Step1Controller {
     public VBox containerVBox;
@@ -303,7 +298,56 @@ public class Step1Controller {
         AbstractDuplicatePropagation groundTruth =
                 DataReadingHelper.getGroundTruth(gtType, gtParams, erType, entitiesD1, entitiesD2);
 
-        System.out.println(groundTruth);
+        if (groundTruth == null) {
+            showError("Ground truth could not be read!",
+                    "Please check that the ground truth reader settings are correct.");
+            return;
+        }
+
+        Set<IdDuplicates> duplicatesSet = groundTruth.getDuplicates();
+
+        // Display exploration window
+        Parent root;
+        FXMLLoader loader = new FXMLLoader(
+                this.getClass().getClassLoader().getResource("wizard-fxml/GroundTruthExploration.fxml"),
+                null,
+                new JavaFXBuilderFactory(),
+                injector::getInstance
+        );
+
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        root.getProperties().put("controller", loader.getController());
+
+        Object controller = loader.getController();
+        if (controller instanceof GroundTruthExplorationController) {
+            // Cast the controller instance since we know it's safe here
+            GroundTruthExplorationController popupController = (GroundTruthExplorationController) controller;
+
+            // Give the configuration options to the controller
+            if (model.getErType().equals(JedaiOptions.DIRTY_ER)) {
+                popupController.setDuplicates(duplicatesSet, entitiesD1);
+            } else {
+                popupController.setDuplicates(duplicatesSet, entitiesD1, entitiesD2);
+            }
+
+            // Create the popup
+            Stage dialog = new Stage();
+            dialog.setScene(new Scene(root));
+
+            dialog.setTitle("JedAI - Ground Truth Exploration");
+            dialog.initModality(Modality.WINDOW_MODAL);
+
+            dialog.show();
+        } else {
+            // This shouldn't ever happen.
+            System.err.println("Error when showing the ground truth exploration popup (Wrong controller instance?)");
+        }
     }
 
     /**
