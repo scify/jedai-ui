@@ -21,13 +21,13 @@ import javafx.scene.shape.Circle;
 import javafx.util.Callback;
 import org.scify.jedai.entitymatching.GroupLinkage;
 import org.scify.jedai.entitymatching.ProfileMatcher;
-import org.scify.jedai.utilities.IDocumentation;
-import org.scify.jedai.utilities.enumerations.BlockBuildingMethod;
 import org.scify.jedai.gui.utilities.BlClMethodConfiguration;
 import org.scify.jedai.gui.utilities.JPair;
 import org.scify.jedai.gui.utilities.JedaiOptions;
 import org.scify.jedai.gui.utilities.dynamic_configuration.MethodConfiguration;
 import org.scify.jedai.gui.wizard.steps.CompletedController;
+import org.scify.jedai.utilities.IDocumentation;
+import org.scify.jedai.utilities.enumerations.BlockBuildingMethod;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -106,14 +106,22 @@ public class WizardController {
     }
 
     private void initButtons() {
-        btnBack.disableProperty().bind(currentStep.lessThanOrEqualTo(0));
-        btnNext.disableProperty().bind(currentStep.greaterThanOrEqualTo(steps.size() - 1));
+        // Disable back button in the 1st step and when workflow is running
+        btnBack.disableProperty().bind(currentStep.lessThanOrEqualTo(0).or(model.workflowRunningProperty()));
 
+        // Disable next step button in the last step and when workflow is running
+        btnNext.disableProperty()
+                .bind(currentStep.greaterThanOrEqualTo(steps.size() - 1).or(model.workflowRunningProperty()));
+
+        // Make the cancel button's text show "Start Over" in the last step
         btnCancel.textProperty().bind(
                 new When(currentStep.lessThan(steps.size() - 1))
                         .then("Cancel")
                         .otherwise("Start Over")
         );
+
+        // Disable the cancel/start over button in the 1st step and when workflow is running
+        btnCancel.disableProperty().bind(currentStep.lessThanOrEqualTo(0).or(model.workflowRunningProperty()));
     }
 
     /**

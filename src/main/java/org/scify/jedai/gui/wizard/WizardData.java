@@ -1,9 +1,6 @@
 package org.scify.jedai.gui.wizard;
 
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.scify.jedai.gui.utilities.BlClMethodConfiguration;
@@ -11,6 +8,9 @@ import org.scify.jedai.gui.utilities.JPair;
 import org.scify.jedai.gui.utilities.JedaiOptions;
 
 public class WizardData {
+    // Boolean that indicates whether a workflow is currently running
+    private final SimpleBooleanProperty workflowRunning = new SimpleBooleanProperty(false);
+
     // Step 1: Data Reading
     private final StringProperty erType = new SimpleStringProperty();
 
@@ -137,6 +137,18 @@ public class WizardData {
     ///////////////////////////////////////////////////
     // Automatically generated getters/setters below //
     ///////////////////////////////////////////////////
+
+    public boolean isWorkflowRunning() {
+        return workflowRunning.get();
+    }
+
+    public SimpleBooleanProperty workflowRunningProperty() {
+        return workflowRunning;
+    }
+
+    public void setWorkflowRunning(boolean workflowRunning) {
+        this.workflowRunning.set(workflowRunning);
+    }
 
     public String getErType() {
         return erType.get();

@@ -220,6 +220,10 @@ public class CompletedController {
 
         // Runnable that will run algorithm in separate thread
         new Thread(() -> {
+            // Disable the step control buttons
+            model.setWorkflowRunning(true);
+
+            // Create performance variables
             long startTime = System.currentTimeMillis();
             double overheadStart;
             double overheadEnd;
@@ -470,7 +474,13 @@ public class CompletedController {
 
                 // Print stack trace
                 e.printStackTrace();
+
+                // Set workflowRunning boolean to false
+                model.setWorkflowRunning(false);
             }
+
+            // Workflow ran, Set workflowRunning boolean to false
+            model.setWorkflowRunning(false);
         }).start();
     }
 
