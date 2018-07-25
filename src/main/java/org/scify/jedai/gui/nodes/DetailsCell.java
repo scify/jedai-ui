@@ -8,9 +8,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TableCell;
 import javafx.stage.Stage;
-import org.scify.jedai.gui.wizard.WizardData;
 import org.scify.jedai.gui.controllers.steps.CompletedController;
 import org.scify.jedai.gui.controllers.steps.ConfirmController;
+import org.scify.jedai.gui.wizard.WizardData;
 
 import java.io.IOException;
 import java.util.ArrayList;

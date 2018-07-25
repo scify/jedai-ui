@@ -6,9 +6,9 @@ import org.scify.jedai.blockprocessing.blockcleaning.ComparisonsBasedBlockPurgin
 import org.scify.jedai.blockprocessing.blockcleaning.SizeBasedBlockPurging;
 import org.scify.jedai.blockprocessing.comparisoncleaning.*;
 import org.scify.jedai.entityclustering.*;
+import org.scify.jedai.gui.utilities.JedaiOptions;
 import org.scify.jedai.utilities.enumerations.BlockBuildingMethod;
 import org.scify.jedai.utilities.enumerations.WeightingScheme;
-import org.scify.jedai.gui.utilities.JedaiOptions;
 
 import java.util.Collections;
 import java.util.HashMap;

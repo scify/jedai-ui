@@ -5,8 +5,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
 import javafx.scene.layout.VBox;
 import org.scify.jedai.datamodel.EntityProfile;
-import org.scify.jedai.gui.utilities.DataReader;
 import org.scify.jedai.gui.nodes.EntityProfileNode;
+import org.scify.jedai.gui.utilities.DataReader;
 import org.scify.jedai.gui.utilities.JPair;
 
 import java.util.List;

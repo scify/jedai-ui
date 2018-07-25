@@ -13,9 +13,9 @@ import javafx.stage.Stage;
 import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.atlas.json.JsonValue;
-import org.scify.jedai.gui.utilities.JPair;
 import org.scify.jedai.gui.nodes.dynamic_configuration.HelpTooltip;
 import org.scify.jedai.gui.nodes.dynamic_configuration.input.*;
+import org.scify.jedai.gui.utilities.JPair;
 
 import java.util.ArrayList;
 import java.util.List;

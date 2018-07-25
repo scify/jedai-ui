@@ -21,11 +21,11 @@ import javafx.scene.shape.Circle;
 import javafx.util.Callback;
 import org.scify.jedai.entitymatching.GroupLinkage;
 import org.scify.jedai.entitymatching.ProfileMatcher;
+import org.scify.jedai.gui.controllers.steps.CompletedController;
 import org.scify.jedai.gui.model.BlClMethodConfiguration;
+import org.scify.jedai.gui.utilities.DynamicMethodConfiguration;
 import org.scify.jedai.gui.utilities.JPair;
 import org.scify.jedai.gui.utilities.JedaiOptions;
-import org.scify.jedai.gui.utilities.DynamicMethodConfiguration;
-import org.scify.jedai.gui.controllers.steps.CompletedController;
 import org.scify.jedai.utilities.IDocumentation;
 import org.scify.jedai.utilities.enumerations.BlockBuildingMethod;
 

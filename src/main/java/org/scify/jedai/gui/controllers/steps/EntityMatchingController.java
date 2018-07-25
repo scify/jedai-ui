@@ -2,14 +2,14 @@ package org.scify.jedai.gui.controllers.steps;
 
 import com.google.inject.Inject;
 import javafx.scene.layout.VBox;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.scify.jedai.gui.nodes.dynamic_configuration.ConfigurationTypeSelector;
 import org.scify.jedai.gui.utilities.JedaiOptions;
 import org.scify.jedai.gui.utilities.RadioButtonHelper;
-import org.scify.jedai.gui.nodes.dynamic_configuration.ConfigurationTypeSelector;
 import org.scify.jedai.gui.wizard.Submit;
 import org.scify.jedai.gui.wizard.Validate;
 import org.scify.jedai.gui.wizard.WizardData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
