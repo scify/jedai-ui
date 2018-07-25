@@ -7,7 +7,7 @@
 <?import javafx.scene.text.Font?>
 <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
       prefHeight="400.0" prefWidth="600.0" spacing="5.0" xmlns="http://javafx.com/javafx/8"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.scify.jedai.gui.wizard.DynamicConfigurationController">
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.scify.jedai.gui.controllers.DynamicConfigurationController">
     <children>
         <Label fx:id="methodNameLabel" text="[method name]">
             <font>

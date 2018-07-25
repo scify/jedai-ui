@@ -21,11 +21,11 @@ import javafx.scene.shape.Circle;
 import javafx.util.Callback;
 import org.scify.jedai.entitymatching.GroupLinkage;
 import org.scify.jedai.entitymatching.ProfileMatcher;
-import org.scify.jedai.gui.utilities.BlClMethodConfiguration;
+import org.scify.jedai.gui.model.BlClMethodConfiguration;
 import org.scify.jedai.gui.utilities.JPair;
 import org.scify.jedai.gui.utilities.JedaiOptions;
-import org.scify.jedai.gui.utilities.dynamic_configuration.MethodConfiguration;
-import org.scify.jedai.gui.wizard.steps.CompletedController;
+import org.scify.jedai.gui.utilities.DynamicMethodConfiguration;
+import org.scify.jedai.gui.controllers.steps.CompletedController;
 import org.scify.jedai.utilities.IDocumentation;
 import org.scify.jedai.utilities.enumerations.BlockBuildingMethod;
 
@@ -270,11 +270,11 @@ public class WizardController {
 
                 // Display the configuration modal
                 if (method != null) {
-                    MethodConfiguration.displayModal(getClass(), injector, method, parametersProperty);
+                    DynamicMethodConfiguration.displayModal(getClass(), injector, method, parametersProperty);
                 }
 
                 // If configuration failed, don't go to next step
-                if (!MethodConfiguration.configurationOk(method, parametersProperty.get())) {
+                if (!DynamicMethodConfiguration.configurationOk(method, parametersProperty.get())) {
                     return;
                 }
             } else if (currentStep.get() == 3) {
@@ -286,10 +286,10 @@ public class WizardController {
                         IDocumentation method = MethodMapping.getMethodByName(bcmc.getName());
 
                         // Configure the method
-                        MethodConfiguration.displayModal(getClass(), injector, method, bcmc.manualParametersProperty());
+                        DynamicMethodConfiguration.displayModal(getClass(), injector, method, bcmc.manualParametersProperty());
 
                         // If configuration failed, don't go to next step
-                        if (!MethodConfiguration.configurationOk(method, bcmc.getManualParameters())) {
+                        if (!DynamicMethodConfiguration.configurationOk(method, bcmc.getManualParameters())) {
                             return;
                         }
                     }

@@ -3,7 +3,7 @@ package org.scify.jedai.gui.wizard;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.scify.jedai.gui.utilities.BlClMethodConfiguration;
+import org.scify.jedai.gui.model.BlClMethodConfiguration;
 import org.scify.jedai.gui.utilities.JPair;
 import org.scify.jedai.gui.utilities.JedaiOptions;
 
