@@ -20,7 +20,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.scify.jedai.datamodel.EntityProfile;
 import org.scify.jedai.datamodel.IdDuplicates;
-import org.scify.jedai.gui.utilities.DataReadingHelper;
+import org.scify.jedai.gui.utilities.DataReader;
 import org.scify.jedai.gui.utilities.JPair;
 import org.scify.jedai.gui.utilities.JedaiOptions;
 import org.scify.jedai.gui.utilities.RadioButtonHelper;
@@ -165,15 +165,15 @@ public class Step1Controller {
             String erType = model.getErType();
 
             // Read 1st profiles file
-            profilesD1 = DataReadingHelper.getEntities(entitiesD1Type, readerParams.get("entities1"));
+            profilesD1 = DataReader.getEntities(entitiesD1Type, readerParams.get("entities1"));
 
             // In case Clean-Clear ER is selected, also read 2nd profiles file
             if (erType.equals(JedaiOptions.CLEAN_CLEAN_ER)) {
-                profilesD2 = DataReadingHelper.getEntities(entitiesD2Type, readerParams.get("entities2"));
+                profilesD2 = DataReader.getEntities(entitiesD2Type, readerParams.get("entities2"));
             }
 
             // Read ground truth
-            groundTruth = DataReadingHelper
+            groundTruth = DataReader
                     .getGroundTruth(groundTruthType, readerParams.get("ground_truth"), erType, profilesD1, profilesD2);
         } catch (Exception e) {
             // Show invalid input file error and stop checking other files
@@ -280,7 +280,7 @@ public class Step1Controller {
         String erType = model.getErType();
 
         // Read dataset 1
-        List<EntityProfile> entitiesD1 = DataReadingHelper.getEntities(
+        List<EntityProfile> entitiesD1 = DataReader.getEntities(
                 model.getEntityProfilesD1Type(),
                 model.getEntityProfilesD1Parameters()
         );
@@ -288,7 +288,7 @@ public class Step1Controller {
         // Read dataset 2 (if needed)
         List<EntityProfile> entitiesD2 = null;
         if (erType.equals(JedaiOptions.CLEAN_CLEAN_ER)) {
-            entitiesD2 = DataReadingHelper.getEntities(
+            entitiesD2 = DataReader.getEntities(
                     model.getEntityProfilesD2Type(),
                     model.getEntityProfilesD2Parameters()
             );
@@ -296,7 +296,7 @@ public class Step1Controller {
 
         // Get ground truth
         AbstractDuplicatePropagation groundTruth =
-                DataReadingHelper.getGroundTruth(gtType, gtParams, erType, entitiesD1, entitiesD2);
+                DataReader.getGroundTruth(gtType, gtParams, erType, entitiesD1, entitiesD2);
 
         if (groundTruth == null) {
             showError("Ground truth could not be read!",

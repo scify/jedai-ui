@@ -27,7 +27,7 @@ import org.scify.jedai.datamodel.SimilarityPairs;
 import org.scify.jedai.entityclustering.IEntityClustering;
 import org.scify.jedai.entitymatching.IEntityMatching;
 import org.scify.jedai.gui.utilities.BlClMethodConfiguration;
-import org.scify.jedai.gui.utilities.DataReadingHelper;
+import org.scify.jedai.gui.utilities.DataReader;
 import org.scify.jedai.gui.utilities.JPair;
 import org.scify.jedai.gui.utilities.JedaiOptions;
 import org.scify.jedai.gui.utilities.console_area.ConsoleArea;
@@ -234,7 +234,7 @@ public class CompletedController {
                 String erType = model.getErType();
 
                 // Step 1: Data reading
-                profilesD1 = DataReadingHelper.getEntities(
+                profilesD1 = DataReader.getEntities(
                         model.getEntityProfilesD1Type(),
                         model.getEntityProfilesD1Parameters());
                 System.out.println("Input Entity Profiles\t:\t" + profilesD1.size());
@@ -242,14 +242,14 @@ public class CompletedController {
                 // In case Clean-Clear ER was selected, also read 2nd profiles file
                 profilesD2 = null;
                 if (erType.equals(JedaiOptions.CLEAN_CLEAN_ER)) {
-                    profilesD2 = DataReadingHelper.getEntities(
+                    profilesD2 = DataReader.getEntities(
                             model.getEntityProfilesD2Type(),
                             model.getEntityProfilesD2Parameters()
                     );
                 }
 
                 // Read ground truth file
-                AbstractDuplicatePropagation duplicatePropagation = DataReadingHelper.getGroundTruth(
+                AbstractDuplicatePropagation duplicatePropagation = DataReader.getGroundTruth(
                         model.getGroundTruthType(),
                         model.getGroundTruthParameters(),
                         erType,

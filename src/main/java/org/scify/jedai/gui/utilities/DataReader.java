@@ -17,7 +17,7 @@ import java.util.Set;
 /**
  * Class to help with reading the required data for the JedAI toolkit using the available UI options
  */
-public class DataReadingHelper {
+public class DataReader {
     /**
      * Get a list of Entity Profiles, using the specified reader type (CSV, Database, RDF or Serialized)
      *

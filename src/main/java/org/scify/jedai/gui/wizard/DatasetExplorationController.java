@@ -5,7 +5,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
 import javafx.scene.layout.VBox;
 import org.scify.jedai.datamodel.EntityProfile;
-import org.scify.jedai.gui.utilities.DataReadingHelper;
+import org.scify.jedai.gui.utilities.DataReader;
 import org.scify.jedai.gui.utilities.EntityProfileNode;
 import org.scify.jedai.gui.utilities.JPair;
 
@@ -28,7 +28,7 @@ public class DatasetExplorationController {
      */
     private void updateView() {
         // Read dataset
-        List<EntityProfile> entities = DataReadingHelper.getEntities(this.datasetType, this.datasetParams);
+        List<EntityProfile> entities = DataReader.getEntities(this.datasetType, this.datasetParams);
 
         // Find number of pages we need to show 10 entities per page
         int pagesNum = 0;
