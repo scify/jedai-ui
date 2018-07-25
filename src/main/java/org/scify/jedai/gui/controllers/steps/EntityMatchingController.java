@@ -14,10 +14,10 @@ import org.scify.jedai.gui.wizard.WizardData;
 import java.util.Arrays;
 import java.util.List;
 
-public class Step5Controller {
+public class EntityMatchingController {
     public VBox matchingMethodContainer;
     public VBox confTypeContainer;
-    private Logger log = LoggerFactory.getLogger(Step5Controller.class);
+    private Logger log = LoggerFactory.getLogger(EntityMatchingController.class);
 
     @Inject
     private WizardData model;

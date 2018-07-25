@@ -6,7 +6,7 @@
 <?import javafx.scene.text.*?>
 <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
       spacing="5.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.scify.jedai.gui.controllers.steps.Step6Controller">
+      fx:controller="org.scify.jedai.gui.controllers.steps.EntityClusteringController">
     <children>
         <Label text="Entity Clustering">
             <font>

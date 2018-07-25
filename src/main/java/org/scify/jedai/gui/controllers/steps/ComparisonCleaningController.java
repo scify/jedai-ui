@@ -15,10 +15,10 @@ import org.scify.jedai.gui.wizard.WizardData;
 import java.util.Arrays;
 import java.util.List;
 
-public class Step4Controller {
+public class ComparisonCleaningController {
     public VBox radioBtnsContainer;
     public VBox confTypeContainer;
-    private Logger log = LoggerFactory.getLogger(Step4Controller.class);
+    private Logger log = LoggerFactory.getLogger(ComparisonCleaningController.class);
 
     @Inject
     private WizardData model;

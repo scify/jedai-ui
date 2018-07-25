@@ -26,8 +26,6 @@ import org.scify.jedai.entityclustering.*;
 import org.scify.jedai.entitymatching.GroupLinkage;
 import org.scify.jedai.entitymatching.IEntityMatching;
 import org.scify.jedai.entitymatching.ProfileMatcher;
-import org.scify.jedai.gui.utilities.JPair;
-import org.scify.jedai.gui.utilities.JedaiOptions;
 import org.scify.jedai.gui.controllers.DynamicConfigurationController;
 import org.scify.jedai.utilities.IDocumentation;
 import org.scify.jedai.utilities.enumerations.BlockBuildingMethod;

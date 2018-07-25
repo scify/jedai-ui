@@ -15,11 +15,11 @@ import org.slf4j.LoggerFactory;
 import java.util.Arrays;
 import java.util.List;
 
-public class Step2Controller {
+public class BlockBuildingController {
     public VBox containerVBox;
     public VBox radioBtnsContainer;
     public VBox confTypeContainer;
-    private Logger log = LoggerFactory.getLogger(Step2Controller.class);
+    private Logger log = LoggerFactory.getLogger(BlockBuildingController.class);
 
     @Inject
     private WizardData model;

@@ -3,7 +3,6 @@ package org.scify.jedai.gui.controllers.steps;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import javafx.beans.property.ListProperty;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,12 +22,10 @@ import org.scify.jedai.datamodel.EntityProfile;
 import org.scify.jedai.datamodel.IdDuplicates;
 import org.scify.jedai.gui.controllers.DatasetExplorationController;
 import org.scify.jedai.gui.controllers.GroundTruthExplorationController;
-import org.scify.jedai.gui.utilities.DataReader;
-import org.scify.jedai.gui.utilities.JPair;
-import org.scify.jedai.gui.utilities.JedaiOptions;
-import org.scify.jedai.gui.utilities.RadioButtonHelper;
-import org.scify.jedai.gui.utilities.DynamicMethodConfiguration;
-import org.scify.jedai.gui.wizard.*;
+import org.scify.jedai.gui.utilities.*;
+import org.scify.jedai.gui.wizard.Submit;
+import org.scify.jedai.gui.wizard.Validate;
+import org.scify.jedai.gui.wizard.WizardData;
 import org.scify.jedai.utilities.IDocumentation;
 import org.scify.jedai.utilities.datastructures.AbstractDuplicatePropagation;
 import org.slf4j.Logger;
@@ -37,7 +34,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.*;
 
-public class Step1Controller {
+public class DataReadingController {
     public VBox containerVBox;
     public VBox radioBtnsContainer;
     public ComboBox<String> entitiesD1FileTypeCombo;
@@ -51,7 +48,7 @@ public class Step1Controller {
     public Button exploreD1Btn;
     public Button exploreD2Btn;
     public Button exploreGtBtn;
-    private Logger log = LoggerFactory.getLogger(Step1Controller.class);
+    private Logger log = LoggerFactory.getLogger(DataReadingController.class);
 
     @Inject
     private WizardData model;
@@ -116,14 +113,14 @@ public class Step1Controller {
         // todo: Disable exploration buttons when there are no options selected
 
         // Set initial values to text fields (for testing...)
-        model.setEntityProfilesD1Type(JedaiOptions.SERIALIZED);
-        model.setGroundTruthType(JedaiOptions.SERIALIZED);
-        model.setEntityProfilesD1Parameters(FXCollections.observableArrayList(
-                new JPair<>("File Path", "C:\\Users\\leots\\Documents\\JedAIToolkit\\jedai-core\\data\\dirtyErDatasets\\restaurantProfiles")
-        ));
-        model.setGroundTruthParameters(FXCollections.observableArrayList(
-                new JPair<>("File Path", "C:\\Users\\leots\\Documents\\JedAIToolkit\\jedai-core\\data\\dirtyErDatasets\\restaurantIdDuplicates")
-        ));
+//        model.setEntityProfilesD1Type(JedaiOptions.SERIALIZED);
+//        model.setGroundTruthType(JedaiOptions.SERIALIZED);
+//        model.setEntityProfilesD1Parameters(FXCollections.observableArrayList(
+//                new JPair<>("File Path", "C:\\Users\\leots\\Documents\\JedAIToolkit\\jedai-core\\data\\dirtyErDatasets\\restaurantProfiles")
+//        ));
+//        model.setGroundTruthParameters(FXCollections.observableArrayList(
+//                new JPair<>("File Path", "C:\\Users\\leots\\Documents\\JedAIToolkit\\jedai-core\\data\\dirtyErDatasets\\restaurantIdDuplicates")
+//        ));
     }
 
     @Validate

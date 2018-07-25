@@ -155,13 +155,13 @@ public class WizardController {
 
         // Specify step FXMLs in order that they should appear
         ArrayList<String> controllers = new ArrayList<>(Arrays.asList(
-                "wizard-fxml/steps/Step0.fxml",
-                "wizard-fxml/steps/Step1.fxml",
-                "wizard-fxml/steps/Step2.fxml",
-                "wizard-fxml/steps/Step3.fxml",
-                "wizard-fxml/steps/Step4.fxml",
-                "wizard-fxml/steps/Step5.fxml",
-                "wizard-fxml/steps/Step6.fxml",
+                "wizard-fxml/steps/Welcome.fxml",
+                "wizard-fxml/steps/DataReading.fxml",
+                "wizard-fxml/steps/BlockBuilding.fxml",
+                "wizard-fxml/steps/BlockCleaning.fxml",
+                "wizard-fxml/steps/ComparisonCleaning.fxml",
+                "wizard-fxml/steps/EntityMatching.fxml",
+                "wizard-fxml/steps/EntityClustering.fxml",
                 "wizard-fxml/steps/Confirm.fxml",
                 "wizard-fxml/steps/Completed.fxml"
         ));
@@ -223,7 +223,6 @@ public class WizardController {
             // Check if configuration is manual, and show manual configuration window before next step
             if (this.configurationTypes.containsKey(currentStep.get())
                     && this.configurationTypes.get(currentStep.get()).getValue().equals(JedaiOptions.MANUAL_CONFIG)) {
-//                System.out.println("Manually configuring step " + currentStep.get());
 
                 // Get method instance & model parameter property in order to show the configuration modal
                 IDocumentation method = null;

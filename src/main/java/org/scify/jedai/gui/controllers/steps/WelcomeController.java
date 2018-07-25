@@ -7,8 +7,8 @@ import org.scify.jedai.gui.wizard.WizardData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Step0Controller {
-    private Logger log = LoggerFactory.getLogger(Step0Controller.class);
+public class WelcomeController {
+    private Logger log = LoggerFactory.getLogger(WelcomeController.class);
 
     @Inject
     WizardData model;

@@ -24,14 +24,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Step3Controller {
+public class BlockCleaningController {
     public VBox containerVBox;
     public ListView<String> list;
     public VBox methodConfContainer;
 
     private BlockCleaningComparator listComparator;
     private Map<String, SimpleBooleanProperty> optionsMap;
-    private Logger log = LoggerFactory.getLogger(Step3Controller.class);
+    private Logger log = LoggerFactory.getLogger(BlockCleaningController.class);
 
     @Inject
     private WizardData model;

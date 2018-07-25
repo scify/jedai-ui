@@ -6,7 +6,7 @@
 <?import javafx.scene.text.Font?>
 <VBox fx:id="containerVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
       minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" xmlns="http://javafx.com/javafx/8"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.scify.jedai.gui.controllers.steps.Step3Controller">
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.scify.jedai.gui.controllers.steps.BlockCleaningController">
     <padding>
         <Insets bottom="40.0" left="40.0" right="40.0" top="40.0"/>
     </padding>

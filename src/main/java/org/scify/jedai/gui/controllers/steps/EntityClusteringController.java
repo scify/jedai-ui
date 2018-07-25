@@ -5,9 +5,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.VBox;
 import jfxtras.scene.control.ToggleGroupValue;
+import org.scify.jedai.gui.nodes.dynamic_configuration.ConfigurationTypeSelector;
 import org.scify.jedai.gui.utilities.JedaiOptions;
 import org.scify.jedai.gui.utilities.RadioButtonHelper;
-import org.scify.jedai.gui.nodes.dynamic_configuration.ConfigurationTypeSelector;
 import org.scify.jedai.gui.wizard.Submit;
 import org.scify.jedai.gui.wizard.Validate;
 import org.scify.jedai.gui.wizard.WizardData;
@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class Step6Controller {
+public class EntityClusteringController {
     public VBox dirtyErContainer;
     public VBox cleanCleanErContainer;
     public VBox confTypeContainer;
@@ -27,7 +27,7 @@ public class Step6Controller {
     private List<String> cleanCleanErOptions;
     ToggleGroupValue dirtyValue;
     ToggleGroupValue cleanCleanValue;
-    private Logger log = LoggerFactory.getLogger(Step6Controller.class);
+    private Logger log = LoggerFactory.getLogger(EntityClusteringController.class);
 
     @Inject
     private WizardData model;
