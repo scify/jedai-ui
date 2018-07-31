@@ -4,16 +4,19 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Pagination;
 import javafx.scene.layout.VBox;
 import org.scify.jedai.datamodel.EntityProfile;
-import org.scify.jedai.datamodel.IdDuplicates;
+import org.scify.jedai.datamodel.EquivalenceCluster;
 
 import java.util.List;
-import java.util.Set;
 
 public class GroundTruthExplorationController {
     private final int pageSize = 10;
     public Pagination entityPagination;
     public VBox containerVBox;
 
+    private boolean dirtyEr = true;
+    private List<EquivalenceCluster> duplicates = null;
+    private List<EntityProfile> entitiesD1 = null;
+    private List<EntityProfile> entitiesD2 = null;
 
     @FXML
     public void initialize() {
@@ -23,15 +26,27 @@ public class GroundTruthExplorationController {
      * Show the entities in the window.
      */
     private void updateView() {
-        //todo: Implement
+        // Find how many pages we need
+        int pagesNum = duplicates.size() / pageSize;
+        if (duplicates.size() % pageSize > 0) {
+            pagesNum++;
+        }
 
         // Setup pagination
-//        entityPagination.setPageCount(??);
+        entityPagination.setPageCount(pagesNum);
         entityPagination.setPageFactory(pageIndex -> {
             // Create node that we will add entities to
             VBox vBox = new VBox();
 
-            //todo: Add entities
+            // Get entities to add
+            List<EquivalenceCluster> duplicatesToShow =
+                    duplicates.subList(pageIndex * pageSize, (pageIndex + 1) * pageSize);
+
+            for (EquivalenceCluster dup : duplicatesToShow) {
+                System.out.println(dup);
+                // todo: Add node to show duplicates
+            }
+
             return vBox;
         });
     }
@@ -42,9 +57,12 @@ public class GroundTruthExplorationController {
      * @param duplicates Set of duplicates
      * @param entities   Entities of the dataset
      */
-    public void setDuplicates(Set<IdDuplicates> duplicates, List<EntityProfile> entities) {
-        System.out.println("Setting duplicates with 1 dataset");
-        //todo: Implement
+    public void setDuplicates(List<EquivalenceCluster> duplicates, List<EntityProfile> entities) {
+        this.dirtyEr = true;
+        this.duplicates = duplicates;
+        this.entitiesD1 = entities;
+
+        updateView();
     }
 
     /**
@@ -54,9 +72,13 @@ public class GroundTruthExplorationController {
      * @param entitiesD1 Entities of the 1st dataset
      * @param entitiesD2 Entities of the 2nd dataset
      */
-    public void setDuplicates(Set<IdDuplicates> duplicates,
+    public void setDuplicates(List<EquivalenceCluster> duplicates,
                               List<EntityProfile> entitiesD1, List<EntityProfile> entitiesD2) {
-        System.out.println("Setting duplicates with 2 datasets");
-        //todo: Implement
+        this.dirtyEr = false;
+        this.duplicates = duplicates;
+        this.entitiesD1 = entitiesD1;
+        this.entitiesD2 = entitiesD2;
+
+        updateView();
     }
 }

@@ -19,7 +19,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.scify.jedai.datamodel.EntityProfile;
-import org.scify.jedai.datamodel.IdDuplicates;
+import org.scify.jedai.datamodel.EquivalenceCluster;
 import org.scify.jedai.gui.controllers.DatasetExplorationController;
 import org.scify.jedai.gui.controllers.GroundTruthExplorationController;
 import org.scify.jedai.gui.utilities.*;
@@ -32,7 +32,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class DataReadingController {
     public VBox containerVBox;
@@ -304,7 +307,7 @@ public class DataReadingController {
             return;
         }
 
-        Set<IdDuplicates> duplicatesSet = groundTruth.getDuplicates();
+        List<EquivalenceCluster> duplicates = groundTruth.getRealEquivalenceClusters();
 
         // Display exploration window
         Parent root;
@@ -331,9 +334,9 @@ public class DataReadingController {
 
             // Give the configuration options to the controller
             if (model.getErType().equals(JedaiOptions.DIRTY_ER)) {
-                popupController.setDuplicates(duplicatesSet, entitiesD1);
+                popupController.setDuplicates(duplicates, entitiesD1);
             } else {
-                popupController.setDuplicates(duplicatesSet, entitiesD1, entitiesD2);
+                popupController.setDuplicates(duplicates, entitiesD1, entitiesD2);
             }
 
             // Create the popup
