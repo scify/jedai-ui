@@ -13,7 +13,7 @@ import org.scify.jedai.gui.nodes.EntityProfileNode;
 import java.util.List;
 
 public class GroundTruthExplorationController {
-    private final int pageSize = 10;
+    private final int pageSize = 5;
     public Pagination entityPagination;
     public VBox containerVBox;
 
@@ -67,6 +67,7 @@ public class GroundTruthExplorationController {
 
                         // Add node for this entity
                         EntityProfileNode entityProfileNode = new EntityProfileNode(entityId, entity);
+                        entityProfileNode.setPrefWidth(280);
 
                         // Add the entity node to the entities container
                         entitiesContainer.getChildren().add(entityProfileNode);
