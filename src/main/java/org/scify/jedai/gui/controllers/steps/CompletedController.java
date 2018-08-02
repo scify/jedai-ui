@@ -283,7 +283,9 @@ public class CompletedController {
                         blocks = blockBuildingMethod.getBlocks(profilesD1, profilesD2);
                     }
                 } else {
-                    // todo: Do something?
+                    // Show error
+                    DialogHelper.showError("Block Building Method Error", "Block Building Method is null!",
+                            "There was a problem running the selected block building method!");
                     return;
                 }
 
