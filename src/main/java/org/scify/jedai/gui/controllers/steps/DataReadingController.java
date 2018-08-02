@@ -5,18 +5,14 @@ import com.google.inject.Injector;
 import javafx.beans.property.ListProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
-import javafx.stage.Stage;
 import org.scify.jedai.datamodel.EntityProfile;
 import org.scify.jedai.datamodel.EquivalenceCluster;
 import org.scify.jedai.gui.controllers.DatasetExplorationController;
@@ -30,7 +26,6 @@ import org.scify.jedai.utilities.datastructures.AbstractDuplicatePropagation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -295,25 +290,15 @@ public class DataReadingController {
 
         List<EquivalenceCluster> duplicates = groundTruth.getRealEquivalenceClusters();
 
-        // Display exploration window
-        Parent root;
-        FXMLLoader loader = new FXMLLoader(
-                this.getClass().getClassLoader().getResource("wizard-fxml/GroundTruthExploration.fxml"),
-                null,
-                new JavaFXBuilderFactory(),
-                injector::getInstance
-        );
-
-        try {
-            root = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
+        // Load FXML for exploration window and get the controller
+        Parent root = DialogHelper.loadFxml(this.getClass(), injector,
+                "wizard-fxml/GroundTruthExploration.fxml");
+        Object controller = null;
+        if (root != null) {
+            controller = root.getProperties().get("controller");
         }
 
-        root.getProperties().put("controller", loader.getController());
-
-        Object controller = loader.getController();
+        // Set properties of the controller & show window
         if (controller instanceof GroundTruthExplorationController) {
             // Cast the controller instance since we know it's safe here
             GroundTruthExplorationController popupController = (GroundTruthExplorationController) controller;
@@ -326,13 +311,8 @@ public class DataReadingController {
             }
 
             // Create the popup
-            Stage dialog = new Stage();
-            dialog.setScene(new Scene(root));
-
-            dialog.setTitle("JedAI - Ground Truth Exploration");
-            dialog.initModality(Modality.WINDOW_MODAL);
-
-            dialog.show();
+            DialogHelper.showScene(root, Modality.WINDOW_MODAL, false,
+                    "JedAI - Ground Truth Exploration");
         } else {
             // This shouldn't ever happen.
             System.err.println("Error when showing the ground truth exploration popup (Wrong controller instance?)");
@@ -370,25 +350,15 @@ public class DataReadingController {
             return;
         }
 
-        // Display exploration window
-        Parent root;
-        FXMLLoader loader = new FXMLLoader(
-                this.getClass().getClassLoader().getResource("wizard-fxml/DatasetExploration.fxml"),
-                null,
-                new JavaFXBuilderFactory(),
-                injector::getInstance
-        );
-
-        try {
-            root = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
+        // Load FXML for exploration window and get the controller
+        Parent root = DialogHelper.loadFxml(this.getClass(), injector,
+                "wizard-fxml/DatasetExploration.fxml");
+        Object controller = null;
+        if (root != null) {
+            controller = root.getProperties().get("controller");
         }
 
-        root.getProperties().put("controller", loader.getController());
-
-        Object controller = loader.getController();
+        // Set properties of the controller & show window
         if (controller instanceof DatasetExplorationController) {
             // Cast the controller instance since we know it's safe here
             DatasetExplorationController popupController = (DatasetExplorationController) controller;
@@ -398,13 +368,8 @@ public class DataReadingController {
             popupController.setDatasetParams(datasetParams);
 
             // Create the popup
-            Stage dialog = new Stage();
-            dialog.setScene(new Scene(root));
-
-            dialog.setTitle("JedAI - Dataset " + datasetNum + " Exploration");
-            dialog.initModality(Modality.WINDOW_MODAL);
-
-            dialog.show();
+            DialogHelper.showScene(root, Modality.WINDOW_MODAL, false,
+                    "JedAI - Dataset " + datasetNum + " Exploration");
         } else {
             // This shouldn't ever happen.
             System.err.println("Error when showing the dataset exploration popup (Wrong controller instance?)");

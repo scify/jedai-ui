@@ -2,14 +2,10 @@ package org.scify.jedai.gui.utilities;
 
 import com.google.inject.Injector;
 import javafx.beans.property.ListProperty;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.stage.Modality;
-import javafx.stage.Stage;
 import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
 import org.scify.jedai.blockbuilding.*;
@@ -34,7 +30,6 @@ import org.scify.jedai.utilities.enumerations.RepresentationModel;
 import org.scify.jedai.utilities.enumerations.SimilarityMetric;
 import org.scify.jedai.utilities.enumerations.WeightingScheme;
 
-import java.io.IOException;
 import java.util.List;
 
 public class DynamicMethodConfiguration {
@@ -47,24 +42,14 @@ public class DynamicMethodConfiguration {
      */
     public static void displayModal(Class callerClass, Injector injector, IDocumentation method,
                                     ListProperty<JPair<String, Object>> paramsProperty) {
-        Parent root;
-        FXMLLoader loader = new FXMLLoader(
-                callerClass.getClassLoader().getResource("wizard-fxml/DynamicConfiguration.fxml"),
-                null,
-                new JavaFXBuilderFactory(),
-                injector::getInstance
-        );
-
-        try {
-            root = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
+        // Load FXML and get controller
+        Parent root = DialogHelper.loadFxml(callerClass, injector, "wizard-fxml/DynamicConfiguration.fxml");
+        Object controller = null;
+        if (root != null) {
+            controller = root.getProperties().get("controller");
         }
 
-        root.getProperties().put("controller", loader.getController());
-
-        Object controller = loader.getController();
+        // Set controller options and show popup
         if (controller instanceof DynamicConfigurationController) {
             // Cast the controller instance since we know it's safe here
             DynamicConfigurationController popupController = (DynamicConfigurationController) controller;
@@ -76,13 +61,8 @@ public class DynamicMethodConfiguration {
             popupController.setMethodName(methodName);
 
             // Create the popup
-            Stage dialog = new Stage();
-            dialog.setScene(new Scene(root));
-            dialog.setTitle("JedAI - " + methodName + " Parameter Configuration");
-            dialog.initModality(Modality.APPLICATION_MODAL);
-
-//            dialog.show();
-            dialog.showAndWait();
+            DialogHelper.showScene(root, Modality.APPLICATION_MODAL, true,
+                    "JedAI - " + methodName + " Parameter Configuration");
         } else {
             // This shouldn't ever happen.
             System.err.println("Error when showing the parameter customization popup (Wrong controller instance?)");

@@ -8,7 +8,6 @@ import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -23,6 +22,7 @@ import org.scify.jedai.entitymatching.GroupLinkage;
 import org.scify.jedai.entitymatching.ProfileMatcher;
 import org.scify.jedai.gui.controllers.steps.CompletedController;
 import org.scify.jedai.gui.model.BlClMethodConfiguration;
+import org.scify.jedai.gui.utilities.DialogHelper;
 import org.scify.jedai.gui.utilities.DynamicMethodConfiguration;
 import org.scify.jedai.gui.utilities.JPair;
 import org.scify.jedai.gui.utilities.JedaiOptions;
@@ -168,13 +168,10 @@ public class WizardController {
 
         // Create steps and add them to the list
         for (String ctrlPath : controllers) {
-            // Create step
-            FXMLLoader loader = new FXMLLoader(WizardController.class.getClassLoader().getResource(ctrlPath), null, bf, cb);
-            Parent step = loader.load();
-            step.getProperties().put(CONTROLLER_KEY, loader.getController());
-
-            // Add step to steps list
-            steps.add(step);
+            // Create step and add it to steps list
+            steps.add(
+                    DialogHelper.loadFxml(this.getClass(), injector, ctrlPath)
+            );
         }
     }
 
