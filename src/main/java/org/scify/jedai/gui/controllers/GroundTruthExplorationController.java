@@ -27,6 +27,24 @@ public class GroundTruthExplorationController {
     }
 
     /**
+     * Get a formatted EntityProfileNode for the specified entity ID
+     *
+     * @param entities Entities list
+     * @param entityId Entity ID
+     * @return EntityProfileNode with customized attributes for ground truth exploration (e.g. width)
+     */
+    private EntityProfileNode getEntityNode(List<EntityProfile> entities, int entityId) {
+        // Find the entity in the dataset
+        EntityProfile entity = entities.get(entityId);
+
+        // Add node for this entity
+        EntityProfileNode entityProfileNode = new EntityProfileNode(entityId, entity);
+        entityProfileNode.setPrefWidth(280);
+
+        return entityProfileNode;
+    }
+
+    /**
      * Show the entities in the window.
      */
     private void updateView() {
@@ -59,22 +77,25 @@ public class GroundTruthExplorationController {
                     // Iterate on the list of entities for the 1st dataset (there is no 2nd)
                     TIntIterator iter = dup.getEntityIdsD1().iterator();
                     while (iter.hasNext()) {
-                        // Get the entity ID
-                        int entityId = iter.next();
-
-                        // Find the entity in the dataset
-                        EntityProfile entity = entitiesD1.get(entityId);
-
-                        // Add node for this entity
-                        EntityProfileNode entityProfileNode = new EntityProfileNode(entityId, entity);
-                        entityProfileNode.setPrefWidth(280);
-
-                        // Add the entity node to the entities container
-                        entitiesContainer.getChildren().add(entityProfileNode);
+                        // Add a node for this entity
+                        entitiesContainer.getChildren().add(
+                                getEntityNode(entitiesD1, iter.next())
+                        );
                     }
                 } else {
-                    //todo
+                    // Check that lists aren't empty
+                    if (dup.getEntityIdsD1().isEmpty() || dup.getEntityIdsD2().isEmpty()) {
+                        System.err.println("ERROR: A clean-clean ground truth entity ID list is empty!");
+                    }
+
+                    // Get the two entities and add them manually (there are always exactly two)
+                    entitiesContainer.getChildren().addAll(
+                            getEntityNode(entitiesD1, dup.getEntityIdsD1().get(0)),
+                            getEntityNode(entitiesD2, dup.getEntityIdsD2().get(0))
+                    );
                 }
+
+                // todo: last page throws exception?
 
                 // Fix sizes
                 entitiesContainer.setFillHeight(true);
