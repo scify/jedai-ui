@@ -29,10 +29,7 @@ import org.scify.jedai.entitymatching.IEntityMatching;
 import org.scify.jedai.gui.model.BlClMethodConfiguration;
 import org.scify.jedai.gui.model.WorkflowResult;
 import org.scify.jedai.gui.nodes.DetailsCell;
-import org.scify.jedai.gui.utilities.DataReader;
-import org.scify.jedai.gui.utilities.DynamicMethodConfiguration;
-import org.scify.jedai.gui.utilities.JPair;
-import org.scify.jedai.gui.utilities.JedaiOptions;
+import org.scify.jedai.gui.utilities.*;
 import org.scify.jedai.gui.utilities.console_area.ConsoleArea;
 import org.scify.jedai.gui.utilities.console_area.MultiOutputStream;
 import org.scify.jedai.gui.wizard.MethodMapping;
@@ -464,13 +461,9 @@ public class CompletedController {
                 });
             } catch (Exception e) {
                 // Exception occurred, show alert with information about it
-                Platform.runLater(() -> {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Exception");
-                    alert.setHeaderText("An exception occurred while running the workflow!");
-                    alert.setContentText("Details: " + e.toString() + " (" + e.getMessage() + ")");
-                    alert.showAndWait();
-                });
+                Platform.runLater(() -> DialogHelper.showError("Exception",
+                        "An exception occurred while running the workflow!",
+                        "Details: " + e.toString() + " (" + e.getMessage() + ")"));
 
                 // Print stack trace
                 e.printStackTrace();

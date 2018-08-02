@@ -2,10 +2,10 @@ package org.scify.jedai.gui.controllers.steps;
 
 import com.google.inject.Inject;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.layout.VBox;
 import jfxtras.scene.control.ToggleGroupValue;
 import org.scify.jedai.gui.nodes.dynamic_configuration.ConfigurationTypeSelector;
+import org.scify.jedai.gui.utilities.DialogHelper;
 import org.scify.jedai.gui.utilities.JedaiOptions;
 import org.scify.jedai.gui.utilities.RadioButtonHelper;
 import org.scify.jedai.gui.wizard.Submit;
@@ -85,11 +85,8 @@ public class EntityClusteringController {
     @Validate
     public boolean validate() {
         if (model.getEntityClustering() == null || model.getEntityClustering().isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Entity Clustering Method");
-            alert.setHeaderText("Missing Field");
-            alert.setContentText("Selecting an Entity Clustering Method is required.");
-            alert.showAndWait();
+            DialogHelper.showError("Entity Clustering Method", "Missing Field",
+                    "Selecting an Entity Clustering Method is required.");
             return false;
         }
 
