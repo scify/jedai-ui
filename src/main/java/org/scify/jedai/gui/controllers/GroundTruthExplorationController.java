@@ -9,6 +9,7 @@ import javafx.scene.layout.VBox;
 import org.scify.jedai.datamodel.EntityProfile;
 import org.scify.jedai.datamodel.EquivalenceCluster;
 import org.scify.jedai.gui.nodes.EntityProfileNode;
+import org.scify.jedai.gui.utilities.DialogHelper;
 
 import java.util.List;
 
@@ -85,7 +86,8 @@ public class GroundTruthExplorationController {
                 } else {
                     // Check that lists aren't empty
                     if (dup.getEntityIdsD1().isEmpty() || dup.getEntityIdsD2().isEmpty()) {
-                        System.err.println("ERROR: A clean-clean ground truth entity ID list is empty!");
+                        DialogHelper.showError("Ground Truth Exploration", "Ground Truth file error!",
+                                "One or both of the clean-clean ground truth entity ID lists are empty!");
                     }
 
                     // Get the two entities and add them manually (there are always exactly two)

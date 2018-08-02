@@ -10,7 +10,6 @@ import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -38,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 public class DataReadingController {
+    private final String errorTitle = "Dataset Selection";
     public VBox containerVBox;
     public VBox radioBtnsContainer;
     public ComboBox<String> entitiesD1FileTypeCombo;
@@ -156,7 +156,7 @@ public class DataReadingController {
 
         if (!ok) {
             // Show missing field error
-            showError("Missing Field", "Please configure all required inputs!");
+            DialogHelper.showError(errorTitle, "Missing Field", "Please configure all required inputs!");
             return false;
         }
 
@@ -180,44 +180,30 @@ public class DataReadingController {
                     .getGroundTruth(groundTruthType, readerParams.get("ground_truth"), erType, profilesD1, profilesD2);
         } catch (Exception e) {
             // Show invalid input file error and stop checking other files
-            showError("Invalid input files!",
+            DialogHelper.showError(errorTitle, "Invalid input files!",
                     "The input files could not be read successfully.\n\nDetails: " + e.toString() + " (" + e.getMessage() + ")");
             return false;
         }
 
         // Check that dataset 1 is not empty
         if (profilesD1 != null && profilesD1.isEmpty()) {
-            showError("Dataset 1 is empty!", "The 1st dataset contains 0 entities!");
+            DialogHelper.showError(errorTitle, "Dataset 1 is empty!", "The 1st dataset contains 0 entities!");
             return false;
         }
 
         // Check that dataset 2 is not empty
         if (profilesD2 != null && profilesD2.isEmpty()) {
-            showError("Dataset 2 is empty!", "The 2nd dataset contains 0 entities!");
+            DialogHelper.showError(errorTitle, "Dataset 2 is empty!", "The 2nd dataset contains 0 entities!");
             return false;
         }
 
         // Check that the ground truth is not empty
         if (groundTruth != null && groundTruth.getDuplicates().isEmpty()) {
-            showError("Ground truth is empty!", "The ground truth file contains 0 duplicates!");
+            DialogHelper.showError(errorTitle, "Ground truth is empty!", "The ground truth file contains 0 duplicates!");
             return false;
         }
 
         return true;
-    }
-
-    /**
-     * Show a dataset selection error popup with customizable header & text
-     *
-     * @param header Header of error message
-     * @param text   Text of error message
-     */
-    private void showError(String header, String text) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Dataset Selection");
-        alert.setHeaderText(header);
-        alert.setContentText(text);
-        alert.showAndWait();
     }
 
     @Submit
@@ -302,7 +288,7 @@ public class DataReadingController {
                 DataReader.getGroundTruth(gtType, gtParams, erType, entitiesD1, entitiesD2);
 
         if (groundTruth == null) {
-            showError("Ground truth could not be read!",
+            DialogHelper.showError(errorTitle, "Ground truth could not be read!",
                     "Please check that the ground truth reader settings are correct.");
             return;
         }
