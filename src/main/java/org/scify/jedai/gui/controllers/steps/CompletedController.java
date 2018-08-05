@@ -513,6 +513,9 @@ public class CompletedController {
      * Reset the view of the step
      */
     public void resetData() {
+        // Disable exploration button
+        exploreBtn.setDisable(true);
+
         // Hide time measurements
         numOfInstancesLabel.setVisible(false);
         totalTimeLabel.setVisible(false);
