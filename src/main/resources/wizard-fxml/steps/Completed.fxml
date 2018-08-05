@@ -6,7 +6,7 @@
 <?import javafx.scene.text.*?>
 <VBox fx:id="containerVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
       minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="700.0" spacing="5.0" VBox.vgrow="ALWAYS"
-      xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="org.scify.jedai.gui.controllers.steps.CompletedController">
     <children>
         <Label alignment="CENTER" contentDisplay="CENTER" text="Workflow Execution">
@@ -92,8 +92,13 @@
         </TabPane>
         <HBox alignment="CENTER" prefHeight="56.0" prefWidth="570.0">
             <children>
-                <Button fx:id="runBtn" mnemonicParsing="false" onAction="#runAlgorithmBtnHandler" prefWidth="125.0"
-                        text="Run workflow"/>
+                <Button fx:id="exploreBtn" disable="true" mnemonicParsing="false" text="Explore">
+                    <HBox.margin>
+                        <Insets right="20.0"/>
+                    </HBox.margin>
+                </Button>
+                <Button fx:id="runBtn" defaultButton="true" mnemonicParsing="false" onAction="#runAlgorithmBtnHandler"
+                        prefWidth="125.0" text="Run workflow"/>
                 <ProgressIndicator fx:id="progressIndicator" prefHeight="52.0" prefWidth="121.0" progress="0.0"
                                    visible="false"/>
                 <Button fx:id="exportBtn" disable="true" mnemonicParsing="false" onAction="#exportBtnHandler"

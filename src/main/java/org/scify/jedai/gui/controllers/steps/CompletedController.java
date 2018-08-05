@@ -60,6 +60,7 @@ public class CompletedController {
     public Label totalTimeLabel;
     public TabPane resultsTabPane;
     public TableView workbenchTable;
+    public Button exploreBtn;
 
     private SingleSelectionModel<Tab> tabSelectionModel;
     private final ObservableList<WorkflowResult> tableData = FXCollections.observableArrayList();
@@ -219,6 +220,9 @@ public class CompletedController {
         new Thread(() -> {
             // Disable the step control buttons
             model.setWorkflowRunning(true);
+
+            // Disable exploration button
+            exploreBtn.setDisable(true);
 
             // Create performance variables
             long startTime = System.currentTimeMillis();
@@ -460,6 +464,9 @@ public class CompletedController {
 
                     // Enable button for result export to CSV
                     exportBtn.setDisable(false);
+
+                    // Enable exploration button
+                    exploreBtn.setDisable(false);
                 });
             } catch (Exception e) {
                 // Exception occurred, show alert with information about it
