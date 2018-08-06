@@ -11,6 +11,7 @@ import org.scify.jedai.datamodel.EquivalenceCluster;
 import org.scify.jedai.gui.nodes.EntityProfileNode;
 import org.scify.jedai.gui.utilities.DialogHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EntityClusterExplorationController {
@@ -122,8 +123,17 @@ public class EntityClusterExplorationController {
      */
     public void setDuplicates(List<EquivalenceCluster> duplicates, List<EntityProfile> entities) {
         this.dirtyEr = true;
-        this.duplicates = duplicates;
         this.entitiesD1 = entities;
+
+        // Find and keep only non-empty clusters
+        List<EquivalenceCluster> filteredDuplicates = new ArrayList<>();
+        for (EquivalenceCluster ec : duplicates) {
+            // For Dirty ER, we only have to check the list for the 1st dataset
+            if (!ec.getEntityIdsD1().isEmpty()) {
+                filteredDuplicates.add(ec);
+            }
+        }
+        this.duplicates = filteredDuplicates;
 
         updateView();
     }
@@ -138,9 +148,18 @@ public class EntityClusterExplorationController {
     public void setDuplicates(List<EquivalenceCluster> duplicates,
                               List<EntityProfile> entitiesD1, List<EntityProfile> entitiesD2) {
         this.dirtyEr = false;
-        this.duplicates = duplicates;
         this.entitiesD1 = entitiesD1;
         this.entitiesD2 = entitiesD2;
+
+        // Find and keep only non-empty clusters
+        List<EquivalenceCluster> filteredDuplicates = new ArrayList<>();
+        for (EquivalenceCluster ec : duplicates) {
+            // For Dirty ER, we only have to check the list for the 1st dataset
+            if (!ec.getEntityIdsD1().isEmpty() && !ec.getEntityIdsD2().isEmpty()) {
+                filteredDuplicates.add(ec);
+            }
+        }
+        this.duplicates = filteredDuplicates;
 
         updateView();
     }
