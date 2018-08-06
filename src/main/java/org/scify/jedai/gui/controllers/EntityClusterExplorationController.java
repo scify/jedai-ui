@@ -13,7 +13,7 @@ import org.scify.jedai.gui.utilities.DialogHelper;
 
 import java.util.List;
 
-public class GroundTruthExplorationController {
+public class EntityClusterExplorationController {
     private final int pageSize = 5;
     public Pagination entityPagination;
     public VBox containerVBox;

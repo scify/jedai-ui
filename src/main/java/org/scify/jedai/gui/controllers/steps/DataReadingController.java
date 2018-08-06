@@ -16,7 +16,7 @@ import javafx.stage.Modality;
 import org.scify.jedai.datamodel.EntityProfile;
 import org.scify.jedai.datamodel.EquivalenceCluster;
 import org.scify.jedai.gui.controllers.DatasetExplorationController;
-import org.scify.jedai.gui.controllers.GroundTruthExplorationController;
+import org.scify.jedai.gui.controllers.EntityClusterExplorationController;
 import org.scify.jedai.gui.utilities.*;
 import org.scify.jedai.gui.wizard.Submit;
 import org.scify.jedai.gui.wizard.Validate;
@@ -292,16 +292,16 @@ public class DataReadingController {
 
         // Load FXML for exploration window and get the controller
         Parent root = DialogHelper.loadFxml(this.getClass(), injector,
-                "wizard-fxml/GroundTruthExploration.fxml");
+                "wizard-fxml/EntityClusterExploration.fxml");
         Object controller = null;
         if (root != null) {
             controller = root.getProperties().get("controller");
         }
 
         // Set properties of the controller & show window
-        if (controller instanceof GroundTruthExplorationController) {
+        if (controller instanceof EntityClusterExplorationController) {
             // Cast the controller instance since we know it's safe here
-            GroundTruthExplorationController popupController = (GroundTruthExplorationController) controller;
+            EntityClusterExplorationController popupController = (EntityClusterExplorationController) controller;
 
             // Give the configuration options to the controller
             if (model.getErType().equals(JedaiOptions.DIRTY_ER)) {

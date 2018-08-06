@@ -29,7 +29,7 @@ import org.scify.jedai.datamodel.EquivalenceCluster;
 import org.scify.jedai.datamodel.SimilarityPairs;
 import org.scify.jedai.entityclustering.IEntityClustering;
 import org.scify.jedai.entitymatching.IEntityMatching;
-import org.scify.jedai.gui.controllers.GroundTruthExplorationController;
+import org.scify.jedai.gui.controllers.EntityClusterExplorationController;
 import org.scify.jedai.gui.model.BlClMethodConfiguration;
 import org.scify.jedai.gui.model.WorkflowResult;
 import org.scify.jedai.gui.nodes.DetailsCell;
@@ -556,16 +556,16 @@ public class CompletedController {
 
         // Load FXML for exploration window and get the controller
         Parent root = DialogHelper.loadFxml(this.getClass(), injector,
-                "wizard-fxml/GroundTruthExploration.fxml");
+                "wizard-fxml/EntityClusterExploration.fxml");
         Object controller = null;
         if (root != null) {
             controller = root.getProperties().get("controller");
         }
 
         // Set properties of the controller & show window
-        if (controller instanceof GroundTruthExplorationController) {
+        if (controller instanceof EntityClusterExplorationController) {
             // Cast the controller instance since we know it's safe here
-            GroundTruthExplorationController popupController = (GroundTruthExplorationController) controller;
+            EntityClusterExplorationController popupController = (EntityClusterExplorationController) controller;
 
             // Give the configuration options to the controller
             if (model.getErType().equals(JedaiOptions.DIRTY_ER)) {
