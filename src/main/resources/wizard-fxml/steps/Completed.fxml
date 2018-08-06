@@ -92,13 +92,14 @@
         </TabPane>
         <HBox alignment="CENTER" prefHeight="56.0" prefWidth="570.0">
             <children>
-                <Button fx:id="exploreBtn" disable="true" mnemonicParsing="false" text="Explore">
-                    <HBox.margin>
-                        <Insets right="20.0"/>
-                    </HBox.margin>
-                </Button>
                 <Button fx:id="runBtn" defaultButton="true" mnemonicParsing="false" onAction="#runAlgorithmBtnHandler"
                         prefWidth="125.0" text="Run workflow"/>
+                <Button fx:id="exploreBtn" disable="true" mnemonicParsing="false" onAction="#exploreResults"
+                        text="Explore">
+                    <HBox.margin>
+                        <Insets left="20.0"/>
+                    </HBox.margin>
+                </Button>
                 <ProgressIndicator fx:id="progressIndicator" prefHeight="52.0" prefWidth="121.0" progress="0.0"
                                    visible="false"/>
                 <Button fx:id="exportBtn" disable="true" mnemonicParsing="false" onAction="#exportBtnHandler"

@@ -10,13 +10,16 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.util.StringConverter;
 import org.scify.jedai.blockbuilding.IBlockBuilding;
 import org.scify.jedai.blockprocessing.IBlockProcessing;
@@ -26,6 +29,7 @@ import org.scify.jedai.datamodel.EquivalenceCluster;
 import org.scify.jedai.datamodel.SimilarityPairs;
 import org.scify.jedai.entityclustering.IEntityClustering;
 import org.scify.jedai.entitymatching.IEntityMatching;
+import org.scify.jedai.gui.controllers.GroundTruthExplorationController;
 import org.scify.jedai.gui.model.BlClMethodConfiguration;
 import org.scify.jedai.gui.model.WorkflowResult;
 import org.scify.jedai.gui.nodes.DetailsCell;
@@ -538,5 +542,44 @@ public class CompletedController {
 
         // Go to first tabset tab
         tabSelectionModel.selectFirst();
+    }
+
+    /**
+     * Explore the results of the dataset. Assumes that it will not be called when this is not possible (because the
+     * button is supposed to be disabled when that's the case...)
+     *
+     * @param actionEvent Button event
+     */
+    public void exploreResults(ActionEvent actionEvent) {
+        // Get LIST of equivalence clusters (from array)
+        List<EquivalenceCluster> duplicates = Arrays.asList(this.entityClusters);
+
+        // Load FXML for exploration window and get the controller
+        Parent root = DialogHelper.loadFxml(this.getClass(), injector,
+                "wizard-fxml/GroundTruthExploration.fxml");
+        Object controller = null;
+        if (root != null) {
+            controller = root.getProperties().get("controller");
+        }
+
+        // Set properties of the controller & show window
+        if (controller instanceof GroundTruthExplorationController) {
+            // Cast the controller instance since we know it's safe here
+            GroundTruthExplorationController popupController = (GroundTruthExplorationController) controller;
+
+            // Give the configuration options to the controller
+            if (model.getErType().equals(JedaiOptions.DIRTY_ER)) {
+                popupController.setDuplicates(duplicates, this.profilesD1);
+            } else {
+                popupController.setDuplicates(duplicates, this.profilesD1, this.profilesD2);
+            }
+
+            // Create the popup
+            DialogHelper.showScene(root, Modality.WINDOW_MODAL, false,
+                    "JedAI - Results Exploration");
+        } else {
+            // This shouldn't ever happen.
+            System.err.println("Error when showing the results exploration popup (Wrong controller instance?)");
+        }
     }
 }
