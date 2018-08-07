@@ -2,6 +2,7 @@ package org.scify.jedai.gui.controllers;
 
 import gnu.trove.iterator.TIntIterator;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
@@ -18,6 +19,7 @@ public class EntityClusterExplorationController {
     private final int pageSize = 5;
     public Pagination entityPagination;
     public VBox containerVBox;
+    public Label titleLabel;
 
     private boolean dirtyEr = true;
     private List<EquivalenceCluster> duplicates = null;
@@ -26,6 +28,15 @@ public class EntityClusterExplorationController {
 
     @FXML
     public void initialize() {
+    }
+
+    /**
+     * Set the title label to display some other string
+     *
+     * @param title Title to show
+     */
+    public void setTitle(String title) {
+        this.titleLabel.setText(title);
     }
 
     /**

@@ -566,6 +566,7 @@ public class CompletedController {
         if (controller instanceof EntityClusterExplorationController) {
             // Cast the controller instance since we know it's safe here
             EntityClusterExplorationController popupController = (EntityClusterExplorationController) controller;
+            popupController.setTitle("Results Exploration");
 
             // Give the configuration options to the controller
             if (model.getErType().equals(JedaiOptions.DIRTY_ER)) {
