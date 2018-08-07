@@ -12,7 +12,7 @@ import org.scify.jedai.gui.utilities.JPair;
 import java.util.List;
 
 public class DatasetExplorationController {
-    private final int pageSize = 10;
+    private final int pageSize = 5;
 
     public VBox containerVBox;
     public Pagination entityPagination;
