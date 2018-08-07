@@ -108,7 +108,13 @@ public class DataReadingController {
         controlsGrid.add(d2ParamsList, 4, 1);
         controlsGrid.add(DynamicMethodConfiguration.newParamsNode(model.groundTruthParametersProperty()), 4, 2);
 
-        // todo: Disable exploration buttons when there are no options selected
+        // Disable exploration buttons when there are no options selected
+        exploreD1Btn.disableProperty().bind(model.entityProfilesD1TypeProperty().isNull());
+        exploreD2Btn.disableProperty().bind(
+                model.erTypeProperty().isEqualTo(JedaiOptions.DIRTY_ER)
+                        .or(model.entityProfilesD2TypeProperty().isNull())
+        );
+        exploreGtBtn.disableProperty().bind(model.groundTruthTypeProperty().isNull());
 
         // Set initial values to text fields (for testing...)
 //        model.setEntityProfilesD1Type(JedaiOptions.SERIALIZED);
