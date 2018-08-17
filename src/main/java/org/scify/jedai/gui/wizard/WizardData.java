@@ -46,6 +46,10 @@ public class WizardData {
     private final StringProperty entityClusteringConfigType = new SimpleStringProperty();
     private final ListProperty<JPair<String, Object>> entityClusteringParameters = new SimpleListProperty<>();
 
+    // Automatic Configuration
+    private final StringProperty autoConfigType = new SimpleStringProperty();
+    private final StringProperty searchType = new SimpleStringProperty();
+
     /**
      * Clone a WizardData object (return a new WizardData object, with the same properties of the given one)
      *
@@ -388,5 +392,29 @@ public class WizardData {
 
     public void setEntityClusteringParameters(ObservableList<JPair<String, Object>> entityClusteringParameters) {
         this.entityClusteringParameters.set(entityClusteringParameters);
+    }
+
+    public String getAutoConfigType() {
+        return autoConfigType.get();
+    }
+
+    public StringProperty autoConfigTypeProperty() {
+        return autoConfigType;
+    }
+
+    public void setAutoConfigType(String autoConfigType) {
+        this.autoConfigType.set(autoConfigType);
+    }
+
+    public String getSearchType() {
+        return searchType.get();
+    }
+
+    public StringProperty searchTypeProperty() {
+        return searchType;
+    }
+
+    public void setSearchType(String searchType) {
+        this.searchType.set(searchType);
     }
 }

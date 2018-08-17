@@ -53,9 +53,14 @@
                                         </Label>
                                     </children>
                                 </GridPane>
-                                <HBox fx:id="gaugesHBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308"
-                                      maxWidth="1.7976931348623157E308" prefHeight="171.0" prefWidth="680.0"
-                                      VBox.vgrow="ALWAYS"/>
+                                <HBox prefHeight="171.0" prefWidth="680.0">
+                                    <children>
+                                        <VBox fx:id="autoConfigContainer" prefHeight="200.0" prefWidth="250.0"/>
+                                        <HBox fx:id="gaugesHBox" alignment="TOP_CENTER"
+                                              maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                                              prefHeight="171.0" prefWidth="400.0"/>
+                                    </children>
+                                </HBox>
                             </children>
                         </VBox>
                     </content>

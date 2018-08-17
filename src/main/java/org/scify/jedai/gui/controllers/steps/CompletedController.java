@@ -65,6 +65,7 @@ public class CompletedController {
     public TabPane resultsTabPane;
     public TableView workbenchTable;
     public Button exploreBtn;
+    public VBox autoConfigContainer;
 
     private SingleSelectionModel<Tab> tabSelectionModel;
     private final ObservableList<WorkflowResult> tableData = FXCollections.observableArrayList();
@@ -115,6 +116,19 @@ public class CompletedController {
 
         // Save the TabPane's selection model to use it for resetting the selected tab later
         tabSelectionModel = resultsTabPane.getSelectionModel();
+
+        // Add radio buttons for configuring automatic configuration options
+        List<String> autoConfigTypes = Arrays.asList(
+                "Holistic",
+                "Step-by-step"
+        );
+        RadioButtonHelper.createButtonGroup(autoConfigContainer, autoConfigTypes, model.autoConfigTypeProperty());
+
+        List<String> searchTypes = Arrays.asList(
+                "Random Search",
+                "Grid Search"
+        );
+        RadioButtonHelper.createButtonGroup(autoConfigContainer, searchTypes, model.searchTypeProperty());
 
         // Setup table for previous results (Workbench)
         initGrid();
