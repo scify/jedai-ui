@@ -119,14 +119,14 @@ public class CompletedController {
 
         // Add radio buttons for configuring automatic configuration options
         List<String> autoConfigTypes = Arrays.asList(
-                "Holistic",
-                "Step-by-step"
+                JedaiOptions.AUTOCONFIG_HOLISTIC,
+                JedaiOptions.AUTOCONFIG_STEPBYSTEP
         );
         RadioButtonHelper.createButtonGroup(autoConfigContainer, autoConfigTypes, model.autoConfigTypeProperty());
 
         List<String> searchTypes = Arrays.asList(
-                "Random Search",
-                "Grid Search"
+                JedaiOptions.AUTOCONFIG_RANDOMSEARCH,
+                JedaiOptions.AUTOCONFIG_GRIDSEARCH
         );
         RadioButtonHelper.createButtonGroup(autoConfigContainer, searchTypes, model.searchTypeProperty());
 

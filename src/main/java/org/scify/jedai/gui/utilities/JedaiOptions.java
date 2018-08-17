@@ -84,4 +84,10 @@ public class JedaiOptions {
     public static final String MERGE_CENTER_CLUSTERING = "Merge-Center Clustering";
     public static final String RICOCHET_SR_CLUSTERING = "Ricochet SR Clustering";
     public static final String UNIQUE_MAPPING_CLUSTERING = "Unique Mapping Clustering";
+
+    // Automatic Configuration
+    public static final String AUTOCONFIG_HOLISTIC = "Holistic";
+    public static final String AUTOCONFIG_STEPBYSTEP = "Step-by-step";
+    public static final String AUTOCONFIG_RANDOMSEARCH = "Random Search";
+    public static final String AUTOCONFIG_GRIDSEARCH = "Grid Search";
 }
