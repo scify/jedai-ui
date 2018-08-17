@@ -18,6 +18,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.util.StringConverter;
@@ -118,12 +120,19 @@ public class CompletedController {
         tabSelectionModel = resultsTabPane.getSelectionModel();
 
         // Add radio buttons for configuring automatic configuration options
+        Label l = new Label("Automatic Configuration Type");
+        l.setFont(Font.font("System", FontWeight.BOLD, 12));
+        autoConfigContainer.getChildren().add(l);
         List<String> autoConfigTypes = Arrays.asList(
                 JedaiOptions.AUTOCONFIG_HOLISTIC,
                 JedaiOptions.AUTOCONFIG_STEPBYSTEP
         );
         RadioButtonHelper.createButtonGroup(autoConfigContainer, autoConfigTypes, model.autoConfigTypeProperty());
 
+        autoConfigContainer.getChildren().add(new Separator());
+        l = new Label("Search Type");
+        l.setFont(Font.font("System", FontWeight.BOLD, 12));
+        autoConfigContainer.getChildren().add(l);
         List<String> searchTypes = Arrays.asList(
                 JedaiOptions.AUTOCONFIG_RANDOMSEARCH,
                 JedaiOptions.AUTOCONFIG_GRIDSEARCH
