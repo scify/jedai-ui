@@ -7,6 +7,7 @@ import org.scify.jedai.datareader.groundtruthreader.GtCSVReader;
 import org.scify.jedai.datareader.groundtruthreader.GtRDFReader;
 import org.scify.jedai.datareader.groundtruthreader.GtSerializationReader;
 import org.scify.jedai.datareader.groundtruthreader.IGroundTruthReader;
+import org.scify.jedai.gui.wizard.WizardData;
 import org.scify.jedai.utilities.datastructures.AbstractDuplicatePropagation;
 import org.scify.jedai.utilities.datastructures.BilateralDuplicatePropagation;
 import org.scify.jedai.utilities.datastructures.UnilateralDuplicatePropagation;
@@ -107,6 +108,14 @@ public class DataReader {
         return profiles;
     }
 
+    public static List<EntityProfile> getEntitiesD1(WizardData model) {
+        return getEntities(model.getEntityProfilesD1Type(), model.getEntityProfilesD1Parameters());
+    }
+
+    public static List<EntityProfile> getEntitiesD2(WizardData model) {
+        return getEntities(model.getEntityProfilesD2Type(), model.getEntityProfilesD2Parameters());
+    }
+
     /**
      * Read ground truth using the specified reader.
      *
@@ -166,5 +175,11 @@ public class DataReader {
         }
 
         return dp;
+    }
+
+    public static AbstractDuplicatePropagation getGroundTruth(WizardData model, List<EntityProfile> profilesD1,
+                                                              List<EntityProfile> profilesD2) {
+        return getGroundTruth(model.getGroundTruthType(), model.getGroundTruthParameters(), model.getErType(),
+                profilesD1, profilesD2);
     }
 }

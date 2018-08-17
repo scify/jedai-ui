@@ -262,28 +262,18 @@ public class CompletedController {
                 String erType = model.getErType();
 
                 // Step 1: Data reading
-                profilesD1 = DataReader.getEntities(
-                        model.getEntityProfilesD1Type(),
-                        model.getEntityProfilesD1Parameters());
+                profilesD1 = DataReader.getEntitiesD1(model);
                 System.out.println("Input Entity Profiles\t:\t" + profilesD1.size());
 
                 // In case Clean-Clear ER was selected, also read 2nd profiles file
                 profilesD2 = null;
                 if (erType.equals(JedaiOptions.CLEAN_CLEAN_ER)) {
-                    profilesD2 = DataReader.getEntities(
-                            model.getEntityProfilesD2Type(),
-                            model.getEntityProfilesD2Parameters()
-                    );
+                    profilesD2 = DataReader.getEntitiesD2(model);
                 }
 
                 // Read ground truth file
-                AbstractDuplicatePropagation duplicatePropagation = DataReader.getGroundTruth(
-                        model.getGroundTruthType(),
-                        model.getGroundTruthParameters(),
-                        erType,
-                        profilesD1,
-                        profilesD2
-                );
+                AbstractDuplicatePropagation duplicatePropagation =
+                        DataReader.getGroundTruth(model, profilesD1, profilesD2);
 
                 System.out.println("Existing Duplicates\t:\t" + duplicatePropagation.getDuplicates().size());
 
