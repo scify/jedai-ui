@@ -122,6 +122,7 @@ public class CompletedController {
         tabSelectionModel = resultsTabPane.getSelectionModel();
 
         // Add radio buttons for configuring automatic configuration options
+        // todo: Show in UI that holistic grid is not supported
         Label l = new Label("Automatic Configuration Type");
         l.setFont(Font.font("System", FontWeight.BOLD, 12));
         autoConfigContainer.getChildren().add(l);
@@ -310,38 +311,93 @@ public class CompletedController {
                 // Set progress indicator to 20%
                 updateProgress(0.2);
 
+                // Prepare methods for rest of workflow
+                // Get block building method
+                IBlockBuilding blockBuildingMethod;
+
+                BlockBuildingMethod blockingWorkflow = MethodMapping.blockBuildingMethods.get(model.getBlockBuilding());
+                overheadStart = System.currentTimeMillis();
+
+                // Check if the user set any custom parameters for block building
+                if (!model.getBlockBuildingConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
+                    // Auto or default configuration selected: use default configuration
+                    blockBuildingMethod = BlockBuildingMethod.getDefaultConfiguration(blockingWorkflow);
+                } else {
+                    // Manual configuration selected, create method with the saved parameters
+                    ObservableList<JPair<String, Object>> blBuParams = model.getBlockBuildingParameters();
+                    blockBuildingMethod = DynamicMethodConfiguration.configureBlockBuildingMethod(blockingWorkflow, blBuParams);
+                }
+
+                // Get comparison cleaning method
+                String coClMethod = model.getComparisonCleaning();
+                IBlockProcessing comparisonCleaningMethod = null;
+                if (coClMethod != null && !coClMethod.equals(JedaiOptions.NO_CLEANING)) {
+                    // Create comparison cleaning method
+
+                    if (!model.getComparisonCleaningConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
+                        // Auto or default configuration selected: use default configuration
+                        comparisonCleaningMethod = MethodMapping.getMethodByName(coClMethod);
+                    } else {
+                        // Manual configuration selected, create method with the saved parameters
+                        ObservableList<JPair<String, Object>> coClParams = model.getComparisonCleaningParameters();
+                        comparisonCleaningMethod = DynamicMethodConfiguration.configureComparisonCleaningMethod(coClMethod, coClParams);
+                    }
+                }
+
+                // Get entity matching method
+                String entityMatchingMethodStr = model.getEntityMatching();
+
+                IEntityMatching entityMatchingMethod;
+                if (!model.getEntityMatchingConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
+                    // Default or automatic config, use default values
+                    entityMatchingMethod = DynamicMethodConfiguration
+                            .configureEntityMatchingMethod(entityMatchingMethodStr, null);
+                } else {
+                    // Manual configuration, use given parameters
+                    ObservableList<JPair<String, Object>> emParams = model.getEntityMatchingParameters();
+                    entityMatchingMethod = DynamicMethodConfiguration
+                            .configureEntityMatchingMethod(entityMatchingMethodStr, emParams);
+                }
+
+                // Get entity clustering method
+                String entityClusteringMethod = model.getEntityClustering();
+                IEntityClustering ec;
+
+                if (!model.getEntityClusteringConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
+                    // Auto or default configuration selected: use default configuration
+                    ec = MethodMapping.getEntityClusteringMethod(entityClusteringMethod);
+                } else {
+                    // Manual configuration selected, create method with the saved parameters
+                    ObservableList<JPair<String, Object>> ecParams = model.getEntityClusteringParameters();
+                    ec = DynamicMethodConfiguration.configureEntityClusteringMethod(entityClusteringMethod, ecParams);
+                }
+
                 if (anyAutomaticConfig()) {
                     // Run the rest of the workflow with holistic, or step-by-step
                     if (model.getAutoConfigType().equals(JedaiOptions.AUTOCONFIG_HOLISTIC)) {
-                        // Holistic automatic configuration (random search because grid takes a long time)
+                        // Holistic random configuration (holistic grid is not supported at this time)
                         int bestIteration = 0;
                         double bestFMeasure = 0;
 
                         for (int j = 0; j < NO_OF_TRIALS; j++) {
+                            if (model.getBlockBuildingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+                                blockBuildingMethod.setNextRandomConfiguration();
+                            }
+
+                            // todo: block cleaning methods
+
+                            if (model.getComparisonCleaningConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+
+                            }
                             //todo
                         }
                     } else {
-                        // Step-by-step automatic configuration
-
+                        // todo: Step-by-step automatic configuration
                     }
                 } else {
-                    // No automatic configuration
-                    // Step 2: Block Building
-                    IBlockBuilding blockBuildingMethod;
+                    // Run workflow without any automatic configuration
 
-                    BlockBuildingMethod blockingWorkflow = MethodMapping.blockBuildingMethods.get(model.getBlockBuilding());
-                    overheadStart = System.currentTimeMillis();
-
-                    // Check if the user set any custom parameters for block building
-                    if (!model.getBlockBuildingConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
-                        // Auto or default configuration selected: use default configuration
-                        blockBuildingMethod = BlockBuildingMethod.getDefaultConfiguration(blockingWorkflow);
-                    } else {
-                        // Manual configuration selected, create method with the saved parameters
-                        ObservableList<JPair<String, Object>> blBuParams = model.getBlockBuildingParameters();
-                        blockBuildingMethod = DynamicMethodConfiguration.configureBlockBuildingMethod(blockingWorkflow, blBuParams);
-                    }
-
+                    // Run step 2
                     List<AbstractBlock> blocks;
                     if (blockBuildingMethod != null) {
                         if (erType.equals(JedaiOptions.DIRTY_ER)) {
@@ -404,21 +460,8 @@ public class CompletedController {
                     }
 
                     // Step 4: Comparison Cleaning
-                    String coClMethod = model.getComparisonCleaning();
-                    if (coClMethod != null && !coClMethod.equals(JedaiOptions.NO_CLEANING)) {
+                    if (comparisonCleaningMethod != null) {
                         overheadStart = System.currentTimeMillis();
-
-                        // Create comparison cleaning method
-                        IBlockProcessing comparisonCleaningMethod;
-
-                        if (!model.getComparisonCleaningConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
-                            // Auto or default configuration selected: use default configuration
-                            comparisonCleaningMethod = MethodMapping.getMethodByName(coClMethod);
-                        } else {
-                            // Manual configuration selected, create method with the saved parameters
-                            ObservableList<JPair<String, Object>> coClParams = model.getComparisonCleaningParameters();
-                            comparisonCleaningMethod = DynamicMethodConfiguration.configureComparisonCleaningMethod(coClMethod, coClParams);
-                        }
 
                         blocks = comparisonCleaningMethod.refineBlocks(blocks);
 
@@ -433,46 +476,22 @@ public class CompletedController {
                     updateProgress(0.6);
 
                     // Step 5: Entity Matching
-                    String entityMatchingMethod = model.getEntityMatching();
-
-                    IEntityMatching em;
-                    if (!model.getEntityMatchingConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
-                        // Default or automatic config, use default values
-                        em = DynamicMethodConfiguration.configureEntityMatchingMethod(entityMatchingMethod, null);
-                    } else {
-                        // Manual configuration, use given parameters
-                        ObservableList<JPair<String, Object>> emParams = model.getEntityMatchingParameters();
-                        em = DynamicMethodConfiguration.configureEntityMatchingMethod(entityMatchingMethod, emParams);
-                    }
                     SimilarityPairs simPairs;
 
-                    if (em == null)
+                    if (entityMatchingMethod == null)
                         throw new Exception("Entity Matching method is null!");
 
                     if (erType.equals(JedaiOptions.DIRTY_ER)) {
-                        simPairs = em.executeComparisons(blocks, profilesD1);
+                        simPairs = entityMatchingMethod.executeComparisons(blocks, profilesD1);
                     } else {
-                        simPairs = em.executeComparisons(blocks, profilesD1, profilesD2);
+                        simPairs = entityMatchingMethod.executeComparisons(blocks, profilesD1, profilesD2);
                     }
 
                     // Set progress indicator to 80%
                     updateProgress(0.8);
 
                     // Step 6: Entity Clustering
-                    String entityClusteringMethod = model.getEntityClustering();
                     overheadStart = System.currentTimeMillis();
-
-                    // Create entity clustering method
-                    IEntityClustering ec;
-
-                    if (!model.getEntityClusteringConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
-                        // Auto or default configuration selected: use default configuration
-                        ec = MethodMapping.getEntityClusteringMethod(entityClusteringMethod);
-                    } else {
-                        // Manual configuration selected, create method with the saved parameters
-                        ObservableList<JPair<String, Object>> ecParams = model.getEntityClusteringParameters();
-                        ec = DynamicMethodConfiguration.configureEntityClusteringMethod(entityClusteringMethod, ecParams);
-                    }
 
                     entityClusters = ec.getDuplicates(simPairs);
 
