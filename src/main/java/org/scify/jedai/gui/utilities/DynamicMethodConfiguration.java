@@ -14,7 +14,6 @@ import org.scify.jedai.blockprocessing.blockcleaning.BlockFiltering;
 import org.scify.jedai.blockprocessing.blockcleaning.ComparisonsBasedBlockPurging;
 import org.scify.jedai.blockprocessing.blockcleaning.SizeBasedBlockPurging;
 import org.scify.jedai.blockprocessing.comparisoncleaning.*;
-import org.scify.jedai.datamodel.ConfigurationSetting;
 import org.scify.jedai.datareader.entityreader.*;
 import org.scify.jedai.datareader.groundtruthreader.GtCSVReader;
 import org.scify.jedai.datareader.groundtruthreader.GtRDFReader;
@@ -131,48 +130,38 @@ public class DynamicMethodConfiguration {
      */
     public static IBlockBuilding configureBlockBuildingMethod(BlockBuildingMethod method,
                                                               List<JPair<String, Object>> parameters) {
-        ConfigurationSetting cs;
-
         switch (method) {
             case STANDARD_BLOCKING:
-                cs = new ConfigurationSetting(0, 0, 0, 0);
-
-                return new StandardBlocking(cs);
+                return new StandardBlocking();
             case SUFFIX_ARRAYS:
-                cs = new ConfigurationSetting(0, 0, 0, 2);
                 // todo: make sure these are correct
-                cs.setIntegerParameter(1, (int) parameters.get(0).getRight());  // Minimum Suffix Length
-                cs.setIntegerParameter(0, (int) parameters.get(1).getRight());  // Maximum Suffix Frequency
-
-                return new SuffixArraysBlocking(cs);
+                return new SuffixArraysBlocking(
+                        (int) parameters.get(0).getRight(), // Maximum Suffix Frequency
+                        (int) parameters.get(1).getRight()  // Minimum Suffix Length
+                );
             case Q_GRAMS_BLOCKING:
-                cs = new ConfigurationSetting(0, 0, 0, 1);
-                cs.setIntegerParameter(0, (int) parameters.get(0).getRight());
-
-                return new QGramsBlocking(cs);
+                return new QGramsBlocking(
+                        (int) parameters.get(0).getRight()
+                );
             case SORTED_NEIGHBORHOOD:
-                cs = new ConfigurationSetting(0, 0, 0, 1);
-                cs.setIntegerParameter(0, (int) parameters.get(0).getRight());
-
-                return new SortedNeighborhoodBlocking(cs);
+                return new SortedNeighborhoodBlocking(
+                        (int) parameters.get(0).getRight()
+                );
             case EXTENDED_SUFFIX_ARRAYS:
                 // todo: make sure these are correct
-                cs = new ConfigurationSetting(0, 0, 0, 2);
-                cs.setIntegerParameter(1, (int) parameters.get(0).getRight());  // Minimum Substring Length
-                cs.setIntegerParameter(0, (int) parameters.get(1).getRight());  // Maximum Substring Frequency
-
-                return new ExtendedSuffixArraysBlocking(cs);
+                return new ExtendedSuffixArraysBlocking(
+                        (int) parameters.get(0).getRight(), // Maximum Substring Frequency
+                        (int) parameters.get(1).getRight()  // Minimum Substring Length
+                );
             case EXTENDED_Q_GRAMS_BLOCKING:
-                cs = new ConfigurationSetting(0, 1, 0, 1);
-                cs.setIntegerParameter(0, (int) parameters.get(0).getRight());
-                cs.setDoubleParameter(0, (double) parameters.get(1).getRight());
-
-                return new ExtendedQGramsBlocking(cs);
+                return new ExtendedQGramsBlocking(
+                        (double) parameters.get(1).getRight(),
+                        (int) parameters.get(0).getRight()
+                );
             case EXTENDED_SORTED_NEIGHBORHOOD:
-                cs = new ConfigurationSetting(0, 0, 0, 1);
-                cs.setIntegerParameter(0, (int) parameters.get(0).getRight());
-
-                return new ExtendedSortedNeighborhoodBlocking(cs);
+                return new ExtendedSortedNeighborhoodBlocking(
+                        (int) parameters.get(0).getRight()
+                );
             default:
                 return null;
         }
