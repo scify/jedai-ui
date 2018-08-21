@@ -55,6 +55,8 @@ import java.text.NumberFormat;
 import java.util.*;
 
 public class CompletedController {
+    private final static int NO_OF_TRIALS = 100;
+
     public Button runBtn;
     public Button exportBtn;
     public VBox containerVBox;
@@ -234,6 +236,34 @@ public class CompletedController {
         Platform.runLater(() -> progressIndicator.setProgress(percentage));
     }
 
+    /**
+     * Return true if automatic configuration was chosen for any method
+     *
+     * @return True if automatic configuration was chosen for any method
+     */
+    private boolean anyAutomaticConfig() {
+        // Check all steps except block cleaning methods
+        if (model.getBlockBuildingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)
+                || model.getComparisonCleaningConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)
+                || model.getEntityMatchingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)
+                || model.getEntityClusteringConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)
+        ) {
+            return true;
+        }
+
+        // Check block cleaning methods
+        if (model.getBlockCleaningMethods() != null && !model.getBlockCleaningMethods().isEmpty()) {
+            // Loop over the methods
+            for (BlClMethodConfiguration config : model.getBlockCleaningMethods()) {
+                // Check if the method is enabled and its config. type is automatic
+                if (config.isEnabled() && config.getConfigurationType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     @FXML
     private void runAlgorithmBtnHandler() {
         // Show the progress indicator
@@ -280,211 +310,230 @@ public class CompletedController {
                 // Set progress indicator to 20%
                 updateProgress(0.2);
 
-                // Step 2: Block Building
-                IBlockBuilding blockBuildingMethod;
+                if (anyAutomaticConfig()) {
+                    // Run the rest of the workflow with holistic, or step-by-step
+                    if (model.getAutoConfigType().equals(JedaiOptions.AUTOCONFIG_HOLISTIC)) {
+                        // Holistic automatic configuration (random search because grid takes a long time)
+                        int bestIteration = 0;
+                        double bestFMeasure = 0;
 
-                BlockBuildingMethod blockingWorkflow = MethodMapping.blockBuildingMethods.get(model.getBlockBuilding());
-                overheadStart = System.currentTimeMillis();
-
-                // Check if the user set any custom parameters for block building
-                if (!model.getBlockBuildingConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
-                    // Auto or default configuration selected: use default configuration
-                    blockBuildingMethod = BlockBuildingMethod.getDefaultConfiguration(blockingWorkflow);
-                } else {
-                    // Manual configuration selected, create method with the saved parameters
-                    ObservableList<JPair<String, Object>> blBuParams = model.getBlockBuildingParameters();
-                    blockBuildingMethod = DynamicMethodConfiguration.configureBlockBuildingMethod(blockingWorkflow, blBuParams);
-                }
-
-                List<AbstractBlock> blocks;
-                if (blockBuildingMethod != null) {
-                    if (erType.equals(JedaiOptions.DIRTY_ER)) {
-                        blocks = blockBuildingMethod.getBlocks(profilesD1);
+                        for (int j = 0; j < NO_OF_TRIALS; j++) {
+                            //todo
+                        }
                     } else {
-                        blocks = blockBuildingMethod.getBlocks(profilesD1, profilesD2);
+                        // Step-by-step automatic configuration
+
                     }
                 } else {
-                    // Show error
-                    DialogHelper.showError("Block Building Method Error", "Block Building Method is null!",
-                            "There was a problem running the selected block building method!");
-                    return;
-                }
+                    // No automatic configuration
+                    // Step 2: Block Building
+                    IBlockBuilding blockBuildingMethod;
 
-                System.out.println("Original blocks\t:\t" + blocks.size());
-
-                // Print blocks performance
-                overheadEnd = System.currentTimeMillis();
-                blp = new BlocksPerformance(blocks, duplicatePropagation);
-                blp.setStatistics();
-                blp.printStatistics(overheadEnd - overheadStart, blockBuildingMethod.getMethodConfiguration(), blockBuildingMethod.getMethodName());
-
-                // Set progress indicator to 40%
-                updateProgress(0.4);
-
-                // Step 3: Block Cleaning
-                List<BlClMethodConfiguration> blClMethods = model.getBlockCleaningMethods();
-
-                if (blClMethods != null) {
-                    // Execute the methods
-                    for (BlClMethodConfiguration currentMethod : blClMethods) {
-                        // Only run the method if it is enabled
-                        if (!currentMethod.isEnabled()) {
-                            continue;
-                        }
-
-                        overheadStart = System.currentTimeMillis();
-
-                        // Process blocks with this method
-                        IBlockProcessing blockCleaningMethod;
-                        if (!currentMethod.getConfigurationType().equals(JedaiOptions.MANUAL_CONFIG)) {
-                            // Auto or default configuration selected: use default configuration
-                            blockCleaningMethod = MethodMapping.getMethodByName(currentMethod.getName());
-                        } else {
-                            // Manual configuration selected, create method with the saved parameters
-                            blockCleaningMethod = DynamicMethodConfiguration.configureBlockCleaningMethod(
-                                    currentMethod.getName(), currentMethod.getManualParameters());
-                        }
-
-                        if (blockCleaningMethod != null) {
-                            blocks = blockCleaningMethod.refineBlocks(blocks);
-
-                            // Print blocks performance
-                            overheadEnd = System.currentTimeMillis();
-                            blp = new BlocksPerformance(blocks, duplicatePropagation);
-                            blp.setStatistics();
-                            blp.printStatistics(overheadEnd - overheadStart, blockCleaningMethod.getMethodConfiguration(), blockCleaningMethod.getMethodName());
-                        }
-                    }
-                }
-
-                // Step 4: Comparison Cleaning
-                String coClMethod = model.getComparisonCleaning();
-                if (coClMethod != null && !coClMethod.equals(JedaiOptions.NO_CLEANING)) {
+                    BlockBuildingMethod blockingWorkflow = MethodMapping.blockBuildingMethods.get(model.getBlockBuilding());
                     overheadStart = System.currentTimeMillis();
 
-                    // Create comparison cleaning method
-                    IBlockProcessing comparisonCleaningMethod;
-
-                    if (!model.getComparisonCleaningConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
+                    // Check if the user set any custom parameters for block building
+                    if (!model.getBlockBuildingConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
                         // Auto or default configuration selected: use default configuration
-                        comparisonCleaningMethod = MethodMapping.getMethodByName(coClMethod);
+                        blockBuildingMethod = BlockBuildingMethod.getDefaultConfiguration(blockingWorkflow);
                     } else {
                         // Manual configuration selected, create method with the saved parameters
-                        ObservableList<JPair<String, Object>> coClParams = model.getComparisonCleaningParameters();
-                        comparisonCleaningMethod = DynamicMethodConfiguration.configureComparisonCleaningMethod(coClMethod, coClParams);
+                        ObservableList<JPair<String, Object>> blBuParams = model.getBlockBuildingParameters();
+                        blockBuildingMethod = DynamicMethodConfiguration.configureBlockBuildingMethod(blockingWorkflow, blBuParams);
                     }
 
-                    blocks = comparisonCleaningMethod.refineBlocks(blocks);
+                    List<AbstractBlock> blocks;
+                    if (blockBuildingMethod != null) {
+                        if (erType.equals(JedaiOptions.DIRTY_ER)) {
+                            blocks = blockBuildingMethod.getBlocks(profilesD1);
+                        } else {
+                            blocks = blockBuildingMethod.getBlocks(profilesD1, profilesD2);
+                        }
+                    } else {
+                        // Show error
+                        DialogHelper.showError("Block Building Method Error", "Block Building Method is null!",
+                                "There was a problem running the selected block building method!");
+                        return;
+                    }
+
+                    System.out.println("Original blocks\t:\t" + blocks.size());
 
                     // Print blocks performance
                     overheadEnd = System.currentTimeMillis();
                     blp = new BlocksPerformance(blocks, duplicatePropagation);
                     blp.setStatistics();
-                    blp.printStatistics(overheadEnd - overheadStart, comparisonCleaningMethod.getMethodConfiguration(), comparisonCleaningMethod.getMethodName());
+                    blp.printStatistics(overheadEnd - overheadStart, blockBuildingMethod.getMethodConfiguration(), blockBuildingMethod.getMethodName());
+
+                    // Set progress indicator to 40%
+                    updateProgress(0.4);
+
+                    // Step 3: Block Cleaning
+                    List<BlClMethodConfiguration> blClMethods = model.getBlockCleaningMethods();
+
+                    if (blClMethods != null) {
+                        // Execute the methods
+                        for (BlClMethodConfiguration currentMethod : blClMethods) {
+                            // Only run the method if it is enabled
+                            if (!currentMethod.isEnabled()) {
+                                continue;
+                            }
+
+                            overheadStart = System.currentTimeMillis();
+
+                            // Process blocks with this method
+                            IBlockProcessing blockCleaningMethod;
+                            if (!currentMethod.getConfigurationType().equals(JedaiOptions.MANUAL_CONFIG)) {
+                                // Auto or default configuration selected: use default configuration
+                                blockCleaningMethod = MethodMapping.getMethodByName(currentMethod.getName());
+                            } else {
+                                // Manual configuration selected, create method with the saved parameters
+                                blockCleaningMethod = DynamicMethodConfiguration.configureBlockCleaningMethod(
+                                        currentMethod.getName(), currentMethod.getManualParameters());
+                            }
+
+                            if (blockCleaningMethod != null) {
+                                blocks = blockCleaningMethod.refineBlocks(blocks);
+
+                                // Print blocks performance
+                                overheadEnd = System.currentTimeMillis();
+                                blp = new BlocksPerformance(blocks, duplicatePropagation);
+                                blp.setStatistics();
+                                blp.printStatistics(overheadEnd - overheadStart, blockCleaningMethod.getMethodConfiguration(), blockCleaningMethod.getMethodName());
+                            }
+                        }
+                    }
+
+                    // Step 4: Comparison Cleaning
+                    String coClMethod = model.getComparisonCleaning();
+                    if (coClMethod != null && !coClMethod.equals(JedaiOptions.NO_CLEANING)) {
+                        overheadStart = System.currentTimeMillis();
+
+                        // Create comparison cleaning method
+                        IBlockProcessing comparisonCleaningMethod;
+
+                        if (!model.getComparisonCleaningConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
+                            // Auto or default configuration selected: use default configuration
+                            comparisonCleaningMethod = MethodMapping.getMethodByName(coClMethod);
+                        } else {
+                            // Manual configuration selected, create method with the saved parameters
+                            ObservableList<JPair<String, Object>> coClParams = model.getComparisonCleaningParameters();
+                            comparisonCleaningMethod = DynamicMethodConfiguration.configureComparisonCleaningMethod(coClMethod, coClParams);
+                        }
+
+                        blocks = comparisonCleaningMethod.refineBlocks(blocks);
+
+                        // Print blocks performance
+                        overheadEnd = System.currentTimeMillis();
+                        blp = new BlocksPerformance(blocks, duplicatePropagation);
+                        blp.setStatistics();
+                        blp.printStatistics(overheadEnd - overheadStart, comparisonCleaningMethod.getMethodConfiguration(), comparisonCleaningMethod.getMethodName());
+                    }
+
+                    // Set progress indicator to 60%
+                    updateProgress(0.6);
+
+                    // Step 5: Entity Matching
+                    String entityMatchingMethod = model.getEntityMatching();
+
+                    IEntityMatching em;
+                    if (!model.getEntityMatchingConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
+                        // Default or automatic config, use default values
+                        em = DynamicMethodConfiguration.configureEntityMatchingMethod(entityMatchingMethod, null);
+                    } else {
+                        // Manual configuration, use given parameters
+                        ObservableList<JPair<String, Object>> emParams = model.getEntityMatchingParameters();
+                        em = DynamicMethodConfiguration.configureEntityMatchingMethod(entityMatchingMethod, emParams);
+                    }
+                    SimilarityPairs simPairs;
+
+                    if (em == null)
+                        throw new Exception("Entity Matching method is null!");
+
+                    if (erType.equals(JedaiOptions.DIRTY_ER)) {
+                        simPairs = em.executeComparisons(blocks, profilesD1);
+                    } else {
+                        simPairs = em.executeComparisons(blocks, profilesD1, profilesD2);
+                    }
+
+                    // Set progress indicator to 80%
+                    updateProgress(0.8);
+
+                    // Step 6: Entity Clustering
+                    String entityClusteringMethod = model.getEntityClustering();
+                    overheadStart = System.currentTimeMillis();
+
+                    // Create entity clustering method
+                    IEntityClustering ec;
+
+                    if (!model.getEntityClusteringConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
+                        // Auto or default configuration selected: use default configuration
+                        ec = MethodMapping.getEntityClusteringMethod(entityClusteringMethod);
+                    } else {
+                        // Manual configuration selected, create method with the saved parameters
+                        ObservableList<JPair<String, Object>> ecParams = model.getEntityClusteringParameters();
+                        ec = DynamicMethodConfiguration.configureEntityClusteringMethod(entityClusteringMethod, ecParams);
+                    }
+
+                    entityClusters = ec.getDuplicates(simPairs);
+
+                    // Print clustering performance
+                    overheadEnd = System.currentTimeMillis();
+                    ClustersPerformance clp = new ClustersPerformance(entityClusters, duplicatePropagation);
+                    clp.setStatistics();
+                    clp.printStatistics(overheadEnd - overheadStart, ec.getMethodName(), ec.getMethodConfiguration());
+
+                    // Set gauge values
+                    f1Gauge.setValue(clp.getFMeasure());
+                    recallGauge.setValue(clp.getRecall());
+                    precisionGauge.setValue(clp.getPrecision());
+
+                    // Set progress indicator to 100%
+                    updateProgress(1.0);
+
+                    // Get final run values
+                    double totalTimeSeconds = (System.currentTimeMillis() - startTime) / 1000.0;
+                    int inputInstances = profilesD1.size();
+                    int numOfClusters = entityClusters.length;
+                    double recall = clp.getRecall();
+                    double precision = clp.getPrecision();
+                    double f1 = clp.getFMeasure();
+
+                    // Create entry for Workbench table
+                    tableData.add(new WorkflowResult(
+                            new SimpleIntegerProperty(tableData.size() + 1),
+                            new SimpleDoubleProperty(recall),
+                            new SimpleDoubleProperty(precision),
+                            new SimpleDoubleProperty(f1),
+                            new SimpleDoubleProperty(totalTimeSeconds),
+                            new SimpleIntegerProperty(inputInstances),
+                            new SimpleIntegerProperty(numOfClusters),
+                            new SimpleIntegerProperty(tableData.size())
+                    ));
+
+                    // Add a copy of current WizardData to the list
+                    detailedRunData.add(WizardData.cloneData(model));
+
+                    // Update labels and JavaFX UI components from UI thread
+                    Platform.runLater(() -> {
+                        // Set label values and show them
+                        numOfInstancesLabel.setText("Input instances: " + inputInstances);
+                        numOfInstancesLabel.setVisible(true);
+
+                        totalTimeLabel.setText("Total running time: " + String.format("%.1f", totalTimeSeconds) + " sec.");
+                        totalTimeLabel.setVisible(true);
+
+                        numOfClustersLabel.setText("Number of clusters: " + numOfClusters);
+                        numOfClustersLabel.setVisible(true);
+
+                        // Enable button for result export to CSV
+                        exportBtn.setDisable(false);
+
+                        // Enable exploration button
+                        exploreBtn.setDisable(false);
+                    });
                 }
 
-                // Set progress indicator to 60%
-                updateProgress(0.6);
 
-                // Step 5: Entity Matching
-                String entityMatchingMethod = model.getEntityMatching();
-
-                IEntityMatching em;
-                if (!model.getEntityMatchingConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
-                    // Default or automatic config, use default values
-                    em = DynamicMethodConfiguration.configureEntityMatchingMethod(entityMatchingMethod, null);
-                } else {
-                    // Manual configuration, use given parameters
-                    ObservableList<JPair<String, Object>> emParams = model.getEntityMatchingParameters();
-                    em = DynamicMethodConfiguration.configureEntityMatchingMethod(entityMatchingMethod, emParams);
-                }
-                SimilarityPairs simPairs;
-
-                if (em == null)
-                    throw new Exception("Entity Matching method is null!");
-
-                if (erType.equals(JedaiOptions.DIRTY_ER)) {
-                    simPairs = em.executeComparisons(blocks, profilesD1);
-                } else {
-                    simPairs = em.executeComparisons(blocks, profilesD1, profilesD2);
-                }
-
-                // Set progress indicator to 80%
-                updateProgress(0.8);
-
-                // Step 6: Entity Clustering
-                String entityClusteringMethod = model.getEntityClustering();
-                overheadStart = System.currentTimeMillis();
-
-                // Create entity clustering method
-                IEntityClustering ec;
-
-                if (!model.getEntityClusteringConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
-                    // Auto or default configuration selected: use default configuration
-                    ec = MethodMapping.getEntityClusteringMethod(entityClusteringMethod);
-                } else {
-                    // Manual configuration selected, create method with the saved parameters
-                    ObservableList<JPair<String, Object>> ecParams = model.getEntityClusteringParameters();
-                    ec = DynamicMethodConfiguration.configureEntityClusteringMethod(entityClusteringMethod, ecParams);
-                }
-
-                entityClusters = ec.getDuplicates(simPairs);
-
-                // Print clustering performance
-                overheadEnd = System.currentTimeMillis();
-                ClustersPerformance clp = new ClustersPerformance(entityClusters, duplicatePropagation);
-                clp.setStatistics();
-                clp.printStatistics(overheadEnd - overheadStart, ec.getMethodName(), ec.getMethodConfiguration());
-
-                // Set gauge values
-                f1Gauge.setValue(clp.getFMeasure());
-                recallGauge.setValue(clp.getRecall());
-                precisionGauge.setValue(clp.getPrecision());
-
-                // Set progress indicator to 100%
-                updateProgress(1.0);
-
-                // Get final run values
-                double totalTimeSeconds = (System.currentTimeMillis() - startTime) / 1000.0;
-                int inputInstances = profilesD1.size();
-                int numOfClusters = entityClusters.length;
-                double recall = clp.getRecall();
-                double precision = clp.getPrecision();
-                double f1 = clp.getFMeasure();
-
-                // Create entry for Workbench table
-                tableData.add(new WorkflowResult(
-                        new SimpleIntegerProperty(tableData.size() + 1),
-                        new SimpleDoubleProperty(recall),
-                        new SimpleDoubleProperty(precision),
-                        new SimpleDoubleProperty(f1),
-                        new SimpleDoubleProperty(totalTimeSeconds),
-                        new SimpleIntegerProperty(inputInstances),
-                        new SimpleIntegerProperty(numOfClusters),
-                        new SimpleIntegerProperty(tableData.size())
-                ));
-
-                // Add a copy of current WizardData to the list
-                detailedRunData.add(WizardData.cloneData(model));
-
-                // Update labels and JavaFX UI components from UI thread
-                Platform.runLater(() -> {
-                    // Set label values and show them
-                    numOfInstancesLabel.setText("Input instances: " + inputInstances);
-                    numOfInstancesLabel.setVisible(true);
-
-                    totalTimeLabel.setText("Total running time: " + String.format("%.1f", totalTimeSeconds) + " sec.");
-                    totalTimeLabel.setVisible(true);
-
-                    numOfClustersLabel.setText("Number of clusters: " + numOfClusters);
-                    numOfClustersLabel.setVisible(true);
-
-                    // Enable button for result export to CSV
-                    exportBtn.setDisable(false);
-
-                    // Enable exploration button
-                    exploreBtn.setDisable(false);
-                });
             } catch (Exception e) {
                 // Exception occurred, show alert with information about it
                 Platform.runLater(() -> DialogHelper.showError("Exception",
