@@ -34,7 +34,6 @@ import org.scify.jedai.gui.utilities.WorkflowManager;
 import org.scify.jedai.gui.utilities.console_area.ConsoleArea;
 import org.scify.jedai.gui.utilities.console_area.MultiOutputStream;
 import org.scify.jedai.gui.wizard.WizardData;
-import org.scify.jedai.utilities.BlocksPerformance;
 import org.scify.jedai.utilities.ClustersPerformance;
 import org.scify.jedai.utilities.PrintToFile;
 
@@ -245,9 +244,6 @@ public class CompletedController {
 
             // Create performance variables
             long startTime = System.currentTimeMillis();
-            double overheadStart;
-            double overheadEnd;
-            BlocksPerformance blp;
 
             try {
                 // Step 1: Data reading

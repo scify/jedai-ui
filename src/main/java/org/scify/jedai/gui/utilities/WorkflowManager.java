@@ -147,6 +147,75 @@ public class WorkflowManager {
     }
 
     /**
+     * When bestIteration is null, set the next random configuraiton for each method in the workflow that should be
+     * automatically configured. If it is set, set these methods to that configuration.
+     *
+     * @param bestIteration Best iteration (optional)
+     */
+    private void iterateHolisticRandom(Integer bestIteration) {
+        // Check if block building parameters should be set automatically
+        if (model.getBlockBuildingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+            if (bestIteration == null) {
+                blockBuildingMethod.setNextRandomConfiguration();
+            } else {
+                blockBuildingMethod.setNumberedRandomConfiguration(bestIteration);
+            }
+        }
+
+        // Check if any block cleaning method parameters should be set automatically
+        if (model.getBlockCleaningMethods() != null && !model.getBlockCleaningMethods().isEmpty()) {
+            // Index of the methods in the blClMethods list
+            int enabledMethodIndex = 0;
+
+            // Check each block cleaning method config
+            for (BlClMethodConfiguration blClConfig : model.getBlockCleaningMethods()) {
+                if (blClConfig.isEnabled()) {
+                    // Method is enabled, check if we should configure automatically
+                    if (blClConfig.getConfigurationType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+                        // Get instance of the method and set next random configuration
+                        if (bestIteration == null) {
+                            blClMethods.get(enabledMethodIndex).setNextRandomConfiguration();
+                        } else {
+                            blClMethods.get(enabledMethodIndex).setNumberedRandomConfiguration(bestIteration);
+                        }
+                    }
+
+                    // Increment index
+                    enabledMethodIndex++;
+                }
+            }
+        }
+
+        // Check if comparison cleaning parameters should be set automatically
+        if (model.getComparisonCleaningConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+            if (bestIteration == null) {
+                comparisonCleaningMethod.setNextRandomConfiguration();
+            } else {
+                comparisonCleaningMethod.setNumberedRandomConfiguration(bestIteration);
+            }
+        }
+
+        // Check if entity matching parameters should be set automatically
+        if (model.getEntityMatchingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+            if (bestIteration == null) {
+                entityMatchingMethod.setNextRandomConfiguration();
+            } else {
+                entityMatchingMethod.setNumberedRandomConfiguration(bestIteration);
+            }
+        }
+
+        // Check if entity clustering parameters should be set automatically
+        // todo: should there be some link between automatic configuration of EM & EC?
+        if (model.getEntityClusteringConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+            if (bestIteration == null) {
+                ec.setNextRandomConfiguration();
+            } else {
+                ec.setNumberedRandomConfiguration(bestIteration);
+            }
+        }
+    }
+
+    /**
      * Execute a full workflow. This includes automatically setting the parameters for any methods that should be
      * automatically configured.
      *
@@ -154,6 +223,7 @@ public class WorkflowManager {
      * @throws Exception If runWorkflow returns null...
      */
     public ClustersPerformance executeWorkflow() throws Exception {
+        // todo: make difference between this method and runWorkflow() clearer
         if (anyAutomaticConfig()) {
             // Run the rest of the workflow with holistic, or step-by-step
             if (model.getAutoConfigType().equals(JedaiOptions.AUTOCONFIG_HOLISTIC)) {
@@ -162,46 +232,8 @@ public class WorkflowManager {
                 double bestFMeasure = 0;
 
                 for (int j = 0; j < NO_OF_TRIALS; j++) {
-                    // Check if block building parameters should be set automatically
-                    if (model.getBlockBuildingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-                        blockBuildingMethod.setNextRandomConfiguration();
-                    }
-
-                    // Check if any block cleaning method parameters should be set automatically
-                    if (model.getBlockCleaningMethods() != null && !model.getBlockCleaningMethods().isEmpty()) {
-                        // Index of the methods in the blClMethods list
-                        int enabledMethodIndex = 0;
-
-                        // Check each block cleaning method config
-                        for (BlClMethodConfiguration blClConfig : model.getBlockCleaningMethods()) {
-                            if (blClConfig.isEnabled()) {
-                                // Method is enabled, check if we should configure automatically
-                                if (blClConfig.getConfigurationType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-                                    // Get instance of the method and set next random configuration
-                                    blClMethods.get(enabledMethodIndex).setNextRandomConfiguration();
-                                }
-
-                                // Increment index
-                                enabledMethodIndex++;
-                            }
-                        }
-                    }
-
-                    // Check if comparison cleaning parameters should be set automatically
-                    if (model.getComparisonCleaningConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-                        comparisonCleaningMethod.setNextRandomConfiguration();
-                    }
-
-                    // Check if entity matching parameters should be set automatically
-                    if (model.getEntityMatchingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-                        entityMatchingMethod.setNextRandomConfiguration();
-                    }
-
-                    // Check if entity clustering parameters should be set automatically
-                    // todo: should there be some link between automatic configuration of EM & EC?
-                    if (model.getEntityClusteringConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-                        ec.setNextRandomConfiguration();
-                    }
+                    // Set the next automatic random configuration
+                    iterateHolisticRandom(null);
 
                     // Run a workflow and check its F-measure
                     ClustersPerformance clp = this.runWorkflow(blockBuildingMethod,
@@ -220,46 +252,7 @@ public class WorkflowManager {
 
                 // Before running the workflow, we should configure the methods using the best iteration's
                 // parameters.
-                // Check if we should set the block building method parameters using the best iteration found
-                if (model.getBlockBuildingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-                    blockBuildingMethod.setNumberedRandomConfiguration(bestIteration);
-                }
-
-                // Check if we should set any block cleaning method parameters using the best iteration found
-                if (model.getBlockCleaningMethods() != null && !model.getBlockCleaningMethods().isEmpty()) {
-                    // Index of the methods in the blClMethods list
-                    int enabledMethodIndex = 0;
-
-                    // Check each block cleaning method config
-                    for (BlClMethodConfiguration blClConfig : model.getBlockCleaningMethods()) {
-                        if (blClConfig.isEnabled()) {
-                            // Method is enabled, check if we should configure automatically
-                            if (blClConfig.getConfigurationType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-                                // Get instance of the method and set next random configuration
-                                blClMethods.get(enabledMethodIndex).setNumberedRandomConfiguration(bestIteration);
-                            }
-
-                            // Increment index
-                            enabledMethodIndex++;
-                        }
-                    }
-                }
-
-                // Check if we should set the comparison cleaning parameters using the best iteration found
-                if (model.getComparisonCleaningConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-                    comparisonCleaningMethod.setNumberedRandomConfiguration(bestIteration);
-                }
-
-                // Check if we should set the entity matching parameters using the best iteration found
-                if (model.getEntityMatchingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-                    entityMatchingMethod.setNumberedRandomConfiguration(bestIteration);
-                }
-
-                // Check if we should set the entity clustering parameters using the best iteration found
-                // todo: should there be some link between automatic configuration of EM & EC?
-                if (model.getEntityClusteringConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-                    ec.setNumberedRandomConfiguration(bestIteration);
-                }
+                iterateHolisticRandom(bestIteration);
             } else {
                 // todo: Step-by-step automatic configuration
             }
