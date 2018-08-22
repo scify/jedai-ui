@@ -533,9 +533,20 @@ public class CompletedController {
 
                             // Check if any block cleaning method parameters should be set automatically
                             if (model.getBlockCleaningMethods() != null && !model.getBlockCleaningMethods().isEmpty()) {
+                                // Index of the methods in the blClMethods list
+                                int enabledMethodIndex = 0;
+
+                                // Check each block cleaning method config
                                 for (BlClMethodConfiguration blClConfig : model.getBlockCleaningMethods()) {
-                                    if (blClConfig.isEnabled() && blClConfig.getConfigurationType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-                                        // todo: the instance of the method needs to be created beforehand...
+                                    if (blClConfig.isEnabled()) {
+                                        // Method is enabled, check if we should configure automatically
+                                        if (blClConfig.getConfigurationType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+                                            // Get instance of the method and set next random configuration
+                                            blClMethods.get(enabledMethodIndex).setNextRandomConfiguration();
+                                        }
+
+                                        // Increment index
+                                        enabledMethodIndex++;
                                     }
                                 }
                             }
