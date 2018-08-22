@@ -316,36 +316,16 @@ public class CompletedController {
         updateProgress(0.4);
 
         // Step 3: Block Cleaning
-        if (blClMethods != null) {
+        if (blClMethods != null && !blClMethods.isEmpty()) {
             // Execute the methods
             for (IBlockProcessing currentMethod : blClMethods) {
-                overheadStart = System.currentTimeMillis();
-
-                blocks = currentMethod.refineBlocks(blocks);
-
-                // Print blocks performance
-                overheadEnd = System.currentTimeMillis();
-                blp = new BlocksPerformance(blocks, duProp);
-                blp.setStatistics();
-                if (output)
-                    blp.printStatistics(overheadEnd - overheadStart, currentMethod.getMethodConfiguration(),
-                            currentMethod.getMethodName());
+                blocks = runBlockProcessing(duProp, output, blocks, currentMethod);
             }
         }
 
         // Step 4: Comparison Cleaning
         if (coCl != null) {
-            overheadStart = System.currentTimeMillis();
-
-            blocks = coCl.refineBlocks(blocks);
-
-            // Print blocks performance
-            overheadEnd = System.currentTimeMillis();
-            blp = new BlocksPerformance(blocks, duProp);
-            blp.setStatistics();
-            if (output)
-                blp.printStatistics(overheadEnd - overheadStart, coCl.getMethodConfiguration(),
-                        coCl.getMethodName());
+            blocks = runBlockProcessing(duProp, output, blocks, coCl);
         }
 
         // Set progress indicator to 60%
@@ -380,6 +360,34 @@ public class CompletedController {
                     ec.getMethodConfiguration());
 
         return clp;
+    }
+
+    /**
+     * Process blocks using a given block processing method
+     *
+     * @param duProp        Duplicate propagation (from ground-truth)
+     * @param output        Set to true to print clusters performance
+     * @param blocks        Blocks to process
+     * @param currentMethod Method to process the blocks with
+     * @return Processed list of blocks
+     */
+    private List<AbstractBlock> runBlockProcessing(AbstractDuplicatePropagation duProp, boolean output,
+                                                   List<AbstractBlock> blocks, IBlockProcessing currentMethod) {
+        double overheadStart;
+        double overheadEnd;
+        BlocksPerformance blp;
+        overheadStart = System.currentTimeMillis();
+
+        blocks = currentMethod.refineBlocks(blocks);
+
+        // Print blocks performance
+        overheadEnd = System.currentTimeMillis();
+        blp = new BlocksPerformance(blocks, duProp);
+        blp.setStatistics();
+        if (output)
+            blp.printStatistics(overheadEnd - overheadStart, currentMethod.getMethodConfiguration(),
+                    currentMethod.getMethodName());
+        return blocks;
     }
 
     @FXML
