@@ -260,7 +260,7 @@ public class WorkflowManager {
                 // Step-by-step automatic configuration. Check if we should do random or grid.
                 if (model.getSearchType().equals(JedaiOptions.AUTOCONFIG_RANDOMSEARCH)) {
                     // Step-by-step random automatic configuration
-                    // todo: implement...
+                    return runStepByStepRandom();
                 } else {
                     // Step-by-step grid automatic configuration
                     // todo: implement...
@@ -368,9 +368,9 @@ public class WorkflowManager {
      * @return ClustersPerformance object of the executed workflow
      * @throws Exception In case the Entity Matching method is null (shouldn't happen though)
      */
-    public ClustersPerformance runWorkflow(IBlockBuilding blBu, List<IBlockProcessing> blClMethods,
-                                           IBlockProcessing coCl, IEntityMatching em, IEntityClustering ec,
-                                           boolean output) throws Exception {
+    private ClustersPerformance runWorkflow(IBlockBuilding blBu, List<IBlockProcessing> blClMethods,
+                                            IBlockProcessing coCl, IEntityMatching em, IEntityClustering ec,
+                                            boolean output) throws Exception {
         // Initialize a few variables
         double overheadStart = System.currentTimeMillis();
         double overheadEnd;
@@ -401,9 +401,6 @@ public class WorkflowManager {
         if (output)
             blp.printStatistics(overheadEnd - overheadStart, blBu.getMethodConfiguration(), blBu.getMethodName());
 
-        // Set progress indicator to 40%
-//        updateProgress(0.4);
-
         // Step 3: Block Cleaning
         if (blClMethods != null && !blClMethods.isEmpty()) {
             // Execute the methods
@@ -417,9 +414,6 @@ public class WorkflowManager {
             blocks = runBlockProcessing(duplicatePropagation, output, blocks, coCl);
         }
 
-        // Set progress indicator to 60%
-//        updateProgress(0.6);
-
         // Step 5: Entity Matching
         SimilarityPairs simPairs;
 
@@ -431,9 +425,6 @@ public class WorkflowManager {
         } else {
             simPairs = em.executeComparisons(blocks, profilesD1, profilesD2);
         }
-
-        // Set progress indicator to 80%
-//        updateProgress(0.8);
 
         // Step 6: Entity Clustering
         overheadStart = System.currentTimeMillis();
@@ -449,5 +440,68 @@ public class WorkflowManager {
                     ec.getMethodConfiguration());
 
         return clp;
+    }
+
+    /**
+     * Run a step by step random workflow.
+     *
+     * @return ClustersPerformance of the workflow result
+     */
+    private ClustersPerformance runStepByStepRandom() {
+        // Local optimization of Block Building
+        double bestA = 0;
+        int bestIteration = 0;
+        double originalComparisons;
+        if (erType.equals(JedaiOptions.DIRTY_ER)) {
+            originalComparisons = profilesD1.size() * profilesD1.size();
+        } else {
+            originalComparisons = ((double) profilesD1.size()) * profilesD2.size();
+        }
+
+        for (int j = 0; j < NO_OF_TRIALS; j++) {
+            blockBuildingMethod.setNextRandomConfiguration();
+            final List<AbstractBlock> originalBlocks;
+
+            if (erType.equals(JedaiOptions.DIRTY_ER)) {
+                originalBlocks = blockBuildingMethod.getBlocks(profilesD1);
+            } else {
+                originalBlocks = blockBuildingMethod.getBlocks(profilesD1, profilesD2);
+            }
+
+            if (originalBlocks.isEmpty()) {
+                continue;
+            }
+
+            final BlocksPerformance blp = new BlocksPerformance(originalBlocks, duplicatePropagation);
+            blp.setStatistics();
+            double recall = blp.getPc();
+            double rr = 1 - blp.getAggregateCardinality() / originalComparisons;
+            double a = rr * recall;
+            if (bestA < a) {
+                bestIteration = j;
+                bestA = a;
+            }
+        }
+        System.out.println("\n\nBest iteration\t:\t" + bestIteration);
+        System.out.println("Best performance\t:\t" + bestA);
+
+        // Set final block building parameters
+        blockBuildingMethod.setNumberedRandomConfiguration(bestIteration);
+        final List<AbstractBlock> blocks;
+
+        if (erType.equals(JedaiOptions.DIRTY_ER)) {
+            blocks = blockBuildingMethod.getBlocks(profilesD1);
+        } else {
+            blocks = blockBuildingMethod.getBlocks(profilesD1, profilesD2);
+        }
+
+        BlocksPerformance blp = new BlocksPerformance(blocks, duplicatePropagation);
+        blp.setStatistics();
+        blp.printStatistics(0, blockBuildingMethod.getMethodConfiguration(), blockBuildingMethod.getMethodName());
+
+        // todo: Run the rest of the workflow
+
+        // todo: Return actual result
+        return null;
     }
 }
