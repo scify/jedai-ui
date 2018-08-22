@@ -23,26 +23,20 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.util.StringConverter;
-import org.scify.jedai.blockbuilding.IBlockBuilding;
-import org.scify.jedai.blockprocessing.IBlockProcessing;
 import org.scify.jedai.datamodel.EquivalenceCluster;
-import org.scify.jedai.entityclustering.IEntityClustering;
-import org.scify.jedai.entitymatching.IEntityMatching;
 import org.scify.jedai.gui.controllers.EntityClusterExplorationController;
-import org.scify.jedai.gui.model.BlClMethodConfiguration;
 import org.scify.jedai.gui.model.WorkflowResult;
 import org.scify.jedai.gui.nodes.DetailsCell;
-import org.scify.jedai.gui.utilities.*;
+import org.scify.jedai.gui.utilities.DialogHelper;
+import org.scify.jedai.gui.utilities.JedaiOptions;
+import org.scify.jedai.gui.utilities.RadioButtonHelper;
+import org.scify.jedai.gui.utilities.WorkflowManager;
 import org.scify.jedai.gui.utilities.console_area.ConsoleArea;
 import org.scify.jedai.gui.utilities.console_area.MultiOutputStream;
-import org.scify.jedai.gui.wizard.MethodMapping;
 import org.scify.jedai.gui.wizard.WizardData;
 import org.scify.jedai.utilities.BlocksPerformance;
 import org.scify.jedai.utilities.ClustersPerformance;
 import org.scify.jedai.utilities.PrintToFile;
-import org.scify.jedai.utilities.enumerations.BlockBuildingMethod;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -51,8 +45,6 @@ import java.text.NumberFormat;
 import java.util.*;
 
 public class CompletedController {
-    private final static int NO_OF_TRIALS = 100;
-
     public Button runBtn;
     public Button exportBtn;
     public VBox containerVBox;
@@ -73,7 +65,6 @@ public class CompletedController {
     private Gauge f1Gauge;
     private Gauge recallGauge;
     private Gauge precisionGauge;
-    private Logger log = LoggerFactory.getLogger(CompletedController.class);
 
     private List<WizardData> detailedRunData;
     private EquivalenceCluster[] entityClusters;
@@ -233,34 +224,6 @@ public class CompletedController {
         Platform.runLater(() -> progressIndicator.setProgress(percentage));
     }
 
-    /**
-     * Return true if automatic configuration was chosen for any method
-     *
-     * @return True if automatic configuration was chosen for any method
-     */
-    private boolean anyAutomaticConfig() {
-        // Check all steps except block cleaning methods
-        if (model.getBlockBuildingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)
-                || model.getComparisonCleaningConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)
-                || model.getEntityMatchingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)
-                || model.getEntityClusteringConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)
-        ) {
-            return true;
-        }
-
-        // Check block cleaning methods
-        if (model.getBlockCleaningMethods() != null && !model.getBlockCleaningMethods().isEmpty()) {
-            // Loop over the methods
-            for (BlClMethodConfiguration config : model.getBlockCleaningMethods()) {
-                // Check if the method is enabled and its config. type is automatic
-                if (config.isEnabled() && config.getConfigurationType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     @FXML
     private void runAlgorithmBtnHandler() {
         // Show the progress indicator
@@ -294,201 +257,9 @@ public class CompletedController {
                 updateProgress(0.2);
 
                 // Prepare methods for rest of workflow
-                // Get block building method
-                IBlockBuilding blockBuildingMethod;
+                workflowMgr.createMethodInstances();
 
-                BlockBuildingMethod blockingWorkflow = MethodMapping.blockBuildingMethods.get(model.getBlockBuilding());
-                overheadStart = System.currentTimeMillis();
-
-                // Check if the user set any custom parameters for block building
-                if (!model.getBlockBuildingConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
-                    // Auto or default configuration selected: use default configuration
-                    blockBuildingMethod = BlockBuildingMethod.getDefaultConfiguration(blockingWorkflow);
-                } else {
-                    // Manual configuration selected, create method with the saved parameters
-                    ObservableList<JPair<String, Object>> blBuParams = model.getBlockBuildingParameters();
-                    blockBuildingMethod = DynamicMethodConfiguration.configureBlockBuildingMethod(blockingWorkflow, blBuParams);
-                }
-
-                // Get list of enabled block cleaning method instances
-                List<IBlockProcessing> blClMethods = new ArrayList<>();
-                for (BlClMethodConfiguration blClMethodConfig : model.getBlockCleaningMethods()) {
-                    // Ignore disabled methods
-                    if (!blClMethodConfig.isEnabled())
-                        continue;
-
-                    // Create instance of this method
-                    IBlockProcessing blockCleaningMethod;
-                    if (!blClMethodConfig.getConfigurationType().equals(JedaiOptions.MANUAL_CONFIG)) {
-                        // Auto or default configuration selected: use default configuration
-                        blockCleaningMethod = MethodMapping.getMethodByName(blClMethodConfig.getName());
-                    } else {
-                        // Manual configuration selected, create method with the saved parameters
-                        blockCleaningMethod = DynamicMethodConfiguration.configureBlockCleaningMethod(
-                                blClMethodConfig.getName(), blClMethodConfig.getManualParameters());
-                    }
-
-                    blClMethods.add(blockCleaningMethod);
-                }
-
-                // Get comparison cleaning method
-                String coClMethod = model.getComparisonCleaning();
-                IBlockProcessing comparisonCleaningMethod = null;
-                if (coClMethod != null && !coClMethod.equals(JedaiOptions.NO_CLEANING)) {
-                    // Create comparison cleaning method
-
-                    if (!model.getComparisonCleaningConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
-                        // Auto or default configuration selected: use default configuration
-                        comparisonCleaningMethod = MethodMapping.getMethodByName(coClMethod);
-                    } else {
-                        // Manual configuration selected, create method with the saved parameters
-                        ObservableList<JPair<String, Object>> coClParams = model.getComparisonCleaningParameters();
-                        comparisonCleaningMethod = DynamicMethodConfiguration.configureComparisonCleaningMethod(coClMethod, coClParams);
-                    }
-                }
-
-                // Get entity matching method
-                String entityMatchingMethodStr = model.getEntityMatching();
-
-                IEntityMatching entityMatchingMethod;
-                if (!model.getEntityMatchingConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
-                    // Default or automatic config, use default values
-                    entityMatchingMethod = DynamicMethodConfiguration
-                            .configureEntityMatchingMethod(entityMatchingMethodStr, null);
-                } else {
-                    // Manual configuration, use given parameters
-                    ObservableList<JPair<String, Object>> emParams = model.getEntityMatchingParameters();
-                    entityMatchingMethod = DynamicMethodConfiguration
-                            .configureEntityMatchingMethod(entityMatchingMethodStr, emParams);
-                }
-
-                // Get entity clustering method
-                String entityClusteringMethod = model.getEntityClustering();
-                IEntityClustering ec;
-
-                if (!model.getEntityClusteringConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
-                    // Auto or default configuration selected: use default configuration
-                    ec = MethodMapping.getEntityClusteringMethod(entityClusteringMethod);
-                } else {
-                    // Manual configuration selected, create method with the saved parameters
-                    ObservableList<JPair<String, Object>> ecParams = model.getEntityClusteringParameters();
-                    ec = DynamicMethodConfiguration.configureEntityClusteringMethod(entityClusteringMethod, ecParams);
-                }
-
-                if (anyAutomaticConfig()) {
-                    // Run the rest of the workflow with holistic, or step-by-step
-                    if (model.getAutoConfigType().equals(JedaiOptions.AUTOCONFIG_HOLISTIC)) {
-                        // Holistic random configuration (holistic grid is not supported at this time)
-                        int bestIteration = 0;
-                        double bestFMeasure = 0;
-
-                        for (int j = 0; j < NO_OF_TRIALS; j++) {
-                            // Check if block building parameters should be set automatically
-                            if (model.getBlockBuildingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-                                blockBuildingMethod.setNextRandomConfiguration();
-                            }
-
-                            // Check if any block cleaning method parameters should be set automatically
-                            if (model.getBlockCleaningMethods() != null && !model.getBlockCleaningMethods().isEmpty()) {
-                                // Index of the methods in the blClMethods list
-                                int enabledMethodIndex = 0;
-
-                                // Check each block cleaning method config
-                                for (BlClMethodConfiguration blClConfig : model.getBlockCleaningMethods()) {
-                                    if (blClConfig.isEnabled()) {
-                                        // Method is enabled, check if we should configure automatically
-                                        if (blClConfig.getConfigurationType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-                                            // Get instance of the method and set next random configuration
-                                            blClMethods.get(enabledMethodIndex).setNextRandomConfiguration();
-                                        }
-
-                                        // Increment index
-                                        enabledMethodIndex++;
-                                    }
-                                }
-                            }
-
-                            // Check if comparison cleaning parameters should be set automatically
-                            if (model.getComparisonCleaningConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-                                comparisonCleaningMethod.setNextRandomConfiguration();
-                            }
-
-                            // Check if entity matching parameters should be set automatically
-                            if (model.getEntityMatchingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-                                entityMatchingMethod.setNextRandomConfiguration();
-                            }
-
-                            // Check if entity clustering parameters should be set automatically
-                            // todo: should there be some link between automatic configuration of EM & EC?
-                            if (model.getEntityClusteringConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-                                ec.setNextRandomConfiguration();
-                            }
-
-                            // Run a workflow and check its F-measure
-                            ClustersPerformance clp = workflowMgr.runWorkflow(blockBuildingMethod,
-                                    blClMethods, comparisonCleaningMethod, entityMatchingMethod, ec, false);
-
-                            // Keep this iteration if it has the best F-measure so far
-                            double fMeasure = clp.getFMeasure();
-                            if (bestFMeasure < fMeasure) {
-                                bestIteration = j;
-                                bestFMeasure = fMeasure;
-                            }
-                        }
-
-                        System.out.println("Best Iteration\t:\t" + bestIteration);
-                        System.out.println("Best FMeasure\t:\t" + bestFMeasure);
-
-                        // Before running the workflow, we should configure the methods using the best iteration's
-                        // parameters.
-                        // Check if we should set the block building method parameters using the best iteration found
-                        if (model.getBlockBuildingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-                            blockBuildingMethod.setNumberedRandomConfiguration(bestIteration);
-                        }
-
-                        // Check if we should set any block cleaning method parameters using the best iteration found
-                        if (model.getBlockCleaningMethods() != null && !model.getBlockCleaningMethods().isEmpty()) {
-                            // Index of the methods in the blClMethods list
-                            int enabledMethodIndex = 0;
-
-                            // Check each block cleaning method config
-                            for (BlClMethodConfiguration blClConfig : model.getBlockCleaningMethods()) {
-                                if (blClConfig.isEnabled()) {
-                                    // Method is enabled, check if we should configure automatically
-                                    if (blClConfig.getConfigurationType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-                                        // Get instance of the method and set next random configuration
-                                        blClMethods.get(enabledMethodIndex).setNumberedRandomConfiguration(bestIteration);
-                                    }
-
-                                    // Increment index
-                                    enabledMethodIndex++;
-                                }
-                            }
-                        }
-
-                        // Check if we should set the comparison cleaning parameters using the best iteration found
-                        if (model.getComparisonCleaningConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-                            comparisonCleaningMethod.setNumberedRandomConfiguration(bestIteration);
-                        }
-
-                        // Check if we should set the entity matching parameters using the best iteration found
-                        if (model.getEntityMatchingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-                            entityMatchingMethod.setNumberedRandomConfiguration(bestIteration);
-                        }
-
-                        // Check if we should set the entity clustering parameters using the best iteration found
-                        // todo: should there be some link between automatic configuration of EM & EC?
-                        if (model.getEntityClusteringConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-                            ec.setNumberedRandomConfiguration(bestIteration);
-                        }
-                    } else {
-                        // todo: Step-by-step automatic configuration
-                    }
-                }
-
-                // Run the final workflow (whether there was an automatic configuration or not)
-                ClustersPerformance clp = workflowMgr.runWorkflow(blockBuildingMethod,
-                        blClMethods, comparisonCleaningMethod, entityMatchingMethod, ec, true);
+                ClustersPerformance clp = workflowMgr.executeWorkflow();
 
                 if (clp == null) {
                     DialogHelper.showError("Workflow execution problem",
