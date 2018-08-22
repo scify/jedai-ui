@@ -579,67 +579,115 @@ public class CompletedController {
                             }
                         }
 
-                        // todo: Run final workflow
+                        System.out.println("Best Iteration\t:\t" + bestIteration);
+                        System.out.println("Best FMeasure\t:\t" + bestFMeasure);
+
+                        // Before running the workflow, we should configure the methods using the best iteration's
+                        // parameters.
+                        // Check if we should set the block building method parameters using the best iteration found
+                        if (model.getBlockBuildingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+                            blockBuildingMethod.setNumberedRandomConfiguration(bestIteration);
+                        }
+
+                        // Check if we should set any block cleaning method parameters using the best iteration found
+                        if (model.getBlockCleaningMethods() != null && !model.getBlockCleaningMethods().isEmpty()) {
+                            // Index of the methods in the blClMethods list
+                            int enabledMethodIndex = 0;
+
+                            // Check each block cleaning method config
+                            for (BlClMethodConfiguration blClConfig : model.getBlockCleaningMethods()) {
+                                if (blClConfig.isEnabled()) {
+                                    // Method is enabled, check if we should configure automatically
+                                    if (blClConfig.getConfigurationType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+                                        // Get instance of the method and set next random configuration
+                                        blClMethods.get(enabledMethodIndex).setNumberedRandomConfiguration(bestIteration);
+                                    }
+
+                                    // Increment index
+                                    enabledMethodIndex++;
+                                }
+                            }
+                        }
+
+                        // Check if we should set the comparison cleaning parameters using the best iteration found
+                        if (model.getComparisonCleaningConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+                            comparisonCleaningMethod.setNumberedRandomConfiguration(bestIteration);
+                        }
+
+                        // Check if we should set the entity matching parameters using the best iteration found
+                        if (model.getEntityMatchingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+                            entityMatchingMethod.setNumberedRandomConfiguration(bestIteration);
+                        }
+
+                        // Check if we should set the entity clustering parameters using the best iteration found
+                        // todo: should there be some link between automatic configuration of EM & EC?
+                        if (model.getEntityClusteringConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+                            ec.setNumberedRandomConfiguration(bestIteration);
+                        }
                     } else {
                         // todo: Step-by-step automatic configuration
                     }
-                } else {
-                    // Run workflow without any automatic configuration
-                    ClustersPerformance clp = runWorkflow(erType, duplicatePropagation, blockBuildingMethod,
-                            blClMethods, comparisonCleaningMethod, entityMatchingMethod, ec, true);
-
-                    // Set gauge values
-                    f1Gauge.setValue(clp.getFMeasure());
-                    recallGauge.setValue(clp.getRecall());
-                    precisionGauge.setValue(clp.getPrecision());
-
-                    // Set progress indicator to 100%
-                    updateProgress(1.0);
-
-                    // Get final run values
-                    double totalTimeSeconds = (System.currentTimeMillis() - startTime) / 1000.0;
-                    int inputInstances = profilesD1.size();
-                    int numOfClusters = entityClusters.length;
-                    double recall = clp.getRecall();
-                    double precision = clp.getPrecision();
-                    double f1 = clp.getFMeasure();
-
-                    // Create entry for Workbench table
-                    tableData.add(new WorkflowResult(
-                            new SimpleIntegerProperty(tableData.size() + 1),
-                            new SimpleDoubleProperty(recall),
-                            new SimpleDoubleProperty(precision),
-                            new SimpleDoubleProperty(f1),
-                            new SimpleDoubleProperty(totalTimeSeconds),
-                            new SimpleIntegerProperty(inputInstances),
-                            new SimpleIntegerProperty(numOfClusters),
-                            new SimpleIntegerProperty(tableData.size())
-                    ));
-
-                    // Add a copy of current WizardData to the list
-                    detailedRunData.add(WizardData.cloneData(model));
-
-                    // Update labels and JavaFX UI components from UI thread
-                    Platform.runLater(() -> {
-                        // Set label values and show them
-                        numOfInstancesLabel.setText("Input instances: " + inputInstances);
-                        numOfInstancesLabel.setVisible(true);
-
-                        totalTimeLabel.setText("Total running time: " + String.format("%.1f", totalTimeSeconds) + " sec.");
-                        totalTimeLabel.setVisible(true);
-
-                        numOfClustersLabel.setText("Number of clusters: " + numOfClusters);
-                        numOfClustersLabel.setVisible(true);
-
-                        // Enable button for result export to CSV
-                        exportBtn.setDisable(false);
-
-                        // Enable exploration button
-                        exploreBtn.setDisable(false);
-                    });
                 }
 
+                // Run the final workflow (whether there was an automatic configuration or not)
+                ClustersPerformance clp = runWorkflow(erType, duplicatePropagation, blockBuildingMethod,
+                        blClMethods, comparisonCleaningMethod, entityMatchingMethod, ec, true);
 
+                if (clp == null) {
+                    DialogHelper.showError("Workflow execution problem",
+                            "A problem occurred while running the workflow!",
+                            "ClustersPerformance while running the final workflow is null!");
+                }
+
+                // Set gauge values
+                f1Gauge.setValue(clp.getFMeasure());
+                recallGauge.setValue(clp.getRecall());
+                precisionGauge.setValue(clp.getPrecision());
+
+                // Set progress indicator to 100%
+                updateProgress(1.0);
+
+                // Get final run values
+                double totalTimeSeconds = (System.currentTimeMillis() - startTime) / 1000.0;
+                int inputInstances = profilesD1.size();
+                int numOfClusters = entityClusters.length;
+                double recall = clp.getRecall();
+                double precision = clp.getPrecision();
+                double f1 = clp.getFMeasure();
+
+                // Create entry for Workbench table
+                tableData.add(new WorkflowResult(
+                        new SimpleIntegerProperty(tableData.size() + 1),
+                        new SimpleDoubleProperty(recall),
+                        new SimpleDoubleProperty(precision),
+                        new SimpleDoubleProperty(f1),
+                        new SimpleDoubleProperty(totalTimeSeconds),
+                        new SimpleIntegerProperty(inputInstances),
+                        new SimpleIntegerProperty(numOfClusters),
+                        new SimpleIntegerProperty(tableData.size())
+                ));
+
+                // Add a copy of current WizardData to the list
+                detailedRunData.add(WizardData.cloneData(model));
+
+                // Update labels and JavaFX UI components from UI thread
+                Platform.runLater(() -> {
+                    // Set label values and show them
+                    numOfInstancesLabel.setText("Input instances: " + inputInstances);
+                    numOfInstancesLabel.setVisible(true);
+
+                    totalTimeLabel.setText("Total running time: " + String.format("%.1f", totalTimeSeconds) + " sec.");
+                    totalTimeLabel.setVisible(true);
+
+                    numOfClustersLabel.setText("Number of clusters: " + numOfClusters);
+                    numOfClustersLabel.setVisible(true);
+
+                    // Enable button for result export to CSV
+                    exportBtn.setDisable(false);
+
+                    // Enable exploration button
+                    exploreBtn.setDisable(false);
+                });
             } catch (Exception e) {
                 // Exception occurred, show alert with information about it
                 Platform.runLater(() -> DialogHelper.showError("Exception",
