@@ -18,13 +18,16 @@ import java.util.List;
 public class WorkflowManager {
     private final static int NO_OF_TRIALS = 100;
     private final WizardData model;
+    private final String erType;
 
     private EquivalenceCluster[] entityClusters;
     private List<EntityProfile> profilesD1;
     private List<EntityProfile> profilesD2;
+    private AbstractDuplicatePropagation duplicatePropagation;
 
     public WorkflowManager(WizardData model) {
         this.model = model;
+        this.erType = model.getErType();
     }
 
     public List<EntityProfile> getProfilesD1() {
@@ -49,6 +52,31 @@ public class WorkflowManager {
 
     public void setEntityClusters(EquivalenceCluster[] entityClusters) {
         this.entityClusters = entityClusters;
+    }
+
+    /**
+     * Read the datasets
+     *
+     * @param output Enable/disable details output
+     */
+    public void readDatasets(boolean output) {
+        // Read dataset 1
+        profilesD1 = DataReader.getEntitiesD1(model);
+
+        // In case Clean-Clear ER was selected, also read dataset 2
+        profilesD2 = null;
+        if (erType.equals(JedaiOptions.CLEAN_CLEAN_ER)) {
+            profilesD2 = DataReader.getEntitiesD2(model);
+        }
+
+        // Read ground truth
+        duplicatePropagation = DataReader.getGroundTruth(model, profilesD1, profilesD2);
+
+        // Print details
+        if (output) {
+            System.out.println("Input Entity Profiles\t:\t" + profilesD1.size());
+            System.out.println("Existing Duplicates\t:\t" + duplicatePropagation.getDuplicates().size());
+        }
     }
 
     /**
@@ -82,8 +110,6 @@ public class WorkflowManager {
     /**
      * Run a workflow with the given methods and return its ClustersPerformance
      *
-     * @param erType      Entity Resolution type (Dirty/Clean-Clean)
-     * @param duProp      Duplicate propagation (from ground truth)
      * @param blBu        Block building method
      * @param blClMethods List of block cleaning methods
      * @param coCl        Comparison cleaning method
@@ -93,9 +119,9 @@ public class WorkflowManager {
      * @return ClustersPerformance object of the executed workflow
      * @throws Exception In case the Entity Matching method is null (shouldn't happen though)
      */
-    public ClustersPerformance runWorkflow(String erType, AbstractDuplicatePropagation duProp, IBlockBuilding blBu,
-                                           List<IBlockProcessing> blClMethods, IBlockProcessing coCl,
-                                           IEntityMatching em, IEntityClustering ec, boolean output) throws Exception {
+    public ClustersPerformance runWorkflow(IBlockBuilding blBu, List<IBlockProcessing> blClMethods,
+                                           IBlockProcessing coCl, IEntityMatching em, IEntityClustering ec,
+                                           boolean output) throws Exception {
         // Initialize a few variables
         double overheadStart = System.currentTimeMillis();
         double overheadEnd;
@@ -121,7 +147,7 @@ public class WorkflowManager {
 
         // Print blocks performance
         overheadEnd = System.currentTimeMillis();
-        blp = new BlocksPerformance(blocks, duProp);
+        blp = new BlocksPerformance(blocks, duplicatePropagation);
         blp.setStatistics();
         if (output)
             blp.printStatistics(overheadEnd - overheadStart, blBu.getMethodConfiguration(), blBu.getMethodName());
@@ -133,13 +159,13 @@ public class WorkflowManager {
         if (blClMethods != null && !blClMethods.isEmpty()) {
             // Execute the methods
             for (IBlockProcessing currentMethod : blClMethods) {
-                blocks = runBlockProcessing(duProp, output, blocks, currentMethod);
+                blocks = runBlockProcessing(duplicatePropagation, output, blocks, currentMethod);
             }
         }
 
         // Step 4: Comparison Cleaning
         if (coCl != null) {
-            blocks = runBlockProcessing(duProp, output, blocks, coCl);
+            blocks = runBlockProcessing(duplicatePropagation, output, blocks, coCl);
         }
 
         // Set progress indicator to 60%
@@ -167,7 +193,7 @@ public class WorkflowManager {
 
         // Print clustering performance
         overheadEnd = System.currentTimeMillis();
-        ClustersPerformance clp = new ClustersPerformance(entityClusters, duProp);
+        ClustersPerformance clp = new ClustersPerformance(entityClusters, duplicatePropagation);
         clp.setStatistics();
         if (output)
             clp.printStatistics(overheadEnd - overheadStart, ec.getMethodName(),

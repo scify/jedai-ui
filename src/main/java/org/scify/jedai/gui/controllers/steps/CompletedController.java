@@ -25,7 +25,6 @@ import javafx.stage.Modality;
 import javafx.util.StringConverter;
 import org.scify.jedai.blockbuilding.IBlockBuilding;
 import org.scify.jedai.blockprocessing.IBlockProcessing;
-import org.scify.jedai.datamodel.EntityProfile;
 import org.scify.jedai.datamodel.EquivalenceCluster;
 import org.scify.jedai.entityclustering.IEntityClustering;
 import org.scify.jedai.entitymatching.IEntityMatching;
@@ -41,7 +40,6 @@ import org.scify.jedai.gui.wizard.WizardData;
 import org.scify.jedai.utilities.BlocksPerformance;
 import org.scify.jedai.utilities.ClustersPerformance;
 import org.scify.jedai.utilities.PrintToFile;
-import org.scify.jedai.utilities.datastructures.AbstractDuplicatePropagation;
 import org.scify.jedai.utilities.enumerations.BlockBuildingMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,8 +77,6 @@ public class CompletedController {
 
     private List<WizardData> detailedRunData;
     private EquivalenceCluster[] entityClusters;
-    private List<EntityProfile> profilesD1;
-    private List<EntityProfile> profilesD2;
 
     private WorkflowManager workflowMgr;
 
@@ -291,27 +287,8 @@ public class CompletedController {
             BlocksPerformance blp;
 
             try {
-                // Get profiles and ground truth paths from model
-                String erType = model.getErType();
-
                 // Step 1: Data reading
-                profilesD1 = DataReader.getEntitiesD1(model);
-                System.out.println("Input Entity Profiles\t:\t" + profilesD1.size());
-
-                // In case Clean-Clear ER was selected, also read 2nd profiles file
-                profilesD2 = null;
-                if (erType.equals(JedaiOptions.CLEAN_CLEAN_ER)) {
-                    profilesD2 = DataReader.getEntitiesD2(model);
-                }
-
-                // Read ground truth file
-                AbstractDuplicatePropagation duplicatePropagation =
-                        DataReader.getGroundTruth(model, profilesD1, profilesD2);
-
-                workflowMgr.setProfilesD1(profilesD1);
-                workflowMgr.setProfilesD2(profilesD2);
-
-                System.out.println("Existing Duplicates\t:\t" + duplicatePropagation.getDuplicates().size());
+                workflowMgr.readDatasets(true);
 
                 // Set progress indicator to 20%
                 updateProgress(0.2);
@@ -448,7 +425,7 @@ public class CompletedController {
                             }
 
                             // Run a workflow and check its F-measure
-                            ClustersPerformance clp = workflowMgr.runWorkflow(erType, duplicatePropagation, blockBuildingMethod,
+                            ClustersPerformance clp = workflowMgr.runWorkflow(blockBuildingMethod,
                                     blClMethods, comparisonCleaningMethod, entityMatchingMethod, ec, false);
 
                             // Keep this iteration if it has the best F-measure so far
@@ -510,7 +487,7 @@ public class CompletedController {
                 }
 
                 // Run the final workflow (whether there was an automatic configuration or not)
-                ClustersPerformance clp = workflowMgr.runWorkflow(erType, duplicatePropagation, blockBuildingMethod,
+                ClustersPerformance clp = workflowMgr.runWorkflow(blockBuildingMethod,
                         blClMethods, comparisonCleaningMethod, entityMatchingMethod, ec, true);
 
                 if (clp == null) {
@@ -532,7 +509,7 @@ public class CompletedController {
 
                 // Get final run values
                 double totalTimeSeconds = (System.currentTimeMillis() - startTime) / 1000.0;
-                int inputInstances = profilesD1.size();
+                int inputInstances = workflowMgr.getProfilesD1().size();
                 int numOfClusters = entityClusters.length;
                 double recall = clp.getRecall();
                 double precision = clp.getPrecision();
@@ -605,7 +582,8 @@ public class CompletedController {
         if (file != null) {
             // Results export to CSV
             try {
-                PrintToFile.toCSV(profilesD1, profilesD2, entityClusters, file.getAbsolutePath());
+                PrintToFile.toCSV(workflowMgr.getProfilesD1(), workflowMgr.getProfilesD2(), entityClusters,
+                        file.getAbsolutePath());
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -669,9 +647,9 @@ public class CompletedController {
 
             // Give the configuration options to the controller
             if (model.getErType().equals(JedaiOptions.DIRTY_ER)) {
-                popupController.setDuplicates(duplicates, this.profilesD1);
+                popupController.setDuplicates(duplicates, workflowMgr.getProfilesD1());
             } else {
-                popupController.setDuplicates(duplicates, this.profilesD1, this.profilesD2);
+                popupController.setDuplicates(duplicates, workflowMgr.getProfilesD1(), workflowMgr.getProfilesD2());
             }
 
             // Create the popup
