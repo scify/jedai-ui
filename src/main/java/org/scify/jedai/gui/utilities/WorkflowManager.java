@@ -250,17 +250,29 @@ public class WorkflowManager {
                 System.out.println("Best Iteration\t:\t" + bestIteration);
                 System.out.println("Best FMeasure\t:\t" + bestFMeasure);
 
-                // Before running the workflow, we should configure the methods using the best iteration's
-                // parameters.
+                // Before running the workflow, we should configure the methods using the best iteration's parameters
                 iterateHolisticRandom(bestIteration);
+
+                // Run the final workflow (whether there was an automatic configuration or not)
+                return this.runWorkflow(blockBuildingMethod, blClMethods, comparisonCleaningMethod,
+                        entityMatchingMethod, ec, true);
             } else {
-                // todo: Step-by-step automatic configuration
+                // Step-by-step automatic configuration. Check if we should do random or grid.
+                if (model.getSearchType().equals(JedaiOptions.AUTOCONFIG_RANDOMSEARCH)) {
+                    // Step-by-step random automatic configuration
+                    // todo: implement...
+                } else {
+                    // Step-by-step grid automatic configuration
+                    // todo: implement...
+                }
             }
+        } else {
+            // Run workflow without any automatic configuration
+            return this.runWorkflow(blockBuildingMethod, blClMethods, comparisonCleaningMethod, entityMatchingMethod,
+                    ec, true);
         }
 
-        // Run the final workflow (whether there was an automatic configuration or not)
-        return this.runWorkflow(blockBuildingMethod, blClMethods, comparisonCleaningMethod, entityMatchingMethod, ec,
-                true);
+        return null;
     }
 
     /**
