@@ -271,6 +271,7 @@ public class CompletedController {
      * @param erType
      * @param duProp
      * @param blBu
+     * @param blClMethods
      * @param coCl
      * @param em
      * @param ec
@@ -278,8 +279,8 @@ public class CompletedController {
      * @throws Exception
      */
     private ClustersPerformance runWorkflow(String erType, AbstractDuplicatePropagation duProp, IBlockBuilding blBu,
-                                            IBlockProcessing coCl, IEntityMatching em, IEntityClustering ec)
-            throws Exception {
+                                            List<IBlockProcessing> blClMethods, IBlockProcessing coCl,
+                                            IEntityMatching em, IEntityClustering ec) throws Exception {
         // Initialize a few variables
         double overheadStart = System.currentTimeMillis();
         double overheadEnd;
@@ -312,40 +313,19 @@ public class CompletedController {
         updateProgress(0.4);
 
         // Step 3: Block Cleaning
-        //todo: get from parameter!!!
-        List<BlClMethodConfiguration> blClMethods = model.getBlockCleaningMethods();
-
-        //noinspection Duplicates
         if (blClMethods != null) {
             // Execute the methods
-            for (BlClMethodConfiguration currentMethod : blClMethods) {
-                // Only run the method if it is enabled
-                if (!currentMethod.isEnabled()) {
-                    continue;
-                }
-
+            for (IBlockProcessing currentMethod : blClMethods) {
                 overheadStart = System.currentTimeMillis();
 
-                // Process blocks with this method
-                IBlockProcessing blockCleaningMethod;
-                if (!currentMethod.getConfigurationType().equals(JedaiOptions.MANUAL_CONFIG)) {
-                    // Auto or default configuration selected: use default configuration
-                    blockCleaningMethod = MethodMapping.getMethodByName(currentMethod.getName());
-                } else {
-                    // Manual configuration selected, create method with the saved parameters
-                    blockCleaningMethod = DynamicMethodConfiguration.configureBlockCleaningMethod(
-                            currentMethod.getName(), currentMethod.getManualParameters());
-                }
+                blocks = currentMethod.refineBlocks(blocks);
 
-                if (blockCleaningMethod != null) {
-                    blocks = blockCleaningMethod.refineBlocks(blocks);
-
-                    // Print blocks performance
-                    overheadEnd = System.currentTimeMillis();
-                    blp = new BlocksPerformance(blocks, duProp);
-                    blp.setStatistics();
-                    blp.printStatistics(overheadEnd - overheadStart, blockCleaningMethod.getMethodConfiguration(), blockCleaningMethod.getMethodName());
-                }
+                // Print blocks performance
+                overheadEnd = System.currentTimeMillis();
+                blp = new BlocksPerformance(blocks, duProp);
+                blp.setStatistics();
+                blp.printStatistics(overheadEnd - overheadStart, currentMethod.getMethodConfiguration(),
+                        currentMethod.getMethodName());
             }
         }
 
@@ -359,7 +339,8 @@ public class CompletedController {
             overheadEnd = System.currentTimeMillis();
             blp = new BlocksPerformance(blocks, duProp);
             blp.setStatistics();
-            blp.printStatistics(overheadEnd - overheadStart, coCl.getMethodConfiguration(), coCl.getMethodName());
+            blp.printStatistics(overheadEnd - overheadStart, coCl.getMethodConfiguration(),
+                    coCl.getMethodName());
         }
 
         // Set progress indicator to 60%
@@ -457,6 +438,27 @@ public class CompletedController {
                     blockBuildingMethod = DynamicMethodConfiguration.configureBlockBuildingMethod(blockingWorkflow, blBuParams);
                 }
 
+                // Get list of enabled block cleaning method instances
+                List<IBlockProcessing> blClMethods = new ArrayList<>();
+                for (BlClMethodConfiguration blClMethodConfig : model.getBlockCleaningMethods()) {
+                    // Ignore disabled methods
+                    if (!blClMethodConfig.isEnabled())
+                        continue;
+
+                    // Create instance of this method
+                    IBlockProcessing blockCleaningMethod;
+                    if (!blClMethodConfig.getConfigurationType().equals(JedaiOptions.MANUAL_CONFIG)) {
+                        // Auto or default configuration selected: use default configuration
+                        blockCleaningMethod = MethodMapping.getMethodByName(blClMethodConfig.getName());
+                    } else {
+                        // Manual configuration selected, create method with the saved parameters
+                        blockCleaningMethod = DynamicMethodConfiguration.configureBlockCleaningMethod(
+                                blClMethodConfig.getName(), blClMethodConfig.getManualParameters());
+                    }
+
+                    blClMethods.add(blockCleaningMethod);
+                }
+
                 // Get comparison cleaning method
                 String coClMethod = model.getComparisonCleaning();
                 IBlockProcessing comparisonCleaningMethod = null;
@@ -541,7 +543,7 @@ public class CompletedController {
 
                             // Run a workflow and check its F-measure
                             ClustersPerformance clp = runWorkflow(erType, duplicatePropagation, blockBuildingMethod,
-                                    comparisonCleaningMethod, entityMatchingMethod, ec);
+                                    blClMethods, comparisonCleaningMethod, entityMatchingMethod, ec);
 
                             // Keep this iteration if it has the best F-measure so far
                             double fMeasure = clp.getFMeasure();
@@ -557,7 +559,8 @@ public class CompletedController {
                     }
                 } else {
                     // Run workflow without any automatic configuration
-                    ClustersPerformance clp = runWorkflow(erType, duplicatePropagation, blockBuildingMethod, comparisonCleaningMethod, entityMatchingMethod, ec);
+                    ClustersPerformance clp = runWorkflow(erType, duplicatePropagation, blockBuildingMethod,
+                            blClMethods, comparisonCleaningMethod, entityMatchingMethod, ec);
 
                     // Set gauge values
                     f1Gauge.setValue(clp.getFMeasure());
