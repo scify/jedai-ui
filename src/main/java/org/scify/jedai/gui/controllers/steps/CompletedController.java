@@ -312,6 +312,7 @@ public class CompletedController {
         updateProgress(0.4);
 
         // Step 3: Block Cleaning
+        //todo: get from parameter!!!
         List<BlClMethodConfiguration> blClMethods = model.getBlockCleaningMethods();
 
         //noinspection Duplicates
@@ -508,17 +509,49 @@ public class CompletedController {
                         double bestFMeasure = 0;
 
                         for (int j = 0; j < NO_OF_TRIALS; j++) {
+                            // Check if block building parameters should be set automatically
                             if (model.getBlockBuildingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
                                 blockBuildingMethod.setNextRandomConfiguration();
                             }
 
-                            // todo: block cleaning methods
-
-                            if (model.getComparisonCleaningConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-
+                            // Check if any block cleaning method parameters should be set automatically
+                            if (model.getBlockCleaningMethods() != null && !model.getBlockCleaningMethods().isEmpty()) {
+                                for (BlClMethodConfiguration blClConfig : model.getBlockCleaningMethods()) {
+                                    if (blClConfig.isEnabled() && blClConfig.getConfigurationType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+                                        // todo: the instance of the method needs to be created beforehand...
+                                    }
+                                }
                             }
-                            // todo: Rest of methods and run a workflow...
+
+                            // Check if comparison cleaning parameters should be set automatically
+                            if (model.getComparisonCleaningConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+                                comparisonCleaningMethod.setNextRandomConfiguration();
+                            }
+
+                            // Check if entity matching parameters should be set automatically
+                            if (model.getEntityMatchingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+                                entityMatchingMethod.setNextRandomConfiguration();
+                            }
+
+                            // Check if entity clustering parameters should be set automatically
+                            // todo: should there be some link between automatic configuration of EM & EC?
+                            if (model.getEntityClusteringConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+                                ec.setNextRandomConfiguration();
+                            }
+
+                            // Run a workflow and check its F-measure
+                            ClustersPerformance clp = runWorkflow(erType, duplicatePropagation, blockBuildingMethod,
+                                    comparisonCleaningMethod, entityMatchingMethod, ec);
+
+                            // Keep this iteration if it has the best F-measure so far
+                            double fMeasure = clp.getFMeasure();
+                            if (bestFMeasure < fMeasure) {
+                                bestIteration = j;
+                                bestFMeasure = fMeasure;
+                            }
                         }
+
+                        // todo: Run final workflow
                     } else {
                         // todo: Step-by-step automatic configuration
                     }
