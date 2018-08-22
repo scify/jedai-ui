@@ -268,19 +268,20 @@ public class CompletedController {
     /**
      * Run a workflow with the given methods and return its ClustersPerformance
      *
-     * @param erType
-     * @param duProp
-     * @param blBu
-     * @param blClMethods
-     * @param coCl
-     * @param em
-     * @param ec
-     * @return
-     * @throws Exception
+     * @param erType      Entity Resolution type (Dirty/Clean-Clean)
+     * @param duProp      Duplicate propagation (from ground truth)
+     * @param blBu        Block building method
+     * @param blClMethods List of block cleaning methods
+     * @param coCl        Comparison cleaning method
+     * @param em          Entity matching method
+     * @param ec          Entity clustering method
+     * @param output      Set to true to print messages while running workflow
+     * @return ClustersPerformance object of the executed workflow
+     * @throws Exception In case the Entity Matching method is null (shouldn't happen though)
      */
     private ClustersPerformance runWorkflow(String erType, AbstractDuplicatePropagation duProp, IBlockBuilding blBu,
                                             List<IBlockProcessing> blClMethods, IBlockProcessing coCl,
-                                            IEntityMatching em, IEntityClustering ec) throws Exception {
+                                            IEntityMatching em, IEntityClustering ec, boolean output) throws Exception {
         // Initialize a few variables
         double overheadStart = System.currentTimeMillis();
         double overheadEnd;
@@ -301,13 +302,15 @@ public class CompletedController {
             return null;
         }
 
-        System.out.println("Original blocks\t:\t" + blocks.size());
+        if (output)
+            System.out.println("Original blocks\t:\t" + blocks.size());
 
         // Print blocks performance
         overheadEnd = System.currentTimeMillis();
         blp = new BlocksPerformance(blocks, duProp);
         blp.setStatistics();
-        blp.printStatistics(overheadEnd - overheadStart, blBu.getMethodConfiguration(), blBu.getMethodName());
+        if (output)
+            blp.printStatistics(overheadEnd - overheadStart, blBu.getMethodConfiguration(), blBu.getMethodName());
 
         // Set progress indicator to 40%
         updateProgress(0.4);
@@ -324,8 +327,9 @@ public class CompletedController {
                 overheadEnd = System.currentTimeMillis();
                 blp = new BlocksPerformance(blocks, duProp);
                 blp.setStatistics();
-                blp.printStatistics(overheadEnd - overheadStart, currentMethod.getMethodConfiguration(),
-                        currentMethod.getMethodName());
+                if (output)
+                    blp.printStatistics(overheadEnd - overheadStart, currentMethod.getMethodConfiguration(),
+                            currentMethod.getMethodName());
             }
         }
 
@@ -339,8 +343,9 @@ public class CompletedController {
             overheadEnd = System.currentTimeMillis();
             blp = new BlocksPerformance(blocks, duProp);
             blp.setStatistics();
-            blp.printStatistics(overheadEnd - overheadStart, coCl.getMethodConfiguration(),
-                    coCl.getMethodName());
+            if (output)
+                blp.printStatistics(overheadEnd - overheadStart, coCl.getMethodConfiguration(),
+                        coCl.getMethodName());
         }
 
         // Set progress indicator to 60%
@@ -370,7 +375,9 @@ public class CompletedController {
         overheadEnd = System.currentTimeMillis();
         ClustersPerformance clp = new ClustersPerformance(entityClusters, duProp);
         clp.setStatistics();
-        clp.printStatistics(overheadEnd - overheadStart, ec.getMethodName(), ec.getMethodConfiguration());
+        if (output)
+            clp.printStatistics(overheadEnd - overheadStart, ec.getMethodName(),
+                    ec.getMethodConfiguration());
 
         return clp;
     }
@@ -543,7 +550,7 @@ public class CompletedController {
 
                             // Run a workflow and check its F-measure
                             ClustersPerformance clp = runWorkflow(erType, duplicatePropagation, blockBuildingMethod,
-                                    blClMethods, comparisonCleaningMethod, entityMatchingMethod, ec);
+                                    blClMethods, comparisonCleaningMethod, entityMatchingMethod, ec, false);
 
                             // Keep this iteration if it has the best F-measure so far
                             double fMeasure = clp.getFMeasure();
@@ -560,7 +567,7 @@ public class CompletedController {
                 } else {
                     // Run workflow without any automatic configuration
                     ClustersPerformance clp = runWorkflow(erType, duplicatePropagation, blockBuildingMethod,
-                            blClMethods, comparisonCleaningMethod, entityMatchingMethod, ec);
+                            blClMethods, comparisonCleaningMethod, entityMatchingMethod, ec, true);
 
                     // Set gauge values
                     f1Gauge.setValue(clp.getFMeasure());
