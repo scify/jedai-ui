@@ -443,6 +443,21 @@ public class WorkflowManager {
     }
 
     /**
+     * Get total comparisons that will be made for a list of blocks
+     *
+     * @param blocks List of blocks
+     * @return Number of comparisons
+     */
+    private double getTotalComparisons(List<AbstractBlock> blocks) {
+        double originalComparisons = 0;
+        originalComparisons = blocks.stream()
+                .map(AbstractBlock::getNoOfComparisons)
+                .reduce(originalComparisons, (accumulator, _item) -> accumulator + _item);
+        System.out.println("Original comparisons\t:\t" + originalComparisons);
+        return originalComparisons;
+    }
+
+    /**
      * Run a step by step random workflow.
      *
      * @return ClustersPerformance of the workflow result
@@ -498,6 +513,38 @@ public class WorkflowManager {
         BlocksPerformance blp = new BlocksPerformance(blocks, duplicatePropagation);
         blp.setStatistics();
         blp.printStatistics(0, blockBuildingMethod.getMethodConfiguration(), blockBuildingMethod.getMethodName());
+
+        // Local optimization of Block Cleaning methods
+        for (IBlockProcessing bp : this.blClMethods) {
+            bestA = 0;
+            bestIteration = 0;
+            originalComparisons = getTotalComparisons(blocks);
+            for (int j = 0; j < NO_OF_TRIALS; j++) {
+                bp.setNextRandomConfiguration();
+                final List<AbstractBlock> purgedBlocks = bp.refineBlocks(blocks);
+                if (purgedBlocks.isEmpty()) {
+                    continue;
+                }
+
+                blp = new BlocksPerformance(purgedBlocks, duplicatePropagation);
+                blp.setStatistics();
+                double recall = blp.getPc();
+                double rr = 1 - blp.getAggregateCardinality() / originalComparisons;
+                double a = rr * recall;
+                if (bestA < a) {
+                    bestIteration = j;
+                    bestA = a;
+                }
+            }
+            System.out.println("\n\nBest iteration\t:\t" + bestIteration);
+            System.out.println("Best performance\t:\t" + bestA);
+
+            bp.setNumberedRandomConfiguration(bestIteration);
+            final List<AbstractBlock> purgedBlocks = bp.refineBlocks(blocks);
+            blp = new BlocksPerformance(purgedBlocks, duplicatePropagation);
+            blp.setStatistics();
+            blp.printStatistics(0, bp.getMethodConfiguration(), bp.getMethodName());
+        }
 
         // todo: Run the rest of the workflow
 
