@@ -609,9 +609,46 @@ public class WorkflowManager {
         blp.printStatistics(0, comparisonCleaningMethod.getMethodConfiguration(),
                 comparisonCleaningMethod.getMethodName());
 
-        // todo: Run the rest of the workflow
+        // Local optimization of Matching & Clustering
+        double time1 = System.currentTimeMillis();
+        if (model.getEntityMatchingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)
+                || model.getEntityClusteringConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+            bestIteration = 0;
+            double bestFMeasure = 0;
+            for (int j = 0; j < NO_OF_TRIALS; j++) {
+                entityMatchingMethod.setNextRandomConfiguration();
+                final SimilarityPairs sims = entityMatchingMethod.executeComparisons(finalBlocks, profilesD1, profilesD2);
 
-        // todo: Return actual result
-        return null;
+                ec.setNextRandomConfiguration();
+                final EquivalenceCluster[] clusters = ec.getDuplicates(sims);
+
+                final ClustersPerformance clp = new ClustersPerformance(clusters, duplicatePropagation);
+                clp.setStatistics();
+                double fMeasure = clp.getFMeasure();
+                if (bestFMeasure < fMeasure) {
+                    bestIteration = j;
+                    bestFMeasure = fMeasure;
+                }
+            }
+            System.out.println("\nBest Iteration\t:\t" + bestIteration);
+            System.out.println("Best FMeasure\t:\t" + bestFMeasure);
+
+            time1 = System.currentTimeMillis();
+
+            entityMatchingMethod.setNumberedRandomConfiguration(bestIteration);
+            ec.setNumberedRandomConfiguration(bestIteration);
+        }
+
+        final SimilarityPairs sims = entityMatchingMethod.executeComparisons(finalBlocks, profilesD1, profilesD2);
+        entityClusters = ec.getDuplicates(sims);
+
+        double time2 = System.currentTimeMillis();
+
+        final ClustersPerformance clp = new ClustersPerformance(entityClusters, duplicatePropagation);
+        clp.setStatistics();
+        // todo: Could set the entire configuration details instead of entity clustering method name & config.
+        clp.printStatistics(time2 - time1, ec.getMethodName(), ec.getMethodConfiguration());
+
+        return clp;
     }
 }
