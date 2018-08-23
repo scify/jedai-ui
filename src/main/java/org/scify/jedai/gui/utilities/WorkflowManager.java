@@ -446,6 +446,43 @@ public class WorkflowManager {
     }
 
     /**
+     * Optimize a given block processing method randomly using the given list of blocks.
+     * Modifies the original block processing object and sets it to use the best found
+     * random configuration.
+     *
+     * @param bp     Block processing method object
+     * @param blocks Blocks to optimize with
+     */
+    private void optimizeBlockProcessingRandom(IBlockProcessing bp, List<AbstractBlock> blocks) {
+        List<AbstractBlock> cleanedBlocks;
+        double bestA = 0;
+        int bestIteration = 0;
+        double originalComparisons = getTotalComparisons(blocks);
+
+        for (int j = 0; j < NO_OF_TRIALS; j++) {
+            bp.setNextRandomConfiguration();
+            cleanedBlocks = bp.refineBlocks(blocks);
+            if (cleanedBlocks.isEmpty()) {
+                continue;
+            }
+
+            BlocksPerformance blp = new BlocksPerformance(cleanedBlocks, duplicatePropagation);
+            blp.setStatistics();
+            double recall = blp.getPc();
+            double rr = 1 - blp.getAggregateCardinality() / originalComparisons;
+            double a = rr * recall;
+            if (bestA < a) {
+                bestIteration = j;
+                bestA = a;
+            }
+        }
+        System.out.println("\n\nBest iteration\t:\t" + bestIteration);
+        System.out.println("Best performance\t:\t" + bestA);
+
+        bp.setNumberedRandomConfiguration(bestIteration);
+    }
+
+    /**
      * Run a step by step random workflow.
      *
      * @return ClustersPerformance of the workflow result
@@ -524,30 +561,8 @@ public class WorkflowManager {
 
                 // Check if we should configure this method automatically
                 if (blClConfig.getConfigurationType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-                    bestA = 0;
-                    bestIteration = 0;
-                    originalComparisons = getTotalComparisons(blocks);
-                    for (int j = 0; j < NO_OF_TRIALS; j++) {
-                        bp.setNextRandomConfiguration();
-                        cleanedBlocks = bp.refineBlocks(blocks);
-                        if (cleanedBlocks.isEmpty()) {
-                            continue;
-                        }
-
-                        blp = new BlocksPerformance(cleanedBlocks, duplicatePropagation);
-                        blp.setStatistics();
-                        double recall = blp.getPc();
-                        double rr = 1 - blp.getAggregateCardinality() / originalComparisons;
-                        double a = rr * recall;
-                        if (bestA < a) {
-                            bestIteration = j;
-                            bestA = a;
-                        }
-                    }
-                    System.out.println("\n\nBest iteration\t:\t" + bestIteration);
-                    System.out.println("Best performance\t:\t" + bestA);
-
-                    bp.setNumberedRandomConfiguration(bestIteration);
+                    // Optimize the method randomly
+                    optimizeBlockProcessingRandom(bp, blocks);
                 }
 
                 // Process blocks with this method
@@ -565,31 +580,7 @@ public class WorkflowManager {
         // Local optimization of Comparison Cleaning
         List<AbstractBlock> finalBlocks;
         if (model.getComparisonCleaningConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-            bestA = 0;
-            bestIteration = 0;
-            originalComparisons = getTotalComparisons(cleanedBlocks);
-            //noinspection Duplicates
-            for (int j = 0; j < NO_OF_TRIALS; j++) {
-                comparisonCleaningMethod.setNextRandomConfiguration();
-                finalBlocks = comparisonCleaningMethod.refineBlocks(cleanedBlocks);
-                if (finalBlocks.isEmpty()) {
-                    continue;
-                }
-
-                blp = new BlocksPerformance(finalBlocks, duplicatePropagation);
-                blp.setStatistics();
-                double recall = blp.getPc();
-                double rr = 1 - blp.getAggregateCardinality() / originalComparisons;
-                double a = rr * recall;
-                if (bestA < a) {
-                    bestIteration = j;
-                    bestA = a;
-                }
-            }
-            System.out.println("\n\nBest iteration\t:\t" + bestIteration);
-            System.out.println("Best performance\t:\t" + bestA);
-
-            comparisonCleaningMethod.setNumberedRandomConfiguration(bestIteration);
+            optimizeBlockProcessingRandom(comparisonCleaningMethod, cleanedBlocks);
         }
 
         finalBlocks = comparisonCleaningMethod.refineBlocks(cleanedBlocks);
