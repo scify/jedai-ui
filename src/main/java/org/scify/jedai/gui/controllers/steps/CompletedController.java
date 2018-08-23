@@ -258,9 +258,9 @@ public class CompletedController {
                 ClustersPerformance clp = workflowMgr.executeWorkflow();
 
                 if (clp == null) {
-                    DialogHelper.showError("Workflow execution problem",
+                    Platform.runLater(() -> DialogHelper.showError("Workflow execution problem",
                             "A problem occurred while running the workflow!",
-                            "ClustersPerformance while running the final workflow is null!");
+                            "ClustersPerformance while running the final workflow is null!"));
                     return;
                 }
 
