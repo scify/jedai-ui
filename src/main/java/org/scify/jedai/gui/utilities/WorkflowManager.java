@@ -45,24 +45,12 @@ public class WorkflowManager {
         return profilesD1;
     }
 
-    public void setProfilesD1(List<EntityProfile> profilesD1) {
-        this.profilesD1 = profilesD1;
-    }
-
     public List<EntityProfile> getProfilesD2() {
         return profilesD2;
     }
 
-    public void setProfilesD2(List<EntityProfile> profilesD2) {
-        this.profilesD2 = profilesD2;
-    }
-
     public EquivalenceCluster[] getEntityClusters() {
         return entityClusters;
-    }
-
-    public void setEntityClusters(EquivalenceCluster[] entityClusters) {
-        this.entityClusters = entityClusters;
     }
 
     /**
@@ -205,7 +193,6 @@ public class WorkflowManager {
         }
 
         // Check if entity clustering parameters should be set automatically
-        // todo: should there be some link between automatic configuration of EM & EC?
         if (model.getEntityClusteringConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
             if (bestIteration == null) {
                 ec.setNextRandomConfiguration();
@@ -399,7 +386,8 @@ public class WorkflowManager {
         blp = new BlocksPerformance(blocks, duplicatePropagation);
         blp.setStatistics();
         if (output)
-            blp.printStatistics(overheadEnd - overheadStart, blBu.getMethodConfiguration(), blBu.getMethodName());
+            blp.printStatistics(overheadEnd - overheadStart, blBu.getMethodConfiguration(),
+                    blBu.getMethodName());
 
         // Step 3: Block Cleaning
         if (blClMethods != null && !blClMethods.isEmpty()) {
@@ -516,7 +504,8 @@ public class WorkflowManager {
 
         BlocksPerformance blp = new BlocksPerformance(blocks, duplicatePropagation);
         blp.setStatistics();
-        blp.printStatistics(0, blockBuildingMethod.getMethodConfiguration(), blockBuildingMethod.getMethodName());
+        blp.printStatistics(0, blockBuildingMethod.getMethodConfiguration(),
+                blockBuildingMethod.getMethodName());
 
         // Local optimization of Block Cleaning methods
         List<AbstractBlock> cleanedBlocks = blocks;
@@ -616,10 +605,17 @@ public class WorkflowManager {
             bestIteration = 0;
             double bestFMeasure = 0;
             for (int j = 0; j < NO_OF_TRIALS; j++) {
-                entityMatchingMethod.setNextRandomConfiguration();
-                final SimilarityPairs sims = entityMatchingMethod.executeComparisons(finalBlocks, profilesD1, profilesD2);
+                // Set entity matching parameters automatically if needed
+                if (model.getEntityMatchingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+                    entityMatchingMethod.setNextRandomConfiguration();
+                }
+                final SimilarityPairs sims =
+                        entityMatchingMethod.executeComparisons(finalBlocks, profilesD1, profilesD2);
 
-                ec.setNextRandomConfiguration();
+                // Set entity clustering parameters automatically if needed
+                if (model.getEntityClusteringConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+                    ec.setNextRandomConfiguration();
+                }
                 final EquivalenceCluster[] clusters = ec.getDuplicates(sims);
 
                 final ClustersPerformance clp = new ClustersPerformance(clusters, duplicatePropagation);
