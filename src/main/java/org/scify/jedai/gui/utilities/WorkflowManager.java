@@ -515,18 +515,19 @@ public class WorkflowManager {
         blp.printStatistics(0, blockBuildingMethod.getMethodConfiguration(), blockBuildingMethod.getMethodName());
 
         // Local optimization of Block Cleaning methods
+        List<AbstractBlock> cleanedBlocks = null;
         for (IBlockProcessing bp : this.blClMethods) {
             bestA = 0;
             bestIteration = 0;
             originalComparisons = getTotalComparisons(blocks);
             for (int j = 0; j < NO_OF_TRIALS; j++) {
                 bp.setNextRandomConfiguration();
-                final List<AbstractBlock> purgedBlocks = bp.refineBlocks(blocks);
-                if (purgedBlocks.isEmpty()) {
+                cleanedBlocks = bp.refineBlocks(blocks);
+                if (cleanedBlocks.isEmpty()) {
                     continue;
                 }
 
-                blp = new BlocksPerformance(purgedBlocks, duplicatePropagation);
+                blp = new BlocksPerformance(cleanedBlocks, duplicatePropagation);
                 blp.setStatistics();
                 double recall = blp.getPc();
                 double rr = 1 - blp.getAggregateCardinality() / originalComparisons;
@@ -540,11 +541,44 @@ public class WorkflowManager {
             System.out.println("Best performance\t:\t" + bestA);
 
             bp.setNumberedRandomConfiguration(bestIteration);
-            final List<AbstractBlock> purgedBlocks = bp.refineBlocks(blocks);
-            blp = new BlocksPerformance(purgedBlocks, duplicatePropagation);
+            cleanedBlocks = bp.refineBlocks(blocks);
+            blp = new BlocksPerformance(cleanedBlocks, duplicatePropagation);
             blp.setStatistics();
             blp.printStatistics(0, bp.getMethodConfiguration(), bp.getMethodName());
         }
+
+        // Local optimization of Comparison Cleaning
+        bestA = 0;
+        bestIteration = 0;
+        originalComparisons = getTotalComparisons(cleanedBlocks);
+        List<AbstractBlock> finalBlocks = null;
+        //noinspection Duplicates
+        for (int j = 0; j < NO_OF_TRIALS; j++) {
+            comparisonCleaningMethod.setNextRandomConfiguration();
+            finalBlocks = comparisonCleaningMethod.refineBlocks(cleanedBlocks);
+            if (finalBlocks.isEmpty()) {
+                continue;
+            }
+
+            blp = new BlocksPerformance(finalBlocks, duplicatePropagation);
+            blp.setStatistics();
+            double recall = blp.getPc();
+            double rr = 1 - blp.getAggregateCardinality() / originalComparisons;
+            double a = rr * recall;
+            if (bestA < a) {
+                bestIteration = j;
+                bestA = a;
+            }
+        }
+        System.out.println("\n\nBest iteration\t:\t" + bestIteration);
+        System.out.println("Best performance\t:\t" + bestA);
+
+        comparisonCleaningMethod.setNumberedRandomConfiguration(bestIteration);
+        finalBlocks = comparisonCleaningMethod.refineBlocks(cleanedBlocks);
+        blp = new BlocksPerformance(finalBlocks, duplicatePropagation);
+        blp.setStatistics();
+        blp.printStatistics(0, comparisonCleaningMethod.getMethodConfiguration(),
+                comparisonCleaningMethod.getMethodName());
 
         // todo: Run the rest of the workflow
 
