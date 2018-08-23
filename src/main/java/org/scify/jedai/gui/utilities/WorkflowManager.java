@@ -463,71 +463,33 @@ public class WorkflowManager {
      * @return ClustersPerformance of the workflow result
      */
     private ClustersPerformance runStepByStepRandom() {
-        // Local optimization of Block Building
         double bestA = 0;
         int bestIteration = 0;
         double originalComparisons;
-        if (erType.equals(JedaiOptions.DIRTY_ER)) {
-            originalComparisons = profilesD1.size() * profilesD1.size();
-        } else {
-            originalComparisons = ((double) profilesD1.size()) * profilesD2.size();
-        }
 
-        for (int j = 0; j < NO_OF_TRIALS; j++) {
-            blockBuildingMethod.setNextRandomConfiguration();
-            final List<AbstractBlock> originalBlocks;
-
+        // Local optimization of Block Building
+        if (model.getBlockBuildingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
             if (erType.equals(JedaiOptions.DIRTY_ER)) {
-                originalBlocks = blockBuildingMethod.getBlocks(profilesD1);
+                originalComparisons = profilesD1.size() * profilesD1.size();
             } else {
-                originalBlocks = blockBuildingMethod.getBlocks(profilesD1, profilesD2);
+                originalComparisons = ((double) profilesD1.size()) * profilesD2.size();
             }
 
-            if (originalBlocks.isEmpty()) {
-                continue;
-            }
-
-            final BlocksPerformance blp = new BlocksPerformance(originalBlocks, duplicatePropagation);
-            blp.setStatistics();
-            double recall = blp.getPc();
-            double rr = 1 - blp.getAggregateCardinality() / originalComparisons;
-            double a = rr * recall;
-            if (bestA < a) {
-                bestIteration = j;
-                bestA = a;
-            }
-        }
-        System.out.println("\n\nBest iteration\t:\t" + bestIteration);
-        System.out.println("Best performance\t:\t" + bestA);
-
-        // Set final block building parameters
-        blockBuildingMethod.setNumberedRandomConfiguration(bestIteration);
-        final List<AbstractBlock> blocks;
-
-        if (erType.equals(JedaiOptions.DIRTY_ER)) {
-            blocks = blockBuildingMethod.getBlocks(profilesD1);
-        } else {
-            blocks = blockBuildingMethod.getBlocks(profilesD1, profilesD2);
-        }
-
-        BlocksPerformance blp = new BlocksPerformance(blocks, duplicatePropagation);
-        blp.setStatistics();
-        blp.printStatistics(0, blockBuildingMethod.getMethodConfiguration(), blockBuildingMethod.getMethodName());
-
-        // Local optimization of Block Cleaning methods
-        List<AbstractBlock> cleanedBlocks = null;
-        for (IBlockProcessing bp : this.blClMethods) {
-            bestA = 0;
-            bestIteration = 0;
-            originalComparisons = getTotalComparisons(blocks);
             for (int j = 0; j < NO_OF_TRIALS; j++) {
-                bp.setNextRandomConfiguration();
-                cleanedBlocks = bp.refineBlocks(blocks);
-                if (cleanedBlocks.isEmpty()) {
+                blockBuildingMethod.setNextRandomConfiguration();
+                final List<AbstractBlock> originalBlocks;
+
+                if (erType.equals(JedaiOptions.DIRTY_ER)) {
+                    originalBlocks = blockBuildingMethod.getBlocks(profilesD1);
+                } else {
+                    originalBlocks = blockBuildingMethod.getBlocks(profilesD1, profilesD2);
+                }
+
+                if (originalBlocks.isEmpty()) {
                     continue;
                 }
 
-                blp = new BlocksPerformance(cleanedBlocks, duplicatePropagation);
+                final BlocksPerformance blp = new BlocksPerformance(originalBlocks, duplicatePropagation);
                 blp.setStatistics();
                 double recall = blp.getPc();
                 double rr = 1 - blp.getAggregateCardinality() / originalComparisons;
@@ -540,40 +502,107 @@ public class WorkflowManager {
             System.out.println("\n\nBest iteration\t:\t" + bestIteration);
             System.out.println("Best performance\t:\t" + bestA);
 
-            bp.setNumberedRandomConfiguration(bestIteration);
-            cleanedBlocks = bp.refineBlocks(blocks);
-            blp = new BlocksPerformance(cleanedBlocks, duplicatePropagation);
-            blp.setStatistics();
-            blp.printStatistics(0, bp.getMethodConfiguration(), bp.getMethodName());
+            // Set final block building parameters
+            blockBuildingMethod.setNumberedRandomConfiguration(bestIteration);
+        }
+
+        // Process the blocks with block building
+        final List<AbstractBlock> blocks;
+        if (erType.equals(JedaiOptions.DIRTY_ER)) {
+            blocks = blockBuildingMethod.getBlocks(profilesD1);
+        } else {
+            blocks = blockBuildingMethod.getBlocks(profilesD1, profilesD2);
+        }
+
+        BlocksPerformance blp = new BlocksPerformance(blocks, duplicatePropagation);
+        blp.setStatistics();
+        blp.printStatistics(0, blockBuildingMethod.getMethodConfiguration(), blockBuildingMethod.getMethodName());
+
+        // Local optimization of Block Cleaning methods
+        List<AbstractBlock> cleanedBlocks = blocks;
+        if (model.getBlockCleaningMethods() != null && !model.getBlockCleaningMethods().isEmpty()) {
+            // Index of the methods in the blClMethods list
+            int enabledMethodIndex = 0;
+
+            // Check each block cleaning method config
+            for (BlClMethodConfiguration blClConfig : model.getBlockCleaningMethods()) {
+                // Skip disabled methods
+                if (!blClConfig.isEnabled())
+                    continue;
+
+                // Get instance of the method
+                IBlockProcessing bp = blClMethods.get(enabledMethodIndex);
+
+                // Check if we should configure this method automatically
+                if (blClConfig.getConfigurationType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+                    bestA = 0;
+                    bestIteration = 0;
+                    originalComparisons = getTotalComparisons(blocks);
+                    for (int j = 0; j < NO_OF_TRIALS; j++) {
+                        bp.setNextRandomConfiguration();
+                        cleanedBlocks = bp.refineBlocks(blocks);
+                        if (cleanedBlocks.isEmpty()) {
+                            continue;
+                        }
+
+                        blp = new BlocksPerformance(cleanedBlocks, duplicatePropagation);
+                        blp.setStatistics();
+                        double recall = blp.getPc();
+                        double rr = 1 - blp.getAggregateCardinality() / originalComparisons;
+                        double a = rr * recall;
+                        if (bestA < a) {
+                            bestIteration = j;
+                            bestA = a;
+                        }
+                    }
+                    System.out.println("\n\nBest iteration\t:\t" + bestIteration);
+                    System.out.println("Best performance\t:\t" + bestA);
+
+                    bp.setNumberedRandomConfiguration(bestIteration);
+                }
+
+                // Process blocks with this method
+                cleanedBlocks = bp.refineBlocks(blocks);
+
+                blp = new BlocksPerformance(cleanedBlocks, duplicatePropagation);
+                blp.setStatistics();
+                blp.printStatistics(0, bp.getMethodConfiguration(), bp.getMethodName());
+
+                // Increment index
+                enabledMethodIndex++;
+            }
         }
 
         // Local optimization of Comparison Cleaning
-        bestA = 0;
-        bestIteration = 0;
-        originalComparisons = getTotalComparisons(cleanedBlocks);
-        List<AbstractBlock> finalBlocks = null;
-        //noinspection Duplicates
-        for (int j = 0; j < NO_OF_TRIALS; j++) {
-            comparisonCleaningMethod.setNextRandomConfiguration();
-            finalBlocks = comparisonCleaningMethod.refineBlocks(cleanedBlocks);
-            if (finalBlocks.isEmpty()) {
-                continue;
-            }
+        List<AbstractBlock> finalBlocks;
+        if (model.getComparisonCleaningConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+            bestA = 0;
+            bestIteration = 0;
+            originalComparisons = getTotalComparisons(cleanedBlocks);
+            //noinspection Duplicates
+            for (int j = 0; j < NO_OF_TRIALS; j++) {
+                comparisonCleaningMethod.setNextRandomConfiguration();
+                finalBlocks = comparisonCleaningMethod.refineBlocks(cleanedBlocks);
+                if (finalBlocks.isEmpty()) {
+                    continue;
+                }
 
-            blp = new BlocksPerformance(finalBlocks, duplicatePropagation);
-            blp.setStatistics();
-            double recall = blp.getPc();
-            double rr = 1 - blp.getAggregateCardinality() / originalComparisons;
-            double a = rr * recall;
-            if (bestA < a) {
-                bestIteration = j;
-                bestA = a;
+                blp = new BlocksPerformance(finalBlocks, duplicatePropagation);
+                blp.setStatistics();
+                double recall = blp.getPc();
+                double rr = 1 - blp.getAggregateCardinality() / originalComparisons;
+                double a = rr * recall;
+                if (bestA < a) {
+                    bestIteration = j;
+                    bestA = a;
+                }
             }
+            System.out.println("\n\nBest iteration\t:\t" + bestIteration);
+            System.out.println("Best performance\t:\t" + bestA);
+
+            comparisonCleaningMethod.setNumberedRandomConfiguration(bestIteration);
         }
-        System.out.println("\n\nBest iteration\t:\t" + bestIteration);
-        System.out.println("Best performance\t:\t" + bestA);
 
-        comparisonCleaningMethod.setNumberedRandomConfiguration(bestIteration);
         finalBlocks = comparisonCleaningMethod.refineBlocks(cleanedBlocks);
         blp = new BlocksPerformance(finalBlocks, duplicatePropagation);
         blp.setStatistics();
