@@ -244,22 +244,16 @@ public class WorkflowManager {
                 return this.runWorkflow(blockBuildingMethod, blClMethods, comparisonCleaningMethod,
                         entityMatchingMethod, ec, true);
             } else {
-                // Step-by-step automatic configuration. Check if we should do random or grid.
-                if (model.getSearchType().equals(JedaiOptions.AUTOCONFIG_RANDOMSEARCH)) {
-                    // Step-by-step random automatic configuration
-                    return runStepByStepRandom();
-                } else {
-                    // Step-by-step grid automatic configuration
-                    // todo: implement...
-                }
+                // Step-by-step automatic configuration. Set random or grid depending on the selected search type.
+                return runStepByStepWorkflow(
+                        model.getSearchType().equals(JedaiOptions.AUTOCONFIG_RANDOMSEARCH)
+                );
             }
         } else {
             // Run workflow without any automatic configuration
             return this.runWorkflow(blockBuildingMethod, blClMethods, comparisonCleaningMethod, entityMatchingMethod,
                     ec, true);
         }
-
-        return null;
     }
 
     /**
@@ -452,15 +446,21 @@ public class WorkflowManager {
      *
      * @param bp     Block processing method object
      * @param blocks Blocks to optimize with
+     * @param random If true will use random search, otherwise grid
      */
-    private void optimizeBlockProcessingRandom(IBlockProcessing bp, List<AbstractBlock> blocks) {
+    private void optimizeBlockProcessing(IBlockProcessing bp, List<AbstractBlock> blocks, boolean random) {
         List<AbstractBlock> cleanedBlocks;
         double bestA = 0;
         int bestIteration = 0;
         double originalComparisons = getTotalComparisons(blocks);
 
-        for (int j = 0; j < NO_OF_TRIALS; j++) {
-            bp.setNextRandomConfiguration();
+        int iterationsNum = random ? NO_OF_TRIALS : bp.getNumberOfGridConfigurations();
+        for (int j = 0; j < iterationsNum; j++) {
+            if (random) {
+                bp.setNextRandomConfiguration();
+            } else {
+                bp.setNumberedGridConfiguration(j);
+            }
             cleanedBlocks = bp.refineBlocks(blocks);
             if (cleanedBlocks.isEmpty()) {
                 continue;
@@ -479,18 +479,24 @@ public class WorkflowManager {
         System.out.println("\n\nBest iteration\t:\t" + bestIteration);
         System.out.println("Best performance\t:\t" + bestA);
 
-        bp.setNumberedRandomConfiguration(bestIteration);
+        if (random) {
+            bp.setNumberedRandomConfiguration(bestIteration);
+        } else {
+            bp.setNumberedGridConfiguration(bestIteration);
+        }
     }
 
     /**
-     * Run a step by step random workflow.
+     * Run a step by step workflow, using random or grid search based on the given parameter.
      *
+     * @param random If true, will use random search. Otherwise, grid.
      * @return ClustersPerformance of the workflow result
      */
-    private ClustersPerformance runStepByStepRandom() {
+    private ClustersPerformance runStepByStepWorkflow(boolean random) {
         double bestA = 0;
         int bestIteration = 0;
         double originalComparisons;
+        int iterationsNum;
 
         // Local optimization of Block Building
         if (model.getBlockBuildingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
@@ -500,10 +506,18 @@ public class WorkflowManager {
                 originalComparisons = ((double) profilesD1.size()) * profilesD2.size();
             }
 
-            for (int j = 0; j < NO_OF_TRIALS; j++) {
-                blockBuildingMethod.setNextRandomConfiguration();
-                final List<AbstractBlock> originalBlocks;
+            iterationsNum = random ? NO_OF_TRIALS : blockBuildingMethod.getNumberOfGridConfigurations();
 
+            for (int j = 0; j < iterationsNum; j++) {
+                // Set next configuration
+                if (random) {
+                    blockBuildingMethod.setNextRandomConfiguration();
+                } else {
+                    blockBuildingMethod.setNumberedGridConfiguration(j);
+                }
+
+                // Process the blocks (call appropriate method depending on ER type)
+                final List<AbstractBlock> originalBlocks;
                 if (erType.equals(JedaiOptions.DIRTY_ER)) {
                     originalBlocks = blockBuildingMethod.getBlocks(profilesD1);
                 } else {
@@ -528,7 +542,11 @@ public class WorkflowManager {
             System.out.println("Best performance\t:\t" + bestA);
 
             // Set final block building parameters
-            blockBuildingMethod.setNumberedRandomConfiguration(bestIteration);
+            if (random) {
+                blockBuildingMethod.setNumberedRandomConfiguration(bestIteration);
+            } else {
+                blockBuildingMethod.setNumberedGridConfiguration(bestIteration);
+            }
         }
 
         // Process the blocks with block building
@@ -561,8 +579,8 @@ public class WorkflowManager {
 
                 // Check if we should configure this method automatically
                 if (blClConfig.getConfigurationType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-                    // Optimize the method randomly
-                    optimizeBlockProcessingRandom(bp, blocks);
+                    // Optimize the method
+                    optimizeBlockProcessing(bp, blocks, random);
                 }
 
                 // Process blocks with this method
@@ -580,7 +598,8 @@ public class WorkflowManager {
         // Local optimization of Comparison Cleaning
         List<AbstractBlock> finalBlocks;
         if (model.getComparisonCleaningConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-            optimizeBlockProcessingRandom(comparisonCleaningMethod, cleanedBlocks);
+            // Optimize the comparison cleaning method
+            optimizeBlockProcessing(comparisonCleaningMethod, cleanedBlocks, random);
         }
 
         finalBlocks = comparisonCleaningMethod.refineBlocks(cleanedBlocks);
@@ -595,6 +614,7 @@ public class WorkflowManager {
                 || model.getEntityClusteringConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
             bestIteration = 0;
             double bestFMeasure = 0;
+            // todo: handle grid search...
             for (int j = 0; j < NO_OF_TRIALS; j++) {
                 // Set entity matching parameters automatically if needed
                 if (model.getEntityMatchingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
