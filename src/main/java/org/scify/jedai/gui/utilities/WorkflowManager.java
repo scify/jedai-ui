@@ -642,8 +642,13 @@ public class WorkflowManager {
 
             time1 = System.currentTimeMillis();
 
-            entityMatchingMethod.setNumberedRandomConfiguration(bestIteration);
-            ec.setNumberedRandomConfiguration(bestIteration);
+            // Set the best iteration's parameters to the methods that should be automatically configured
+            if (model.getEntityMatchingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+                entityMatchingMethod.setNumberedRandomConfiguration(bestIteration);
+            }
+            if (model.getEntityClusteringConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+                ec.setNumberedRandomConfiguration(bestIteration);
+            }
         }
 
         final SimilarityPairs sims = entityMatchingMethod.executeComparisons(finalBlocks, profilesD1, profilesD2);
