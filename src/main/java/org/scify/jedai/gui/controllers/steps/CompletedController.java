@@ -137,6 +137,12 @@ public class CompletedController {
         );
         outputFormatCombobox.setItems(outputFormats);
 
+        // Disable the export button when the output format isn't selected or when the exploration button is disabled
+        exportBtn.disableProperty().bind(
+                outputFormatCombobox.valueProperty().isNull()
+                        .or(exploreBtn.disabledProperty())
+        );
+
         // Setup table for previous results (Workbench)
         initGrid();
     }
@@ -318,9 +324,6 @@ public class CompletedController {
                     numOfClustersLabel.setText("Number of clusters: " + numOfClusters);
                     numOfClustersLabel.setVisible(true);
 
-                    // Enable button for result export to CSV
-                    exportBtn.setDisable(false);
-
                     // Enable exploration button
                     exploreBtn.setDisable(false);
                 });
@@ -377,9 +380,6 @@ public class CompletedController {
         numOfInstancesLabel.setVisible(false);
         totalTimeLabel.setVisible(false);
         numOfClustersLabel.setVisible(false);
-
-        // Make export button disabled
-        exportBtn.setDisable(true);
 
         // Reset gauges
         f1Gauge.setValue(0.0);
