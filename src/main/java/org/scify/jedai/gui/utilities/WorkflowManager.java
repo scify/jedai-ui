@@ -325,15 +325,18 @@ public class WorkflowManager {
         BlocksPerformance blp;
         overheadStart = System.currentTimeMillis();
 
-        blocks = currentMethod.refineBlocks(blocks);
+        if (!blocks.isEmpty()) {
+            blocks = currentMethod.refineBlocks(blocks);
 
-        // Print blocks performance
-        overheadEnd = System.currentTimeMillis();
-        blp = new BlocksPerformance(blocks, duProp);
-        blp.setStatistics();
-        if (output)
-            blp.printStatistics(overheadEnd - overheadStart, currentMethod.getMethodConfiguration(),
-                    currentMethod.getMethodName());
+            // Print blocks performance
+            overheadEnd = System.currentTimeMillis();
+            blp = new BlocksPerformance(blocks, duProp);
+            blp.setStatistics();
+            if (output)
+                blp.printStatistics(overheadEnd - overheadStart, currentMethod.getMethodConfiguration(),
+                        currentMethod.getMethodName());
+        }
+
         return blocks;
     }
 
