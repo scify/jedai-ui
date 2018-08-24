@@ -57,6 +57,7 @@ public class CompletedController {
     public TableView workbenchTable;
     public Button exploreBtn;
     public VBox autoConfigContainer;
+    public ComboBox outputFormatCombobox;
 
     private SingleSelectionModel<Tab> tabSelectionModel;
     private final ObservableList<WorkflowResult> tableData = FXCollections.observableArrayList();
@@ -127,6 +128,14 @@ public class CompletedController {
                 JedaiOptions.AUTOCONFIG_GRIDSEARCH
         );
         RadioButtonHelper.createButtonGroup(autoConfigContainer, searchTypes, model.searchTypeProperty());
+
+        // Add output options to the output format combobox
+        ObservableList<String> outputFormats = FXCollections.observableArrayList(
+                JedaiOptions.CSV,
+                JedaiOptions.XML,
+                JedaiOptions.RDF
+        );
+        outputFormatCombobox.setItems(outputFormats);
 
         // Setup table for previous results (Workbench)
         initGrid();

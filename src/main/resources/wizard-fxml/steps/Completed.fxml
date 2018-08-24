@@ -108,8 +108,14 @@
                 </Button>
                 <ProgressIndicator fx:id="progressIndicator" prefHeight="52.0" prefWidth="121.0" progress="0.0"
                                    visible="false"/>
+                <ComboBox fx:id="outputFormatCombobox" prefHeight="25.0" prefWidth="160.0"
+                          promptText="Select output format">
+                    <HBox.margin>
+                        <Insets right="5.0"/>
+                    </HBox.margin>
+                </ComboBox>
                 <Button fx:id="exportBtn" disable="true" mnemonicParsing="false" onAction="#exportBtnHandler"
-                        prefWidth="125.0" text="Export CSV"/>
+                        prefHeight="25.0" prefWidth="69.0" text="Export"/>
             </children>
         </HBox>
     </children>
