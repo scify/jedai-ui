@@ -346,23 +346,50 @@ public class CompletedController {
     }
 
     /**
-     * Ask the user for a filename with a save file dialog, and save a CSV with the entity clusters
+     * Ask the user for a filename with a save file dialog, and save a file with the entity clusters
      */
     public void exportBtnHandler() {
         FileChooser fileChooser = new FileChooser();
 
+        // Get selected output format
+        String outputFormat = outputFormatCombobox.getValue().toString();
+
+        // Set extension
+        String extension = null;
+        switch (outputFormat) {
+            case JedaiOptions.CSV:
+                extension = "*.csv";
+                break;
+            case JedaiOptions.XML:
+            case JedaiOptions.RDF:
+                extension = "*.xml";
+                break;
+        }
+
+
         // Set extension filter
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV File", "*.csv");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(outputFormat + " File", extension);
         fileChooser.getExtensionFilters().add(extFilter);
 
         // Show save file dialog
         File file = fileChooser.showSaveDialog(containerVBox.getScene().getWindow());
 
         if (file != null) {
-            // Results export to CSV
+            // Export the results to file
             try {
-                PrintToFile.toCSV(workflowMgr.getProfilesD1(), workflowMgr.getProfilesD2(), entityClusters,
-                        file.getAbsolutePath());
+                switch (outputFormat) {
+                    case JedaiOptions.CSV:
+                        // Output CSV
+                        PrintToFile.toCSV(workflowMgr.getProfilesD1(), workflowMgr.getProfilesD2(), entityClusters,
+                                file.getAbsolutePath());
+                        break;
+                    case JedaiOptions.XML:
+                        // todo
+                        break;
+                    case JedaiOptions.RDF:
+                        // todo
+                        break;
+                }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
