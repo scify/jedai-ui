@@ -162,6 +162,16 @@ public class DynamicMethodConfiguration {
                 return new ExtendedSortedNeighborhoodBlocking(
                         (int) parameters.get(0).getRight()
                 );
+            case LSH_SUPERBIT_BLOCKING:
+                return new LSHSuperBitBlocking(
+                        (int) parameters.get(0).getRight(),
+                        (int) parameters.get(1).getRight()
+                );
+            case LSH_MINHASH_BLOCKING:
+                return new LSHMinHashBlocking(
+                        (int) parameters.get(0).getRight(),
+                        (int) parameters.get(1).getRight()
+                );
             default:
                 return null;
         }
