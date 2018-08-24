@@ -398,6 +398,13 @@ public class CompletedController {
         // Get LIST of equivalence clusters (from array)
         List<EquivalenceCluster> duplicates = Arrays.asList(this.entityClusters);
 
+        // Sort clusters from largest (in size) to smallest
+        duplicates.sort((o1, o2) -> {
+            Integer o1Size = o1.getEntityIdsD1().size() + o1.getEntityIdsD2().size();
+            Integer o2Size = o2.getEntityIdsD1().size() + o2.getEntityIdsD2().size();
+            return -o1Size.compareTo(o2Size);
+        });
+
         // Load FXML for exploration window and get the controller
         Parent root = DialogHelper.loadFxml(this.getClass(), injector,
                 "wizard-fxml/EntityClusterExploration.fxml");
