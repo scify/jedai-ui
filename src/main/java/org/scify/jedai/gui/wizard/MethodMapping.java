@@ -105,6 +105,13 @@ public class MethodMapping {
             case JedaiOptions.RECIPROCAL_WEIGHED_NODE_PRUNING:
                 processingMethod = new ReciprocalWeightedNodePruning(WeightingScheme.ECBS);
                 break;
+            case JedaiOptions.CANOPY_CLUSTERING:
+                // todo: check what values to use as default for canopy clusterings!
+                processingMethod = new CanopyClustering(0, 0, WeightingScheme.ECBS);
+                break;
+            case JedaiOptions.CANOPY_CLUSTERING_EXTENDED:
+                processingMethod = new ExtendedCanopyClustering(0, 0, WeightingScheme.ECBS);
+                break;
         }
 
         // Return the method

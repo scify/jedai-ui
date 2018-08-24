@@ -42,6 +42,8 @@ public class JedaiOptions {
     public static final String WEIGHED_NODE_PRUNING = "Weighed Node Pruning (WNP)";
     public static final String RECIPROCAL_CARDINALITY_NODE_PRUNING = "Reciprocal Cardinality Node Pruning (ReCNP)";
     public static final String RECIPROCAL_WEIGHED_NODE_PRUNING = "Reciprocal Weighed Node Pruning (ReWNP)";
+    public static final String CANOPY_CLUSTERING = "Canopy Clustering";
+    public static final String CANOPY_CLUSTERING_EXTENDED = "Extended Canopy Clustering";
 
     // Entity Matching methods
     public static final String GROUP_LINKAGE = "Group Linkage";

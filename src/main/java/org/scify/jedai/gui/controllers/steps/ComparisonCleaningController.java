@@ -33,7 +33,9 @@ public class ComparisonCleaningController {
                 JedaiOptions.WEIGHED_EDGE_PRUNING,
                 JedaiOptions.WEIGHED_NODE_PRUNING,
                 JedaiOptions.RECIPROCAL_CARDINALITY_NODE_PRUNING,
-                JedaiOptions.RECIPROCAL_WEIGHED_NODE_PRUNING
+                JedaiOptions.RECIPROCAL_WEIGHED_NODE_PRUNING,
+                JedaiOptions.CANOPY_CLUSTERING,
+                JedaiOptions.CANOPY_CLUSTERING_EXTENDED
         );
 
         RadioButtonHelper.createButtonGroup(radioBtnsContainer, options, model.comparisonCleaningProperty());

@@ -97,7 +97,6 @@ public class WorkflowManager {
         comparisonCleaningMethod = null;
         if (coClMethod != null && !coClMethod.equals(JedaiOptions.NO_CLEANING)) {
             // Create comparison cleaning method
-
             if (!model.getComparisonCleaningConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
                 // Auto or default configuration selected: use default configuration
                 comparisonCleaningMethod = MethodMapping.getMethodByName(coClMethod);
