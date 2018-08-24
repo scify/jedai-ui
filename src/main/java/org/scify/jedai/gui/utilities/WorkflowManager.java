@@ -54,6 +54,10 @@ public class WorkflowManager {
         return entityClusters;
     }
 
+    public AbstractDuplicatePropagation getDuplicatePropagation() {
+        return duplicatePropagation;
+    }
+
     /**
      * Create instances of the methods that will be used for running the workflow
      */

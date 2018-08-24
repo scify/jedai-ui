@@ -24,6 +24,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.util.StringConverter;
 import org.scify.jedai.datamodel.EquivalenceCluster;
+import org.scify.jedai.datawriter.ClustersPerformanceWriter;
 import org.scify.jedai.gui.controllers.EntityClusterExplorationController;
 import org.scify.jedai.gui.model.WorkflowResult;
 import org.scify.jedai.gui.nodes.DetailsCell;
@@ -35,7 +36,6 @@ import org.scify.jedai.gui.utilities.console_area.ConsoleArea;
 import org.scify.jedai.gui.utilities.console_area.MultiOutputStream;
 import org.scify.jedai.gui.wizard.WizardData;
 import org.scify.jedai.utilities.ClustersPerformance;
-import org.scify.jedai.utilities.PrintToFile;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -374,19 +374,27 @@ public class CompletedController {
         File file = fileChooser.showSaveDialog(containerVBox.getScene().getWindow());
 
         if (file != null) {
+            // Create performance writer object
+            ClustersPerformanceWriter cpw = new ClustersPerformanceWriter(
+                    workflowMgr.getEntityClusters(),
+                    workflowMgr.getDuplicatePropagation()
+            );
+
             // Export the results to file
             try {
                 switch (outputFormat) {
                     case JedaiOptions.CSV:
                         // Output CSV
-                        PrintToFile.toCSV(workflowMgr.getProfilesD1(), workflowMgr.getProfilesD2(), entityClusters,
+                        cpw.printDetailedResultsToCSV(workflowMgr.getProfilesD1(), workflowMgr.getProfilesD2(),
                                 file.getAbsolutePath());
                         break;
                     case JedaiOptions.XML:
-                        // todo
+                        cpw.printDetailedResultsToXML(workflowMgr.getProfilesD1(), workflowMgr.getProfilesD2(),
+                                file.getAbsolutePath());
                         break;
                     case JedaiOptions.RDF:
-                        // todo
+                        cpw.printDetailedResultsToRDF(workflowMgr.getProfilesD1(), workflowMgr.getProfilesD2(),
+                                file.getAbsolutePath());
                         break;
                 }
             } catch (FileNotFoundException e) {
