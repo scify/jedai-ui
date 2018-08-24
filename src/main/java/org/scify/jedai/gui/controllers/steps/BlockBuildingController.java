@@ -34,7 +34,9 @@ public class BlockBuildingController {
                 JedaiOptions.Q_GRAMS_BLOCKING,
                 JedaiOptions.Q_GRAMS_BLOCKING_EXTENDED,
                 JedaiOptions.SUFFIX_ARRAYS_BLOCKING,
-                JedaiOptions.SUFFIX_ARRAYS_BLOCKING_EXTENDED
+                JedaiOptions.SUFFIX_ARRAYS_BLOCKING_EXTENDED,
+                JedaiOptions.LSH_SUPERBIT_BLOCKING,
+                JedaiOptions.LSH_MINHASH_BLOCKING
         );
 
         // Create radio buttons using helper method

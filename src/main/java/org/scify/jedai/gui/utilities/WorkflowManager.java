@@ -1,5 +1,6 @@
 package org.scify.jedai.gui.utilities;
 
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import org.scify.jedai.blockbuilding.IBlockBuilding;
 import org.scify.jedai.blockprocessing.IBlockProcessing;
@@ -370,8 +371,9 @@ public class WorkflowManager {
             }
         } else {
             // Show error
-            DialogHelper.showError("Block Building Method Error", "Block Building Method is null!",
-                    "There was a problem running the selected block building method!");
+            Platform.runLater(() -> DialogHelper.showError("Block Building Method Error",
+                    "Block Building Method is null!",
+                    "There was a problem running the selected block building method!"));
             return null;
         }
 

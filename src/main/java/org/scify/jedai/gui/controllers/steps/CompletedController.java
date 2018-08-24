@@ -366,7 +366,6 @@ public class CompletedController {
                 break;
         }
 
-
         // Set extension filter
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(outputFormat + " File", extension);
         fileChooser.getExtensionFilters().add(extFilter);

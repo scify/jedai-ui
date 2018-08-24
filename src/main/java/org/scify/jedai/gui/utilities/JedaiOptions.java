@@ -25,6 +25,8 @@ public class JedaiOptions {
     public static final String Q_GRAMS_BLOCKING_EXTENDED = "Extended Q-Grams Blocking";
     public static final String SUFFIX_ARRAYS_BLOCKING = "Suffix Arrays Blocking";
     public static final String SUFFIX_ARRAYS_BLOCKING_EXTENDED = "Extended Suffix Arrays Blocking";
+    public static final String LSH_SUPERBIT_BLOCKING = "LSH SuperBit Blocking";
+    public static final String LSH_MINHASH_BLOCKING = "LSH MinHash Blocking";
 
     // Block Cleaning methods
     public static final String BLOCK_FILTERING = "Block Filtering";
