@@ -273,9 +273,9 @@ public class CompletedController {
                 ClustersPerformance clp = workflowMgr.executeWorkflow();
 
                 if (clp == null) {
-                    Platform.runLater(() -> DialogHelper.showError("Workflow execution problem",
+                    DialogHelper.showError("Workflow execution problem",
                             "A problem occurred while running the workflow!",
-                            "ClustersPerformance while running the final workflow is null!"));
+                            "ClustersPerformance while running the final workflow is null!");
                     return;
                 }
 
@@ -329,9 +329,9 @@ public class CompletedController {
                 });
             } catch (Exception e) {
                 // Exception occurred, show alert with information about it
-                Platform.runLater(() -> DialogHelper.showError("Exception",
+                DialogHelper.showError("Exception",
                         "An exception occurred while running the workflow!",
-                        "Details: " + e.toString() + " (" + e.getMessage() + ")"));
+                        "Details: " + e.toString() + " (" + e.getMessage() + ")");
 
                 // Print stack trace
                 e.printStackTrace();
