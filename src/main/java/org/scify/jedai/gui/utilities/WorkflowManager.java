@@ -1,6 +1,8 @@
 package org.scify.jedai.gui.utilities;
 
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Label;
 import org.scify.jedai.blockbuilding.IBlockBuilding;
 import org.scify.jedai.blockprocessing.IBlockProcessing;
 import org.scify.jedai.datamodel.AbstractBlock;
@@ -212,7 +214,7 @@ public class WorkflowManager {
      * @return ClustersPerformance object for the final run of the workflow
      * @throws Exception If runWorkflow returns null...
      */
-    public ClustersPerformance executeWorkflow() throws Exception {
+    public ClustersPerformance executeWorkflow(Label statusLabel) throws Exception {
         // todo: make difference between this method and runWorkflow() clearer
         if (anyAutomaticConfig()) {
             // Run the rest of the workflow with holistic, or step-by-step
@@ -222,11 +224,15 @@ public class WorkflowManager {
                 double bestFMeasure = 0;
 
                 for (int j = 0; j < NO_OF_TRIALS; j++) {
+                    int finalJ = j;
+                    Platform.runLater(
+                            () -> statusLabel.setText("Auto-configuration " + finalJ + "/" + NO_OF_TRIALS));
+
                     // Set the next automatic random configuration
                     iterateHolisticRandom(null);
 
                     // Run a workflow and check its F-measure
-                    ClustersPerformance clp = this.runWorkflow(blockBuildingMethod,
+                    ClustersPerformance clp = this.runWorkflow(statusLabel, blockBuildingMethod,
                             blClMethods, comparisonCleaningMethod, entityMatchingMethod, ec, false);
 
                     // If there was a problem with this random workflow, skip this iteration
@@ -249,18 +255,19 @@ public class WorkflowManager {
                 iterateHolisticRandom(bestIteration);
 
                 // Run the final workflow (whether there was an automatic configuration or not)
-                return this.runWorkflow(blockBuildingMethod, blClMethods, comparisonCleaningMethod,
+                return this.runWorkflow(statusLabel, blockBuildingMethod, blClMethods, comparisonCleaningMethod,
                         entityMatchingMethod, ec, true);
             } else {
                 // Step-by-step automatic configuration. Set random or grid depending on the selected search type.
                 return runStepByStepWorkflow(
+                        statusLabel,
                         model.getSearchType().equals(JedaiOptions.AUTOCONFIG_RANDOMSEARCH)
                 );
             }
         } else {
             // Run workflow without any automatic configuration
-            return this.runWorkflow(blockBuildingMethod, blClMethods, comparisonCleaningMethod, entityMatchingMethod,
-                    ec, true);
+            return this.runWorkflow(statusLabel, blockBuildingMethod, blClMethods, comparisonCleaningMethod,
+                    entityMatchingMethod, ec, true);
         }
     }
 
@@ -351,6 +358,7 @@ public class WorkflowManager {
     /**
      * Run a workflow with the given methods and return its ClustersPerformance
      *
+     * @param statusLabel Label to set status on
      * @param blBu        Block building method
      * @param blClMethods List of block cleaning methods
      * @param coCl        Comparison cleaning method
@@ -360,7 +368,7 @@ public class WorkflowManager {
      * @return ClustersPerformance object of the executed workflow
      * @throws Exception In case the Entity Matching method is null (shouldn't happen though)
      */
-    private ClustersPerformance runWorkflow(IBlockBuilding blBu, List<IBlockProcessing> blClMethods,
+    private ClustersPerformance runWorkflow(Label statusLabel, IBlockBuilding blBu, List<IBlockProcessing> blClMethods,
                                             IBlockProcessing coCl, IEntityMatching em, IEntityClustering ec,
                                             boolean output) throws Exception {
         // Initialize a few variables
@@ -369,6 +377,9 @@ public class WorkflowManager {
         BlocksPerformance blp;
 
         // Run step 2
+        if (output)
+            Platform.runLater(() -> statusLabel.setText("Running block building..."));
+
         List<AbstractBlock> blocks;
         if (blBu != null) {
             if (erType.equals(JedaiOptions.DIRTY_ER)) {
@@ -396,6 +407,9 @@ public class WorkflowManager {
                     blBu.getMethodName());
 
         // Step 3: Block Cleaning
+        if (output)
+            Platform.runLater(() -> statusLabel.setText("Running block cleaning..."));
+
         if (blClMethods != null && !blClMethods.isEmpty()) {
             // Execute the methods
             for (IBlockProcessing currentMethod : blClMethods) {
@@ -408,6 +422,8 @@ public class WorkflowManager {
         }
 
         // Step 4: Comparison Cleaning
+        if (output)
+            Platform.runLater(() -> statusLabel.setText("Running comparison cleaning..."));
         if (coCl != null) {
             blocks = runBlockProcessing(duplicatePropagation, output, blocks, coCl);
 
@@ -417,6 +433,8 @@ public class WorkflowManager {
         }
 
         // Step 5: Entity Matching
+        if (output)
+            Platform.runLater(() -> statusLabel.setText("Running entity matching..."));
         SimilarityPairs simPairs;
 
         if (em == null)
@@ -429,6 +447,8 @@ public class WorkflowManager {
         }
 
         // Step 6: Entity Clustering
+        if (output)
+            Platform.runLater(() -> statusLabel.setText("Running entity clustering..."));
         overheadStart = System.currentTimeMillis();
 
         entityClusters = ec.getDuplicates(simPairs);
@@ -509,16 +529,19 @@ public class WorkflowManager {
     /**
      * Run a step by step workflow, using random or grid search based on the given parameter.
      *
-     * @param random If true, will use random search. Otherwise, grid.
+     * @param statusLabel Label to show status
+     * @param random      If true, will use random search. Otherwise, grid.
      * @return ClustersPerformance of the workflow result
      */
-    private ClustersPerformance runStepByStepWorkflow(boolean random) {
+    private ClustersPerformance runStepByStepWorkflow(Label statusLabel, boolean random) {
         double bestA = 0;
         int bestIteration = 0;
         double originalComparisons;
         int iterationsNum;
 
         // Local optimization of Block Building
+        Platform.runLater(() -> statusLabel.setText("Block Building optimization..."));
+
         if (model.getBlockBuildingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
             if (erType.equals(JedaiOptions.DIRTY_ER)) {
                 originalComparisons = profilesD1.size() * profilesD1.size();
@@ -570,6 +593,8 @@ public class WorkflowManager {
         }
 
         // Process the blocks with block building
+        Platform.runLater(() -> statusLabel.setText("Running block building..."));
+
         final List<AbstractBlock> blocks;
         if (erType.equals(JedaiOptions.DIRTY_ER)) {
             blocks = blockBuildingMethod.getBlocks(profilesD1);
@@ -583,6 +608,8 @@ public class WorkflowManager {
                 blockBuildingMethod.getMethodName());
 
         // Local optimization of Block Cleaning methods
+        Platform.runLater(() -> statusLabel.setText("Running block cleaning..."));
+
         List<AbstractBlock> cleanedBlocks = blocks;
         if (model.getBlockCleaningMethods() != null && !model.getBlockCleaningMethods().isEmpty()) {
             // Index of the methods in the blClMethods list
@@ -616,6 +643,8 @@ public class WorkflowManager {
         }
 
         // Local optimization of Comparison Cleaning
+        Platform.runLater(() -> statusLabel.setText("Running comparison cleaning..."));
+
         List<AbstractBlock> finalBlocks;
         if (model.getComparisonCleaningConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
             // Optimize the comparison cleaning method
@@ -629,6 +658,8 @@ public class WorkflowManager {
                 comparisonCleaningMethod.getMethodName());
 
         // Local optimization of Matching & Clustering
+        Platform.runLater(() -> statusLabel.setText("Running entity matching & clustering"));
+
         double time1 = System.currentTimeMillis();
         if (model.getEntityMatchingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)
                 || model.getEntityClusteringConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {

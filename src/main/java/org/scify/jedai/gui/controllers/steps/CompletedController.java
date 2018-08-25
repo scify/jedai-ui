@@ -50,7 +50,6 @@ public class CompletedController {
     public Label numOfInstancesLabel;
     public Label numOfClustersLabel;
     public HBox gaugesHBox;
-    public ProgressIndicator progressIndicator;
     public TextArea logTextArea;
     public Label totalTimeLabel;
     public TabPane resultsTabPane;
@@ -58,6 +57,7 @@ public class CompletedController {
     public Button exploreBtn;
     public VBox autoConfigContainer;
     public ComboBox outputFormatCombobox;
+    public Label statusLabel;
 
     private SingleSelectionModel<Tab> tabSelectionModel;
     private final ObservableList<WorkflowResult> tableData = FXCollections.observableArrayList();
@@ -229,21 +229,8 @@ public class CompletedController {
                 .build();
     }
 
-    /**
-     * Update the progress of the progressIndicator in the UI thread
-     *
-     * @param percentage Percentage to set indicator to (in range [0, 1])
-     */
-    private void updateProgress(double percentage) {
-        Platform.runLater(() -> progressIndicator.setProgress(percentage));
-    }
-
     @FXML
     private void runAlgorithmBtnHandler() {
-        // Show the progress indicator
-        progressIndicator.setVisible(true);
-        progressIndicator.setProgress(0.0);
-
         // Reset console area
         logTextArea.clear();
 
@@ -262,15 +249,13 @@ public class CompletedController {
 
             try {
                 // Step 1: Data reading
+                Platform.runLater(() -> statusLabel.setText("Reading datasets..."));
                 workflowMgr.readDatasets(true);
-
-                // Set progress indicator to 20%
-                updateProgress(0.2);
 
                 // Prepare methods for rest of workflow
                 workflowMgr.createMethodInstances();
 
-                ClustersPerformance clp = workflowMgr.executeWorkflow();
+                ClustersPerformance clp = workflowMgr.executeWorkflow(statusLabel);
 
                 if (clp == null) {
                     DialogHelper.showError("Workflow execution problem",
@@ -281,13 +266,11 @@ public class CompletedController {
 
                 entityClusters = workflowMgr.getEntityClusters();
 
-                // Set gauge values
+                // Set gauge values & status label
                 f1Gauge.setValue(clp.getFMeasure());
                 recallGauge.setValue(clp.getRecall());
                 precisionGauge.setValue(clp.getPrecision());
-
-                // Set progress indicator to 100%
-                updateProgress(1.0);
+                Platform.runLater(() -> statusLabel.setText("Completed!"));
 
                 // Get final run values
                 double totalTimeSeconds = (System.currentTimeMillis() - startTime) / 1000.0;
@@ -423,9 +406,8 @@ public class CompletedController {
         // Reset Details tab
         logTextArea.setText("");
 
-        // Reset progress indicator
-        progressIndicator.setVisible(false);
-        progressIndicator.setProgress(0.0);
+        // Reset status label
+        statusLabel.setText("");
 
         // Go to first tabset tab
         tabSelectionModel.selectFirst();
