@@ -229,6 +229,11 @@ public class WorkflowManager {
                     ClustersPerformance clp = this.runWorkflow(blockBuildingMethod,
                             blClMethods, comparisonCleaningMethod, entityMatchingMethod, ec, false);
 
+                    // If there was a problem with this random workflow, skip this iteration
+                    if (clp == null) {
+                        continue;
+                    }
+
                     // Keep this iteration if it has the best F-measure so far
                     double fMeasure = clp.getFMeasure();
                     if (bestFMeasure < fMeasure) {
@@ -395,12 +400,20 @@ public class WorkflowManager {
             // Execute the methods
             for (IBlockProcessing currentMethod : blClMethods) {
                 blocks = runBlockProcessing(duplicatePropagation, output, blocks, currentMethod);
+
+                if (blocks.isEmpty()) {
+                    return null;
+                }
             }
         }
 
         // Step 4: Comparison Cleaning
         if (coCl != null) {
             blocks = runBlockProcessing(duplicatePropagation, output, blocks, coCl);
+
+            if (blocks.isEmpty()) {
+                return null;
+            }
         }
 
         // Step 5: Entity Matching
