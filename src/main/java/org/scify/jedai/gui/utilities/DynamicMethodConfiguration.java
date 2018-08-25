@@ -226,16 +226,14 @@ public class DynamicMethodConfiguration {
                 break;
             case JedaiOptions.CANOPY_CLUSTERING:
                 processingMethod = new CanopyClustering(
-                        0,  // todo: these should be in the parameters???
-                        0,
-                        (WeightingScheme) parameters.get(0).getRight()
+                        (double) parameters.get(0).getRight(), // Inclusive threshold
+                        (double) parameters.get(1).getRight()  // Exclusive threshold
                 );
                 break;
             case JedaiOptions.CANOPY_CLUSTERING_EXTENDED:
                 processingMethod = new ExtendedCanopyClustering(
-                        0,  // todo: these should be in the parameters???
-                        0,
-                        (WeightingScheme) parameters.get(0).getRight()
+                        (int) parameters.get(0).getRight(), // Inclusive threshold
+                        (int) parameters.get(1).getRight()  // Exclusive threshold
                 );
                 break;
         }
