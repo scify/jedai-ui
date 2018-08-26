@@ -41,6 +41,10 @@ public class SchemaClusteringController {
         confTypeContainer.getChildren().add(
                 new ConfigurationTypeSelector(model.schemaClusteringConfigTypeProperty())
         );
+
+        // TEMPORARY: disable automatic configuration of schema clustering
+        ConfigurationTypeSelector cts = (ConfigurationTypeSelector) confTypeContainer.getChildren().get(1);
+        cts.getChildren().get(1).setDisable(true);
     }
 
     @Validate

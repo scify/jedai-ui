@@ -594,13 +594,10 @@ public class WorkflowManager {
         TObjectIntMap<String>[] scClusters = null;
         if (!model.getSchemaClustering().equals(JedaiOptions.NO_SCHEMA_CLUSTERING)) {
             Platform.runLater(() -> statusLabel.setText("Schema Clustering optimization..."));
-            // todo: check if it should be optimized together with block building!
 
             // Optimize schema clustering
-//            if (model.getSchemaClusteringConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-//                iterationsNum = random ? NO_OF_TRIALS : blockBuildingMethod.getNumberOfGridConfigurations();
-//
-//            }
+//          if (model.getSchemaClusteringConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) { }
+            // todo: optimize together with block building
 
             // Execute schema clustering method
             ISchemaClustering sc = MethodMapping.getSchemaClusteringMethodByName(model.getSchemaClustering());
