@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<VBox fx:id="containerVBox" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+      minWidth="-Infinity" spacing="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.scify.jedai.gui.controllers.steps.SchemaClusteringController">
+    <children>
+        <Label text="Schema Clustering">
+            <font>
+                <Font name="System Bold" size="24.0"/>
+            </font>
+        </Label>
+        <Label text="Select a Schema Clustering method">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Label>
+        <HBox prefHeight="200.0" prefWidth="360.0">
+            <children>
+                <VBox fx:id="radioBtnsContainer" prefHeight="200.0" prefWidth="250.0" spacing="5.0"/>
+                <VBox fx:id="confTypeContainer" prefHeight="200.0" prefWidth="250.0">
+                    <children>
+                        <Label text="Configuration type:"/>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+    </children>
+    <padding>
+        <Insets bottom="20.0" left="40.0" right="40.0" top="20.0"/>
+    </padding>
+</VBox>
