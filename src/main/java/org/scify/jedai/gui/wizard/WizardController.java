@@ -26,6 +26,9 @@ import org.scify.jedai.gui.utilities.JPair;
 import org.scify.jedai.gui.utilities.JedaiOptions;
 import org.scify.jedai.utilities.IDocumentation;
 import org.scify.jedai.utilities.enumerations.BlockBuildingMethod;
+import org.scify.jedai.utilities.enumerations.RepresentationModel;
+import org.scify.jedai.utilities.enumerations.SchemaClusteringMethod;
+import org.scify.jedai.utilities.enumerations.SimilarityMetric;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -227,14 +230,14 @@ public class WizardController {
                 switch (currentStep.get()) {
                     case 2:
                         // Schema Clustering
+                        // todo: when selecting "no SC" and manual configuration, we can't advance to next step
                         parametersProperty = model.schemaClusteringParametersProperty();
 
                         methodName = model.getSchemaClustering();
-//                        method = SchemaClusteringMethod.getModel(
-//                                RepresentationModel.CHARACTER_TRIGRAMS,
-//                                SimilarityMetric.ENHANCED_JACCARD_SIMILARITY,
-//                                MethodMapping.schemaClusteringMethods.get(methodName));
-                        // todo: schema clustering does not extend IDocumentation :\
+                        method = SchemaClusteringMethod.getModel(
+                                RepresentationModel.CHARACTER_TRIGRAMS,
+                                SimilarityMetric.ENHANCED_JACCARD_SIMILARITY,
+                                MethodMapping.schemaClusteringMethods.get(methodName));
                         break;
                     case 3:
                         // Block Building
