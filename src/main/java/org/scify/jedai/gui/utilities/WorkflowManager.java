@@ -746,42 +746,94 @@ public class WorkflowManager {
         double time1 = System.currentTimeMillis();
         if (model.getEntityMatchingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)
                 || model.getEntityClusteringConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-            bestIteration = 0;
             double bestFMeasure = 0;
-            // todo: handle grid search...
-            for (int j = 0; j < NO_OF_TRIALS; j++) {
-                // Set entity matching parameters automatically if needed
+
+            // Check if we are using random search or grid search
+            if (random) {
+                bestIteration = 0;
+
+                // Optimize entity matching and clustering with random search
+                for (int j = 0; j < NO_OF_TRIALS; j++) {
+                    // Set entity matching parameters automatically if needed
+                    if (model.getEntityMatchingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+                        entityMatchingMethod.setNextRandomConfiguration();
+                    }
+                    final SimilarityPairs sims =
+                            entityMatchingMethod.executeComparisons(finalBlocks, profilesD1, profilesD2);
+
+                    // Set entity clustering parameters automatically if needed
+                    if (model.getEntityClusteringConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+                        ec.setNextRandomConfiguration();
+                    }
+                    final EquivalenceCluster[] clusters = ec.getDuplicates(sims);
+
+                    final ClustersPerformance clp = new ClustersPerformance(clusters, duplicatePropagation);
+                    clp.setStatistics();
+                    double fMeasure = clp.getFMeasure();
+                    if (bestFMeasure < fMeasure) {
+                        bestIteration = j;
+                        bestFMeasure = fMeasure;
+                    }
+                }
+                System.out.println("\nBest Iteration\t:\t" + bestIteration);
+                System.out.println("Best FMeasure\t:\t" + bestFMeasure);
+
+                time1 = System.currentTimeMillis();
+
+                // Set the best iteration's parameters to the methods that should be automatically configured
                 if (model.getEntityMatchingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-                    entityMatchingMethod.setNextRandomConfiguration();
+                    entityMatchingMethod.setNumberedRandomConfiguration(bestIteration);
                 }
-                final SimilarityPairs sims =
-                        entityMatchingMethod.executeComparisons(finalBlocks, profilesD1, profilesD2);
-
-                // Set entity clustering parameters automatically if needed
                 if (model.getEntityClusteringConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-                    ec.setNextRandomConfiguration();
+                    ec.setNumberedRandomConfiguration(bestIteration);
                 }
-                final EquivalenceCluster[] clusters = ec.getDuplicates(sims);
+            } else {
+                // Optimize entity matching and clustering with grid search
+                boolean emAutoConfig = model.getEntityMatchingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG);
+                boolean ecAutoConfig = model.getEntityClusteringConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG);
 
-                final ClustersPerformance clp = new ClustersPerformance(clusters, duplicatePropagation);
-                clp.setStatistics();
-                double fMeasure = clp.getFMeasure();
-                if (bestFMeasure < fMeasure) {
-                    bestIteration = j;
-                    bestFMeasure = fMeasure;
+                int bestInnerIteration = 0;
+                int bestOuterIteration = 0;
+
+                // Get number of loops for each
+                int outerLoops = (emAutoConfig) ? entityMatchingMethod.getNumberOfGridConfigurations() : 1;
+                int innerLoops = (ecAutoConfig) ? ec.getNumberOfGridConfigurations() : 1;
+
+                // Iterate all entity matching configurations
+                for (int j = 0; j < outerLoops; j++) {
+                    if (emAutoConfig) {
+                        entityMatchingMethod.setNumberedGridConfiguration(j);
+                    }
+                    final SimilarityPairs sims = entityMatchingMethod.executeComparisons(finalBlocks, profilesD1, profilesD2);
+
+                    // Iterate all entity clustering configurations
+                    for (int k = 0; k < innerLoops; k++) {
+                        if (ecAutoConfig) {
+                            ec.setNumberedGridConfiguration(k);
+                        }
+                        final EquivalenceCluster[] clusters = ec.getDuplicates(sims);
+
+                        final ClustersPerformance clp = new ClustersPerformance(clusters, duplicatePropagation);
+                        clp.setStatistics();
+                        double fMeasure = clp.getFMeasure();
+                        if (bestFMeasure < fMeasure) {
+                            bestInnerIteration = k;
+                            bestOuterIteration = j;
+                            bestFMeasure = fMeasure;
+                        }
+                    }
                 }
-            }
-            System.out.println("\nBest Iteration\t:\t" + bestIteration);
-            System.out.println("Best FMeasure\t:\t" + bestFMeasure);
+                System.out.println("\nBest Inner Iteration\t:\t" + bestInnerIteration);
+                System.out.println("\nBest Outer Iteration\t:\t" + bestOuterIteration);
+                System.out.println("Best FMeasure\t:\t" + bestFMeasure);
 
-            time1 = System.currentTimeMillis();
-
-            // Set the best iteration's parameters to the methods that should be automatically configured
-            if (model.getEntityMatchingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-                entityMatchingMethod.setNumberedRandomConfiguration(bestIteration);
-            }
-            if (model.getEntityClusteringConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-                ec.setNumberedRandomConfiguration(bestIteration);
+                // Set the best iteration's parameters to the methods that should be automatically configured
+                if (model.getEntityMatchingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+                    entityMatchingMethod.setNumberedGridConfiguration(bestOuterIteration);
+                }
+                if (model.getEntityClusteringConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+                    ec.setNumberedGridConfiguration(bestInnerIteration);
+                }
             }
         }
 
