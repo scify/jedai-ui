@@ -193,6 +193,13 @@ public class ConfirmController {
         addRow(rows++, boldLabel("Ground Truth Reader Parameters"),
                 DynamicMethodConfiguration.newParamsNode(model.groundTruthParametersProperty()));
 
+        // Schema Clustering method
+        addRow(rows++, boldLabel("Schema Clustering Method"), boundLabel(model.schemaClusteringProperty()));
+
+        // Schema Clustering parameters
+        addRow(rows++, boldLabel("Schema Clustering Parameters"),
+                DynamicMethodConfiguration.newParamsNode(model.schemaClusteringParametersProperty()));
+
         // Block Building method
         addRow(rows++, boldLabel("Block Building Method"), boundLabel(model.blockBuildingProperty()));
 
