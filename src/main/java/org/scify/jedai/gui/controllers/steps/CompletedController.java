@@ -12,6 +12,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -109,7 +110,6 @@ public class CompletedController {
         tabSelectionModel = resultsTabPane.getSelectionModel();
 
         // Add radio buttons for configuring automatic configuration options
-        // todo: Show in UI that holistic grid is not supported
         Label l = new Label("Automatic Configuration Type");
         l.setFont(Font.font("System", FontWeight.BOLD, 12));
         autoConfigContainer.getChildren().add(l);
@@ -129,6 +129,32 @@ public class CompletedController {
         );
         RadioButtonHelper.createButtonGroup(autoConfigContainer, searchTypes, model.searchTypeProperty());
 
+        // Get the last 2 radio buttons of the container, which are the search types, in order to be able to disable
+        // them later
+        List<Node> searchRadioBtns = new ArrayList<>();
+        List<Node> autoConfigNodes = autoConfigContainer.getChildren();
+        for (Node n : autoConfigNodes) {
+            if (n instanceof RadioButton) {
+                if (autoConfigNodes.indexOf(n) > autoConfigNodes.size() - 3) {
+                    searchRadioBtns.add(n);
+                }
+            }
+        }
+
+        // Add listener to disable search type selection for holistic auto configuration
+        model.autoConfigTypeProperty().addListener((observable, oldValue, newValue) -> {
+            // If the new selection is holistic search, select random search
+            if (newValue.equals(JedaiOptions.AUTOCONFIG_HOLISTIC)) {
+                model.setSearchType(JedaiOptions.AUTOCONFIG_RANDOMSEARCH);
+            }
+
+            // Enable or disable the radio buttons
+            toggleNodes(searchRadioBtns, newValue.equals(JedaiOptions.AUTOCONFIG_HOLISTIC));
+        });
+
+        // Enable or disable the radio buttons depending on the initially selected auto-config. type
+        toggleNodes(searchRadioBtns, model.getAutoConfigType().equals(JedaiOptions.AUTOCONFIG_HOLISTIC));
+
         // Add output options to the output format combobox
         ObservableList<String> outputFormats = FXCollections.observableArrayList(
                 JedaiOptions.CSV,
@@ -145,6 +171,18 @@ public class CompletedController {
 
         // Setup table for previous results (Workbench)
         initGrid();
+    }
+
+    /**
+     * Enable or disable a list of nodes
+     *
+     * @param nodes   Nodes to enable or disable
+     * @param disable Whether to disable the nodes or enable them
+     */
+    private void toggleNodes(List<Node> nodes, boolean disable) {
+        for (Node n : nodes) {
+            n.setDisable(disable);
+        }
     }
 
     /**
