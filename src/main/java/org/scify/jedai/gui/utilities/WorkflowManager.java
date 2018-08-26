@@ -413,12 +413,19 @@ public class WorkflowManager {
         List<AbstractBlock> blocks;
         if (blBu != null) {
             if (erType.equals(JedaiOptions.DIRTY_ER)) {
-                // todo: check if schema clustering can he used here
-                blocks = blBu.getBlocks(profilesD1);
+                if (clusters == null) {
+                    // Dirty ER without schema clustering
+                    blocks = blBu.getBlocks(profilesD1);
+                } else {
+                    // Dirty ER with schema clustering
+                    blocks = blBu.getBlocks(profilesD1, null, clusters);
+                }
             } else {
                 if (clusters == null) {
+                    // Clean-clean ER without schema clustering
                     blocks = blBu.getBlocks(profilesD1, profilesD2);
                 } else {
+                    // Clean-clean ER with schema clustering
                     blocks = blBu.getBlocks(profilesD1, profilesD2, clusters);
                 }
             }
@@ -620,8 +627,13 @@ public class WorkflowManager {
                 // Process the blocks (call appropriate method depending on ER type)
                 final List<AbstractBlock> originalBlocks;
                 if (erType.equals(JedaiOptions.DIRTY_ER)) {
-                    // todo: check if SC can be used in dirty ER...
-                    originalBlocks = blockBuildingMethod.getBlocks(profilesD1);
+                    if (scClusters == null) {
+                        // Dirty ER without schema clustering
+                        originalBlocks = blockBuildingMethod.getBlocks(profilesD1);
+                    } else {
+                        // Dirty ER with schema clustering
+                        originalBlocks = blockBuildingMethod.getBlocks(profilesD1, null, scClusters);
+                    }
                 } else {
                     if (scClusters != null) {
                         // Clean-clean ER with schema clustering
