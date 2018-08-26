@@ -161,6 +161,15 @@ public class WorkflowManager {
      * @param bestIteration Best iteration (optional)
      */
     private void iterateHolisticRandom(Integer bestIteration) {
+        // Check if schema clustering parameters should be set automatically
+        if (model.getSchemaClusteringConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+            if (bestIteration == null) {
+                schemaClusteringMethod.setNextRandomConfiguration();
+            } else {
+                schemaClusteringMethod.setNumberedRandomConfiguration(bestIteration);
+            }
+        }
+
         // Check if block building parameters should be set automatically
         if (model.getBlockBuildingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
             if (bestIteration == null) {
