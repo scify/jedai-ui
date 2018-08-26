@@ -8,7 +8,6 @@ import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
-import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -17,7 +16,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.util.Callback;
 import org.scify.jedai.entitymatching.GroupLinkage;
 import org.scify.jedai.entitymatching.ProfileMatcher;
 import org.scify.jedai.gui.controllers.steps.CompletedController;
@@ -66,16 +64,17 @@ public class WizardController {
     private final IntegerProperty currentStep = new SimpleIntegerProperty(-1);
 
     @FXML
-    public void initialize() throws Exception {
+    public void initialize() {
         // Initialize ArrayLists with step texts & descriptions
         this.stepTexts = Arrays.asList(
                 "Welcome",
                 "Step 1: Data Reading",
-                "Step 2: Block Building",
-                "Step 3: Block Cleaning",
-                "Step 4: Comparison Cleaning",
-                "Step 5: Entity Matching",
-                "Step 6: Entity Clustering",
+                "Step 2: Schema Clustering",
+                "Step 3: Block Building",
+                "Step 4: Block Cleaning",
+                "Step 5: Comparison Cleaning",
+                "Step 6: Entity Matching",
+                "Step 7: Entity Clustering",
                 "Selection Confirmation",
                 "Workflow Execution"
         );
@@ -83,6 +82,7 @@ public class WizardController {
         this.stepDescriptions = Arrays.asList(
                 "Welcome to JedAI, an open source, high scalability toolkit that offers out-of-the-box solutions for Entity Resolution over structured (relational) and semi-structured (RDF) data.",
                 "Data Reading transforms the input data into a list of entity profiles.",
+                "Schema Clustering groups together syntactically (not semantically) similar attributes. This can improve the performance of all workflow steps.",
                 "Block Building clusters entities into overlapping blocks in a lazy manner that relies on unsupervised blocking keys: every token in an attribute value forms a key. Blocks are then extracted, based on its equality or on its similarity with other keys.",
                 "Block Cleaning aims to clean a set of overlapping blocks from unnecessary comparisons, which can be either redundant (i.e., repeated) or superfluous (i.e., between non-matching entities). Its methods operate on the coarse level of individual blocks or entities.",
                 "Similar to Block Cleaning, Comparison Cleaning aims to clean a set of blocks from both redundant and superfluous comparisons. Unlike Block Cleaning, its methods operate on the finer granularity of individual comparisons.",
@@ -94,10 +94,11 @@ public class WizardController {
 
         // Initialize hashmap with configuration types
         this.configurationTypes = new HashMap<>();
-        this.configurationTypes.put(2, model.blockBuildingConfigTypeProperty());
-        this.configurationTypes.put(4, model.comparisonCleaningConfigTypeProperty());
-        this.configurationTypes.put(5, model.entityMatchingConfigTypeProperty());
-        this.configurationTypes.put(6, model.entityClusteringConfigTypeProperty());
+        this.configurationTypes.put(2, model.schemaClusteringConfigTypeProperty());
+        this.configurationTypes.put(3, model.blockBuildingConfigTypeProperty());
+        this.configurationTypes.put(5, model.comparisonCleaningConfigTypeProperty());
+        this.configurationTypes.put(6, model.entityMatchingConfigTypeProperty());
+        this.configurationTypes.put(7, model.entityClusteringConfigTypeProperty());
 
         buildSteps();
         initButtons();
@@ -148,15 +149,12 @@ public class WizardController {
         }
     }
 
-    private void buildSteps() throws java.io.IOException {
-        final JavaFXBuilderFactory bf = new JavaFXBuilderFactory();
-
-        final Callback<Class<?>, Object> cb = (clazz) -> injector.getInstance(clazz);
-
+    private void buildSteps() {
         // Specify step FXMLs in order that they should appear
         ArrayList<String> controllers = new ArrayList<>(Arrays.asList(
                 "wizard-fxml/steps/Welcome.fxml",
                 "wizard-fxml/steps/DataReading.fxml",
+                "wizard-fxml/steps/SchemaClustering.fxml",
                 "wizard-fxml/steps/BlockBuilding.fxml",
                 "wizard-fxml/steps/BlockCleaning.fxml",
                 "wizard-fxml/steps/ComparisonCleaning.fxml",
@@ -228,6 +226,16 @@ public class WizardController {
 
                 switch (currentStep.get()) {
                     case 2:
+                        // Schema Clustering
+                        parametersProperty = model.schemaClusteringParametersProperty();
+
+                        methodName = model.getSchemaClustering();
+//                        method = BlockBuildingMethod.getDefaultConfiguration(
+//                                MethodMapping.blockBuildingMethods.get(methodName)
+//                        );
+                        // todo: update for schema clustering
+                        break;
+                    case 3:
                         // Block Building
                         parametersProperty = model.blockBuildingParametersProperty();
 
@@ -237,15 +245,16 @@ public class WizardController {
                         );
 
                         break;
-                    case 4:
+                    case 5:
                         // Comparison Cleaning
+                        // todo: when selecting "no CoCl" and manual configuration, we can't advance to next step
                         parametersProperty = model.comparisonCleaningParametersProperty();
 
                         methodName = model.getComparisonCleaning();
                         method = MethodMapping.getMethodByName(methodName);
 
                         break;
-                    case 5:
+                    case 6:
                         // Entity Matching
                         parametersProperty = model.entityMatchingParametersProperty();
 
@@ -254,7 +263,7 @@ public class WizardController {
                                 new GroupLinkage() : new ProfileMatcher();
 
                         break;
-                    case 6:
+                    case 7:
                         // Entity Clustering
                         parametersProperty = model.entityClusteringParametersProperty();
 
@@ -264,16 +273,18 @@ public class WizardController {
                         break;
                 }
 
+                // Check that the method isn't null
+                if (method == null)
+                    return;
+
                 // Display the configuration modal
-                if (method != null) {
-                    DynamicMethodConfiguration.displayModal(getClass(), injector, method, parametersProperty);
-                }
+                DynamicMethodConfiguration.displayModal(getClass(), injector, method, parametersProperty);
 
                 // If configuration failed, don't go to next step
                 if (!DynamicMethodConfiguration.configurationOk(method, parametersProperty.get())) {
                     return;
                 }
-            } else if (currentStep.get() == 3) {
+            } else if (currentStep.get() == 4) {
                 // Special case: Block Cleaning can have multiple methods. We need to check each one separately
                 for (BlClMethodConfiguration bcmc : model.getBlockCleaningMethods()) {
                     // If the method is enabled and its configuration type is set to manual...
@@ -282,7 +293,8 @@ public class WizardController {
                         IDocumentation method = MethodMapping.getMethodByName(bcmc.getName());
 
                         // Configure the method
-                        DynamicMethodConfiguration.displayModal(getClass(), injector, method, bcmc.manualParametersProperty());
+                        DynamicMethodConfiguration.displayModal(getClass(), injector, method,
+                                bcmc.manualParametersProperty());
 
                         // If configuration failed, don't go to next step
                         if (!DynamicMethodConfiguration.configurationOk(method, bcmc.getManualParameters())) {
