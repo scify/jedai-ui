@@ -7,8 +7,11 @@ import org.scify.jedai.blockprocessing.blockcleaning.SizeBasedBlockPurging;
 import org.scify.jedai.blockprocessing.comparisoncleaning.*;
 import org.scify.jedai.entityclustering.*;
 import org.scify.jedai.gui.utilities.JedaiOptions;
-import org.scify.jedai.utilities.enumerations.BlockBuildingMethod;
-import org.scify.jedai.utilities.enumerations.WeightingScheme;
+import org.scify.jedai.schemaclustering.AttributeNameClustering;
+import org.scify.jedai.schemaclustering.AttributeValueClustering;
+import org.scify.jedai.schemaclustering.HolisticAttributeClustering;
+import org.scify.jedai.schemaclustering.ISchemaClustering;
+import org.scify.jedai.utilities.enumerations.*;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -16,6 +19,7 @@ import java.util.Map;
 
 public class MethodMapping {
     public static final Map<String, BlockBuildingMethod> blockBuildingMethods = createMap();
+    public static final Map<String, SchemaClusteringMethod> schemaClusteringMethods = createSchemaClusteringMap();
 
     /**
      * Return map of block building methods' String names to their enumeration values
@@ -33,6 +37,19 @@ public class MethodMapping {
         result.put(JedaiOptions.SUFFIX_ARRAYS_BLOCKING_EXTENDED, BlockBuildingMethod.EXTENDED_SUFFIX_ARRAYS);
         result.put(JedaiOptions.LSH_SUPERBIT_BLOCKING, BlockBuildingMethod.LSH_SUPERBIT_BLOCKING);
         result.put(JedaiOptions.LSH_MINHASH_BLOCKING, BlockBuildingMethod.LSH_MINHASH_BLOCKING);
+        return Collections.unmodifiableMap(result);
+    }
+
+    /**
+     * Return map of schema clsutering methods' String names to their enumeration values
+     *
+     * @return Mapping of schema clustering method names to enum values
+     */
+    private static Map<String, SchemaClusteringMethod> createSchemaClusteringMap() {
+        Map<String, SchemaClusteringMethod> result = new HashMap<>();
+        result.put(JedaiOptions.ATTRIBUTE_NAME_CLUSTERING, SchemaClusteringMethod.ATTRIBUTE_NAME_CLUSTERING);
+        result.put(JedaiOptions.ATTRIBUTE_VALUE_CLUSTERING, SchemaClusteringMethod.ATTRIBUTE_VALUE_CLUSTERING);
+        result.put(JedaiOptions.HOLISTIC_ATTRIBUTE_CLUSTERING, SchemaClusteringMethod.HOLISTIC_ATTRIBUTE_CLUSTERING);
         return Collections.unmodifiableMap(result);
     }
 
@@ -66,6 +83,27 @@ public class MethodMapping {
         }
 
         return method;
+    }
+
+    public static ISchemaClustering getSchemaClusteringMethodByName(String methodName) {
+        ISchemaClustering schemaClustering = null;
+
+        switch (methodName) {
+            case JedaiOptions.ATTRIBUTE_NAME_CLUSTERING:
+                schemaClustering = new AttributeNameClustering(
+                        RepresentationModel.CHARACTER_TRIGRAMS, SimilarityMetric.ENHANCED_JACCARD_SIMILARITY);
+                break;
+            case JedaiOptions.ATTRIBUTE_VALUE_CLUSTERING:
+                schemaClustering = new AttributeValueClustering(
+                        RepresentationModel.CHARACTER_TRIGRAMS, SimilarityMetric.ENHANCED_JACCARD_SIMILARITY);
+                break;
+            case JedaiOptions.HOLISTIC_ATTRIBUTE_CLUSTERING:
+                schemaClustering = new HolisticAttributeClustering(
+                        RepresentationModel.CHARACTER_TRIGRAMS, SimilarityMetric.ENHANCED_JACCARD_SIMILARITY);
+                break;
+        }
+
+        return schemaClustering;
     }
 
     public static IBlockProcessing getMethodByName(String method) {

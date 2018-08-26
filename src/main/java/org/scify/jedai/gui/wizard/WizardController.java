@@ -230,10 +230,11 @@ public class WizardController {
                         parametersProperty = model.schemaClusteringParametersProperty();
 
                         methodName = model.getSchemaClustering();
-//                        method = BlockBuildingMethod.getDefaultConfiguration(
-//                                MethodMapping.blockBuildingMethods.get(methodName)
-//                        );
-                        // todo: update for schema clustering
+//                        method = SchemaClusteringMethod.getModel(
+//                                RepresentationModel.CHARACTER_TRIGRAMS,
+//                                SimilarityMetric.ENHANCED_JACCARD_SIMILARITY,
+//                                MethodMapping.schemaClusteringMethods.get(methodName));
+                        // todo: schema clustering does not extend IDocumentation :\
                         break;
                     case 3:
                         // Block Building
