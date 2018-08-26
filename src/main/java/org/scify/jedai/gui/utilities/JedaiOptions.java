@@ -17,6 +17,12 @@ public class JedaiOptions {
     public static final String SERIALIZED = "Serialized";
     public static final String XML = "XML";
 
+    // Schema Clustering Methods
+    public static final String NO_SCHEMA_CLUSTERING = "No Schema Clustering";
+    public static final String ATTRIBUTE_NAME_CLUSTERING = "Attribute Name Clustering";
+    public static final String ATTRIBUTE_VALUE_CLUSTERING = "Attribute Value Clustering";
+    public static final String HOLISTIC_ATTRIBUTE_CLUSTERING = "Holistic Attribute Clustering";
+
     // Block Building methods
     public static final String STANDARD_TOKEN_BUILDING = "Standard/Token Blocking";
     public static final String SORTED_NEIGHBORHOOD = "Sorted Neighborhood";

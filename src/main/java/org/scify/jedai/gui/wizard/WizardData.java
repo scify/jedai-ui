@@ -11,7 +11,7 @@ public class WizardData {
     // Boolean that indicates whether a workflow is currently running
     private final SimpleBooleanProperty workflowRunning = new SimpleBooleanProperty(false);
 
-    // Step 1: Data Reading
+    // Data Reading
     private final StringProperty erType = new SimpleStringProperty();
 
     private final StringProperty entityProfilesD1Type = new SimpleStringProperty();
@@ -23,25 +23,30 @@ public class WizardData {
     private final StringProperty groundTruthType = new SimpleStringProperty();
     private final ListProperty<JPair<String, Object>> groundTruthParameters = new SimpleListProperty<>();
 
-    // Step 2: Block Building
+    // Schema Clustering
+    private final StringProperty schemaClustering = new SimpleStringProperty();
+    private final StringProperty schemaClusteringConfigType = new SimpleStringProperty();
+    private final ListProperty<JPair<String, Object>> schemaClusteringParameters = new SimpleListProperty<>();
+
+    // Block Building
     private final StringProperty blockBuilding = new SimpleStringProperty();
     private final StringProperty blockBuildingConfigType = new SimpleStringProperty();
     private final ListProperty<JPair<String, Object>> blockBuildingParameters = new SimpleListProperty<>();
 
-    // Step 3: Block Cleaning
+    // Block Cleaning
     private final ListProperty<BlClMethodConfiguration> blockCleaningMethods = new SimpleListProperty<>();
 
-    // Step 4: Comparison Cleaning
+    // Comparison Cleaning
     private final StringProperty comparisonCleaning = new SimpleStringProperty();
     private final StringProperty comparisonCleaningConfigType = new SimpleStringProperty();
     private final ListProperty<JPair<String, Object>> comparisonCleaningParameters = new SimpleListProperty<>();
 
-    // Step 5: Entity Matching
+    // Entity Matching
     private final StringProperty entityMatching = new SimpleStringProperty();
     private final StringProperty entityMatchingConfigType = new SimpleStringProperty();
     private final ListProperty<JPair<String, Object>> entityMatchingParameters = new SimpleListProperty<>();
 
-    // Step 6: Entity Clustering
+    // Entity Clustering
     private final StringProperty entityClustering = new SimpleStringProperty();
     private final StringProperty entityClusteringConfigType = new SimpleStringProperty();
     private final ListProperty<JPair<String, Object>> entityClusteringParameters = new SimpleListProperty<>();
@@ -59,7 +64,7 @@ public class WizardData {
     public static WizardData cloneData(WizardData data) {
         WizardData clone = new WizardData();
 
-        // Step 1: Data Reading
+        // Data Reading
         clone.setErType(data.getErType());
 
         clone.setEntityProfilesD1Type(data.getEntityProfilesD1Type());
@@ -73,13 +78,20 @@ public class WizardData {
         clone.setGroundTruthType(data.getGroundTruthType());
         clone.setGroundTruthParameters(FXCollections.observableArrayList(data.getGroundTruthParameters()));
 
-        // Step 2: Block Building
+        // Schema Clustering
+        clone.setSchemaClustering(data.getSchemaClustering());
+        clone.setSchemaClusteringConfigType(data.getSchemaClusteringConfigType());
+        if (data.getSchemaClusteringParameters() != null)
+            clone.setSchemaClusteringParameters(
+                    FXCollections.observableArrayList(data.getSchemaClusteringParameters()));
+
+        // Block Building
         clone.setBlockBuilding(data.getBlockBuilding());
         clone.setBlockBuildingConfigType(data.getBlockBuildingConfigType());
         if (data.getBlockBuildingParameters() != null)
             clone.setBlockBuildingParameters(FXCollections.observableArrayList(data.getBlockBuildingParameters()));
 
-        // Step 3: Block Cleaning
+        // Block Cleaning
         ObservableList<BlClMethodConfiguration> newBlClMethods = FXCollections.observableArrayList();
         for (BlClMethodConfiguration method : data.getBlockCleaningMethods()) {
             // Create new object with the old one's properties to add to the new list
@@ -87,20 +99,20 @@ public class WizardData {
         }
         clone.setBlockCleaningMethods(newBlClMethods);
 
-        // Step 4: Comparison Cleaning
+        // Comparison Cleaning
         clone.setComparisonCleaning(data.getComparisonCleaning());
         clone.setComparisonCleaningConfigType(data.getComparisonCleaningConfigType());
         if (data.getComparisonCleaningParameters() != null)
             clone.setComparisonCleaningParameters(
                     FXCollections.observableArrayList(data.getComparisonCleaningParameters()));
 
-        // Step 5: Entity Matching
+        // Entity Matching
         clone.setEntityMatching(data.getEntityMatching());
         clone.setEntityMatchingConfigType(data.getEntityMatchingConfigType());
         if (data.getEntityMatchingParameters() != null)
             clone.setEntityMatchingParameters(FXCollections.observableArrayList(data.getEntityMatchingParameters()));
 
-        // Step 6: Entity Clustering
+        // Entity Clustering
         clone.setEntityClustering(data.getEntityClustering());
         clone.setEntityClusteringConfigType(data.getEntityClusteringConfigType());
         if (data.getEntityClusteringParameters() != null)
@@ -120,12 +132,14 @@ public class WizardData {
         }
 
         // Reset advanced configuration parameters (except for Data Reading)
+        schemaClusteringParametersProperty().clear();
         blockBuildingParametersProperty().clear();
         comparisonCleaningParametersProperty().clear();
         entityClusteringParametersProperty().clear();
         entityMatchingParametersProperty().clear();
 
         // Reset radio buttons
+        schemaClusteringProperty().setValue(JedaiOptions.NO_SCHEMA_CLUSTERING);
         blockBuildingProperty().setValue(JedaiOptions.STANDARD_TOKEN_BUILDING);
         comparisonCleaningProperty().setValue(JedaiOptions.NO_CLEANING);
         entityMatchingProperty().setValue(JedaiOptions.GROUP_LINKAGE);
@@ -236,6 +250,42 @@ public class WizardData {
 
     public void setGroundTruthParameters(ObservableList<JPair<String, Object>> groundTruthParameters) {
         this.groundTruthParameters.set(groundTruthParameters);
+    }
+
+    public String getSchemaClustering() {
+        return schemaClustering.get();
+    }
+
+    public StringProperty schemaClusteringProperty() {
+        return schemaClustering;
+    }
+
+    public void setSchemaClustering(String schemaClustering) {
+        this.schemaClustering.set(schemaClustering);
+    }
+
+    public String getSchemaClusteringConfigType() {
+        return schemaClusteringConfigType.get();
+    }
+
+    public StringProperty schemaClusteringConfigTypeProperty() {
+        return schemaClusteringConfigType;
+    }
+
+    public void setSchemaClusteringConfigType(String schemaClusteringConfigType) {
+        this.schemaClusteringConfigType.set(schemaClusteringConfigType);
+    }
+
+    public ObservableList<JPair<String, Object>> getSchemaClusteringParameters() {
+        return schemaClusteringParameters.get();
+    }
+
+    public ListProperty<JPair<String, Object>> schemaClusteringParametersProperty() {
+        return schemaClusteringParameters;
+    }
+
+    public void setSchemaClusteringParameters(ObservableList<JPair<String, Object>> schemaClusteringParameters) {
+        this.schemaClusteringParameters.set(schemaClusteringParameters);
     }
 
     public String getBlockBuilding() {
