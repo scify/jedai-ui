@@ -23,6 +23,10 @@ import org.scify.jedai.entitymatching.GroupLinkage;
 import org.scify.jedai.entitymatching.IEntityMatching;
 import org.scify.jedai.entitymatching.ProfileMatcher;
 import org.scify.jedai.gui.controllers.DynamicConfigurationController;
+import org.scify.jedai.schemaclustering.AttributeNameClustering;
+import org.scify.jedai.schemaclustering.AttributeValueClustering;
+import org.scify.jedai.schemaclustering.HolisticAttributeClustering;
+import org.scify.jedai.schemaclustering.ISchemaClustering;
 import org.scify.jedai.utilities.IDocumentation;
 import org.scify.jedai.utilities.enumerations.BlockBuildingMethod;
 import org.scify.jedai.utilities.enumerations.RepresentationModel;
@@ -276,6 +280,43 @@ public class DynamicMethodConfiguration {
     }
 
     /**
+     * Given a schema clustering method name and list of parameters, create an instance of the method configured with
+     * the specified parameters. Used for manual configuration.
+     *
+     * @param methodName Name of the block cleaning method
+     * @param parameters Parameters for method
+     * @return Configured schema clustering method
+     */
+    public static ISchemaClustering configureSchemaClusteringMethod(String methodName,
+                                                                    List<JPair<String, Object>> parameters) {
+        ISchemaClustering processingMethod = null;
+
+        // Get appropriate processing method
+        switch (methodName) {
+            case JedaiOptions.ATTRIBUTE_NAME_CLUSTERING:
+                processingMethod = new AttributeNameClustering(
+                        (RepresentationModel) parameters.get(0).getRight(),
+                        (SimilarityMetric) parameters.get(1).getRight()
+                );
+                break;
+            case JedaiOptions.ATTRIBUTE_VALUE_CLUSTERING:
+                processingMethod = new AttributeValueClustering(
+                        (RepresentationModel) parameters.get(0).getRight(),
+                        (SimilarityMetric) parameters.get(1).getRight()
+                );
+                break;
+            case JedaiOptions.HOLISTIC_ATTRIBUTE_CLUSTERING:
+                processingMethod = new HolisticAttributeClustering(
+                        (RepresentationModel) parameters.get(0).getRight(),
+                        (SimilarityMetric) parameters.get(1).getRight()
+                );
+                break;
+        }
+
+        return processingMethod;
+    }
+
+    /**
      * Given a Entity Clustering method name and a list of parameters, initialize and return that method with these
      * parameters. Assumes the parameters are of the correct type (they are cast) and correct number.
      *
@@ -345,7 +386,6 @@ public class DynamicMethodConfiguration {
         RepresentationModel rep;
         SimilarityMetric simMetric;
 
-        //todo: The default values could be taken from the JSON configurations of the methods
         switch (emMethodName) {
             case JedaiOptions.GROUP_LINKAGE:
                 double simThr = (parameters != null) ? (double) parameters.get(2).getRight() : 0.5;

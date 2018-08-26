@@ -66,16 +66,16 @@ public class WorkflowManager {
      * Create instances of the methods that will be used for running the workflow
      */
     public void createMethodInstances() {
-        // Get schema clustering method
-//        SchemaClusteringMethod schemaClustering =
-//                MethodMapping.schemaClusteringMethods.get(model.getSchemaClustering());
-
         // Get schema clustering method (will become null if no schema clustering method was selected)
         if (!model.getSchemaClusteringConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
+            // Default (or automatic, later) configuration of schema clustering
             schemaClusteringMethod = MethodMapping.getSchemaClusteringMethodByName(model.getSchemaClustering());
         } else {
-            // todo: add manual configuration of schema clustering...
-            schemaClusteringMethod = MethodMapping.getSchemaClusteringMethodByName(model.getSchemaClustering());
+            // Manual configuration of schema clustering
+            schemaClusteringMethod = DynamicMethodConfiguration.configureSchemaClusteringMethod(
+                    model.getSchemaClustering(),
+                    model.getSchemaClusteringParameters()
+            );
         }
 
         // Get block building method
