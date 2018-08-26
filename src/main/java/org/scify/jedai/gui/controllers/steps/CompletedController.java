@@ -248,7 +248,7 @@ public class CompletedController {
             long startTime = System.currentTimeMillis();
 
             try {
-                // Step 1: Data reading
+                // Data reading
                 Platform.runLater(() -> statusLabel.setText("Reading datasets..."));
                 workflowMgr.readDatasets(true);
 

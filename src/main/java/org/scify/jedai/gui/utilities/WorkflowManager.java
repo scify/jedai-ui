@@ -1,5 +1,6 @@
 package org.scify.jedai.gui.utilities;
 
+import gnu.trove.map.TObjectIntMap;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
@@ -14,6 +15,7 @@ import org.scify.jedai.entitymatching.IEntityMatching;
 import org.scify.jedai.gui.model.BlClMethodConfiguration;
 import org.scify.jedai.gui.wizard.MethodMapping;
 import org.scify.jedai.gui.wizard.WizardData;
+import org.scify.jedai.schemaclustering.ISchemaClustering;
 import org.scify.jedai.utilities.BlocksPerformance;
 import org.scify.jedai.utilities.ClustersPerformance;
 import org.scify.jedai.utilities.datastructures.AbstractDuplicatePropagation;
@@ -32,6 +34,7 @@ public class WorkflowManager {
     private List<EntityProfile> profilesD2;
     private AbstractDuplicatePropagation duplicatePropagation;
 
+    private ISchemaClustering schemaClusteringMethod;
     private IBlockBuilding blockBuildingMethod;
     private List<IBlockProcessing> blClMethods;
     private IBlockProcessing comparisonCleaningMethod;
@@ -63,6 +66,18 @@ public class WorkflowManager {
      * Create instances of the methods that will be used for running the workflow
      */
     public void createMethodInstances() {
+        // Get schema clustering method
+//        SchemaClusteringMethod schemaClustering =
+//                MethodMapping.schemaClusteringMethods.get(model.getSchemaClustering());
+
+        // Get schema clustering method (will become null if no schema clustering method was selected)
+        if (!model.getSchemaClusteringConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
+            schemaClusteringMethod = MethodMapping.getSchemaClusteringMethodByName(model.getSchemaClustering());
+        } else {
+            // todo: add manual configuration of schema clustering...
+            schemaClusteringMethod = MethodMapping.getSchemaClusteringMethodByName(model.getSchemaClustering());
+        }
+
         // Get block building method
         BlockBuildingMethod blockingWorkflow = MethodMapping.blockBuildingMethods.get(model.getBlockBuilding());
 
@@ -232,7 +247,7 @@ public class WorkflowManager {
                     iterateHolisticRandom(null);
 
                     // Run a workflow and check its F-measure
-                    ClustersPerformance clp = this.runWorkflow(statusLabel, blockBuildingMethod,
+                    ClustersPerformance clp = this.runWorkflow(statusLabel, schemaClusteringMethod, blockBuildingMethod,
                             blClMethods, comparisonCleaningMethod, entityMatchingMethod, ec, false);
 
                     // If there was a problem with this random workflow, skip this iteration
@@ -255,8 +270,8 @@ public class WorkflowManager {
                 iterateHolisticRandom(bestIteration);
 
                 // Run the final workflow (whether there was an automatic configuration or not)
-                return this.runWorkflow(statusLabel, blockBuildingMethod, blClMethods, comparisonCleaningMethod,
-                        entityMatchingMethod, ec, true);
+                return this.runWorkflow(statusLabel, schemaClusteringMethod, blockBuildingMethod, blClMethods,
+                        comparisonCleaningMethod, entityMatchingMethod, ec, true);
             } else {
                 // Step-by-step automatic configuration. Set random or grid depending on the selected search type.
                 return runStepByStepWorkflow(
@@ -266,8 +281,8 @@ public class WorkflowManager {
             }
         } else {
             // Run workflow without any automatic configuration
-            return this.runWorkflow(statusLabel, blockBuildingMethod, blClMethods, comparisonCleaningMethod,
-                    entityMatchingMethod, ec, true);
+            return this.runWorkflow(statusLabel, schemaClusteringMethod, blockBuildingMethod, blClMethods,
+                    comparisonCleaningMethod, entityMatchingMethod, ec, true);
         }
     }
 
@@ -359,6 +374,7 @@ public class WorkflowManager {
      * Run a workflow with the given methods and return its ClustersPerformance
      *
      * @param statusLabel Label to set status on
+     * @param sc          Schema clustering method
      * @param blBu        Block building method
      * @param blClMethods List of block cleaning methods
      * @param coCl        Comparison cleaning method
@@ -368,24 +384,43 @@ public class WorkflowManager {
      * @return ClustersPerformance object of the executed workflow
      * @throws Exception In case the Entity Matching method is null (shouldn't happen though)
      */
-    private ClustersPerformance runWorkflow(Label statusLabel, IBlockBuilding blBu, List<IBlockProcessing> blClMethods,
-                                            IBlockProcessing coCl, IEntityMatching em, IEntityClustering ec,
-                                            boolean output) throws Exception {
+    private ClustersPerformance runWorkflow(Label statusLabel, ISchemaClustering sc, IBlockBuilding blBu,
+                                            List<IBlockProcessing> blClMethods, IBlockProcessing coCl,
+                                            IEntityMatching em, IEntityClustering ec, boolean output) throws Exception {
         // Initialize a few variables
         double overheadStart = System.currentTimeMillis();
         double overheadEnd;
         BlocksPerformance blp;
 
-        // Run step 2
+        // Run schema clustering (if it's not null)
+        if (output)
+            Platform.runLater(() -> statusLabel.setText("Running schema clustering..."));
+
+        TObjectIntMap<String>[] clusters = null;
+        if (sc != null) {
+            // Run schema clustering
+            if (erType.equals(JedaiOptions.DIRTY_ER)) {
+                clusters = sc.getClusters(profilesD1);
+            } else {
+                clusters = sc.getClusters(profilesD1, profilesD2);
+            }
+        }
+
+        // Run block building
         if (output)
             Platform.runLater(() -> statusLabel.setText("Running block building..."));
 
         List<AbstractBlock> blocks;
         if (blBu != null) {
             if (erType.equals(JedaiOptions.DIRTY_ER)) {
+                // todo: check if schema clustering can he used here
                 blocks = blBu.getBlocks(profilesD1);
             } else {
-                blocks = blBu.getBlocks(profilesD1, profilesD2);
+                if (clusters == null) {
+                    blocks = blBu.getBlocks(profilesD1, profilesD2);
+                } else {
+                    blocks = blBu.getBlocks(profilesD1, profilesD2, clusters);
+                }
             }
         } else {
             // Show error
@@ -406,7 +441,7 @@ public class WorkflowManager {
             blp.printStatistics(overheadEnd - overheadStart, blBu.getMethodConfiguration(),
                     blBu.getMethodName());
 
-        // Step 3: Block Cleaning
+        // Run Block Cleaning
         if (output)
             Platform.runLater(() -> statusLabel.setText("Running block cleaning..."));
 
@@ -421,7 +456,7 @@ public class WorkflowManager {
             }
         }
 
-        // Step 4: Comparison Cleaning
+        // Run Comparison Cleaning
         if (output)
             Platform.runLater(() -> statusLabel.setText("Running comparison cleaning..."));
         if (coCl != null) {
@@ -432,7 +467,7 @@ public class WorkflowManager {
             }
         }
 
-        // Step 5: Entity Matching
+        // Run Entity Matching
         if (output)
             Platform.runLater(() -> statusLabel.setText("Running entity matching..."));
         SimilarityPairs simPairs;
@@ -446,7 +481,7 @@ public class WorkflowManager {
             simPairs = em.executeComparisons(blocks, profilesD1, profilesD2);
         }
 
-        // Step 6: Entity Clustering
+        // Run Entity Clustering
         if (output)
             Platform.runLater(() -> statusLabel.setText("Running entity clustering..."));
         overheadStart = System.currentTimeMillis();
@@ -539,6 +574,29 @@ public class WorkflowManager {
         double originalComparisons;
         int iterationsNum;
 
+        // Local optimization of Schema Clustering
+        TObjectIntMap<String>[] scClusters = null;
+        if (!model.getSchemaClustering().equals(JedaiOptions.NO_SCHEMA_CLUSTERING)) {
+            Platform.runLater(() -> statusLabel.setText("Schema Clustering optimization..."));
+            // todo: check if it should be optimized together with block building!
+
+            // Optimize schema clustering
+//            if (model.getSchemaClusteringConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+//                iterationsNum = random ? NO_OF_TRIALS : blockBuildingMethod.getNumberOfGridConfigurations();
+//
+//            }
+
+            // Execute schema clustering method
+            ISchemaClustering sc = MethodMapping.getSchemaClusteringMethodByName(model.getSchemaClustering());
+
+            if (erType.equals(JedaiOptions.DIRTY_ER)) {
+                scClusters = sc.getClusters(profilesD1);
+            } else {
+                scClusters = sc.getClusters(profilesD1, profilesD2);
+            }
+
+        }
+
         // Local optimization of Block Building
         Platform.runLater(() -> statusLabel.setText("Block Building optimization..."));
 
@@ -562,9 +620,16 @@ public class WorkflowManager {
                 // Process the blocks (call appropriate method depending on ER type)
                 final List<AbstractBlock> originalBlocks;
                 if (erType.equals(JedaiOptions.DIRTY_ER)) {
+                    // todo: check if SC can be used in dirty ER...
                     originalBlocks = blockBuildingMethod.getBlocks(profilesD1);
                 } else {
-                    originalBlocks = blockBuildingMethod.getBlocks(profilesD1, profilesD2);
+                    if (scClusters != null) {
+                        // Clean-clean ER with schema clustering
+                        originalBlocks = blockBuildingMethod.getBlocks(profilesD1, profilesD2, scClusters);
+                    } else {
+                        // Clean-clean ER without schema clustering
+                        originalBlocks = blockBuildingMethod.getBlocks(profilesD1, profilesD2);
+                    }
                 }
 
                 if (originalBlocks.isEmpty()) {
