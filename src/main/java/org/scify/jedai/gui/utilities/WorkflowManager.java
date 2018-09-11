@@ -13,6 +13,7 @@ import org.scify.jedai.datamodel.SimilarityPairs;
 import org.scify.jedai.entityclustering.IEntityClustering;
 import org.scify.jedai.entitymatching.IEntityMatching;
 import org.scify.jedai.gui.model.BlClMethodConfiguration;
+import org.scify.jedai.gui.model.WorkflowResult;
 import org.scify.jedai.gui.wizard.MethodMapping;
 import org.scify.jedai.gui.wizard.WizardData;
 import org.scify.jedai.schemaclustering.ISchemaClustering;
@@ -28,6 +29,7 @@ public class WorkflowManager {
     private final static int NO_OF_TRIALS = 100;
     private final WizardData model;
     private final String erType;
+    private final List<WorkflowResult> performancePerStep;
 
     private EquivalenceCluster[] entityClusters;
     private List<EntityProfile> profilesD1;
@@ -44,6 +46,9 @@ public class WorkflowManager {
     public WorkflowManager(WizardData model) {
         this.model = model;
         this.erType = model.getErType();
+
+        // Initialize performance per step list
+        this.performancePerStep = new ArrayList<>();
     }
 
     public List<EntityProfile> getProfilesD1() {
@@ -352,12 +357,12 @@ public class WorkflowManager {
      * Process blocks using a given block processing method
      *
      * @param duProp        Duplicate propagation (from ground-truth)
-     * @param output        Set to true to print clusters performance
+     * @param finalRun      Set to true to print clusters performance
      * @param blocks        Blocks to process
      * @param currentMethod Method to process the blocks with
      * @return Processed list of blocks
      */
-    private List<AbstractBlock> runBlockProcessing(AbstractDuplicatePropagation duProp, boolean output,
+    private List<AbstractBlock> runBlockProcessing(AbstractDuplicatePropagation duProp, boolean finalRun,
                                                    List<AbstractBlock> blocks, IBlockProcessing currentMethod) {
         double overheadStart;
         double overheadEnd;
@@ -366,14 +371,23 @@ public class WorkflowManager {
 
         if (!blocks.isEmpty()) {
             blocks = currentMethod.refineBlocks(blocks);
-
-            // Print blocks performance
             overheadEnd = System.currentTimeMillis();
-            blp = new BlocksPerformance(blocks, duProp);
-            blp.setStatistics();
-            if (output)
-                blp.printStatistics(overheadEnd - overheadStart, currentMethod.getMethodConfiguration(),
+
+            if (finalRun) {
+                // Print blocks performance
+                blp = new BlocksPerformance(blocks, duProp);
+                blp.setStatistics();
+
+                double totalTime = overheadEnd - overheadStart;
+                blp.printStatistics(totalTime, currentMethod.getMethodConfiguration(),
                         currentMethod.getMethodName());
+
+                // Save the performance of block processing
+                performancePerStep.add(
+                        new WorkflowResult(currentMethod.getMethodName(), blp.getPc(), blp.getPq(), blp.getFMeasure(),
+                                totalTime, -1, -1, -1)
+                );
+            }
         }
 
         return blocks;
@@ -389,20 +403,21 @@ public class WorkflowManager {
      * @param coCl        Comparison cleaning method
      * @param em          Entity matching method
      * @param ec          Entity clustering method
-     * @param output      Set to true to print messages while running workflow
+     * @param finalRun    Set to true to print messages while running workflow & save performance of each step
      * @return ClustersPerformance object of the executed workflow
      * @throws Exception In case the Entity Matching method is null (shouldn't happen though)
      */
     private ClustersPerformance runWorkflow(Label statusLabel, ISchemaClustering sc, IBlockBuilding blBu,
                                             List<IBlockProcessing> blClMethods, IBlockProcessing coCl,
-                                            IEntityMatching em, IEntityClustering ec, boolean output) throws Exception {
+                                            IEntityMatching em, IEntityClustering ec, boolean finalRun)
+            throws Exception {
         // Initialize a few variables
         double overheadStart = System.currentTimeMillis();
         double overheadEnd;
         BlocksPerformance blp;
 
         // Run schema clustering (if it's not null)
-        if (output)
+        if (finalRun)
             Platform.runLater(() -> statusLabel.setText("Running schema clustering..."));
 
         TObjectIntMap<String>[] clusters = null;
@@ -416,7 +431,7 @@ public class WorkflowManager {
         }
 
         // Run block building
-        if (output)
+        if (finalRun)
             Platform.runLater(() -> statusLabel.setText("Running block building..."));
 
         List<AbstractBlock> blocks;
@@ -446,25 +461,35 @@ public class WorkflowManager {
             return null;
         }
 
-        if (output)
+        if (finalRun)
             System.out.println("Original blocks\t:\t" + blocks.size());
 
-        // Print blocks performance
+        // Get blocks performance to print and
         overheadEnd = System.currentTimeMillis();
         blp = new BlocksPerformance(blocks, duplicatePropagation);
         blp.setStatistics();
-        if (output)
-            blp.printStatistics(overheadEnd - overheadStart, blBu.getMethodConfiguration(),
+        if (finalRun) {
+            double totalTime = overheadEnd - overheadStart;
+
+            // Print performance
+            blp.printStatistics(totalTime, blBu.getMethodConfiguration(),
                     blBu.getMethodName());
 
+            // Save the performance of block building
+            performancePerStep.add(
+                    new WorkflowResult("Block Building", blp.getPc(), blp.getPq(), blp.getFMeasure(),
+                            totalTime, -1, -1, -1)
+            );
+        }
+
         // Run Block Cleaning
-        if (output)
+        if (finalRun)
             Platform.runLater(() -> statusLabel.setText("Running block cleaning..."));
 
         if (blClMethods != null && !blClMethods.isEmpty()) {
             // Execute the methods
             for (IBlockProcessing currentMethod : blClMethods) {
-                blocks = runBlockProcessing(duplicatePropagation, output, blocks, currentMethod);
+                blocks = runBlockProcessing(duplicatePropagation, finalRun, blocks, currentMethod);
 
                 if (blocks.isEmpty()) {
                     return null;
@@ -473,10 +498,10 @@ public class WorkflowManager {
         }
 
         // Run Comparison Cleaning
-        if (output)
+        if (finalRun)
             Platform.runLater(() -> statusLabel.setText("Running comparison cleaning..."));
         if (coCl != null) {
-            blocks = runBlockProcessing(duplicatePropagation, output, blocks, coCl);
+            blocks = runBlockProcessing(duplicatePropagation, finalRun, blocks, coCl);
 
             if (blocks.isEmpty()) {
                 return null;
@@ -484,7 +509,7 @@ public class WorkflowManager {
         }
 
         // Run Entity Matching
-        if (output)
+        if (finalRun)
             Platform.runLater(() -> statusLabel.setText("Running entity matching..."));
         SimilarityPairs simPairs;
 
@@ -498,7 +523,7 @@ public class WorkflowManager {
         }
 
         // Run Entity Clustering
-        if (output)
+        if (finalRun)
             Platform.runLater(() -> statusLabel.setText("Running entity clustering..."));
         overheadStart = System.currentTimeMillis();
 
@@ -508,7 +533,7 @@ public class WorkflowManager {
         overheadEnd = System.currentTimeMillis();
         ClustersPerformance clp = new ClustersPerformance(entityClusters, duplicatePropagation);
         clp.setStatistics();
-        if (output)
+        if (finalRun)
             clp.printStatistics(overheadEnd - overheadStart, ec.getMethodName(),
                     ec.getMethodConfiguration());
 
