@@ -55,11 +55,12 @@ public class CompletedController {
     public TextArea logTextArea;
     public Label totalTimeLabel;
     public TabPane resultsTabPane;
-    public TableView<WorkflowResult> workbenchTable;
     public Button exploreBtn;
     public VBox autoConfigContainer;
     public ComboBox outputFormatCombobox;
     public Label statusLabel;
+    public TableView<WorkflowResult> workbenchTable;    // Old table with results (to be removed)
+    public TreeTableView resultsTable;                  // Tree table with results
 
     private SingleSelectionModel<Tab> tabSelectionModel;
     private final ObservableList<WorkflowResult> tableData = FXCollections.observableArrayList();
@@ -172,10 +173,11 @@ public class CompletedController {
 
         // Setup table for previous results (Workbench)
         initGrid();
+        initResultsGrid();  // New grid
     }
 
     /**
-     * Enable or disable a list of nodes
+     * Enable or disable a list of nodes (used for the automatic configuration radio buttons)
      *
      * @param nodes   Nodes to enable or disable
      * @param disable Whether to disable the nodes or enable them
@@ -184,6 +186,14 @@ public class CompletedController {
         for (Node n : nodes) {
             n.setDisable(disable);
         }
+    }
+
+    /**
+     * Initialize the workbench treeview grid which shows the results of previous JedAI runs.
+     */
+    private void initResultsGrid() {
+        resultsTable.setEditable(false);
+        // todo
     }
 
     /**
