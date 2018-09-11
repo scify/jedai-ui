@@ -17,18 +17,16 @@ public class WorkflowResult {
     private final SimpleIntegerProperty numOfClusters;
     private final SimpleIntegerProperty detailsId;
 
-    public WorkflowResult(SimpleStringProperty resultName, SimpleDoubleProperty recall, SimpleDoubleProperty precision,
-                          SimpleDoubleProperty f1Measure, SimpleDoubleProperty totalTime,
-                          SimpleIntegerProperty inputInstances, SimpleIntegerProperty numOfClusters,
-                          SimpleIntegerProperty detailsId) {
-        this.resultName = resultName;
-        this.recall = recall;
-        this.precision = precision;
-        this.f1Measure = f1Measure;
-        this.totalTime = totalTime;
-        this.inputInstances = inputInstances;
-        this.numOfClusters = numOfClusters;
-        this.detailsId = detailsId;
+    public WorkflowResult(String resultName, double recall, double precision, double f1Measure, double totalTime,
+                          int inputInstances, int numOfClusters, int detailsId) {
+        this.resultName = new SimpleStringProperty(resultName);
+        this.recall = new SimpleDoubleProperty(recall);
+        this.precision = new SimpleDoubleProperty(precision);
+        this.f1Measure = new SimpleDoubleProperty(f1Measure);
+        this.totalTime = new SimpleDoubleProperty(totalTime);
+        this.inputInstances = new SimpleIntegerProperty(inputInstances);
+        this.numOfClusters = new SimpleIntegerProperty(numOfClusters);
+        this.detailsId = new SimpleIntegerProperty(detailsId);
     }
 
     public String getResultName() {

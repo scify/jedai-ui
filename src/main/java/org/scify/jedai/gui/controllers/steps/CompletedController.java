@@ -6,9 +6,6 @@ import eu.hansolo.medusa.Gauge;
 import eu.hansolo.medusa.Gauge.SkinType;
 import eu.hansolo.medusa.GaugeBuilder;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -60,7 +57,7 @@ public class CompletedController {
     public ComboBox outputFormatCombobox;
     public Label statusLabel;
     public TableView<WorkflowResult> workbenchTable;    // Old table with results (to be removed)
-    public TreeTableView resultsTable;                  // Tree table with results
+    public TreeTableView<WorkflowResult> resultsTable;  // Tree table with results
 
     private SingleSelectionModel<Tab> tabSelectionModel;
     private final ObservableList<WorkflowResult> tableData = FXCollections.observableArrayList();
@@ -193,7 +190,11 @@ public class CompletedController {
      */
     private void initResultsGrid() {
         resultsTable.setEditable(false);
-        // todo
+
+        // Create root node
+        TreeItem<WorkflowResult> root = new TreeItem<>(new WorkflowResult("root", 0, 0,
+                0, 0, 0, 0, 0));
+        resultsTable.setRoot(root);
     }
 
     /**
@@ -330,16 +331,8 @@ public class CompletedController {
                 double f1 = clp.getFMeasure();
 
                 // Create entry for Workbench table
-                tableData.add(new WorkflowResult(
-                        new SimpleStringProperty("Run " + (tableData.size() + 1)),
-                        new SimpleDoubleProperty(recall),
-                        new SimpleDoubleProperty(precision),
-                        new SimpleDoubleProperty(f1),
-                        new SimpleDoubleProperty(totalTimeSeconds),
-                        new SimpleIntegerProperty(inputInstances),
-                        new SimpleIntegerProperty(numOfClusters),
-                        new SimpleIntegerProperty(tableData.size())
-                ));
+                tableData.add(new WorkflowResult("Run " + (tableData.size() + 1), recall, precision, f1,
+                        totalTimeSeconds, inputInstances, numOfClusters, tableData.size()));
 
                 // Add a copy of current WizardData to the list
                 detailedRunData.add(WizardData.cloneData(model));
