@@ -312,6 +312,21 @@ public class CompletedController {
                 .build();
     }
 
+    /**
+     * Add a workflow result to the tree table view. Requires the total performance of the workflow, and the manager
+     * that ran it in order to get the detailed performance per step.
+     *
+     * @param total Total workflow performance result
+     * @param mgr   WorkflowManager to get detailed performance per step
+     */
+    private void addResultToTable(WorkflowResult total, WorkflowManager mgr) {
+        // Create root node for the total workflow result
+        TreeItem<WorkflowResult> totalResult = new TreeItem<>(total);
+        resultsTable.getRoot().getChildren().add(totalResult);
+
+        // todo: Get performance for each step from the workflow manager and add them as children of totalResult
+    }
+
     @FXML
     private void runAlgorithmBtnHandler() {
         // Reset console area
@@ -321,13 +336,11 @@ public class CompletedController {
 
         // Runnable that will run algorithm in separate thread
         new Thread(() -> {
-            // Disable the step control buttons
+            // Disable the step control buttons & exploration button
             model.setWorkflowRunning(true);
-
-            // Disable exploration button
             exploreBtn.setDisable(true);
 
-            // Create performance variables
+            // Set the starting time
             long startTime = System.currentTimeMillis();
 
             try {
@@ -338,6 +351,7 @@ public class CompletedController {
                 // Prepare methods for rest of workflow
                 workflowMgr.createMethodInstances();
 
+                // Execute the workflow
                 ClustersPerformance clp = workflowMgr.executeWorkflow(statusLabel);
 
                 if (clp == null) {
@@ -347,6 +361,7 @@ public class CompletedController {
                     return;
                 }
 
+                // Get the generated clusters
                 entityClusters = workflowMgr.getEntityClusters();
 
                 // Set gauge values & status label
@@ -363,9 +378,11 @@ public class CompletedController {
                 double precision = clp.getPrecision();
                 double f1 = clp.getFMeasure();
 
-                // Create entry for Workbench table
-                tableData.add(new WorkflowResult("Run " + (tableData.size() + 1), recall, precision, f1,
-                        totalTimeSeconds, inputInstances, numOfClusters, tableData.size()));
+                // Add entry to the workbench
+                WorkflowResult total = new WorkflowResult("Run " + (tableData.size() + 1), recall, precision,
+                        f1, totalTimeSeconds, inputInstances, numOfClusters, tableData.size());
+                addResultToTable(total, workflowMgr);
+                tableData.add(total);
 
                 // Add a copy of current WizardData to the list
                 detailedRunData.add(WizardData.cloneData(model));
