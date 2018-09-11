@@ -2,12 +2,13 @@ package org.scify.jedai.gui.model;
 
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 
 /**
  * A workflow run result that can be shown in the Workbench
  */
 public class WorkflowResult {
-    private final SimpleIntegerProperty runNumber;
+    private final SimpleStringProperty resultName;
     private final SimpleDoubleProperty recall;
     private final SimpleDoubleProperty precision;
     private final SimpleDoubleProperty f1Measure;
@@ -16,11 +17,11 @@ public class WorkflowResult {
     private final SimpleIntegerProperty numOfClusters;
     private final SimpleIntegerProperty detailsId;
 
-    public WorkflowResult(SimpleIntegerProperty runNumber, SimpleDoubleProperty recall, SimpleDoubleProperty precision,
+    public WorkflowResult(SimpleStringProperty resultName, SimpleDoubleProperty recall, SimpleDoubleProperty precision,
                           SimpleDoubleProperty f1Measure, SimpleDoubleProperty totalTime,
                           SimpleIntegerProperty inputInstances, SimpleIntegerProperty numOfClusters,
                           SimpleIntegerProperty detailsId) {
-        this.runNumber = runNumber;
+        this.resultName = resultName;
         this.recall = recall;
         this.precision = precision;
         this.f1Measure = f1Measure;
@@ -30,20 +31,12 @@ public class WorkflowResult {
         this.detailsId = detailsId;
     }
 
-    public int getDetailsId() {
-        return detailsId.get();
+    public String getResultName() {
+        return resultName.get();
     }
 
-    public SimpleIntegerProperty detailsIdProperty() {
-        return detailsId;
-    }
-
-    public int getRunNumber() {
-        return runNumber.get();
-    }
-
-    public SimpleIntegerProperty runNumberProperty() {
-        return runNumber;
+    public SimpleStringProperty resultNameProperty() {
+        return resultName;
     }
 
     public double getRecall() {
@@ -92,5 +85,13 @@ public class WorkflowResult {
 
     public SimpleIntegerProperty numOfClustersProperty() {
         return numOfClusters;
+    }
+
+    public int getDetailsId() {
+        return detailsId.get();
+    }
+
+    public SimpleIntegerProperty detailsIdProperty() {
+        return detailsId;
     }
 }

@@ -8,6 +8,7 @@ import eu.hansolo.medusa.GaugeBuilder;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -54,7 +55,7 @@ public class CompletedController {
     public TextArea logTextArea;
     public Label totalTimeLabel;
     public TabPane resultsTabPane;
-    public TableView workbenchTable;
+    public TableView<WorkflowResult> workbenchTable;
     public Button exploreBtn;
     public VBox autoConfigContainer;
     public ComboBox outputFormatCombobox;
@@ -195,7 +196,7 @@ public class CompletedController {
 
         // Specify columns for grid
         Map<String, String> tableCols = new LinkedHashMap<>();
-        tableCols.put("Run #", "runNumber");
+        tableCols.put("Run #", "resultName");
         tableCols.put("Recall", "recall");
         tableCols.put("Precision", "precision");
         tableCols.put("F1-measure", "f1Measure");
@@ -320,7 +321,7 @@ public class CompletedController {
 
                 // Create entry for Workbench table
                 tableData.add(new WorkflowResult(
-                        new SimpleIntegerProperty(tableData.size() + 1),
+                        new SimpleStringProperty("Run " + (tableData.size() + 1)),
                         new SimpleDoubleProperty(recall),
                         new SimpleDoubleProperty(precision),
                         new SimpleDoubleProperty(f1),
