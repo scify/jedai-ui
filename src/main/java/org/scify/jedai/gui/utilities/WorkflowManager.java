@@ -237,6 +237,19 @@ public class WorkflowManager {
     }
 
     /**
+     * Add a blocks performance result to the performance per step list
+     *
+     * @param name Name of step
+     * @param time Time it took to run the step
+     * @param blp  BlocksPerformance object (to get values)
+     */
+    private void addBlocksPerformance(String name, double time, BlocksPerformance blp) {
+        performancePerStep.add(
+                new WorkflowResult(name, blp.getPc(), blp.getPq(), blp.getFMeasure(), time, -1, -1, -1)
+        );
+    }
+
+    /**
      * Execute a full workflow. This includes automatically setting the parameters for any methods that should be
      * automatically configured.
      *
@@ -383,10 +396,7 @@ public class WorkflowManager {
                         currentMethod.getMethodName());
 
                 // Save the performance of block processing
-                performancePerStep.add(
-                        new WorkflowResult(currentMethod.getMethodName(), blp.getPc(), blp.getPq(), blp.getFMeasure(),
-                                totalTime, -1, -1, -1)
-                );
+                this.addBlocksPerformance(currentMethod.getMethodName(), totalTime, blp);
             }
         }
 
@@ -476,10 +486,7 @@ public class WorkflowManager {
                     blBu.getMethodName());
 
             // Save the performance of block building
-            performancePerStep.add(
-                    new WorkflowResult("Block Building", blp.getPc(), blp.getPq(), blp.getFMeasure(),
-                            totalTime, -1, -1, -1)
-            );
+            this.addBlocksPerformance("Block Building", totalTime, blp);
         }
 
         // Run Block Cleaning
@@ -632,7 +639,6 @@ public class WorkflowManager {
             } else {
                 scClusters = sc.getClusters(profilesD1, profilesD2);
             }
-
         }
 
         // Local optimization of Block Building
@@ -714,6 +720,7 @@ public class WorkflowManager {
         blp.setStatistics();
         blp.printStatistics(0, blockBuildingMethod.getMethodConfiguration(),
                 blockBuildingMethod.getMethodName());
+        this.addBlocksPerformance("Block Building", 0, blp);
 
         // Local optimization of Block Cleaning methods
         Platform.runLater(() -> statusLabel.setText("Running block cleaning..."));
@@ -744,6 +751,7 @@ public class WorkflowManager {
                 blp = new BlocksPerformance(cleanedBlocks, duplicatePropagation);
                 blp.setStatistics();
                 blp.printStatistics(0, bp.getMethodConfiguration(), bp.getMethodName());
+                this.addBlocksPerformance(bp.getMethodName(), 0, blp);
 
                 // Increment index
                 enabledMethodIndex++;
@@ -764,6 +772,7 @@ public class WorkflowManager {
         blp.setStatistics();
         blp.printStatistics(0, comparisonCleaningMethod.getMethodConfiguration(),
                 comparisonCleaningMethod.getMethodName());
+        this.addBlocksPerformance(comparisonCleaningMethod.getMethodName(), 0, blp);
 
         // Local optimization of Matching & Clustering
         Platform.runLater(() -> statusLabel.setText("Running entity matching & clustering"));
