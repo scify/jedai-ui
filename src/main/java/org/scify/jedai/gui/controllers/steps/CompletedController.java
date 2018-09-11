@@ -15,6 +15,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -22,6 +23,8 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.util.StringConverter;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.scify.jedai.datamodel.EquivalenceCluster;
 import org.scify.jedai.datawriter.ClustersPerformanceWriter;
 import org.scify.jedai.gui.controllers.EntityClusterExplorationController;
@@ -190,11 +193,41 @@ public class CompletedController {
      */
     private void initResultsGrid() {
         resultsTable.setEditable(false);
+        resultsTable.setShowRoot(false);
 
         // Create root node
         TreeItem<WorkflowResult> root = new TreeItem<>(new WorkflowResult("root", 0, 0,
                 0, 0, 0, 0, 0));
         resultsTable.setRoot(root);
+
+        // Generate grid columns
+        Map<String, Pair<String, Boolean>> columns = new LinkedHashMap<>();
+        columns.put("Run #", new ImmutablePair<>("resultName", false));
+        columns.put("Recall", new ImmutablePair<>("recall", true));
+        columns.put("Precision", new ImmutablePair<>("precision", true));
+        columns.put("F1-measure", new ImmutablePair<>("f1Measure", true));
+        columns.put("Total time (sec.)", new ImmutablePair<>("totalTime", false));
+        columns.put("Input instances", new ImmutablePair<>("inputInstances", false));
+        columns.put("Clusters #", new ImmutablePair<>("numOfClusters", false));
+
+        // Create column objects
+        for (String colName : columns.keySet()) {
+            Pair<String, Boolean> value = columns.get(colName);
+            String propertyName = value.getLeft();
+//            boolean formatted = value.getRight();
+            // todo: Add formatter if formatted is true
+
+            // Create column
+            TreeTableColumn<WorkflowResult, Object> col = new TreeTableColumn<>(colName);
+            col.setCellValueFactory(new TreeItemPropertyValueFactory<>(propertyName));
+
+            // Add column to table
+            resultsTable.getColumns().add(col);
+        }
+//        root.getChildren().add(
+//                new TreeItem<>(new WorkflowResult("test", 0, 0, 0, 0,
+//                        0, 0, 0))
+//        );
     }
 
     /**
