@@ -51,6 +51,10 @@ public class WorkflowManager {
         this.performancePerStep = new ArrayList<>();
     }
 
+    public List<WorkflowResult> getPerformancePerStep() {
+        return performancePerStep;
+    }
+
     public List<EntityProfile> getProfilesD1() {
         return profilesD1;
     }

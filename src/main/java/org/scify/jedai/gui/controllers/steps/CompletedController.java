@@ -322,9 +322,16 @@ public class CompletedController {
     private void addResultToTable(WorkflowResult total, WorkflowManager mgr) {
         // Create root node for the total workflow result
         TreeItem<WorkflowResult> totalResult = new TreeItem<>(total);
-        resultsTable.getRoot().getChildren().add(totalResult);
 
-        // todo: Get performance for each step from the workflow manager and add them as children of totalResult
+        //  Get performance for each step from the workflow manager and add them as children of totalResult
+        for (WorkflowResult wr : mgr.getPerformancePerStep()) {
+            totalResult.getChildren().add(
+                    new TreeItem<>(wr)
+            );
+        }
+
+        // Add node for this workflow to the table's root node
+        resultsTable.getRoot().getChildren().add(totalResult);
     }
 
     @FXML
