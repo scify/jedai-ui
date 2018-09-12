@@ -1,8 +1,12 @@
 package org.scify.jedai.gui.model;
 
+import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * A workflow run result that can be shown in the Workbench
@@ -28,6 +32,27 @@ public class WorkflowResult {
         this.numOfClusters = new SimpleIntegerProperty(numOfClusters);
         this.detailsId = new SimpleIntegerProperty(detailsId);
     }
+
+    private ReadOnlyDoubleWrapper getRoundedDoubleWrapper(double num) {
+        BigDecimal bd = new BigDecimal(num);
+        bd = bd.setScale(3, RoundingMode.HALF_UP);
+
+        return new ReadOnlyDoubleWrapper(bd.doubleValue());
+    }
+
+    public ReadOnlyDoubleWrapper recallRoundedProperty() {
+        return getRoundedDoubleWrapper(this.getRecall());
+    }
+
+    public ReadOnlyDoubleWrapper precisionRoundedProperty() {
+        return getRoundedDoubleWrapper(this.getPrecision());
+    }
+
+    public ReadOnlyDoubleWrapper fMeasureRoundedProperty() {
+        return getRoundedDoubleWrapper(this.getF1Measure());
+    }
+
+    // Automatically generated getters below
 
     public String getResultName() {
         return resultName.get();
