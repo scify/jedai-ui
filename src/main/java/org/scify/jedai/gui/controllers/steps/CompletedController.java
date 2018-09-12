@@ -222,6 +222,11 @@ public class CompletedController {
             // Add column to table
             resultsTable.getColumns().add(col);
         }
+
+        // Add details button column
+        TreeTableColumn<WorkflowResult, String> detailsBtnCol = new TreeTableColumn<>("Details");
+//        detailsBtnCol.setCellFactory(param -> new DetailsCell(this.detailedRunData, this.injector));
+        resultsTable.getColumns().add(detailsBtnCol);
     }
 
     /**
