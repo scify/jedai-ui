@@ -17,17 +17,30 @@ import java.util.List;
 
 public class DetailsTreeCell extends TreeTableCell<WorkflowResult, String> {
     private final Hyperlink link;
+    private final List<TreeItem<WorkflowResult>> workflowResultRows;
     private final List<WizardData> detailedRunData;
     private final List<WizardData> openedPopups;
+    private final Injector injector;
 
     public DetailsTreeCell(List<TreeItem<WorkflowResult>> workflowResultRows, List<WizardData> detailedRunData,
                            Injector injector) {
+        this.workflowResultRows = workflowResultRows;
         this.detailedRunData = detailedRunData;
+        this.injector = injector;
         this.openedPopups = new ArrayList<>();
 
-        this.link = new Hyperlink("View");
-        // todo: hide text if this.getParent().getTreeItem().isLeaf()?
-        this.link.setOnAction(evt -> {
+        this.link = createLink();
+    }
+
+    /**
+     * Create a JavaFX Hyperlink that when clicked, shows the detailed configuration for a workflow.
+     *
+     * @return The described link
+     */
+    private Hyperlink createLink() {
+        Hyperlink link = new Hyperlink("View");
+
+        link.setOnAction(evt -> {
             // Get the TreeTableRow for this item
             int index = Integer.MAX_VALUE;
             Parent p = this.getParent();
@@ -36,7 +49,7 @@ public class DetailsTreeCell extends TreeTableCell<WorkflowResult, String> {
                 TreeItem parentItem = parent.getTreeItem();
                 if (workflowResultRows.contains(parentItem)) {
                     // This TreeItem represents a whole workflow's results, so we can show the popup. Find the index
-                    // by checking the position of this TreeItem against the root TreeItem's children
+                    // by checking the position of this TreeItem against the root TreeItem's children.
                     index = workflowResultRows.indexOf(parentItem);
                 }
             }
@@ -77,6 +90,8 @@ public class DetailsTreeCell extends TreeTableCell<WorkflowResult, String> {
                 }
             }
         });
+
+        return link;
     }
 
     @Override
