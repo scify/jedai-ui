@@ -200,7 +200,7 @@ public class CompletedController {
         resultsTable.setRoot(root);
 
         // Generate grid columns
-        List<ImmutablePair<String, String>> columnNames = Arrays.asList(
+        List<ImmutablePair<String, String>> tableCols = Arrays.asList(
                 new ImmutablePair<>("Run #", "resultName"),
                 new ImmutablePair<>("Recall", "recallRounded"),
                 new ImmutablePair<>("Precision", "precisionRounded"),
@@ -210,14 +210,20 @@ public class CompletedController {
                 new ImmutablePair<>("Clusters #", "numOfClusters")
         );
 
+        // Set number of columns, used for calculation of each column's initial width
+        int colsNum = tableCols.size() + 1; // Add 1 because we add the details column later
+
         // Create column objects
-        for (ImmutablePair<String, String> p : columnNames) {
+        for (ImmutablePair<String, String> p : tableCols) {
             String colName = p.getLeft();
             String propertyName = p.getRight();
 
             // Create column
             TreeTableColumn<WorkflowResult, Object> col = new TreeTableColumn<>(colName);
             col.setCellValueFactory(new TreeItemPropertyValueFactory<>(propertyName));
+
+            // Set width of the column (subtract not needed but prevents horizontal scrollbar...)
+            col.prefWidthProperty().bind(resultsTable.widthProperty().multiply(1.0 / colsNum).subtract(1));
 
             // Add column to table
             resultsTable.getColumns().add(col);
