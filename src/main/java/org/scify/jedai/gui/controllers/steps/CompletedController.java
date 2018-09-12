@@ -24,7 +24,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.util.StringConverter;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.scify.jedai.datamodel.EquivalenceCluster;
 import org.scify.jedai.datawriter.ClustersPerformanceWriter;
 import org.scify.jedai.gui.controllers.EntityClusterExplorationController;
@@ -201,21 +200,20 @@ public class CompletedController {
         resultsTable.setRoot(root);
 
         // Generate grid columns
-        Map<String, Pair<String, Boolean>> columns = new LinkedHashMap<>();
-        columns.put("Run #", new ImmutablePair<>("resultName", false));
-        columns.put("Recall", new ImmutablePair<>("recall", true));
-        columns.put("Precision", new ImmutablePair<>("precision", true));
-        columns.put("F1-measure", new ImmutablePair<>("f1Measure", true));
-        columns.put("Total time (sec.)", new ImmutablePair<>("totalTime", false));
-        columns.put("Input instances", new ImmutablePair<>("inputInstances", false));
-        columns.put("Clusters #", new ImmutablePair<>("numOfClusters", false));
+        List<ImmutablePair<String, String>> columnNames = Arrays.asList(
+                new ImmutablePair<>("Run #", "resultName"),
+                new ImmutablePair<>("Recall", "recallRounded"),
+                new ImmutablePair<>("Precision", "precisionRounded"),
+                new ImmutablePair<>("F1-measure", "fMeasureRounded"),
+                new ImmutablePair<>("Total time (sec.)", "totalTime"),
+                new ImmutablePair<>("Input instances", "inputInstances"),
+                new ImmutablePair<>("Clusters #", "numOfClusters")
+        );
 
         // Create column objects
-        for (String colName : columns.keySet()) {
-            Pair<String, Boolean> value = columns.get(colName);
-            String propertyName = value.getLeft();
-//            boolean formatted = value.getRight();
-            // todo: Add formatter if formatted is true
+        for (ImmutablePair<String, String> p : columnNames) {
+            String colName = p.getLeft();
+            String propertyName = p.getRight();
 
             // Create column
             TreeTableColumn<WorkflowResult, Object> col = new TreeTableColumn<>(colName);
@@ -224,10 +222,6 @@ public class CompletedController {
             // Add column to table
             resultsTable.getColumns().add(col);
         }
-//        root.getChildren().add(
-//                new TreeItem<>(new WorkflowResult("test", 0, 0, 0, 0,
-//                        0, 0, 0))
-//        );
     }
 
     /**
