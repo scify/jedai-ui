@@ -28,21 +28,19 @@ public class DetailsTreeCell extends TreeTableCell<WorkflowResult, String> {
         // todo: hide text if this.getParent().getTreeItem().isLeaf()?
         this.link.setOnAction(evt -> {
             // Get the TreeTableRow for this item
-            Parent p = this.getParent();
             int index = Integer.MAX_VALUE;
+            Parent p = this.getParent();
             if (p instanceof TreeTableRow) {
                 TreeTableRow parent = (TreeTableRow) p;
                 TreeItem parentItem = parent.getTreeItem();
                 if (parentItem.getParent() == rootTreeItem) {
-                    // This tree item represents a whole workflow's results, so we can show the popup
-                    // todo: Find correct index
-                    index = parent.getIndex();
+                    // This TreeItem represents a whole workflow's results, so we can show the popup. Find the index
+                    // by checking the position of this TreeItem against the parent TreeItem's children
+                    index = parentItem.getParent().getChildren().indexOf(parentItem);
                 }
             }
 
             String title = "Run #" + (index + 1) + " Detailed Configuration";
-
-            System.out.println(title);
 
             if (this.detailedRunData.size() > index) {
                 // Get the model for this run
