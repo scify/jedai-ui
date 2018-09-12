@@ -20,7 +20,8 @@ public class DetailsTreeCell extends TreeTableCell<WorkflowResult, String> {
     private final List<WizardData> detailedRunData;
     private final List<WizardData> openedPopups;
 
-    public DetailsTreeCell(TreeItem<WorkflowResult> rootTreeItem, List<WizardData> detailedRunData, Injector injector) {
+    public DetailsTreeCell(List<TreeItem<WorkflowResult>> workflowResultRows, List<WizardData> detailedRunData,
+                           Injector injector) {
         this.detailedRunData = detailedRunData;
         this.openedPopups = new ArrayList<>();
 
@@ -33,10 +34,10 @@ public class DetailsTreeCell extends TreeTableCell<WorkflowResult, String> {
             if (p instanceof TreeTableRow) {
                 TreeTableRow parent = (TreeTableRow) p;
                 TreeItem parentItem = parent.getTreeItem();
-                if (parentItem.getParent() == rootTreeItem) {
+                if (workflowResultRows.contains(parentItem)) {
                     // This TreeItem represents a whole workflow's results, so we can show the popup. Find the index
-                    // by checking the position of this TreeItem against the parent TreeItem's children
-                    index = parentItem.getParent().getChildren().indexOf(parentItem);
+                    // by checking the position of this TreeItem against the root TreeItem's children
+                    index = workflowResultRows.indexOf(parentItem);
                 }
             }
 
