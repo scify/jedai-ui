@@ -29,6 +29,7 @@ import org.scify.jedai.datawriter.ClustersPerformanceWriter;
 import org.scify.jedai.gui.controllers.EntityClusterExplorationController;
 import org.scify.jedai.gui.model.WorkflowResult;
 import org.scify.jedai.gui.nodes.DetailsCell;
+import org.scify.jedai.gui.nodes.DetailsTreeCell;
 import org.scify.jedai.gui.utilities.DialogHelper;
 import org.scify.jedai.gui.utilities.JedaiOptions;
 import org.scify.jedai.gui.utilities.RadioButtonHelper;
@@ -68,7 +69,7 @@ public class CompletedController {
     private Gauge recallGauge;
     private Gauge precisionGauge;
 
-    private List<WizardData> detailedRunData;
+    private List<WizardData> previousRunConfigs;
     private EquivalenceCluster[] entityClusters;
 
     private WorkflowManager workflowMgr;
@@ -82,7 +83,7 @@ public class CompletedController {
     @FXML
     public void initialize() {
         // Initialize list of detailed run data
-        detailedRunData = new ArrayList<>();
+        previousRunConfigs = new ArrayList<>();
 
         // Create gauges
         recallGauge = newGauge("Recall");
@@ -231,7 +232,7 @@ public class CompletedController {
 
         // Add details button column
         TreeTableColumn<WorkflowResult, String> detailsBtnCol = new TreeTableColumn<>("Details");
-//        detailsBtnCol.setCellFactory(param -> new DetailsCell(this.detailedRunData, this.injector));
+        detailsBtnCol.setCellFactory(aram -> new DetailsTreeCell(this.previousRunConfigs, this.injector));
         resultsTable.getColumns().add(detailsBtnCol);
     }
 
@@ -294,7 +295,7 @@ public class CompletedController {
 
         // Add details button column
         TableColumn detailsBtnCol = new TableColumn("Details");
-        detailsBtnCol.setCellFactory(param -> new DetailsCell(this.detailedRunData, this.injector));
+        detailsBtnCol.setCellFactory(param -> new DetailsCell(this.previousRunConfigs, this.injector));
         workbenchTable.getColumns().add(detailsBtnCol);
     }
 
@@ -397,7 +398,7 @@ public class CompletedController {
                 tableData.add(total);
 
                 // Add a copy of current WizardData to the list
-                detailedRunData.add(WizardData.cloneData(model));
+                previousRunConfigs.add(WizardData.cloneData(model));
 
                 // Update labels and JavaFX UI components from UI thread
                 Platform.runLater(() -> {
