@@ -3,7 +3,9 @@ package org.scify.jedai.gui.nodes;
 import com.google.inject.Injector;
 import javafx.scene.Parent;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
+import javafx.scene.control.TreeTableRow;
 import javafx.stage.Stage;
 import org.scify.jedai.gui.controllers.steps.ConfirmController;
 import org.scify.jedai.gui.model.WorkflowResult;
@@ -18,14 +20,26 @@ public class DetailsTreeCell extends TreeTableCell<WorkflowResult, String> {
     private final List<WizardData> detailedRunData;
     private final List<WizardData> openedPopups;
 
-    public DetailsTreeCell(List<WizardData> detailedRunData, Injector injector) {
+    public DetailsTreeCell(TreeItem<WorkflowResult> rootTreeItem, List<WizardData> detailedRunData, Injector injector) {
         this.detailedRunData = detailedRunData;
         this.openedPopups = new ArrayList<>();
 
         this.link = new Hyperlink("View");
+        // todo: hide text if this.getParent().getTreeItem().isLeaf()?
         this.link.setOnAction(evt -> {
-            // Get run data for this button
-            int index = this.getIndex();
+            // Get the TreeTableRow for this item
+            Parent p = this.getParent();
+            int index = Integer.MAX_VALUE;
+            if (p instanceof TreeTableRow) {
+                TreeTableRow parent = (TreeTableRow) p;
+                TreeItem parentItem = parent.getTreeItem();
+                if (parentItem.getParent() == rootTreeItem) {
+                    // This tree item represents a whole workflow's results, so we can show the popup
+                    // todo: Find correct index
+                    index = parent.getIndex();
+                }
+            }
+
             String title = "Run #" + (index + 1) + " Detailed Configuration";
 
             System.out.println(title);
