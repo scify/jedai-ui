@@ -16,10 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DetailsTreeCell extends TreeTableCell<WorkflowResult, String> {
+    private final static List<Integer> openedPopups = new ArrayList<>();
     private final Hyperlink link;
     private final List<TreeItem<WorkflowResult>> workflowResultRows;
     private final List<WizardData> detailedRunData;
-    private final List<WizardData> openedPopups;
     private final Injector injector;
 
     public DetailsTreeCell(List<TreeItem<WorkflowResult>> workflowResultRows, List<WizardData> detailedRunData,
@@ -27,7 +27,6 @@ public class DetailsTreeCell extends TreeTableCell<WorkflowResult, String> {
         this.workflowResultRows = workflowResultRows;
         this.detailedRunData = detailedRunData;
         this.injector = injector;
-        this.openedPopups = new ArrayList<>();
 
         this.link = createLink();
     }
@@ -59,38 +58,37 @@ public class DetailsTreeCell extends TreeTableCell<WorkflowResult, String> {
 
             String title = "Run #" + (index + 1) + " Detailed Configuration";
 
-            if (this.detailedRunData.size() > index) {
+            // Open the popup if one for this index isn't already opened
+            if (this.detailedRunData.size() > index && !openedPopups.contains(index)) {
                 // Get the model for this run
                 WizardData data = this.detailedRunData.get(index);
 
-                // Only open a new popup if another one for this data is not open
-                if (!openedPopups.contains(data)) {
-                    // Load FXML for the popup window
-                    Parent root = DialogHelper.loadFxml(this.getClass(), injector,
-                            "wizard-fxml/steps/Confirm.fxml");
+                // Load FXML for the popup window
+                Parent root = DialogHelper.loadFxml(this.getClass(), injector,
+                        "wizard-fxml/steps/Confirm.fxml");
 
-                    // Get the controller
-                    Object controller = null;
-                    if (root != null) {
-                        controller = root.getProperties().get("controller");
-                    }
-
-                    // Set the controller's model to the data one
-                    if (controller instanceof ConfirmController) {
-                        // Set the data to the controller
-                        ConfirmController confirmController = (ConfirmController) controller;
-                        confirmController.setModel(data, title);
-                    }
-
-                    // Show the popup window
-                    Stage dialog = DialogHelper.showScene(root, null, false, title);
-
-                    // Add the data of this popup in the array list of opened popups
-                    openedPopups.add(data);
-
-                    // When the popup closes, remove its data from the opened list so it can be opened again
-                    dialog.setOnCloseRequest(event -> openedPopups.remove(data));
+                // Get the controller
+                Object controller = null;
+                if (root != null) {
+                    controller = root.getProperties().get("controller");
                 }
+
+                // Set the controller's model to the data one
+                if (controller instanceof ConfirmController) {
+                    // Set the data to the controller
+                    ConfirmController confirmController = (ConfirmController) controller;
+                    confirmController.setModel(data, title);
+                }
+
+                // Show the popup window
+                Stage dialog = DialogHelper.showScene(root, null, false, title);
+
+                // Add the index of this popup in the array list of opened popups
+                openedPopups.add(index);
+
+                // When the popup closes, remove its index from the opened list so it can be opened again
+                int indexToRemove = index;
+                dialog.setOnCloseRequest(event -> openedPopups.remove(Integer.valueOf(indexToRemove)));
             }
         });
 
