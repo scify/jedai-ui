@@ -5,7 +5,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
-import javafx.scene.control.TreeTableRow;
 import javafx.stage.Stage;
 import org.scify.jedai.gui.controllers.steps.ConfirmController;
 import org.scify.jedai.gui.model.WorkflowResult;
@@ -40,21 +39,18 @@ public class DetailsTreeCell extends TreeTableCell<WorkflowResult, String> {
         Hyperlink link = new Hyperlink("View");
 
         link.setOnAction(evt -> {
-            // Get the TreeTableRow for this item
-            int index = Integer.MAX_VALUE;
-            Parent myParent = this.getParent();
-            if (myParent instanceof TreeTableRow) {
-                TreeTableRow myRow = (TreeTableRow) myParent;
-                TreeItem treeItem = myRow.getTreeItem();
-                if (!workflowResultRows.contains(treeItem)) {
-                    // This row does not represent an entire workflow (only a step of it), but since we know the tree is
-                    // up to 2 levels deep, we can get the parent of this tree item and find its index instead.
-                    treeItem = treeItem.getParent();
-                }
+            // Get the TreeItem for this item
+            TreeItem treeItem = this.getTreeTableRow().getTreeItem();
 
-                // Find the index of the tree item that represents the entire workflow
-                index = workflowResultRows.indexOf(treeItem);
+            // Check if we should use the parent TreeItem
+            if (!workflowResultRows.contains(treeItem)) {
+                // This row does not represent an entire workflow (only a step of it), but since we know the tree is
+                // up to 2 levels deep, we can get the parent of this tree item and find its index instead.
+                treeItem = treeItem.getParent();
             }
+
+            // Find the index of the tree item that represents the entire workflow
+            int index = workflowResultRows.indexOf(treeItem);
 
             String title = "Run #" + (index + 1) + " Detailed Configuration";
 
