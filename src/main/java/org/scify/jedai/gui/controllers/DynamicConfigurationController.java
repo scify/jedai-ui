@@ -16,6 +16,8 @@ import org.apache.jena.atlas.json.JsonValue;
 import org.scify.jedai.gui.nodes.dynamic_configuration.HelpTooltip;
 import org.scify.jedai.gui.nodes.dynamic_configuration.input.*;
 import org.scify.jedai.gui.utilities.JPair;
+import org.scify.jedai.utilities.enumerations.RepresentationModel;
+import org.scify.jedai.utilities.enumerations.SimilarityMetric;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -141,6 +143,7 @@ public class DynamicConfigurationController {
                         jsonParamObj.put("defaultValue", prevParams.get(gridRows).getRight().toString());
                     }
 
+                    // Create control for this parameter and add it to the table
                     if (hasSimMetricAndReprModel && isSimilarityMetric(jsonParamObj)) {
                         // Add and save instance of similarity metric selection node
                         simMetricNode = addParameterControls(jsonParamObj, gridRows++);
@@ -159,7 +162,41 @@ public class DynamicConfigurationController {
             // Check if we should link similarity metric & representation model selection nodes
             if (hasSimMetricAndReprModel && simMetricNode != null && reprModelNode != null) {
                 // At this point we should have added nodes for both similarity metric and representation model (if applicable), so we can link them
+                EnumerationInput simMetric = (EnumerationInput) simMetricNode;
+                EnumerationInput reprModel = (EnumerationInput) reprModelNode;
+
+                // Set a listener to update similarity metric options whenever the representation model changes
+                reprModel.valueProperty().addListener((observable, oldValue, newValue) ->
+                        updateSimMetricOptions(simMetric, (RepresentationModel) newValue));
+
+                // Update the initial list of similarity metrics based on the currently selected representation model
+                updateSimMetricOptions(simMetric, (RepresentationModel) reprModel.getValue());
             }
+        }
+    }
+
+    /**
+     * Update the options of a similarity metric input to contain only the ones that are compatible with the given
+     * representation model.
+     *
+     * @param simMetric         Similarity Metric input
+     * @param selectedReprModel Selected representation model
+     */
+    private void updateSimMetricOptions(EnumerationInput simMetric, RepresentationModel selectedReprModel) {
+        // Save the previously selected similarity metric and get the compatible ones with this representation model
+        SimilarityMetric prevSimMetric = (SimilarityMetric) simMetric.getValue();
+        List<SimilarityMetric> compatibleSimMetrics = SimilarityMetric.getModelCompatibleSimMetrics(selectedReprModel);
+
+        // Set the options of the input to only contain the compatible ones
+        simMetric.setItems(FXCollections.observableArrayList(compatibleSimMetrics));
+
+        // If the previously selected similarity metric is no longer compatible, select the default
+        if (!compatibleSimMetrics.contains(prevSimMetric)) {
+            // Get default similarity metric for this representation model
+            SimilarityMetric defaultSimMetric = SimilarityMetric.getModelDefaultSimMetric(selectedReprModel);
+
+            // Set the input's value to that similarity metric
+            simMetric.setValue(defaultSimMetric);
         }
     }
 
