@@ -43,6 +43,22 @@ public class DynamicConfigurationController {
         methodNameLabel.setText(methodName);
     }
 
+    private boolean isSimilarityMetric(JsonObject jsonParamObj) {
+        String name = jsonParamObj.get("name").getAsString().value();
+        String type = jsonParamObj.get("class").getAsString().value();
+
+        return (name.equals("Similarity Measure") &&
+                type.equals("org.scify.jedai.utilities.enumerations.SimilarityMetric"));
+    }
+
+    private boolean isRepresentationModel(JsonObject jsonParamObj) {
+        String name = jsonParamObj.get("name").getAsString().value();
+        String type = jsonParamObj.get("class").getAsString().value();
+
+        return (name.equals("Representation Model") &&
+                type.equals("org.scify.jedai.utilities.enumerations.RepresentationModel"));
+    }
+
     /**
      * Check whether a method's configuration contains both a similarity metric and representation model (in order to
      * show custom selector for them)
@@ -59,17 +75,19 @@ public class DynamicConfigurationController {
             if (jsonParam.isObject()) {
                 // Get the JSON object and find its name & class properties
                 JsonObject jsonParamObj = jsonParam.getAsObject();
-                String name = jsonParamObj.get("name").getAsString().value();
-                String type = jsonParamObj.get("class").getAsString().value();
 
-                if (name.equals("Similarity Measure") &&
-                        type.equals("org.scify.jedai.utilities.enumerations.SimilarityMetric")) {
+                if (isSimilarityMetric(jsonParamObj)) {
                     // Similarity Metric found
                     hasSimMetric = true;
-                } else if (name.equals("Representation Model") &&
-                        type.equals("org.scify.jedai.utilities.enumerations.RepresentationModel")) {
+
+                    // Stop if both were found
+                    if (hasReprModel) break;
+                } else if (isRepresentationModel(jsonParamObj)) {
                     // Representation Model found
                     hasReprModel = true;
+
+                    // Stop if both were found
+                    if (hasSimMetric) break;
                 }
             }
         }
@@ -100,8 +118,12 @@ public class DynamicConfigurationController {
         if (jsonParamDescriptions.isEmpty()) {
             configureParamsLabel.setText("This is a parameter-free method!");
         } else {
-            // Generate the form to configure the method
+            // Initialize variables for the custom similarity metric/representation model combo selector
             boolean hasSimMetricAndReprModel = hasSimMetricAndReprModelCombo(jsonParamDescriptions);
+            Node simMetricNode = null;
+            Node reprModelNode = null;
+
+            // Generate the form to configure the method
             int gridRows = 0;
             for (JsonValue jsonParam : jsonParamDescriptions) {
                 if (jsonParam.isObject()) {
@@ -119,11 +141,24 @@ public class DynamicConfigurationController {
                         jsonParamObj.put("defaultValue", prevParams.get(gridRows).getRight().toString());
                     }
 
-                    // Create controls for setting this parameter
-                    addParameterControls(jsonParamObj, gridRows++);
+                    if (hasSimMetricAndReprModel && isSimilarityMetric(jsonParamObj)) {
+                        // Add and save instance of similarity metric selection node
+                        simMetricNode = addParameterControls(jsonParamObj, gridRows++);
+                    } else if (hasSimMetricAndReprModel && isRepresentationModel(jsonParamObj)) {
+                        // Add and save instance of reprensetation model node
+                        reprModelNode = addParameterControls(jsonParamObj, gridRows++);
+                    } else {
+                        // Create controls for setting this parameter as usual
+                        addParameterControls(jsonParamObj, gridRows++);
+                    }
                 } else if (jsonParam.isArray()) {
                     throw new UnsupportedOperationException("Cannot handle JSON array yet (?)");
                 }
+            }
+
+            // Check if we should link similarity metric & representation model selection nodes
+            if (hasSimMetricAndReprModel && simMetricNode != null && reprModelNode != null) {
+                // At this point we should have added nodes for both similarity metric and representation model (if applicable), so we can link them
             }
         }
     }
@@ -134,7 +169,7 @@ public class DynamicConfigurationController {
      * @param param The parameter to create controls for.
      * @param index Grid row to add the controls to.
      */
-    private void addParameterControls(JsonObject param, int index) {
+    private Node addParameterControls(JsonObject param, int index) {
         // Get name of parameter & create label for it
         String name = param.get("name").getAsString().value();
         Label label = new Label(name);
@@ -181,6 +216,8 @@ public class DynamicConfigurationController {
 
         // Add controls to the grid
         configGrid.addRow(index, label, control, help);
+
+        return control;
     }
 
     /**
