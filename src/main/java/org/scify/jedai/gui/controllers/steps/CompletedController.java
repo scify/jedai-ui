@@ -13,8 +13,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -22,13 +20,11 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
-import javafx.util.StringConverter;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.scify.jedai.datamodel.EquivalenceCluster;
 import org.scify.jedai.datawriter.ClustersPerformanceWriter;
 import org.scify.jedai.gui.controllers.EntityClusterExplorationController;
 import org.scify.jedai.gui.model.WorkflowResult;
-import org.scify.jedai.gui.nodes.DetailsCell;
 import org.scify.jedai.gui.nodes.DetailsTreeCell;
 import org.scify.jedai.gui.utilities.DialogHelper;
 import org.scify.jedai.gui.utilities.JedaiOptions;
@@ -42,8 +38,9 @@ import org.scify.jedai.utilities.ClustersPerformance;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
-import java.text.NumberFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class CompletedController {
     public Button runBtn;
@@ -59,7 +56,6 @@ public class CompletedController {
     public VBox autoConfigContainer;
     public ComboBox outputFormatCombobox;
     public Label statusLabel;
-    public TableView<WorkflowResult> workbenchTable;    // Old table with results (to be removed)
     public TreeTableView<WorkflowResult> resultsTable;  // Tree table with results
 
     private SingleSelectionModel<Tab> tabSelectionModel;
@@ -172,8 +168,7 @@ public class CompletedController {
         );
 
         // Setup table for previous results (Workbench)
-        initGrid();
-        initResultsGrid();  // New grid
+        initResultsGrid();
     }
 
     /**
@@ -234,69 +229,6 @@ public class CompletedController {
         TreeTableColumn<WorkflowResult, String> detailsBtnCol = new TreeTableColumn<>("Details");
         detailsBtnCol.setCellFactory(aram -> new DetailsTreeCell(root.getChildren(), this.previousRunConfigs, this.injector));
         resultsTable.getColumns().add(detailsBtnCol);
-    }
-
-    /**
-     * Initialize the workbench grid which shows the results of previous JedAI runs
-     */
-    private void initGrid() {
-        // Set grid properties
-        workbenchTable.setEditable(false);
-        workbenchTable.setItems(tableData);
-
-        // Specify columns for grid
-        Map<String, String> tableCols = new LinkedHashMap<>();
-        tableCols.put("Run #", "resultName");
-        tableCols.put("Recall", "recall");
-        tableCols.put("Precision", "precision");
-        tableCols.put("F1-measure", "f1Measure");
-        tableCols.put("Total time (sec.)", "totalTime");
-        tableCols.put("Input instances", "inputInstances");
-        tableCols.put("Clusters #", "numOfClusters");
-
-        List<String> colsToFormat = Arrays.asList("Recall", "Precision", "F1-measure");
-
-        int colsNum = tableCols.size() + 1; // Add 1 because we add the details column later
-
-        // Create column objects
-        for (String colName : tableCols.keySet()) {
-            TableColumn col = new TableColumn(colName);
-            col.setCellValueFactory(new PropertyValueFactory<WorkflowResult, String>(tableCols.get(colName)));
-
-            // Set the width to be the same for all columns (subtract not needed but prevents horizontal scrollbar...)
-            col.prefWidthProperty().bind(workbenchTable.widthProperty().multiply(1.0 / colsNum).subtract(1));
-
-            if (colsToFormat.contains(colName)) {
-                // Add number formatter which shows maximum 3 fraction digits
-                col.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<Double>() {
-                    private final NumberFormat nf = NumberFormat.getNumberInstance();
-
-                    {
-                        nf.setMaximumFractionDigits(3);
-                        nf.setMinimumFractionDigits(1);
-                    }
-
-                    @Override
-                    public String toString(Double object) {
-                        return nf.format(object);
-                    }
-
-                    @Override
-                    public Double fromString(String string) {
-                        // Not needed because we don't edit the table
-                        return null;
-                    }
-                }));
-            }
-
-            // Add column to the table
-            workbenchTable.getColumns().add(col);
-        }
-
-        // Add details button column
-        TableColumn detailsBtnCol = new TableColumn("Details");
-        detailsBtnCol.setCellFactory(param -> new DetailsCell(this.previousRunConfigs, this.injector));
-        workbenchTable.getColumns().add(detailsBtnCol);
     }
 
     /**
