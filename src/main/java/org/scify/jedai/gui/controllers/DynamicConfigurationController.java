@@ -44,9 +44,45 @@ public class DynamicConfigurationController {
     }
 
     /**
+     * Check whether a method's configuration contains both a similarity metric and representation model (in order to
+     * show custom selector for them)
+     *
+     * @param jsonParamDescriptions JSON descriptions of the method's parameters
+     * @return True if the method configuration contains both similarity metric and representation model selection
+     */
+    private boolean hasSimMetricAndReprModelCombo(JsonArray jsonParamDescriptions) {
+        boolean hasSimMetric = false;
+        boolean hasReprModel = false;
+
+        // Loop over the values and check if they are similarity measure or representation model selection
+        for (JsonValue jsonParam : jsonParamDescriptions) {
+            if (jsonParam.isObject()) {
+                // Get the JSON object and find its name & class properties
+                JsonObject jsonParamObj = jsonParam.getAsObject();
+                String name = jsonParamObj.get("name").getAsString().value();
+                String type = jsonParamObj.get("class").getAsString().value();
+
+                if (name.equals("Similarity Measure") &&
+                        type.equals("org.scify.jedai.utilities.enumerations.SimilarityMetric")) {
+                    // Similarity Metric found
+                    hasSimMetric = true;
+                } else if (name.equals("Representation Model") &&
+                        type.equals("org.scify.jedai.utilities.enumerations.RepresentationModel")) {
+                    // Representation Model found
+                    hasReprModel = true;
+                }
+            }
+        }
+
+        // If both similarity metric & representation model were found, return true
+        return (hasSimMetric && hasReprModel);
+    }
+
+    /**
      * Set the parameters to show in the configuration window, and create UI elements for the user to set them.
      *
      * @param jsonParamDescriptions Parameters as specified by the JedAI library
+     * @param parametersProperty    Property to save the selected values to
      */
     public void setParameters(JsonArray jsonParamDescriptions, ListProperty<JPair<String, Object>> parametersProperty) {
         this.parametersProperty = parametersProperty;
@@ -65,6 +101,7 @@ public class DynamicConfigurationController {
             configureParamsLabel.setText("This is a parameter-free method!");
         } else {
             // Generate the form to configure the method
+            boolean hasSimMetricAndReprModel = hasSimMetricAndReprModelCombo(jsonParamDescriptions);
             int gridRows = 0;
             for (JsonValue jsonParam : jsonParamDescriptions) {
                 if (jsonParam.isObject()) {
