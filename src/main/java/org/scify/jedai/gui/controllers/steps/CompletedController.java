@@ -26,6 +26,7 @@ import org.scify.jedai.datawriter.ClustersPerformanceWriter;
 import org.scify.jedai.gui.controllers.EntityClusterExplorationController;
 import org.scify.jedai.gui.model.WorkflowResult;
 import org.scify.jedai.gui.nodes.DetailsTreeCell;
+import org.scify.jedai.gui.nodes.NonNegativeTreeTableCell;
 import org.scify.jedai.gui.utilities.DialogHelper;
 import org.scify.jedai.gui.utilities.JedaiOptions;
 import org.scify.jedai.gui.utilities.RadioButtonHelper;
@@ -191,8 +192,8 @@ public class CompletedController {
         resultsTable.setShowRoot(false);
 
         // Create root node
-        TreeItem<WorkflowResult> root = new TreeItem<>(new WorkflowResult("root", 0, 0,
-                0, 0, 0, 0, 0));
+        TreeItem<WorkflowResult> root = new TreeItem<>(new WorkflowResult("root", -1, -1,
+                -1, -1, -1, -1, -1));
         resultsTable.setRoot(root);
 
         // Generate grid columns
@@ -217,6 +218,7 @@ public class CompletedController {
             // Create column
             TreeTableColumn<WorkflowResult, Object> col = new TreeTableColumn<>(colName);
             col.setCellValueFactory(new TreeItemPropertyValueFactory<>(propertyName));
+            col.setCellFactory(param -> new NonNegativeTreeTableCell());
 
             // Set width of the column (subtract not needed but prevents horizontal scrollbar...)
             col.prefWidthProperty().bind(resultsTable.widthProperty().multiply(1.0 / colsNum).subtract(1));
@@ -227,7 +229,7 @@ public class CompletedController {
 
         // Add details button column
         TreeTableColumn<WorkflowResult, String> detailsBtnCol = new TreeTableColumn<>("Details");
-        detailsBtnCol.setCellFactory(aram -> new DetailsTreeCell(root.getChildren(), this.previousRunConfigs, this.injector));
+        detailsBtnCol.setCellFactory(param -> new DetailsTreeCell(root.getChildren(), this.previousRunConfigs, this.injector));
         resultsTable.getColumns().add(detailsBtnCol);
     }
 
