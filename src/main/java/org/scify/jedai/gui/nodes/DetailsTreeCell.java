@@ -43,15 +43,18 @@ public class DetailsTreeCell extends TreeTableCell<WorkflowResult, String> {
         link.setOnAction(evt -> {
             // Get the TreeTableRow for this item
             int index = Integer.MAX_VALUE;
-            Parent p = this.getParent();
-            if (p instanceof TreeTableRow) {
-                TreeTableRow parent = (TreeTableRow) p;
-                TreeItem parentItem = parent.getTreeItem();
-                if (workflowResultRows.contains(parentItem)) {
-                    // This TreeItem represents a whole workflow's results, so we can show the popup. Find the index
-                    // by checking the position of this TreeItem against the root TreeItem's children.
-                    index = workflowResultRows.indexOf(parentItem);
+            Parent myParent = this.getParent();
+            if (myParent instanceof TreeTableRow) {
+                TreeTableRow myRow = (TreeTableRow) myParent;
+                TreeItem treeItem = myRow.getTreeItem();
+                if (!workflowResultRows.contains(treeItem)) {
+                    // This row does not represent an entire workflow (only a step of it), but since we know the tree is
+                    // up to 2 levels deep, we can get the parent of this tree item and find its index instead.
+                    treeItem = treeItem.getParent();
                 }
+
+                // Find the index of the tree item that represents the entire workflow
+                index = workflowResultRows.indexOf(treeItem);
             }
 
             String title = "Run #" + (index + 1) + " Detailed Configuration";
