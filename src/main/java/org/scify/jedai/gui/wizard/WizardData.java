@@ -5,7 +5,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.scify.jedai.gui.model.BlClMethodConfiguration;
 import org.scify.jedai.gui.utilities.JPair;
-import org.scify.jedai.gui.utilities.JedaiOptions;
 
 public class WizardData {
     // Boolean that indicates whether a workflow is currently running
@@ -120,36 +119,6 @@ public class WizardData {
                     FXCollections.observableArrayList(data.getEntityClusteringParameters()));
 
         return clone;
-    }
-
-    /**
-     * Reset the model, setting all values to their defaults.
-     */
-    public void reset() {
-        // Reset block cleaning list
-        for (BlClMethodConfiguration mConfig : this.getBlockCleaningMethods()) {
-            mConfig.reset();
-        }
-
-        // Reset advanced configuration parameters (except for Data Reading)
-        schemaClusteringParametersProperty().clear();
-        blockBuildingParametersProperty().clear();
-        comparisonCleaningParametersProperty().clear();
-        entityClusteringParametersProperty().clear();
-        entityMatchingParametersProperty().clear();
-
-        // Reset radio buttons
-        schemaClusteringProperty().setValue(JedaiOptions.NO_SCHEMA_CLUSTERING);
-        blockBuildingProperty().setValue(JedaiOptions.STANDARD_TOKEN_BUILDING);
-        comparisonCleaningProperty().setValue(JedaiOptions.NO_CLEANING);
-        entityMatchingProperty().setValue(JedaiOptions.GROUP_LINKAGE);
-        entityClusteringProperty().setValue(JedaiOptions.CENTER_CLUSTERING);
-
-        // Reset configuration type radio buttons
-        blockBuildingConfigTypeProperty().setValue(JedaiOptions.DEFAULT_CONFIG);
-        comparisonCleaningConfigTypeProperty().setValue(JedaiOptions.DEFAULT_CONFIG);
-        entityMatchingConfigTypeProperty().setValue(JedaiOptions.DEFAULT_CONFIG);
-        entityClusteringConfigTypeProperty().setValue(JedaiOptions.DEFAULT_CONFIG);
     }
 
     ///////////////////////////////////////////////////

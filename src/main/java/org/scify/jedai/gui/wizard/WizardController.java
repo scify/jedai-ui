@@ -338,8 +338,6 @@ public class WizardController {
 
         setLabelAndDescription(currentStep.getValue());
 
-        model.reset();
-
         // Get controller of last step, to reset its data (only if it's an instance of the CompletedController)
         Object ctrl = steps.get(steps.size() - 1).getProperties().get(CONTROLLER_KEY);
 
