@@ -45,7 +45,6 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.7.0</version>
                 <configuration>
@@ -55,23 +54,26 @@
             </plugin>
 
         <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <executions>
-            <execution>
-                <phase>package</phase>
-                <goals>
-                    <goal>single</goal>
-                </goals>
-                <configuration>
-                    <descriptor>assembly.xml</descriptor>
-                    <archive>
-                        <manifest>
-                            <mainClass>org.scify.jedai.gui.wizard.WizardMain</mainClass>
-                        </manifest>
-                    </archive>
-        	<appendAssemblyId>false</appendAssemblyId>
-                </configuration>
-            </execution>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <version>3.1.0</version>
+            <executions>
+                <execution>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>single</goal>
+                    </goals>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <mainClass>org.scify.jedai.gui.wizard.WizardMain</mainClass>
+                            </manifest>
+                        </archive>
+                        <descriptorRefs>
+                            <descriptorRef>jar-with-dependencies</descriptorRef>
+                        </descriptorRefs>
+            	        <appendAssemblyId>false</appendAssemblyId>
+                    </configuration>
+                </execution>
             </executions>
         </plugin>
     </plugins>
