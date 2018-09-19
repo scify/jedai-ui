@@ -14,7 +14,7 @@ import org.scify.jedai.gui.wizard.WizardData;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DetailsTreeCell extends TreeTableCell<WorkflowResult, String> {
+public class DetailsTreeCell extends TreeTableCell<WorkflowResult, Object> {
     private final static List<Integer> openedPopups = new ArrayList<>();
     private final Hyperlink link;
     private final List<TreeItem<WorkflowResult>> workflowResultRows;
@@ -92,8 +92,18 @@ public class DetailsTreeCell extends TreeTableCell<WorkflowResult, String> {
     }
 
     @Override
-    protected void updateItem(String item, boolean empty) {
+    protected void updateItem(Object item, boolean empty) {
         super.updateItem(item, empty);
-        setGraphic(empty ? null : link);
+
+        if (empty || item == null) {
+            setText(null);
+            setGraphic(null);
+        } else {
+            if (!item.toString().equals("-1")) {
+                setGraphic(link);
+            } else {
+                setGraphic(null);
+            }
+        }
     }
 }

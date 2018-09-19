@@ -228,8 +228,10 @@ public class CompletedController {
         }
 
         // Add details button column
-        TreeTableColumn<WorkflowResult, String> detailsBtnCol = new TreeTableColumn<>("Details");
-        detailsBtnCol.setCellFactory(param -> new DetailsTreeCell(root.getChildren(), this.previousRunConfigs, this.injector));
+        TreeTableColumn<WorkflowResult, Object> detailsBtnCol = new TreeTableColumn<>("Details");
+        detailsBtnCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("detailsId"));
+        detailsBtnCol.setCellFactory(
+                param -> new DetailsTreeCell(root.getChildren(), this.previousRunConfigs, this.injector));
         resultsTable.getColumns().add(detailsBtnCol);
     }
 
