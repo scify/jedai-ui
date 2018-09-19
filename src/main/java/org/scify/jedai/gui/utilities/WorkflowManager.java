@@ -490,7 +490,7 @@ public class WorkflowManager {
                     blBu.getMethodName());
 
             // Save the performance of block building
-            this.addBlocksPerformance("Block Building", totalTime, blp);
+            this.addBlocksPerformance(blBu.getMethodName(), totalTime, blp);
         }
 
         // Run Block Cleaning
@@ -724,7 +724,7 @@ public class WorkflowManager {
         blp.setStatistics();
         blp.printStatistics(0, blockBuildingMethod.getMethodConfiguration(),
                 blockBuildingMethod.getMethodName());
-        this.addBlocksPerformance("Block Building", 0, blp);
+        this.addBlocksPerformance(blockBuildingMethod.getMethodName(), 0, blp);
 
         // Local optimization of Block Cleaning methods
         Platform.runLater(() -> statusLabel.setText("Running block cleaning..."));
