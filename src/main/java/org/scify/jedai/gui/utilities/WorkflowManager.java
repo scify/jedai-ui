@@ -37,7 +37,7 @@ public class WorkflowManager {
     private AbstractDuplicatePropagation duplicatePropagation;
 
     private ISchemaClustering schemaClusteringMethod;
-    private IBlockBuilding blockBuildingMethod;
+    private List<IBlockBuilding> blBuMethods;
     private List<IBlockProcessing> blClMethods;
     private IBlockProcessing comparisonCleaningMethod;
     private IEntityMatching entityMatchingMethod;
@@ -87,17 +87,28 @@ public class WorkflowManager {
             );
         }
 
-        // Get block building method
-        BlockBuildingMethod blockingWorkflow = MethodMapping.blockBuildingMethods.get(model.getBlockBuilding());
+        // Get list of enabled block cleaning method instances
+        blBuMethods = new ArrayList<>();
+        for (JedaiMethodConfiguration methodConfig : model.getBlockBuildingMethods()) {
+            // Ignore disabled methods
+            if (!methodConfig.isEnabled())
+                return;
 
-        // Check if the user set any custom parameters for block building
-        if (!model.getBlockBuildingConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
-            // Auto or default configuration selected: use default configuration
-            blockBuildingMethod = BlockBuildingMethod.getDefaultConfiguration(blockingWorkflow);
-        } else {
-            // Manual configuration selected, create method with the saved parameters
-            ObservableList<JPair<String, Object>> blBuParams = model.getBlockBuildingParameters();
-            blockBuildingMethod = DynamicMethodConfiguration.configureBlockBuildingMethod(blockingWorkflow, blBuParams);
+            // Create instance of this method
+            BlockBuildingMethod blockingWorkflow = MethodMapping.blockBuildingMethods.get(methodConfig.getName());
+
+            // Check if the user set any custom parameters for block building
+            IBlockBuilding blockBuildingMethod;
+            if (!methodConfig.getConfigurationType().equals(JedaiOptions.MANUAL_CONFIG)) {
+                // Auto or default configuration selected: use default configuration
+                blockBuildingMethod = BlockBuildingMethod.getDefaultConfiguration(blockingWorkflow);
+            } else {
+                // Manual configuration selected, create method with the saved parameters
+                ObservableList<JPair<String, Object>> blBuParams = methodConfig.getManualParameters();
+                blockBuildingMethod = DynamicMethodConfiguration.configureBlockBuildingMethod(blockingWorkflow, blBuParams);
+            }
+
+            blBuMethods.add(blockBuildingMethod);
         }
 
         // Get list of enabled block cleaning method instances
@@ -179,12 +190,27 @@ public class WorkflowManager {
             }
         }
 
-        // Check if block building parameters should be set automatically
-        if (model.getBlockBuildingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-            if (bestIteration == null) {
-                blockBuildingMethod.setNextRandomConfiguration();
-            } else {
-                blockBuildingMethod.setNumberedRandomConfiguration(bestIteration);
+        // Check if any block building method parameters should be set automatically
+        if (model.getBlockBuildingMethods() != null && !model.getBlockBuildingMethods().isEmpty()) {
+            // Index of the methods in the blClMethods list
+            int enabledMethodIndex = 0;
+
+            // Check each block cleaning method config
+            for (JedaiMethodConfiguration methodConfig : model.getBlockBuildingMethods()) {
+                if (methodConfig.isEnabled()) {
+                    // Method is enabled, check if we should configure automatically
+                    if (methodConfig.getConfigurationType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+                        // Get instance of the method and set next random configuration
+                        if (bestIteration == null) {
+                            blBuMethods.get(enabledMethodIndex).setNextRandomConfiguration();
+                        } else {
+                            blBuMethods.get(enabledMethodIndex).setNumberedRandomConfiguration(bestIteration);
+                        }
+                    }
+
+                    // Increment index
+                    enabledMethodIndex++;
+                }
             }
         }
 
@@ -278,7 +304,7 @@ public class WorkflowManager {
                     iterateHolisticRandom(null);
 
                     // Run a workflow and check its F-measure
-                    ClustersPerformance clp = this.runWorkflow(statusLabel, schemaClusteringMethod, blockBuildingMethod,
+                    ClustersPerformance clp = this.runWorkflow(statusLabel, schemaClusteringMethod, blBuMethods,
                             blClMethods, comparisonCleaningMethod, entityMatchingMethod, ec, false);
 
                     // If there was a problem with this random workflow, skip this iteration
@@ -301,7 +327,7 @@ public class WorkflowManager {
                 iterateHolisticRandom(bestIteration);
 
                 // Run the final workflow (whether there was an automatic configuration or not)
-                return this.runWorkflow(statusLabel, schemaClusteringMethod, blockBuildingMethod, blClMethods,
+                return this.runWorkflow(statusLabel, schemaClusteringMethod, blBuMethods, blClMethods,
                         comparisonCleaningMethod, entityMatchingMethod, ec, true);
             } else {
                 // Step-by-step automatic configuration. Set random or grid depending on the selected search type.
@@ -312,7 +338,7 @@ public class WorkflowManager {
             }
         } else {
             // Run workflow without any automatic configuration
-            return this.runWorkflow(statusLabel, schemaClusteringMethod, blockBuildingMethod, blClMethods,
+            return this.runWorkflow(statusLabel, schemaClusteringMethod, blBuMethods, blClMethods,
                     comparisonCleaningMethod, entityMatchingMethod, ec, true);
         }
     }
@@ -324,22 +350,31 @@ public class WorkflowManager {
      */
     private boolean anyAutomaticConfig() {
         // Check all steps except block cleaning methods
-        if (model.getBlockBuildingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)
-                || model.getComparisonCleaningConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)
+        if (model.getComparisonCleaningConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)
                 || model.getEntityMatchingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)
                 || model.getEntityClusteringConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)
         ) {
             return true;
         }
 
-        // Check block cleaning methods
+        // Create list of all block building and cleaning method configurations
+        List<JedaiMethodConfiguration> allConfigs = new ArrayList<>();
+
+        // Add block building method configurations
+        if (model.getBlockBuildingMethods() != null && !model.getBlockBuildingMethods().isEmpty()) {
+            allConfigs.addAll(model.getBlockBuildingMethods());
+        }
+
+        // Add block cleaning method configurations
         if (model.getBlockCleaningMethods() != null && !model.getBlockCleaningMethods().isEmpty()) {
-            // Loop over the methods
-            for (JedaiMethodConfiguration config : model.getBlockCleaningMethods()) {
-                // Check if the method is enabled and its config. type is automatic
-                if (config.isEnabled() && config.getConfigurationType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-                    return true;
-                }
+            allConfigs.addAll(model.getBlockCleaningMethods());
+        }
+
+        // Loop over the method configurations
+        for (JedaiMethodConfiguration config : allConfigs) {
+            // Check if the method is enabled and its config. type is automatic
+            if (config.isEnabled() && config.getConfigurationType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+                return true;
             }
         }
         return false;
@@ -412,7 +447,7 @@ public class WorkflowManager {
      *
      * @param statusLabel Label to set status on
      * @param sc          Schema clustering method
-     * @param blBu        Block building method
+     * @param blBuMethods List of block building methods
      * @param blClMethods List of block cleaning methods
      * @param coCl        Comparison cleaning method
      * @param em          Entity matching method
@@ -421,7 +456,7 @@ public class WorkflowManager {
      * @return ClustersPerformance object of the executed workflow
      * @throws Exception In case the Entity Matching method is null (shouldn't happen though)
      */
-    private ClustersPerformance runWorkflow(Label statusLabel, ISchemaClustering sc, IBlockBuilding blBu,
+    private ClustersPerformance runWorkflow(Label statusLabel, ISchemaClustering sc, List<IBlockBuilding> blBuMethods,
                                             List<IBlockProcessing> blClMethods, IBlockProcessing coCl,
                                             IEntityMatching em, IEntityClustering ec, boolean finalRun)
             throws Exception {
@@ -449,22 +484,24 @@ public class WorkflowManager {
             Platform.runLater(() -> statusLabel.setText("Running block building..."));
 
         List<AbstractBlock> blocks;
-        if (blBu != null) {
+        IBlockBuilding bp = blBuMethods.get(0);
+        // todo: run all block building methods
+        if (bp != null) {
             if (erType.equals(JedaiOptions.DIRTY_ER)) {
                 if (clusters == null) {
                     // Dirty ER without schema clustering
-                    blocks = blBu.getBlocks(profilesD1);
+                    blocks = bp.getBlocks(profilesD1);
                 } else {
                     // Dirty ER with schema clustering
-                    blocks = blBu.getBlocks(profilesD1, null, clusters);
+                    blocks = bp.getBlocks(profilesD1, null, clusters);
                 }
             } else {
                 if (clusters == null) {
                     // Clean-clean ER without schema clustering
-                    blocks = blBu.getBlocks(profilesD1, profilesD2);
+                    blocks = bp.getBlocks(profilesD1, profilesD2);
                 } else {
                     // Clean-clean ER with schema clustering
-                    blocks = blBu.getBlocks(profilesD1, profilesD2, clusters);
+                    blocks = bp.getBlocks(profilesD1, profilesD2, clusters);
                 }
             }
         } else {
@@ -486,11 +523,11 @@ public class WorkflowManager {
             double totalTime = overheadEnd - overheadStart;
 
             // Print performance
-            blp.printStatistics(totalTime, blBu.getMethodConfiguration(),
-                    blBu.getMethodName());
+            blp.printStatistics(totalTime, bp.getMethodConfiguration(),
+                    bp.getMethodName());
 
             // Save the performance of block building
-            this.addBlocksPerformance(blBu.getMethodName(), totalTime, blp);
+            this.addBlocksPerformance(bp.getMethodName(), totalTime, blp);
         }
 
         // Run Block Cleaning
@@ -648,21 +685,24 @@ public class WorkflowManager {
         // Local optimization of Block Building
         Platform.runLater(() -> statusLabel.setText("Block Building optimization..."));
 
-        if (model.getBlockBuildingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+        JedaiMethodConfiguration mc = model.getBlockBuildingMethods().get(0);
+        IBlockBuilding bb = blBuMethods.get(0);
+        // todo: run all block building methods...
+        if (mc.getConfigurationType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
             if (erType.equals(JedaiOptions.DIRTY_ER)) {
                 originalComparisons = profilesD1.size() * profilesD1.size();
             } else {
                 originalComparisons = ((double) profilesD1.size()) * profilesD2.size();
             }
 
-            iterationsNum = random ? NO_OF_TRIALS : blockBuildingMethod.getNumberOfGridConfigurations();
+            iterationsNum = random ? NO_OF_TRIALS : bb.getNumberOfGridConfigurations();
 
             for (int j = 0; j < iterationsNum; j++) {
                 // Set next configuration
                 if (random) {
-                    blockBuildingMethod.setNextRandomConfiguration();
+                    bb.setNextRandomConfiguration();
                 } else {
-                    blockBuildingMethod.setNumberedGridConfiguration(j);
+                    bb.setNumberedGridConfiguration(j);
                 }
 
                 // Process the blocks (call appropriate method depending on ER type)
@@ -670,18 +710,18 @@ public class WorkflowManager {
                 if (erType.equals(JedaiOptions.DIRTY_ER)) {
                     if (scClusters == null) {
                         // Dirty ER without schema clustering
-                        originalBlocks = blockBuildingMethod.getBlocks(profilesD1);
+                        originalBlocks = bb.getBlocks(profilesD1);
                     } else {
                         // Dirty ER with schema clustering
-                        originalBlocks = blockBuildingMethod.getBlocks(profilesD1, null, scClusters);
+                        originalBlocks = bb.getBlocks(profilesD1, null, scClusters);
                     }
                 } else {
                     if (scClusters != null) {
                         // Clean-clean ER with schema clustering
-                        originalBlocks = blockBuildingMethod.getBlocks(profilesD1, profilesD2, scClusters);
+                        originalBlocks = bb.getBlocks(profilesD1, profilesD2, scClusters);
                     } else {
                         // Clean-clean ER without schema clustering
-                        originalBlocks = blockBuildingMethod.getBlocks(profilesD1, profilesD2);
+                        originalBlocks = bb.getBlocks(profilesD1, profilesD2);
                     }
                 }
 
@@ -704,9 +744,9 @@ public class WorkflowManager {
 
             // Set final block building parameters
             if (random) {
-                blockBuildingMethod.setNumberedRandomConfiguration(bestIteration);
+                bb.setNumberedRandomConfiguration(bestIteration);
             } else {
-                blockBuildingMethod.setNumberedGridConfiguration(bestIteration);
+                bb.setNumberedGridConfiguration(bestIteration);
             }
         }
 
@@ -715,16 +755,16 @@ public class WorkflowManager {
 
         final List<AbstractBlock> blocks;
         if (erType.equals(JedaiOptions.DIRTY_ER)) {
-            blocks = blockBuildingMethod.getBlocks(profilesD1);
+            blocks = bb.getBlocks(profilesD1);
         } else {
-            blocks = blockBuildingMethod.getBlocks(profilesD1, profilesD2);
+            blocks = bb.getBlocks(profilesD1, profilesD2);
         }
 
         BlocksPerformance blp = new BlocksPerformance(blocks, duplicatePropagation);
         blp.setStatistics();
-        blp.printStatistics(0, blockBuildingMethod.getMethodConfiguration(),
-                blockBuildingMethod.getMethodName());
-        this.addBlocksPerformance(blockBuildingMethod.getMethodName(), 0, blp);
+        blp.printStatistics(0, bb.getMethodConfiguration(),
+                bb.getMethodName());
+        this.addBlocksPerformance(bb.getMethodName(), 0, blp);
 
         // Local optimization of Block Cleaning methods
         Platform.runLater(() -> statusLabel.setText("Running block cleaning..."));
