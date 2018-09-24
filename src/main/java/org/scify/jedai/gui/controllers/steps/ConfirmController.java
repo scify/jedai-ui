@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class ConfirmController {
     public GridPane paramsGrid;
@@ -91,17 +92,17 @@ public class ConfirmController {
     }
 
     /**
-     * Get a list view that displays the block cleaning methods. Items are updated automatically by using an extractor,
-     * and they are displayed using a custom ListCell.
+     * Get a list view that displays the given method configurations. Items are updated automatically by using an
+     * extractor, and they are displayed using a custom ListCell.
      *
-     * @return ListView for block cleaning methods
+     * @return ListView for JedAI method configurations
      */
-    private ListView<JedaiMethodConfiguration> getBlockCleaningMethodsListView() {
+    private ListView<JedaiMethodConfiguration> getJedaiMethodConfigurationsListView(List<JedaiMethodConfiguration> configs) {
         // Create new ListView for JedaiMethodConfiguration objects
-        ListView<JedaiMethodConfiguration> blockCleaningList = new ListView<>();
+        ListView<JedaiMethodConfiguration> listView = new ListView<>();
 
         // Set its CellFactory to a custom one that formats JedaiMethodConfiguration objects
-        blockCleaningList.setCellFactory(param -> new JedaiMethodConfigurationListCell());
+        listView.setCellFactory(param -> new JedaiMethodConfigurationListCell());
 
         // Create an ObservableList that contains the model's JedaiMethodConfiguration items, but has a custom extractor
         // that checks for changes on their properties. (thanks https://stackoverflow.com/a/23828608)
@@ -113,17 +114,17 @@ public class ConfirmController {
                 }
         );
 
-        extractorList.addAll(model.getBlockCleaningMethods());
+        extractorList.addAll(configs);
 
         // Set the ListView's items to a filtered version of the ObservableList, which removes disabled methods
-        blockCleaningList.setItems(extractorList.filtered(
-                blClMethodConfiguration -> blClMethodConfiguration.enabledProperty().get()
+        listView.setItems(extractorList.filtered(
+                methodConfig -> methodConfig.enabledProperty().get()
         ));
 
         // Set max height of ListView and return it
-        blockCleaningList.setMaxHeight(80);
+        listView.setMaxHeight(80);
 
-        return blockCleaningList;
+        return listView;
     }
 
     @FXML
@@ -180,15 +181,13 @@ public class ConfirmController {
         addRow(rows++, boldLabel("Schema Clustering Parameters"),
                 DynamicMethodConfiguration.newParamsNode(model.schemaClusteringParametersProperty()));
 
-        // Block Building method
-        addRow(rows++, boldLabel("Block Building Method"), boundLabel(model.blockBuildingProperty()));
-
-        // Block Building parameters
-        addRow(rows++, boldLabel("Block Building Parameters"),
-                DynamicMethodConfiguration.newParamsNode(model.blockBuildingParametersProperty()));
+        // Block Building methods list
+        addRow(rows++, boldLabel("Block Building Methods"),
+                getJedaiMethodConfigurationsListView(model.getBlockBuildingMethods()));
 
         // Block Cleaning methods list
-        addRow(rows++, boldLabel("Block Cleaning Methods"), getBlockCleaningMethodsListView());
+        addRow(rows++, boldLabel("Block Cleaning Methods"),
+                getJedaiMethodConfigurationsListView(model.getBlockCleaningMethods()));
 
         // Comparison Cleaning method
         addRow(rows++, boldLabel("Comparison Cleaning Method"), boundLabel(model.comparisonCleaningProperty()));
