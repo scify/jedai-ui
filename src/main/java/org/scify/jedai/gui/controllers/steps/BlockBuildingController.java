@@ -81,12 +81,15 @@ public class BlockBuildingController {
 
         // Add items to the list
         list.getItems().addAll(optionsMap.keySet());
+
         // Set list cells to have checkboxes which use the map's boolean values
         list.setCellFactory(CheckBoxListCell.forListView(optionsMap::get));
+        // todo: list order is wrong
     }
 
     @Validate
     public boolean validate() {
+        // todo: check that there is at least one enabled method!
         return true;
     }
 

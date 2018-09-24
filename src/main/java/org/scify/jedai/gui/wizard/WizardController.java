@@ -25,6 +25,7 @@ import org.scify.jedai.gui.utilities.DynamicMethodConfiguration;
 import org.scify.jedai.gui.utilities.JPair;
 import org.scify.jedai.gui.utilities.JedaiOptions;
 import org.scify.jedai.utilities.IDocumentation;
+import org.scify.jedai.utilities.enumerations.BlockBuildingMethod;
 import org.scify.jedai.utilities.enumerations.RepresentationModel;
 import org.scify.jedai.utilities.enumerations.SchemaClusteringMethod;
 import org.scify.jedai.utilities.enumerations.SimilarityMetric;
@@ -277,16 +278,28 @@ public class WizardController {
                     return;
                 }
             } else if (currentStep.get() == 3 || currentStep.get() == 4) {
+                boolean isBlockBuilding = (currentStep.get() == 3);
+
                 // Special case: Block Building and Cleaning can have multiple methods.
                 // We need to check each one separately. Get the methods...
                 List<JedaiMethodConfiguration> methodConfigs =
-                        currentStep.get() == 3 ? model.getBlockBuildingMethods() : model.getBlockCleaningMethods();
+                        isBlockBuilding ? model.getBlockBuildingMethods() : model.getBlockCleaningMethods();
 
                 for (JedaiMethodConfiguration methodConfig : methodConfigs) {
                     // If the method is enabled and its configuration type is set to manual...
                     if (methodConfig.isEnabled() && methodConfig.getConfigurationType().equals(JedaiOptions.MANUAL_CONFIG)) {
                         // Get an instance of the method
-                        IDocumentation method = MethodMapping.getMethodByName(methodConfig.getName());
+
+                        IDocumentation method;
+                        if (isBlockBuilding) {
+                            // Get block building method
+                            method = BlockBuildingMethod.getDefaultConfiguration(
+                                    MethodMapping.blockBuildingMethods.get(methodConfig.getName())
+                            );
+                        } else {
+                            // Get block cleaning method
+                            method = MethodMapping.getMethodByName(methodConfig.getName());
+                        }
 
                         // Configure the method
                         DynamicMethodConfiguration.displayModal(getClass(), injector, method,
