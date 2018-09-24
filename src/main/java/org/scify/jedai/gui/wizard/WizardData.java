@@ -28,9 +28,7 @@ public class WizardData {
     private final ListProperty<JPair<String, Object>> schemaClusteringParameters = new SimpleListProperty<>();
 
     // Block Building
-    private final StringProperty blockBuilding = new SimpleStringProperty();
-    private final StringProperty blockBuildingConfigType = new SimpleStringProperty();
-    private final ListProperty<JPair<String, Object>> blockBuildingParameters = new SimpleListProperty<>();
+    private final ListProperty<JedaiMethodConfiguration> blockBuildingMethods = new SimpleListProperty<>();
 
     // Block Cleaning
     private final ListProperty<JedaiMethodConfiguration> blockCleaningMethods = new SimpleListProperty<>();
@@ -85,10 +83,12 @@ public class WizardData {
                     FXCollections.observableArrayList(data.getSchemaClusteringParameters()));
 
         // Block Building
-        clone.setBlockBuilding(data.getBlockBuilding());
-        clone.setBlockBuildingConfigType(data.getBlockBuildingConfigType());
-        if (data.getBlockBuildingParameters() != null)
-            clone.setBlockBuildingParameters(FXCollections.observableArrayList(data.getBlockBuildingParameters()));
+        ObservableList<JedaiMethodConfiguration> newBlBuMethods = FXCollections.observableArrayList();
+        for (JedaiMethodConfiguration method : data.getBlockBuildingMethods()) {
+            // Create new object with the old one's properties to add to the new list
+            newBlBuMethods.add(new JedaiMethodConfiguration(method));
+        }
+        clone.setBlockBuildingMethods(newBlBuMethods);
 
         // Block Cleaning
         ObservableList<JedaiMethodConfiguration> newBlClMethods = FXCollections.observableArrayList();
@@ -257,40 +257,16 @@ public class WizardData {
         this.schemaClusteringParameters.set(schemaClusteringParameters);
     }
 
-    public String getBlockBuilding() {
-        return blockBuilding.get();
+    public ObservableList<JedaiMethodConfiguration> getBlockBuildingMethods() {
+        return blockBuildingMethods.get();
     }
 
-    public StringProperty blockBuildingProperty() {
-        return blockBuilding;
+    public ListProperty<JedaiMethodConfiguration> blockBuildingMethodsProperty() {
+        return blockBuildingMethods;
     }
 
-    public void setBlockBuilding(String blockBuilding) {
-        this.blockBuilding.set(blockBuilding);
-    }
-
-    public String getBlockBuildingConfigType() {
-        return blockBuildingConfigType.get();
-    }
-
-    public StringProperty blockBuildingConfigTypeProperty() {
-        return blockBuildingConfigType;
-    }
-
-    public void setBlockBuildingConfigType(String blockBuildingConfigType) {
-        this.blockBuildingConfigType.set(blockBuildingConfigType);
-    }
-
-    public ObservableList<JPair<String, Object>> getBlockBuildingParameters() {
-        return blockBuildingParameters.get();
-    }
-
-    public ListProperty<JPair<String, Object>> blockBuildingParametersProperty() {
-        return blockBuildingParameters;
-    }
-
-    public void setBlockBuildingParameters(ObservableList<JPair<String, Object>> blockBuildingParameters) {
-        this.blockBuildingParameters.set(blockBuildingParameters);
+    public void setBlockBuildingMethods(ObservableList<JedaiMethodConfiguration> blockBuildingMethods) {
+        this.blockBuildingMethods.set(blockBuildingMethods);
     }
 
     public ObservableList<JedaiMethodConfiguration> getBlockCleaningMethods() {
