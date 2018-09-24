@@ -42,7 +42,7 @@ public class BlockCleaningController {
         listComparator = new BlockCleaningComparator();
 
         // Initialize block cleaning methods list
-        model.setBlockCleaningMethods(FXCollections.observableList(new ArrayList<>()));
+        model.setBlockCleaningMethods(FXCollections.observableArrayList());
 
         // Add JedaiMethodConfiguration objects to the model
         model.getBlockCleaningMethods().addAll(

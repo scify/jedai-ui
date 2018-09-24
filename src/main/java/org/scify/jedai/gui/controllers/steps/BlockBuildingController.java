@@ -1,11 +1,17 @@
 package org.scify.jedai.gui.controllers.steps;
 
 import com.google.inject.Inject;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.ListView;
+import javafx.scene.control.Separator;
+import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.VBox;
+import org.scify.jedai.gui.model.JedaiMethodConfiguration;
 import org.scify.jedai.gui.nodes.dynamic_configuration.ConfigurationTypeSelector;
+import org.scify.jedai.gui.nodes.dynamic_configuration.ConfigurationTypeSelectorHorizontal;
 import org.scify.jedai.gui.utilities.JedaiOptions;
-import org.scify.jedai.gui.utilities.RadioButtonHelper;
 import org.scify.jedai.gui.wizard.Submit;
 import org.scify.jedai.gui.wizard.Validate;
 import org.scify.jedai.gui.wizard.WizardData;
@@ -13,12 +19,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+@SuppressWarnings("Duplicates")
 public class BlockBuildingController {
     public VBox containerVBox;
-    public VBox radioBtnsContainer;
-    public VBox confTypeContainer;
+    public VBox methodConfContainer;
+    public ListView<Object> list;
     private Logger log = LoggerFactory.getLogger(BlockBuildingController.class);
 
     @Inject
@@ -26,6 +35,9 @@ public class BlockBuildingController {
 
     @FXML
     public void initialize() {
+        // Initialize block building methods list
+        model.setBlockBuildingMethods(FXCollections.observableArrayList());
+
         // Create List with options
         List<String> options = Arrays.asList(
                 JedaiOptions.STANDARD_TOKEN_BUILDING,
@@ -39,13 +51,38 @@ public class BlockBuildingController {
                 JedaiOptions.LSH_MINHASH_BLOCKING
         );
 
-        // Create radio buttons using helper method
-        RadioButtonHelper.createButtonGroup(radioBtnsContainer, options, model.blockBuildingProperty());
+        // For each option, add a JedaiMethodConfiguration object to the model
+        for (String s : options) {
+            model.getBlockBuildingMethods().add(new JedaiMethodConfiguration(s));
+        }
 
-        // Add default/automatic/manual configuration buttons
-        confTypeContainer.getChildren().add(
-                new ConfigurationTypeSelector(model.blockBuildingConfigTypeProperty())
-        );
+        // Enable the 1st method by default
+        model.getBlockBuildingMethods().get(0).setEnabled(true);
+
+        // Create map with method names -> boolean properties and add ConfigurationTypeSelectors
+        Map<String, SimpleBooleanProperty> optionsMap = new HashMap<>();
+
+        List<JedaiMethodConfiguration> blBuMethods = model.getBlockBuildingMethods();
+        for (JedaiMethodConfiguration mConf : blBuMethods) {
+            // Add to options HashMap
+            optionsMap.put(mConf.getName(), mConf.enabledProperty());
+
+            // Add configuration type selector for this method
+            ConfigurationTypeSelector cts = new ConfigurationTypeSelectorHorizontal(mConf.configurationTypeProperty());
+            cts.bindEnabled(mConf.enabledProperty());
+
+            methodConfContainer.getChildren().add(cts);
+
+            // Add separators between selectors
+            if (blBuMethods.indexOf(mConf) < blBuMethods.size() - 1) {
+                methodConfContainer.getChildren().add(new Separator());
+            }
+        }
+
+        // Add items to the list
+        list.getItems().addAll(optionsMap.keySet());
+        // Set list cells to have checkboxes which use the map's boolean values
+        list.setCellFactory(CheckBoxListCell.forListView(optionsMap::get));
     }
 
     @Validate
