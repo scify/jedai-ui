@@ -13,13 +13,13 @@ import org.scify.jedai.gui.utilities.JedaiOptions;
  * - The selected configuration type for this method
  * - For manual configuration, the selected parameters
  */
-public class BlClMethodConfiguration {
+public class JedaiMethodConfiguration {
     private SimpleBooleanProperty enabled;
     private String name;
     private StringProperty configurationType;
     private ListProperty<JPair<String, Object>> manualParameters;
 
-    public BlClMethodConfiguration(String methodName) {
+    public JedaiMethodConfiguration(String methodName) {
         this.name = methodName;
 
         // Initialize properties
@@ -29,11 +29,11 @@ public class BlClMethodConfiguration {
     }
 
     /**
-     * Constructor that gets this item's properties from another BlClMethodConfiguration object
+     * Constructor that gets this item's properties from another JedaiMethodConfiguration object
      *
-     * @param source Source BlClMethodConfiguration object
+     * @param source Source JedaiMethodConfiguration object
      */
-    public BlClMethodConfiguration(BlClMethodConfiguration source) {
+    public JedaiMethodConfiguration(JedaiMethodConfiguration source) {
         this.name = source.getName();
         this.enabled = new SimpleBooleanProperty(source.isEnabled());
         this.configurationType = new SimpleStringProperty(source.getConfigurationType());
@@ -51,7 +51,7 @@ public class BlClMethodConfiguration {
 
     @Override
     public String toString() {
-        return "BlClMethodConfiguration{" +
+        return "JedaiMethodConfiguration{" +
                 "enabled=" + enabled +
                 ", name='" + name + '\'' +
                 ", configurationType=" + configurationType +

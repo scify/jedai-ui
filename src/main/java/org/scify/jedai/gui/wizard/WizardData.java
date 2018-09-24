@@ -3,7 +3,7 @@ package org.scify.jedai.gui.wizard;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.scify.jedai.gui.model.BlClMethodConfiguration;
+import org.scify.jedai.gui.model.JedaiMethodConfiguration;
 import org.scify.jedai.gui.utilities.JPair;
 
 public class WizardData {
@@ -33,7 +33,7 @@ public class WizardData {
     private final ListProperty<JPair<String, Object>> blockBuildingParameters = new SimpleListProperty<>();
 
     // Block Cleaning
-    private final ListProperty<BlClMethodConfiguration> blockCleaningMethods = new SimpleListProperty<>();
+    private final ListProperty<JedaiMethodConfiguration> blockCleaningMethods = new SimpleListProperty<>();
 
     // Comparison Cleaning
     private final StringProperty comparisonCleaning = new SimpleStringProperty();
@@ -91,10 +91,10 @@ public class WizardData {
             clone.setBlockBuildingParameters(FXCollections.observableArrayList(data.getBlockBuildingParameters()));
 
         // Block Cleaning
-        ObservableList<BlClMethodConfiguration> newBlClMethods = FXCollections.observableArrayList();
-        for (BlClMethodConfiguration method : data.getBlockCleaningMethods()) {
+        ObservableList<JedaiMethodConfiguration> newBlClMethods = FXCollections.observableArrayList();
+        for (JedaiMethodConfiguration method : data.getBlockCleaningMethods()) {
             // Create new object with the old one's properties to add to the new list
-            newBlClMethods.add(new BlClMethodConfiguration(method));
+            newBlClMethods.add(new JedaiMethodConfiguration(method));
         }
         clone.setBlockCleaningMethods(newBlClMethods);
 
@@ -293,15 +293,15 @@ public class WizardData {
         this.blockBuildingParameters.set(blockBuildingParameters);
     }
 
-    public ObservableList<BlClMethodConfiguration> getBlockCleaningMethods() {
+    public ObservableList<JedaiMethodConfiguration> getBlockCleaningMethods() {
         return blockCleaningMethods.get();
     }
 
-    public ListProperty<BlClMethodConfiguration> blockCleaningMethodsProperty() {
+    public ListProperty<JedaiMethodConfiguration> blockCleaningMethodsProperty() {
         return blockCleaningMethods;
     }
 
-    public void setBlockCleaningMethods(ObservableList<BlClMethodConfiguration> blockCleaningMethods) {
+    public void setBlockCleaningMethods(ObservableList<JedaiMethodConfiguration> blockCleaningMethods) {
         this.blockCleaningMethods.set(blockCleaningMethods);
     }
 

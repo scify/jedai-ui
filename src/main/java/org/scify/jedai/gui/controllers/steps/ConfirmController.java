@@ -15,7 +15,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import org.scify.jedai.gui.model.BlClMethodConfiguration;
+import org.scify.jedai.gui.model.JedaiMethodConfiguration;
 import org.scify.jedai.gui.utilities.DynamicMethodConfiguration;
 import org.scify.jedai.gui.utilities.JedaiOptions;
 import org.scify.jedai.gui.utilities.RowHidingChangeListener;
@@ -96,14 +96,14 @@ public class ConfirmController {
      *
      * @return ListView for block cleaning methods
      */
-    private ListView<BlClMethodConfiguration> getBlockCleaningMethodsListView() {
-        // Create new ListView for BlClMethodConfiguration objects
-        ListView<BlClMethodConfiguration> blockCleaningList = new ListView<>();
+    private ListView<JedaiMethodConfiguration> getBlockCleaningMethodsListView() {
+        // Create new ListView for JedaiMethodConfiguration objects
+        ListView<JedaiMethodConfiguration> blockCleaningList = new ListView<>();
 
-        // Set its CellFactory to a custom one that formats BlClMethodConfiguration objects
-        blockCleaningList.setCellFactory(param -> new ListCell<BlClMethodConfiguration>() {
+        // Set its CellFactory to a custom one that formats JedaiMethodConfiguration objects
+        blockCleaningList.setCellFactory(param -> new ListCell<JedaiMethodConfiguration>() {
             @Override
-            protected void updateItem(BlClMethodConfiguration item, boolean empty) {
+            protected void updateItem(JedaiMethodConfiguration item, boolean empty) {
                 super.updateItem(item, empty);
 
                 if (empty || item == null) {
@@ -123,9 +123,9 @@ public class ConfirmController {
             }
         });
 
-        // Create an ObservableList that contains the model's BlClMethodConfiguration items, but has a custom extractor
+        // Create an ObservableList that contains the model's JedaiMethodConfiguration items, but has a custom extractor
         // that checks for changes on their properties. (thanks https://stackoverflow.com/a/23828608)
-        ObservableList<BlClMethodConfiguration> extractorList = FXCollections.observableArrayList(
+        ObservableList<JedaiMethodConfiguration> extractorList = FXCollections.observableArrayList(
                 param -> new Observable[]{
                         param.enabledProperty(),
                         param.manualParametersProperty(),

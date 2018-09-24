@@ -19,7 +19,7 @@ import javafx.scene.shape.Circle;
 import org.scify.jedai.entitymatching.GroupLinkage;
 import org.scify.jedai.entitymatching.ProfileMatcher;
 import org.scify.jedai.gui.controllers.steps.CompletedController;
-import org.scify.jedai.gui.model.BlClMethodConfiguration;
+import org.scify.jedai.gui.model.JedaiMethodConfiguration;
 import org.scify.jedai.gui.utilities.DialogHelper;
 import org.scify.jedai.gui.utilities.DynamicMethodConfiguration;
 import org.scify.jedai.gui.utilities.JPair;
@@ -290,7 +290,7 @@ public class WizardController {
                 }
             } else if (currentStep.get() == 4) {
                 // Special case: Block Cleaning can have multiple methods. We need to check each one separately
-                for (BlClMethodConfiguration bcmc : model.getBlockCleaningMethods()) {
+                for (JedaiMethodConfiguration bcmc : model.getBlockCleaningMethods()) {
                     // If the method is enabled and its configuration type is set to manual...
                     if (bcmc.isEnabled() && bcmc.getConfigurationType().equals(JedaiOptions.MANUAL_CONFIG)) {
                         // Get an instance of the method

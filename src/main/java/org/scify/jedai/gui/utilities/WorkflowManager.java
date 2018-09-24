@@ -12,7 +12,7 @@ import org.scify.jedai.datamodel.EquivalenceCluster;
 import org.scify.jedai.datamodel.SimilarityPairs;
 import org.scify.jedai.entityclustering.IEntityClustering;
 import org.scify.jedai.entitymatching.IEntityMatching;
-import org.scify.jedai.gui.model.BlClMethodConfiguration;
+import org.scify.jedai.gui.model.JedaiMethodConfiguration;
 import org.scify.jedai.gui.model.WorkflowResult;
 import org.scify.jedai.gui.wizard.MethodMapping;
 import org.scify.jedai.gui.wizard.WizardData;
@@ -102,7 +102,7 @@ public class WorkflowManager {
 
         // Get list of enabled block cleaning method instances
         blClMethods = new ArrayList<>();
-        for (BlClMethodConfiguration blClMethodConfig : model.getBlockCleaningMethods()) {
+        for (JedaiMethodConfiguration blClMethodConfig : model.getBlockCleaningMethods()) {
             // Ignore disabled methods
             if (!blClMethodConfig.isEnabled())
                 continue;
@@ -194,7 +194,7 @@ public class WorkflowManager {
             int enabledMethodIndex = 0;
 
             // Check each block cleaning method config
-            for (BlClMethodConfiguration blClConfig : model.getBlockCleaningMethods()) {
+            for (JedaiMethodConfiguration blClConfig : model.getBlockCleaningMethods()) {
                 if (blClConfig.isEnabled()) {
                     // Method is enabled, check if we should configure automatically
                     if (blClConfig.getConfigurationType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
@@ -335,7 +335,7 @@ public class WorkflowManager {
         // Check block cleaning methods
         if (model.getBlockCleaningMethods() != null && !model.getBlockCleaningMethods().isEmpty()) {
             // Loop over the methods
-            for (BlClMethodConfiguration config : model.getBlockCleaningMethods()) {
+            for (JedaiMethodConfiguration config : model.getBlockCleaningMethods()) {
                 // Check if the method is enabled and its config. type is automatic
                 if (config.isEnabled() && config.getConfigurationType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
                     return true;
@@ -735,7 +735,7 @@ public class WorkflowManager {
             int enabledMethodIndex = 0;
 
             // Check each block cleaning method config
-            for (BlClMethodConfiguration blClConfig : model.getBlockCleaningMethods()) {
+            for (JedaiMethodConfiguration blClConfig : model.getBlockCleaningMethods()) {
                 // Skip disabled methods
                 if (!blClConfig.isEnabled())
                     continue;

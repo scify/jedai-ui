@@ -8,7 +8,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Separator;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.VBox;
-import org.scify.jedai.gui.model.BlClMethodConfiguration;
+import org.scify.jedai.gui.model.JedaiMethodConfiguration;
 import org.scify.jedai.gui.nodes.dynamic_configuration.ConfigurationTypeSelector;
 import org.scify.jedai.gui.nodes.dynamic_configuration.ConfigurationTypeSelectorHorizontal;
 import org.scify.jedai.gui.utilities.BlockCleaningComparator;
@@ -44,18 +44,18 @@ public class BlockCleaningController {
         // Initialize block cleaning methods list
         model.setBlockCleaningMethods(FXCollections.observableList(new ArrayList<>()));
 
-        // Add BlClMethodConfiguration objects to the model
+        // Add JedaiMethodConfiguration objects to the model
         model.getBlockCleaningMethods().addAll(
-                new BlClMethodConfiguration(JedaiOptions.SIZE_BASED_BLOCK_PURGING),
-                new BlClMethodConfiguration(JedaiOptions.COMPARISON_BASED_BLOCK_PURGING),
-                new BlClMethodConfiguration(JedaiOptions.BLOCK_FILTERING)
+                new JedaiMethodConfiguration(JedaiOptions.SIZE_BASED_BLOCK_PURGING),
+                new JedaiMethodConfiguration(JedaiOptions.COMPARISON_BASED_BLOCK_PURGING),
+                new JedaiMethodConfiguration(JedaiOptions.BLOCK_FILTERING)
         );
 
         // Create map with method names -> boolean properties and add ConfigurationTypeSelectors
         optionsMap = new HashMap<>();
 
-        List<BlClMethodConfiguration> blClMethods = model.getBlockCleaningMethods();
-        for (BlClMethodConfiguration bcmc : blClMethods) {
+        List<JedaiMethodConfiguration> blClMethods = model.getBlockCleaningMethods();
+        for (JedaiMethodConfiguration bcmc : blClMethods) {
             // Add to options HashMap
             optionsMap.put(bcmc.getName(), bcmc.enabledProperty());
 
