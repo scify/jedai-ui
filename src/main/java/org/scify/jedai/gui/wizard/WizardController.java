@@ -25,7 +25,6 @@ import org.scify.jedai.gui.utilities.DynamicMethodConfiguration;
 import org.scify.jedai.gui.utilities.JPair;
 import org.scify.jedai.gui.utilities.JedaiOptions;
 import org.scify.jedai.utilities.IDocumentation;
-import org.scify.jedai.utilities.enumerations.BlockBuildingMethod;
 import org.scify.jedai.utilities.enumerations.RepresentationModel;
 import org.scify.jedai.utilities.enumerations.SchemaClusteringMethod;
 import org.scify.jedai.utilities.enumerations.SimilarityMetric;
@@ -98,7 +97,6 @@ public class WizardController {
         // Initialize hashmap with configuration types
         this.configurationTypes = new HashMap<>();
         this.configurationTypes.put(2, model.schemaClusteringConfigTypeProperty());
-        this.configurationTypes.put(3, model.blockBuildingConfigTypeProperty());
         this.configurationTypes.put(5, model.comparisonCleaningConfigTypeProperty());
         this.configurationTypes.put(6, model.entityMatchingConfigTypeProperty());
         this.configurationTypes.put(7, model.entityClusteringConfigTypeProperty());
@@ -239,16 +237,6 @@ public class WizardController {
                                 SimilarityMetric.ENHANCED_JACCARD_SIMILARITY,
                                 MethodMapping.schemaClusteringMethods.get(methodName));
                         break;
-                    case 3:
-                        // Block Building
-                        parametersProperty = model.blockBuildingParametersProperty();
-
-                        methodName = model.getBlockBuilding();
-                        method = BlockBuildingMethod.getDefaultConfiguration(
-                                MethodMapping.blockBuildingMethods.get(methodName)
-                        );
-
-                        break;
                     case 5:
                         // Comparison Cleaning
                         // todo: when selecting "no CoCl" and manual configuration, we can't advance to next step
@@ -288,20 +276,24 @@ public class WizardController {
                 if (!DynamicMethodConfiguration.configurationOk(method, parametersProperty.get())) {
                     return;
                 }
-            } else if (currentStep.get() == 4) {
-                // Special case: Block Cleaning can have multiple methods. We need to check each one separately
-                for (JedaiMethodConfiguration bcmc : model.getBlockCleaningMethods()) {
+            } else if (currentStep.get() == 3 || currentStep.get() == 4) {
+                // Special case: Block Building and Cleaning can have multiple methods.
+                // We need to check each one separately. Get the methods...
+                List<JedaiMethodConfiguration> methodConfigs =
+                        currentStep.get() == 3 ? model.getBlockBuildingMethods() : model.getBlockCleaningMethods();
+
+                for (JedaiMethodConfiguration methodConfig : methodConfigs) {
                     // If the method is enabled and its configuration type is set to manual...
-                    if (bcmc.isEnabled() && bcmc.getConfigurationType().equals(JedaiOptions.MANUAL_CONFIG)) {
+                    if (methodConfig.isEnabled() && methodConfig.getConfigurationType().equals(JedaiOptions.MANUAL_CONFIG)) {
                         // Get an instance of the method
-                        IDocumentation method = MethodMapping.getMethodByName(bcmc.getName());
+                        IDocumentation method = MethodMapping.getMethodByName(methodConfig.getName());
 
                         // Configure the method
                         DynamicMethodConfiguration.displayModal(getClass(), injector, method,
-                                bcmc.manualParametersProperty());
+                                methodConfig.manualParametersProperty());
 
                         // If configuration failed, don't go to next step
-                        if (!DynamicMethodConfiguration.configurationOk(method, bcmc.getManualParameters())) {
+                        if (!DynamicMethodConfiguration.configurationOk(method, methodConfig.getManualParameters())) {
                             return;
                         }
                     }
