@@ -11,6 +11,7 @@ import javafx.scene.layout.VBox;
 import org.scify.jedai.gui.model.JedaiMethodConfiguration;
 import org.scify.jedai.gui.nodes.dynamic_configuration.ConfigurationTypeSelector;
 import org.scify.jedai.gui.nodes.dynamic_configuration.ConfigurationTypeSelectorHorizontal;
+import org.scify.jedai.gui.utilities.DialogHelper;
 import org.scify.jedai.gui.utilities.JedaiOptions;
 import org.scify.jedai.gui.wizard.Submit;
 import org.scify.jedai.gui.wizard.Validate;
@@ -89,8 +90,17 @@ public class BlockBuildingController {
 
     @Validate
     public boolean validate() {
-        // todo: check that there is at least one enabled method!
-        return true;
+        // Check that there is at least one enabled method
+        for (JedaiMethodConfiguration mc : model.getBlockBuildingMethods()) {
+            if (mc.isEnabled()) {
+                return true;
+            }
+        }
+
+        // Show error and do not continue
+        DialogHelper.showError("Error", "No method selected!",
+                "You must select at least one method for Block Building!");
+        return false;
     }
 
     @Submit
