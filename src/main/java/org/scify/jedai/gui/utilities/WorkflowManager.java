@@ -672,6 +672,7 @@ public class WorkflowManager {
         int bestIteration = 0;
         double originalComparisons;
         int iterationsNum;
+        BlocksPerformance blp;
 
         // Local optimization of Schema Clustering
         TObjectIntMap<String>[] scClusters = null;
@@ -695,70 +696,85 @@ public class WorkflowManager {
         // Local optimization of Block Building
         Platform.runLater(() -> statusLabel.setText("Block Building optimization..."));
 
-        JedaiMethodConfiguration mc = model.getBlockBuildingMethods().get(0);
-        IBlockBuilding bb = blBuMethods.get(0);
-        // todo: run all block building methods...
-        if (mc.getConfigurationType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
-            if (erType.equals(JedaiOptions.DIRTY_ER)) {
-                originalComparisons = profilesD1.size() * profilesD1.size();
-            } else {
-                originalComparisons = ((double) profilesD1.size()) * profilesD2.size();
-            }
+        final List<AbstractBlock> blocks = new ArrayList<>();
 
-            iterationsNum = random ? NO_OF_TRIALS : bb.getNumberOfGridConfigurations();
+        if (model.getBlockBuildingMethods() != null && !model.getBlockBuildingMethods().isEmpty()) {
+            // Index of the methods in the blBuMethods list
+            int enabledMethodIndex = 0;
 
-            for (int j = 0; j < iterationsNum; j++) {
-                // Set next configuration
-                if (random) {
-                    bb.setNextRandomConfiguration();
-                } else {
-                    bb.setNumberedGridConfiguration(j);
-                }
-
-                // Process the blocks (call appropriate method depending on ER type)
-                final List<AbstractBlock> originalBlocks =
-                        runBlockBuilding(erType, scClusters, profilesD1, profilesD2, bb);
-
-                if (originalBlocks.isEmpty()) {
+            for (JedaiMethodConfiguration mc : model.getBlockBuildingMethods()) {
+                // Skip disabled methods
+                if (!mc.isEnabled())
                     continue;
+
+                // Get the block building method instance
+                IBlockBuilding bb = blBuMethods.get(enabledMethodIndex);
+
+                if (mc.getConfigurationType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+                    if (erType.equals(JedaiOptions.DIRTY_ER)) {
+                        originalComparisons = profilesD1.size() * profilesD1.size();
+                    } else {
+                        originalComparisons = ((double) profilesD1.size()) * profilesD2.size();
+                    }
+
+                    iterationsNum = random ? NO_OF_TRIALS : bb.getNumberOfGridConfigurations();
+
+                    for (int j = 0; j < iterationsNum; j++) {
+                        // Set next configuration
+                        if (random) {
+                            bb.setNextRandomConfiguration();
+                        } else {
+                            bb.setNumberedGridConfiguration(j);
+                        }
+
+                        // Process the blocks
+                        final List<AbstractBlock> originalBlocks = new ArrayList<>(blocks);
+                        originalBlocks.addAll(runBlockBuilding(erType, scClusters, profilesD1, profilesD2, bb));
+
+                        if (originalBlocks.isEmpty()) {
+                            continue;
+                        }
+
+                        final BlocksPerformance methodBlp = new BlocksPerformance(originalBlocks, duplicatePropagation);
+                        methodBlp.setStatistics();
+                        double recall = methodBlp.getPc();
+                        double rr = 1 - methodBlp.getAggregateCardinality() / originalComparisons;
+                        double a = rr * recall;
+                        if (bestA < a) {
+                            bestIteration = j;
+                            bestA = a;
+                        }
+                    }
+                    System.out.println("\n\nBest iteration\t:\t" + bestIteration);
+                    System.out.println("Best performance\t:\t" + bestA);
+
+                    // Set final block building parameters
+                    if (random) {
+                        bb.setNumberedRandomConfiguration(bestIteration);
+                    } else {
+                        bb.setNumberedGridConfiguration(bestIteration);
+                    }
                 }
 
-                final BlocksPerformance blp = new BlocksPerformance(originalBlocks, duplicatePropagation);
+                // Process the blocks with block building
+                Platform.runLater(() -> statusLabel.setText("Running block building..."));
+
+                if (erType.equals(JedaiOptions.DIRTY_ER)) {
+                    blocks.addAll(bb.getBlocks(profilesD1));
+                } else {
+                    blocks.addAll(bb.getBlocks(profilesD1, profilesD2));
+                }
+
+                blp = new BlocksPerformance(blocks, duplicatePropagation);
                 blp.setStatistics();
-                double recall = blp.getPc();
-                double rr = 1 - blp.getAggregateCardinality() / originalComparisons;
-                double a = rr * recall;
-                if (bestA < a) {
-                    bestIteration = j;
-                    bestA = a;
-                }
-            }
-            System.out.println("\n\nBest iteration\t:\t" + bestIteration);
-            System.out.println("Best performance\t:\t" + bestA);
+                blp.printStatistics(0, bb.getMethodConfiguration(),
+                        bb.getMethodName());
+                this.addBlocksPerformance(bb.getMethodName(), 0, blp);
 
-            // Set final block building parameters
-            if (random) {
-                bb.setNumberedRandomConfiguration(bestIteration);
-            } else {
-                bb.setNumberedGridConfiguration(bestIteration);
+                // Increment index
+                enabledMethodIndex++;
             }
         }
-
-        // Process the blocks with block building
-        Platform.runLater(() -> statusLabel.setText("Running block building..."));
-
-        final List<AbstractBlock> blocks;
-        if (erType.equals(JedaiOptions.DIRTY_ER)) {
-            blocks = bb.getBlocks(profilesD1);
-        } else {
-            blocks = bb.getBlocks(profilesD1, profilesD2);
-        }
-
-        BlocksPerformance blp = new BlocksPerformance(blocks, duplicatePropagation);
-        blp.setStatistics();
-        blp.printStatistics(0, bb.getMethodConfiguration(),
-                bb.getMethodName());
-        this.addBlocksPerformance(bb.getMethodName(), 0, blp);
 
         // Local optimization of Block Cleaning methods
         Platform.runLater(() -> statusLabel.setText("Running block cleaning..."));
