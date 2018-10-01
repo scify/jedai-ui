@@ -297,8 +297,7 @@ public class WorkflowManager {
 
                 for (int j = 0; j < NO_OF_TRIALS; j++) {
                     int finalJ = j;
-                    Platform.runLater(
-                            () -> statusLabel.setText("Auto-configuration " + finalJ + "/" + NO_OF_TRIALS));
+                    Platform.runLater(() -> statusLabel.setText("Auto-configuration " + finalJ + "/" + NO_OF_TRIALS));
 
                     // Set the next automatic random configuration
                     iterateHolisticRandom(null);
@@ -479,43 +478,43 @@ public class WorkflowManager {
             }
         }
 
-        // Run block building
+        // Run block building methods
         if (finalRun)
             Platform.runLater(() -> statusLabel.setText("Running block building..."));
 
-        List<AbstractBlock> blocks;
-        IBlockBuilding bp = blBuMethods.get(0);
-        // todo: run all block building methods
-        if (bp != null) {
+        List<AbstractBlock> blocks = new ArrayList<>();
+        StringBuilder bbConfigs = new StringBuilder();
+        StringBuilder bbNames = new StringBuilder();
+
+        for (IBlockBuilding bb : blBuMethods) {
+            // Add method name and config to the strings (that are used to print performance)
+            bbNames.append(bb.getMethodName()).append(" / ");
+            bbConfigs.append(bb.getMethodConfiguration()).append(" / ");
+
+            // Run the method
             if (erType.equals(JedaiOptions.DIRTY_ER)) {
                 if (clusters == null) {
                     // Dirty ER without schema clustering
-                    blocks = bp.getBlocks(profilesD1);
+                    blocks.addAll(bb.getBlocks(profilesD1));
                 } else {
                     // Dirty ER with schema clustering
-                    blocks = bp.getBlocks(profilesD1, null, clusters);
+                    blocks.addAll(bb.getBlocks(profilesD1, null, clusters));
                 }
             } else {
                 if (clusters == null) {
                     // Clean-clean ER without schema clustering
-                    blocks = bp.getBlocks(profilesD1, profilesD2);
+                    blocks.addAll(bb.getBlocks(profilesD1, profilesD2));
                 } else {
                     // Clean-clean ER with schema clustering
-                    blocks = bp.getBlocks(profilesD1, profilesD2, clusters);
+                    blocks.addAll(bb.getBlocks(profilesD1, profilesD2, clusters));
                 }
             }
-        } else {
-            // Show error
-            DialogHelper.showError("Block Building Method Error",
-                    "Block Building Method is null!",
-                    "There was a problem running the selected block building method!");
-            return null;
         }
 
         if (finalRun)
             System.out.println("Original blocks\t:\t" + blocks.size());
 
-        // Get blocks performance to print and
+        // Get blocks performance to print
         overheadEnd = System.currentTimeMillis();
         blp = new BlocksPerformance(blocks, duplicatePropagation);
         blp.setStatistics();
@@ -523,11 +522,11 @@ public class WorkflowManager {
             double totalTime = overheadEnd - overheadStart;
 
             // Print performance
-            blp.printStatistics(totalTime, bp.getMethodConfiguration(),
-                    bp.getMethodName());
+            blp.printStatistics(totalTime, bbConfigs.toString(), bbNames.toString());
 
             // Save the performance of block building
-            this.addBlocksPerformance(bp.getMethodName(), totalTime, blp);
+            // todo: Add multiple items to the list instead of just one
+            this.addBlocksPerformance(bbNames.toString(), totalTime, blp);
         }
 
         // Run Block Cleaning
