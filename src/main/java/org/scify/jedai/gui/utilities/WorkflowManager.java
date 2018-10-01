@@ -92,7 +92,7 @@ public class WorkflowManager {
         for (JedaiMethodConfiguration methodConfig : model.getBlockBuildingMethods()) {
             // Ignore disabled methods
             if (!methodConfig.isEnabled())
-                return;
+                continue;
 
             // Create instance of this method
             BlockBuildingMethod blockingWorkflow = MethodMapping.blockBuildingMethods.get(methodConfig.getName());
