@@ -459,12 +459,7 @@ public class WorkflowManager {
                                             List<IBlockProcessing> blClMethods, IBlockProcessing coCl,
                                             IEntityMatching em, IEntityClustering ec, boolean finalRun)
             throws Exception {
-        // Initialize a few variables
-        double overheadStart = System.currentTimeMillis();
-        double overheadEnd;
-        BlocksPerformance blp;
-
-        // Run schema clustering (if it's not null)
+        // Run schema clustering if it's not null (can't measure its performance)
         if (finalRun)
             Platform.runLater(() -> statusLabel.setText("Running schema clustering..."));
 
@@ -478,18 +473,19 @@ public class WorkflowManager {
             }
         }
 
+        // Initialize a few variables
+        double overheadStart;
+        double overheadEnd;
+        BlocksPerformance blp;
+
         // Run block building methods
         if (finalRun)
             Platform.runLater(() -> statusLabel.setText("Running block building..."));
 
         List<AbstractBlock> blocks = new ArrayList<>();
-        StringBuilder bbConfigs = new StringBuilder();
-        StringBuilder bbNames = new StringBuilder();
-
         for (IBlockBuilding bb : blBuMethods) {
-            // Add method name and config to the strings (that are used to print performance)
-            bbNames.append(bb.getMethodName()).append(" / ");
-            bbConfigs.append(bb.getMethodConfiguration()).append(" / ");
+            // Start time measurement
+            overheadStart = System.currentTimeMillis();
 
             // Run the method
             if (erType.equals(JedaiOptions.DIRTY_ER)) {
@@ -509,25 +505,24 @@ public class WorkflowManager {
                     blocks.addAll(bb.getBlocks(profilesD1, profilesD2, clusters));
                 }
             }
+
+            // Get blocks performance to print
+            overheadEnd = System.currentTimeMillis();
+            blp = new BlocksPerformance(blocks, duplicatePropagation);
+            blp.setStatistics();
+            if (finalRun) {
+                double totalTime = overheadEnd - overheadStart;
+
+                // Print performance
+                blp.printStatistics(totalTime, bb.getMethodConfiguration(), bb.getMethodName());
+
+                // Save the performance of block building
+                this.addBlocksPerformance(bb.getMethodName(), totalTime, blp);
+            }
         }
 
         if (finalRun)
             System.out.println("Original blocks\t:\t" + blocks.size());
-
-        // Get blocks performance to print
-        overheadEnd = System.currentTimeMillis();
-        blp = new BlocksPerformance(blocks, duplicatePropagation);
-        blp.setStatistics();
-        if (finalRun) {
-            double totalTime = overheadEnd - overheadStart;
-
-            // Print performance
-            blp.printStatistics(totalTime, bbConfigs.toString(), bbNames.toString());
-
-            // Save the performance of block building
-            // todo: Add multiple items to the list instead of just one
-            this.addBlocksPerformance(bbNames.toString(), totalTime, blp);
-        }
 
         // Run Block Cleaning
         if (finalRun)
