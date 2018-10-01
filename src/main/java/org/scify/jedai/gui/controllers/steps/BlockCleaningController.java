@@ -19,7 +19,6 @@ import org.scify.jedai.gui.wizard.WizardData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +28,6 @@ public class BlockCleaningController {
     public ListView<String> list;
     public VBox methodConfContainer;
 
-    private BlockCleaningComparator listComparator;
     private Map<String, SimpleBooleanProperty> optionsMap;
     private Logger log = LoggerFactory.getLogger(BlockCleaningController.class);
 
@@ -38,9 +36,6 @@ public class BlockCleaningController {
 
     @FXML
     public void initialize() {
-        // Create comparator object that will be used for list sorting later
-        listComparator = new BlockCleaningComparator();
-
         // Initialize block cleaning methods list
         model.setBlockCleaningMethods(FXCollections.observableArrayList());
 
@@ -73,7 +68,7 @@ public class BlockCleaningController {
 
         // Add items to the list
         list.getItems().addAll(optionsMap.keySet());
-        list.getItems().sort(listComparator);
+        list.getItems().sort(new BlockCleaningComparator());
 
         // Set list cells to have checkboxes which use the map's boolean values
         list.setCellFactory(CheckBoxListCell.forListView(optionsMap::get));

@@ -11,6 +11,7 @@ import javafx.scene.layout.VBox;
 import org.scify.jedai.gui.model.JedaiMethodConfiguration;
 import org.scify.jedai.gui.nodes.dynamic_configuration.ConfigurationTypeSelector;
 import org.scify.jedai.gui.nodes.dynamic_configuration.ConfigurationTypeSelectorHorizontal;
+import org.scify.jedai.gui.utilities.BlockBuildingComparator;
 import org.scify.jedai.gui.utilities.DialogHelper;
 import org.scify.jedai.gui.utilities.JedaiOptions;
 import org.scify.jedai.gui.wizard.Submit;
@@ -28,7 +29,7 @@ import java.util.Map;
 public class BlockBuildingController {
     public VBox containerVBox;
     public VBox methodConfContainer;
-    public ListView<Object> list;
+    public ListView<String> list;
     private Logger log = LoggerFactory.getLogger(BlockBuildingController.class);
 
     @Inject
@@ -82,10 +83,10 @@ public class BlockBuildingController {
 
         // Add items to the list
         list.getItems().addAll(optionsMap.keySet());
+        list.getItems().sort(new BlockBuildingComparator());
 
         // Set list cells to have checkboxes which use the map's boolean values
         list.setCellFactory(CheckBoxListCell.forListView(optionsMap::get));
-        // todo: list order is wrong
     }
 
     @Validate
