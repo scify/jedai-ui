@@ -73,9 +73,10 @@ public class EntityClusterExplorationController {
             // Create node that we will add entities to
             VBox vBox = new VBox();
 
-            // Get entities to add
-            List<EquivalenceCluster> duplicatesToShow =
-                    duplicates.subList(pageIndex * pageSize, (pageIndex + 1) * pageSize);
+            // Get entities to add to this page
+            int firstCluster = pageIndex * pageSize;
+            int lastCluster = Math.min((pageIndex + 1) * pageSize, duplicates.size());
+            List<EquivalenceCluster> duplicatesToShow = duplicates.subList(firstCluster, lastCluster);
 
             for (EquivalenceCluster dup : duplicatesToShow) {
                 // Create nodes that will hold the entities (HBox into ScrollPane)
@@ -108,8 +109,6 @@ public class EntityClusterExplorationController {
                             getEntityNode(entitiesD2, dup.getEntityIdsD2().get(0))
                     );
                 }
-
-                // todo: last page throws exception?
 
                 // Fix sizes
                 entitiesContainer.setFillHeight(true);
