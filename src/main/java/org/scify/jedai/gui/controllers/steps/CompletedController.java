@@ -20,7 +20,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
-import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.scify.jedai.datamodel.EquivalenceCluster;
 import org.scify.jedai.datawriter.ClustersPerformanceWriter;
 import org.scify.jedai.gui.controllers.EntityClusterExplorationController;
@@ -196,24 +196,26 @@ public class CompletedController {
                 -1, -1, -1, -1, -1));
         resultsTable.setRoot(root);
 
-        // Generate grid columns
-        List<ImmutablePair<String, String>> tableCols = Arrays.asList(
-                new ImmutablePair<>("Run #", "resultName"),
-                new ImmutablePair<>("Recall", "recallRounded"),
-                new ImmutablePair<>("Precision", "precisionRounded"),
-                new ImmutablePair<>("F1-measure", "fMeasureRounded"),
-                new ImmutablePair<>("Total time (sec.)", "totalTime"),
-                new ImmutablePair<>("Input instances", "inputInstances"),
-                new ImmutablePair<>("Clusters #", "numOfClusters")
+        // Generate grid columns (with label, property name and column width relative to other columns...)
+        List<ImmutableTriple<String, String, Integer>> tableCols = Arrays.asList(
+                new ImmutableTriple<>("Run #", "resultName", 3),
+                new ImmutableTriple<>("Recall", "recallRounded", 1),
+                new ImmutableTriple<>("Precision", "precisionRounded", 1),
+                new ImmutableTriple<>("F1-measure", "fMeasureRounded", 1),
+                new ImmutableTriple<>("Total time (sec.)", "totalTime", 1),
+                new ImmutableTriple<>("Input instances", "inputInstances", 1),
+                new ImmutableTriple<>("Clusters #", "numOfClusters", 1)
         );
 
-        // Set number of columns, used for calculation of each column's initial width
-        int colsNum = tableCols.size() + 1; // Add 1 because we add the details column later
-
+        int totalWidth = 1; // Start from 1 because we add the details column later
+        for (ImmutableTriple<String, String, Integer> t : tableCols) {
+            totalWidth += t.getRight();
+        }
         // Create column objects
-        for (ImmutablePair<String, String> p : tableCols) {
+        for (ImmutableTriple<String, String, Integer> p : tableCols) {
             String colName = p.getLeft();
-            String propertyName = p.getRight();
+            String propertyName = p.getMiddle();
+            int colWidth = p.getRight();
 
             // Create column
             TreeTableColumn<WorkflowResult, Object> col = new TreeTableColumn<>(colName);
@@ -221,7 +223,8 @@ public class CompletedController {
             col.setCellFactory(param -> new NonNegativeTreeTableCell());
 
             // Set width of the column (subtract not needed but prevents horizontal scrollbar...)
-            col.prefWidthProperty().bind(resultsTable.widthProperty().multiply(1.0 / colsNum).subtract(1));
+            col.prefWidthProperty().bind(
+                    resultsTable.widthProperty().multiply(1.0 / totalWidth).multiply(colWidth).subtract(colWidth));
 
             // Add column to table
             resultsTable.getColumns().add(col);
