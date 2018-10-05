@@ -270,12 +270,12 @@ public class WorkflowManager {
      * Add a blocks performance result to the performance per step list
      *
      * @param name Name of step
-     * @param time Time it took to run the step
+     * @param time Time it took to run the step (in milliseconds)
      * @param blp  BlocksPerformance object (to get values)
      */
     private void addBlocksPerformance(String name, double time, BlocksPerformance blp) {
         performancePerStep.add(
-                new WorkflowResult(name, blp.getPc(), blp.getPq(), blp.getFMeasure(), time, -1, -1, -1)
+                new WorkflowResult(name, blp.getPc(), blp.getPq(), blp.getFMeasure(), time / 1000.0, -1, -1, -1)
         );
     }
 
@@ -670,11 +670,13 @@ public class WorkflowManager {
     private ClustersPerformance runStepByStepWorkflow(Label statusLabel, boolean random) {
         double bestA = 0;
         int bestIteration = 0;
+
         double originalComparisons;
         int iterationsNum;
+        double time1, time2, totalTimeMillis;
         BlocksPerformance blp;
 
-        // Local optimization of Schema Clustering
+        // Schema Clustering local optimization
         TObjectIntMap<String>[] scClusters = null;
         if (!model.getSchemaClustering().equals(JedaiOptions.NO_SCHEMA_CLUSTERING)) {
             Platform.runLater(() -> statusLabel.setText("Schema Clustering optimization..."));
@@ -693,9 +695,9 @@ public class WorkflowManager {
             }
         }
 
-        // Local optimization of Block Building
+        // Block Building local optimization
         Platform.runLater(() -> statusLabel.setText("Block Building optimization..."));
-
+        time1 = System.currentTimeMillis();
         final List<AbstractBlock> blocks = new ArrayList<>();
 
         if (model.getBlockBuildingMethods() != null && !model.getBlockBuildingMethods().isEmpty()) {
@@ -765,18 +767,21 @@ public class WorkflowManager {
                     blocks.addAll(bb.getBlocks(profilesD1, profilesD2));
                 }
 
+                time2 = System.currentTimeMillis();
+                totalTimeMillis = time2 - time1;
+
                 blp = new BlocksPerformance(blocks, duplicatePropagation);
                 blp.setStatistics();
-                blp.printStatistics(0, bb.getMethodConfiguration(),
+                blp.printStatistics(totalTimeMillis, bb.getMethodConfiguration(),
                         bb.getMethodName());
-                this.addBlocksPerformance(bb.getMethodName(), 0, blp);
+                this.addBlocksPerformance(bb.getMethodName(), totalTimeMillis, blp);
 
                 // Increment index
                 enabledMethodIndex++;
             }
         }
 
-        // Local optimization of Block Cleaning methods
+        // Block Cleaning methods local optimization
         Platform.runLater(() -> statusLabel.setText("Running block cleaning..."));
 
         List<AbstractBlock> cleanedBlocks = blocks;
@@ -790,6 +795,9 @@ public class WorkflowManager {
                 if (!blClConfig.isEnabled())
                     continue;
 
+                // Start time measurement
+                time1 = System.currentTimeMillis();
+
                 // Get instance of the method
                 IBlockProcessing bp = blClMethods.get(enabledMethodIndex);
 
@@ -802,18 +810,23 @@ public class WorkflowManager {
                 // Process blocks with this method
                 cleanedBlocks = bp.refineBlocks(blocks);
 
+                // Measure milliseconds it took to optimize & run method
+                time2 = System.currentTimeMillis();
+                totalTimeMillis = time2 - time1;
+
                 blp = new BlocksPerformance(cleanedBlocks, duplicatePropagation);
                 blp.setStatistics();
-                blp.printStatistics(0, bp.getMethodConfiguration(), bp.getMethodName());
-                this.addBlocksPerformance(bp.getMethodName(), 0, blp);
+                blp.printStatistics(totalTimeMillis, bp.getMethodConfiguration(), bp.getMethodName());
+                this.addBlocksPerformance(bp.getMethodName(), totalTimeMillis, blp);
 
                 // Increment index
                 enabledMethodIndex++;
             }
         }
 
-        // Local optimization of Comparison Cleaning
+        // Comparison Cleaning local optimization
         Platform.runLater(() -> statusLabel.setText("Running comparison cleaning..."));
+        time1 = System.currentTimeMillis();
 
         List<AbstractBlock> finalBlocks;
         if (model.getComparisonCleaningConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
@@ -822,16 +835,19 @@ public class WorkflowManager {
         }
 
         finalBlocks = comparisonCleaningMethod.refineBlocks(cleanedBlocks);
+        time2 = System.currentTimeMillis();
+        totalTimeMillis = time2 - time1;
+
         blp = new BlocksPerformance(finalBlocks, duplicatePropagation);
         blp.setStatistics();
-        blp.printStatistics(0, comparisonCleaningMethod.getMethodConfiguration(),
+        blp.printStatistics(totalTimeMillis, comparisonCleaningMethod.getMethodConfiguration(),
                 comparisonCleaningMethod.getMethodName());
-        this.addBlocksPerformance(comparisonCleaningMethod.getMethodName(), 0, blp);
+        this.addBlocksPerformance(comparisonCleaningMethod.getMethodName(), totalTimeMillis, blp);
 
-        // Local optimization of Matching & Clustering
+        // Entity Matching & Clustering local optimization
         Platform.runLater(() -> statusLabel.setText("Running entity matching & clustering"));
 
-        double time1 = System.currentTimeMillis();
+        time1 = System.currentTimeMillis();
         if (model.getEntityMatchingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)
                 || model.getEntityClusteringConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
             double bestFMeasure = 0;
@@ -928,12 +944,13 @@ public class WorkflowManager {
         final SimilarityPairs sims = entityMatchingMethod.executeComparisons(finalBlocks, profilesD1, profilesD2);
         entityClusters = ec.getDuplicates(sims);
 
-        double time2 = System.currentTimeMillis();
+        time2 = System.currentTimeMillis();
+        totalTimeMillis = time2 - time1;
 
         final ClustersPerformance clp = new ClustersPerformance(entityClusters, duplicatePropagation);
         clp.setStatistics();
         // todo: Could set the entire configuration details instead of entity clustering method name & config.
-        clp.printStatistics(time2 - time1, ec.getMethodName(), ec.getMethodConfiguration());
+        clp.printStatistics(totalTimeMillis, ec.getMethodName(), ec.getMethodConfiguration());
 
         return clp;
     }
