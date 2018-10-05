@@ -207,10 +207,9 @@ public class CompletedController {
                 new ImmutableTriple<>("Clusters #", "numOfClusters", 1)
         );
 
-        int totalWidth = 1; // Start from 1 because we add the details column later
-        for (ImmutableTriple<String, String, Integer> t : tableCols) {
-            totalWidth += t.getRight();
-        }
+        // Sum the column widths (+1 because we add Details column later)
+        int totalWidth = 1 + tableCols.stream().map(ImmutableTriple::getRight).mapToInt(Integer::intValue).sum();
+
         // Create column objects
         for (ImmutableTriple<String, String, Integer> p : tableCols) {
             String colName = p.getLeft();
