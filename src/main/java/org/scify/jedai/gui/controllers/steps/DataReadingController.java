@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
+import org.apache.jena.riot.RiotException;
 import org.scify.jedai.datamodel.EntityProfile;
 import org.scify.jedai.datamodel.EquivalenceCluster;
 import org.scify.jedai.gui.controllers.DatasetExplorationController;
@@ -285,9 +286,18 @@ public class DataReadingController {
         }
 
         // Get ground truth
-        AbstractDuplicatePropagation groundTruth =
-                DataReader.getGroundTruth(gtType, gtParams, erType, entitiesD1, entitiesD2);
+        AbstractDuplicatePropagation groundTruth;
+        try {
+            groundTruth = DataReader.getGroundTruth(gtType, gtParams, erType, entitiesD1, entitiesD2);
+        } catch (RiotException e) {
+            // Catch possible exception from RDF reader
+            DialogHelper.showError(errorTitle, "Ground truth could not be read!",
+                    "Please check that the ground truth reader settings are correct.\n\nError details:\n"
+                            + e.getMessage());
+            return;
+        }
 
+        // Check that ground truth is not null
         if (groundTruth == null) {
             DialogHelper.showError(errorTitle, "Ground truth could not be read!",
                     "Please check that the ground truth reader settings are correct.");
