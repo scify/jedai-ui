@@ -845,11 +845,17 @@ public class WorkflowManager {
         this.addBlocksPerformance(comparisonCleaningMethod.getMethodName(), totalTimeMillis, blp);
 
         // Entity Matching & Clustering local optimization
-        Platform.runLater(() -> statusLabel.setText("Running entity matching & clustering"));
-
         time1 = System.currentTimeMillis();
-        if (model.getEntityMatchingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)
-                || model.getEntityClusteringConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
+        boolean matchingAutomatic = model.getEntityMatchingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG);
+        boolean clusteringAutomatic = model.getEntityClusteringConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG);
+
+        if (matchingAutomatic || clusteringAutomatic) {
+            // Show message that we are doing optimization based on the selected options
+            String optimizationMsg = (matchingAutomatic ? "matching" : "") +
+                    (matchingAutomatic && clusteringAutomatic ? " & " : "") +
+                    (clusteringAutomatic ? "clustering" : "");
+            Platform.runLater(() -> statusLabel.setText("Entity " + optimizationMsg + " optimization..."));
+
             double bestFMeasure = 0;
 
             // Check if we are using random search or grid search
@@ -941,7 +947,12 @@ public class WorkflowManager {
             }
         }
 
+        // Run entity matching with final configuration
+        Platform.runLater(() -> statusLabel.setText("Running entity matching..."));
         final SimilarityPairs sims = entityMatchingMethod.executeComparisons(finalBlocks, profilesD1, profilesD2);
+
+        // Run entity clustering with final configuration
+        Platform.runLater(() -> statusLabel.setText("Running entity clustering..."));
         entityClusters = ec.getDuplicates(sims);
 
         time2 = System.currentTimeMillis();
