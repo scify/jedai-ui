@@ -12,6 +12,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.layout.HBox;
@@ -20,6 +24,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.scify.jedai.datamodel.EquivalenceCluster;
 import org.scify.jedai.datawriter.ClustersPerformanceWriter;
@@ -54,6 +60,7 @@ public class CompletedController {
     public Label totalTimeLabel;
     public TabPane resultsTabPane;
     public Button exploreBtn;
+    public Button showPlotBtn;
     public VBox autoConfigContainer;
     public ComboBox outputFormatCombobox;
     public Label statusLabel;
@@ -290,7 +297,7 @@ public class CompletedController {
             // Disable the step control buttons & exploration button
             model.setWorkflowRunning(true);
             exploreBtn.setDisable(true);
-
+            showPlotBtn.setDisable(true);
             // Set the starting time
             long startTime = System.currentTimeMillis();
 
@@ -352,6 +359,7 @@ public class CompletedController {
 
                     // Enable exploration button
                     exploreBtn.setDisable(false);
+                    showPlotBtn.setDisable(false);
                 });
             } catch (Exception e) {
                 // Exception occurred, show alert with information about it
@@ -435,6 +443,7 @@ public class CompletedController {
     public void resetData() {
         // Disable exploration button
         exploreBtn.setDisable(true);
+        showPlotBtn.setDisable(true);
 
         // Hide time measurements
         numOfInstancesLabel.setVisible(false);
@@ -501,5 +510,75 @@ public class CompletedController {
             // This shouldn't ever happen.
             System.err.println("Error when showing the results exploration popup (Wrong controller instance?)");
         }
+    }
+
+    /**
+     * TODO: Integrate real data
+     *
+     * Shows a Line chart (currently with dummy data)
+     * With the Precision and the Normalized number of emitted records
+     *
+     * @param actionEvent
+     */
+    public void showPlot(ActionEvent actionEvent) {
+        Stage stage = new Stage();
+        stage.setTitle("Progressive Workflow ROC Curve");
+
+        final NumberAxis xAxis = new NumberAxis();
+        final NumberAxis yAxis = new NumberAxis();
+
+        yAxis.setLowerBound(0);
+        yAxis.setUpperBound(100);
+        yAxis.setTickUnit(20);
+        yAxis.setLabel("Recall % ");
+
+        xAxis.setLowerBound(0);
+        xAxis.setUpperBound(35);
+        xAxis.setTickUnit(5);
+        xAxis.setLabel("Normalized number of emitted records");
+        //creating the chart
+        final LineChart<Number,Number> lineChart =
+                new LineChart<Number,Number>(xAxis,yAxis);
+
+        lineChart.setTitle("Progressive Workflow ROC Curve");
+        //defining a series
+        XYChart.Series series = new XYChart.Series();
+        series.setName("Recall");
+        //populating the series with data
+        series.getData().add(new XYChart.Data(1, 5));
+        series.getData().add(new XYChart.Data(1.2, 22));
+        series.getData().add(new XYChart.Data(2.5, 37));
+        series.getData().add(new XYChart.Data(3, 42));
+        series.getData().add(new XYChart.Data(4.8, 50));
+        series.getData().add(new XYChart.Data(5.2, 63));
+        series.getData().add(new XYChart.Data(6.8, 75));
+        series.getData().add(new XYChart.Data(7.5, 80));
+        series.getData().add(new XYChart.Data(9.5, 82));
+        series.getData().add(new XYChart.Data(12, 85));
+        series.getData().add(new XYChart.Data(14, 88));
+        series.getData().add(new XYChart.Data(15, 90));
+        series.getData().add(new XYChart.Data(17, 92));
+        series.getData().add(new XYChart.Data(18, 95));
+        series.getData().add(new XYChart.Data(20, 97));
+        series.getData().add(new XYChart.Data(22, 98));
+        series.getData().add(new XYChart.Data(25, 100));
+
+        lineChart.getData().add(series);
+
+        stage.setScene(new Scene(lineChart, 800, 600));
+        stage.show();
+
+        showDummyDataAlert(stage);
+    }
+
+    protected void showDummyDataAlert(Stage stage) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Information Dialog");
+        alert.setHeaderText("Plot information");
+        alert.setContentText("This plot is currently in development and contains dummy data");
+        alert.initStyle(StageStyle.UTILITY);
+        alert.initOwner(stage);
+        alert.getDialogPane().setPrefSize(480, 250);
+        alert.showAndWait();
     }
 }
