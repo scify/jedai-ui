@@ -527,11 +527,13 @@ public class CompletedController {
         final NumberAxis xAxis = new NumberAxis();
         final NumberAxis yAxis = new NumberAxis();
 
+        yAxis.setAutoRanging(false);
         yAxis.setLowerBound(0);
         yAxis.setUpperBound(100);
         yAxis.setTickUnit(20);
         yAxis.setLabel("Recall % ");
 
+        xAxis.setAutoRanging(false);
         xAxis.setLowerBound(0);
         xAxis.setUpperBound(35);
         xAxis.setTickUnit(5);
@@ -543,7 +545,9 @@ public class CompletedController {
         lineChart.setTitle("Progressive Workflow ROC Curve");
         //defining a series
         XYChart.Series series = new XYChart.Series();
-        series.setName("Recall");
+
+        lineChart.setLegendVisible(false);
+
         //populating the series with data
         series.getData().add(new XYChart.Data(1, 5));
         series.getData().add(new XYChart.Data(1.2, 22));
@@ -561,7 +565,7 @@ public class CompletedController {
         series.getData().add(new XYChart.Data(18, 95));
         series.getData().add(new XYChart.Data(20, 97));
         series.getData().add(new XYChart.Data(22, 98));
-        series.getData().add(new XYChart.Data(25, 100));
+        series.getData().add(new XYChart.Data(25, 99));
 
         lineChart.getData().add(series);
 
