@@ -6,6 +6,12 @@ public class JedaiOptions {
     public static final String AUTOMATIC_CONFIG = "Automatic";
     public static final String MANUAL_CONFIG = "Manual";
 
+    // Workflows
+    public static final String WORKFLOW_BLOCKING_BASED = "Blocking-based";
+    public static final String WORKFLOW_JOIN_BASED = "Join-based";
+    public static final String WORKFLOW_PROGRESSIVE = "Progressive";
+
+
     // Entity resolution types
     public static final String DIRTY_ER = "Dirty Entity Resolution";
     public static final String CLEAN_CLEAN_ER = "Clean-Clean Entity Resolution";

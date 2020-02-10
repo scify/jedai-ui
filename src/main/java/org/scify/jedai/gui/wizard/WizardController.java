@@ -71,6 +71,7 @@ public class WizardController {
         // Initialize ArrayLists with step texts & descriptions
         this.stepTexts = Arrays.asList(
                 "Welcome",
+                "Workflow Selection",
                 "Step 1: Data Reading",
                 "Step 2: Schema Clustering",
                 "Step 3: Block Building",
@@ -84,6 +85,7 @@ public class WizardController {
 
         this.stepDescriptions = Arrays.asList(
                 "Welcome to JedAI, an open source, high scalability toolkit that offers out-of-the-box solutions for Entity Resolution over structured (relational) and semi-structured (RDF) data.",
+                "Choose a workflow type. This step probably needs a better description.",
                 "Data Reading transforms the input data into a list of entity profiles.",
                 "Schema Clustering groups together syntactically (not semantically) similar attributes. This can improve the performance of all workflow steps.",
                 "Block Building clusters entities into overlapping blocks in a lazy manner that relies on unsupervised blocking keys: every token in an attribute value forms a key. Blocks are then extracted, based on its equality or on its similarity with other keys.",
@@ -97,10 +99,10 @@ public class WizardController {
 
         // Initialize hashmap with configuration types
         this.configurationTypes = new HashMap<>();
-        this.configurationTypes.put(2, model.schemaClusteringConfigTypeProperty());
-        this.configurationTypes.put(5, model.comparisonCleaningConfigTypeProperty());
-        this.configurationTypes.put(6, model.entityMatchingConfigTypeProperty());
-        this.configurationTypes.put(7, model.entityClusteringConfigTypeProperty());
+        this.configurationTypes.put(3, model.schemaClusteringConfigTypeProperty());
+        this.configurationTypes.put(6, model.comparisonCleaningConfigTypeProperty());
+        this.configurationTypes.put(7, model.entityMatchingConfigTypeProperty());
+        this.configurationTypes.put(8, model.entityClusteringConfigTypeProperty());
 
         buildSteps();
         initButtons();
@@ -155,6 +157,7 @@ public class WizardController {
         // Specify step FXMLs in order that they should appear
         ArrayList<String> controllers = new ArrayList<>(Arrays.asList(
                 "wizard-fxml/steps/Welcome.fxml",
+                "wizard-fxml/steps/WorkflowSelection.fxml",
                 "wizard-fxml/steps/DataReading.fxml",
                 "wizard-fxml/steps/SchemaClustering.fxml",
                 "wizard-fxml/steps/BlockBuilding.fxml",
@@ -227,7 +230,7 @@ public class WizardController {
                 ListProperty<JPair<String, Object>> parametersProperty = null;
 
                 switch (currentStep.get()) {
-                    case 2:
+                    case 3:
                         // Schema Clustering
                         // todo: when selecting "no SC" and manual configuration, we can't advance to next step
                         parametersProperty = model.schemaClusteringParametersProperty();
@@ -238,7 +241,7 @@ public class WizardController {
                                 SimilarityMetric.ENHANCED_JACCARD_SIMILARITY,
                                 MethodMapping.schemaClusteringMethods.get(methodName));
                         break;
-                    case 5:
+                    case 6:
                         // Comparison Cleaning
                         // todo: when selecting "no CoCl" and manual configuration, we can't advance to next step
                         parametersProperty = model.comparisonCleaningParametersProperty();
@@ -247,7 +250,7 @@ public class WizardController {
                         method = MethodMapping.getMethodByName(methodName);
 
                         break;
-                    case 6:
+                    case 7:
                         // Entity Matching
                         parametersProperty = model.entityMatchingParametersProperty();
 
@@ -256,7 +259,7 @@ public class WizardController {
                                 new GroupLinkage() : new ProfileMatcher();
 
                         break;
-                    case 7:
+                    case 8:
                         // Entity Clustering
                         parametersProperty = model.entityClusteringParametersProperty();
 
@@ -277,8 +280,8 @@ public class WizardController {
                 if (!DynamicMethodConfiguration.configurationOk(method, parametersProperty.get())) {
                     return;
                 }
-            } else if (currentStep.get() == 3 || currentStep.get() == 4) {
-                boolean isBlockBuilding = (currentStep.get() == 3);
+            } else if (currentStep.get() == 4 || currentStep.get() == 5) {
+                boolean isBlockBuilding = (currentStep.get() == 4);
 
                 // Special case: Block Building and Cleaning can have multiple methods.
                 // We need to check each one separately. Get the methods...
