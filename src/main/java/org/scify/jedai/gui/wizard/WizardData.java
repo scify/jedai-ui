@@ -10,6 +10,9 @@ public class WizardData {
     // Boolean that indicates whether a workflow is currently running
     private final SimpleBooleanProperty workflowRunning = new SimpleBooleanProperty(false);
 
+    // Workflow selection
+    private final StringProperty workflow = new SimpleStringProperty();
+
     // Data Reading
     private final StringProperty erType = new SimpleStringProperty();
 
@@ -60,6 +63,9 @@ public class WizardData {
      */
     public static WizardData cloneData(WizardData data) {
         WizardData clone = new WizardData();
+
+        // Workflow
+        clone.setWorkflow(data.getWorkflow());
 
         // Data Reading
         clone.setErType(data.getErType());
@@ -135,6 +141,18 @@ public class WizardData {
 
     public void setWorkflowRunning(boolean workflowRunning) {
         this.workflowRunning.set(workflowRunning);
+    }
+
+    public String getWorkflow() {
+        return workflow.get();
+    }
+
+    public StringProperty workflowProperty() {
+        return workflow;
+    }
+
+    public void setWorkflow(String workflow) {
+        this.workflow.set(workflow);
     }
 
     public String getErType() {
