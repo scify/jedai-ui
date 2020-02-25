@@ -106,4 +106,31 @@ public class JedaiOptions {
     public static final String AUTOCONFIG_STEPBYSTEP = "Step-by-step";
     public static final String AUTOCONFIG_RANDOMSEARCH = "Random Search";
     public static final String AUTOCONFIG_GRIDSEARCH = "Grid Search";
+
+    // JedAI workflow step names & descriptions
+    public static final String STEP_LABEL_WELCOME = "Welcome";
+    public static final String STEP_DESCRIPTION_WELCOME = "Welcome to JedAI, an open source, high scalability toolkit that offers out-of-the-box solutions for Entity Resolution over structured (relational) and semi-structured (RDF) data.";
+    public static final String STEP_LABEL_WORKFLOW_SELECTION = "Workflow Selection";
+    public static final String STEP_LABEL_DATA_READING = "Data Reading";
+    public static final String STEP_DESCRIPTION_DATA_READING = "Data Reading transforms the input data into a list of entity profiles.";
+    public static final String STEP_LABEL_SCHEMA_CLUSTERING = "Schema Clustering";
+    public static final String STEP_DESCRIPTION_SCHEMA_CLUSTERING = "Schema Clustering groups together syntactically (not semantically) similar attributes. This can improve the performance of all workflow steps.";
+    public static final String STEP_LABEL_BLOCK_BUILDING = "Block Building";
+    public static final String STEP_DESCRIPTION_BLOCK_BUILDING = "Block Building clusters entities into overlapping blocks in a lazy manner that relies on unsupervised blocking keys: every token in an attribute value forms a key. Blocks are then extracted, based on its equality or on its similarity with other keys.";
+    public static final String STEP_LABEL_BLOCK_CLEANING = "Block Cleaning";
+    public static final String STEP_DESCRIPTION_BLOCK_CLEANING = "Block Cleaning aims to clean a set of overlapping blocks from unnecessary comparisons, which can be either redundant (i.e., repeated) or superfluous (i.e., between non-matching entities). Its methods operate on the coarse level of individual blocks or entities.";
+    public static final String STEP_LABEL_COMPARISON_CLEANING = "Comparison Cleaning";
+    public static final String STEP_DESCRIPTION_COMPARISON_CLEANING = "Similar to Block Cleaning, Comparison Cleaning aims to clean a set of blocks from both redundant and superfluous comparisons. Unlike Block Cleaning, its methods operate on the finer granularity of individual comparisons.";
+    public static final String STEP_LABEL_ENTITY_MATCHING = "Entity Matching";
+    public static final String STEP_DESCRIPTION_ENTITY_MATCHING = "Entity Matching compares pairs of entity profiles, associating every pair with a similarity in [0,1]. Its output comprises the similarity graph, i.e., an undirected, weighted graph where the nodes correspond to entities and the edges connect pairs of compared entities.";
+    public static final String STEP_LABEL_ENTITY_CLUSTERING = "Entity Clustering";
+    public static final String STEP_DESCRIPTION_ENTITY_CLUSTERING = "Entity Clustering takes as input the similarity graph produced by Entity Matching and partitions it into a set of equivalence clusters, with every cluster corresponding to a distinct real-world object.";
+    public static final String STEP_LABEL_SELECTION_CONFIRMATION = "Selection Confirmation";
+    public static final String STEP_DESCRIPTION_SELECTION_CONFIRMATION = "Confirm the selected values and press the \"Next\" button to go to the results page.";
+    public static final String STEP_LABEL_WORKFLOW_EXECUTION = "Workflow Execution";
+    public static final String STEP_DESCRIPTION_WORKFLOW_EXECUTION = "Press \"Run algorithm\" to run the algorithm. You can export the results to a CSV file with the \"Export CSV\" button.";
+    public static final String STEP_LABEL_SIMILARITY_JOIN = "Similarity Join";
+    public static final String STEP_DESCRIPTION_SIMILARITY_JOIN = "??";
+    public static final String STEP_LABEL_PRIORITIZATION = "Prioritization";
+    public static final String STEP_DESCRIPTION_PRIORITIZATION = "??";
 }
