@@ -111,6 +111,7 @@ public class JedaiOptions {
     public static final String STEP_LABEL_WELCOME = "Welcome";
     public static final String STEP_DESCRIPTION_WELCOME = "Welcome to JedAI, an open source, high scalability toolkit that offers out-of-the-box solutions for Entity Resolution over structured (relational) and semi-structured (RDF) data.";
     public static final String STEP_LABEL_WORKFLOW_SELECTION = "Workflow Selection";
+    public static final String STEP_DESCRIPTION_WORKFLOW_SELECTION = "Select one of the three available workflows.";
     public static final String STEP_LABEL_DATA_READING = "Data Reading";
     public static final String STEP_DESCRIPTION_DATA_READING = "Data Reading transforms the input data into a list of entity profiles.";
     public static final String STEP_LABEL_SCHEMA_CLUSTERING = "Schema Clustering";
