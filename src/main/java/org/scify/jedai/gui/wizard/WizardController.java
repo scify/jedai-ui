@@ -61,14 +61,15 @@ public class WizardController {
 
     private final List<Parent> steps = new ArrayList<>();
 
+    private final List<WorkflowStep> initialSteps;
+    private final List<WorkflowStep> finalSteps;
+    private List<WorkflowStep> intermediateSteps;
+
     private final IntegerProperty currentStep = new SimpleIntegerProperty(-1);
 
-    @FXML
-    public void initialize() {
-        List<WorkflowStep> intermediateSteps = new ArrayList<>();
-
+    public WizardController() {
         // Initialize initial steps, which always stay the same
-        List<WorkflowStep> initialSteps = new ArrayList<>(
+        this.initialSteps = new ArrayList<>(
                 Arrays.asList(
                         new WorkflowStep(
                                 JedaiOptions.STEP_LABEL_WELCOME,
@@ -84,7 +85,7 @@ public class WizardController {
         );
 
         // Initialize last steps
-        List<WorkflowStep> lastSteps = new ArrayList<>(
+        this.finalSteps = new ArrayList<>(
                 Arrays.asList(
                         new WorkflowStep(
                                 JedaiOptions.STEP_LABEL_SELECTION_CONFIRMATION,
@@ -98,7 +99,10 @@ public class WizardController {
                         )
                 )
         );
+    }
 
+    @FXML
+    public void initialize() {
         // todo: most things below will be replaced
 
         // Initialize ArrayLists with step texts & descriptions
