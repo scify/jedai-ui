@@ -20,10 +20,7 @@ import org.scify.jedai.entitymatching.GroupLinkage;
 import org.scify.jedai.entitymatching.ProfileMatcher;
 import org.scify.jedai.gui.controllers.steps.CompletedController;
 import org.scify.jedai.gui.model.JedaiMethodConfiguration;
-import org.scify.jedai.gui.utilities.DialogHelper;
-import org.scify.jedai.gui.utilities.DynamicMethodConfiguration;
-import org.scify.jedai.gui.utilities.JPair;
-import org.scify.jedai.gui.utilities.JedaiOptions;
+import org.scify.jedai.gui.utilities.*;
 import org.scify.jedai.utilities.IDocumentation;
 import org.scify.jedai.utilities.enumerations.BlockBuildingMethod;
 import org.scify.jedai.utilities.enumerations.RepresentationModel;
@@ -68,6 +65,42 @@ public class WizardController {
 
     @FXML
     public void initialize() {
+        List<WorkflowStep> intermediateSteps = new ArrayList<>();
+
+        // Initialize initial steps, which always stay the same
+        List<WorkflowStep> initialSteps = new ArrayList<>(
+                Arrays.asList(
+                        new WorkflowStep(
+                                JedaiOptions.STEP_LABEL_WELCOME,
+                                JedaiOptions.STEP_DESCRIPTION_WELCOME,
+                                "wizard-fxml/steps/Welcome.fxml"
+                        ),
+                        new WorkflowStep(
+                                JedaiOptions.STEP_LABEL_WORKFLOW_SELECTION,
+                                JedaiOptions.STEP_DESCRIPTION_WORKFLOW_SELECTION,
+                                "wizard-fxml/steps/WorkflowSelection.fxml"
+                        )
+                )
+        );
+
+        // Initialize last steps
+        List<WorkflowStep> lastSteps = new ArrayList<>(
+                Arrays.asList(
+                        new WorkflowStep(
+                                JedaiOptions.STEP_LABEL_SELECTION_CONFIRMATION,
+                                JedaiOptions.STEP_DESCRIPTION_SELECTION_CONFIRMATION,
+                                "wizard-fxml/steps/Confirm.fxml"
+                        ),
+                        new WorkflowStep(
+                                JedaiOptions.STEP_LABEL_WORKFLOW_EXECUTION,
+                                JedaiOptions.STEP_DESCRIPTION_WORKFLOW_EXECUTION,
+                                "wizard-fxml/steps/Completed.fxml"
+                        )
+                )
+        );
+
+        // todo: most things below will be replaced
+
         // Initialize ArrayLists with step texts & descriptions
         this.stepTexts = Arrays.asList(
                 "Welcome",
