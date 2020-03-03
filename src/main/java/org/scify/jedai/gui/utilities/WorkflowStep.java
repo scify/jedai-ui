@@ -1,12 +1,14 @@
 package org.scify.jedai.gui.utilities;
 
 import javafx.beans.property.StringProperty;
+import javafx.scene.Parent;
 
 public class WorkflowStep {
     private final String label;
     private final String description;
     private final String fxmlPath;
     private final StringProperty configProperty;
+    private Parent node;
 
     public WorkflowStep(String label, String description, String fxmlPath, StringProperty configProperty) {
         this.label = label;
@@ -47,5 +49,13 @@ public class WorkflowStep {
 
     public StringProperty configPropertyProperty() {
         return configProperty;
+    }
+
+    public Parent getNode() {
+        return node;
+    }
+
+    public void setNode(Parent node) {
+        this.node = node;
     }
 }
