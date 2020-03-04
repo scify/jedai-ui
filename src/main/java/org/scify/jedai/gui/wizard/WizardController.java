@@ -63,7 +63,9 @@ public class WizardController {
 
     private final List<WorkflowStep> initialSteps;
     private final List<WorkflowStep> finalSteps;
-    private List<WorkflowStep> intermediateSteps;
+    private List<WorkflowStep> intermediateSteps = new ArrayList<>();
+
+    private int totalSteps;
 
     private final IntegerProperty currentStep = new SimpleIntegerProperty(-1);
 
@@ -99,40 +101,14 @@ public class WizardController {
                         )
                 )
         );
+
+        // Set total steps (will be updated later as well)
+        totalSteps = initialSteps.size() + finalSteps.size();
     }
 
     @FXML
     public void initialize() {
         // todo: most things below will be replaced
-
-        // Initialize ArrayLists with step texts & descriptions
-        this.stepTexts = Arrays.asList(
-                "Welcome",
-                "Workflow Selection",
-                "Step 1: Data Reading",
-                "Step 2: Schema Clustering",
-                "Step 3: Block Building",
-                "Step 4: Block Cleaning",
-                "Step 5: Comparison Cleaning",
-                "Step 6: Entity Matching",
-                "Step 7: Entity Clustering",
-                "Selection Confirmation",
-                "Workflow Execution"
-        );
-
-        this.stepDescriptions = Arrays.asList(
-                "Welcome to JedAI, an open source, high scalability toolkit that offers out-of-the-box solutions for Entity Resolution over structured (relational) and semi-structured (RDF) data.",
-                "Choose a workflow type. This step probably needs a better description.",
-                "Data Reading transforms the input data into a list of entity profiles.",
-                "Schema Clustering groups together syntactically (not semantically) similar attributes. This can improve the performance of all workflow steps.",
-                "Block Building clusters entities into overlapping blocks in a lazy manner that relies on unsupervised blocking keys: every token in an attribute value forms a key. Blocks are then extracted, based on its equality or on its similarity with other keys.",
-                "Block Cleaning aims to clean a set of overlapping blocks from unnecessary comparisons, which can be either redundant (i.e., repeated) or superfluous (i.e., between non-matching entities). Its methods operate on the coarse level of individual blocks or entities.",
-                "Similar to Block Cleaning, Comparison Cleaning aims to clean a set of blocks from both redundant and superfluous comparisons. Unlike Block Cleaning, its methods operate on the finer granularity of individual comparisons.",
-                "Entity Matching compares pairs of entity profiles, associating every pair with a similarity in [0,1]. Its output comprises the similarity graph, i.e., an undirected, weighted graph where the nodes correspond to entities and the edges connect pairs of compared entities.",
-                "Entity Clustering takes as input the similarity graph produced by Entity Matching and partitions it into a set of equivalence clusters, with every cluster corresponding to a distinct real-world object.",
-                "Confirm the selected values and press the \"Next\" button to go to the results page.",
-                "Press \"Run algorithm\" to run the algorithm. You can export the results to a CSV file with the \"Export CSV\" button."
-        );
 
         // Initialize hashmap with configuration types
         this.configurationTypes = new HashMap<>();
@@ -141,10 +117,28 @@ public class WizardController {
         this.configurationTypes.put(7, model.entityMatchingConfigTypeProperty());
         this.configurationTypes.put(8, model.entityClusteringConfigTypeProperty());
 
-        buildSteps();
+        buildSteps(initialSteps);
+        buildSteps(finalSteps);
         initButtons();
         buildIndicatorCircles();
         setInitialContent();
+    }
+
+    /**
+     * Given a step number, return its WorkflowStep object for the current workflow.
+     * Starts from initialSteps, then intermediate then final ones.
+     *
+     * @param stepNum
+     * @return
+     */
+    private WorkflowStep getStep(int stepNum) {
+        if (stepNum < initialSteps.size()) {
+            return initialSteps.get(stepNum);
+        } else if (stepNum < initialSteps.size() + intermediateSteps.size()) {
+            return intermediateSteps.get(stepNum - initialSteps.size());
+        } else {
+            return finalSteps.get(stepNum - initialSteps.size() - intermediateSteps.size());
+        }
     }
 
     private void initButtons() {
@@ -153,11 +147,13 @@ public class WizardController {
 
         // Disable next step button in the last step and when workflow is running
         btnNext.disableProperty()
-                .bind(currentStep.greaterThanOrEqualTo(steps.size() - 1).or(model.workflowRunningProperty()));
+                .bind(currentStep.greaterThanOrEqualTo(this.totalSteps - 1).or(model.workflowRunningProperty()));
+//                .bind(currentStep.greaterThanOrEqualTo(steps.size() - 1).or(model.workflowRunningProperty()));
 
         // Make the cancel button's text show "Start Over" in the last step
         btnCancel.textProperty().bind(
-                new When(currentStep.lessThan(steps.size() - 1))
+//                new When(currentStep.lessThan(steps.size() - 1))
+                new When(currentStep.lessThan(this.totalSteps - 1))
                         .then("Cancel")
                         .otherwise("Start Over")
         );
@@ -172,19 +168,22 @@ public class WizardController {
      * @param stepNum Step number
      */
     private void setLabelAndDescription(int stepNum) {
-        stepsLabel.setText(stepTexts.get(stepNum));
-        stepDescriptionTextarea.setText(stepDescriptions.get(stepNum));
+        WorkflowStep step = this.getStep(stepNum);
+        stepsLabel.setText(step.getLabel());
+        stepDescriptionTextarea.setText(step.getDescription());
     }
 
     private void setInitialContent() {
-        currentStep.set(0);  // first element
-        contentPanel.getChildren().add(steps.get(currentStep.get()));
+        currentStep.set(0);  // First element
+        WorkflowStep currStep = this.getStep(currentStep.get());
+        contentPanel.getChildren().add(currStep.getNode());
 
         // Set step text & description
-        setLabelAndDescription(0);
+        setLabelAndDescription(currentStep.get());
     }
 
     private void buildIndicatorCircles() {
+        // todo: check & update
         for (int i = 0; i < steps.size(); i++) {
             hboxIndicators.getChildren().add(createIndicatorCircle(i));
         }
@@ -199,36 +198,6 @@ public class WizardController {
         for (WorkflowStep step : steps) {
             step.setNode(
                     DialogHelper.loadFxml(this.getClass(), injector, step.getFxmlPath())
-            );
-        }
-    }
-
-    private void buildSteps() {
-        // Build initial and final steps
-        buildSteps(initialSteps);
-        buildSteps(finalSteps);
-
-        // Specify step FXMLs in order that they should appear
-        ArrayList<String> controllers = new ArrayList<>(Arrays.asList(
-                "wizard-fxml/steps/Welcome.fxml",
-                "wizard-fxml/steps/WorkflowSelection.fxml",
-                "wizard-fxml/steps/DataReading.fxml",
-                "wizard-fxml/steps/SchemaClustering.fxml",
-                "wizard-fxml/steps/BlockBuilding.fxml",
-                "wizard-fxml/steps/BlockCleaning.fxml",
-                "wizard-fxml/steps/ComparisonCleaning.fxml",
-                "wizard-fxml/steps/EntityMatching.fxml",
-                "wizard-fxml/steps/EntityClustering.fxml",
-                "wizard-fxml/steps/Confirm.fxml"
-//                ,
-//                "wizard-fxml/steps/Completed.fxml"
-        ));
-
-        // Create steps and add them to the list
-        for (String ctrlPath : controllers) {
-            // Create step and add it to steps list
-            steps.add(
-                    DialogHelper.loadFxml(this.getClass(), injector, ctrlPath)
             );
         }
     }
@@ -248,6 +217,7 @@ public class WizardController {
 
     @FXML
     public void next() {
+        // todo: check & update
         Parent p = steps.get(currentStep.get());
         Object controller = p.getProperties().get(CONTROLLER_KEY);
 
@@ -383,6 +353,7 @@ public class WizardController {
 
     @FXML
     public void back() {
+        // todo: check & update
         if (currentStep.get() > 0) {
             contentPanel.getChildren().remove(steps.get(currentStep.get()));
             currentStep.set(currentStep.get() - 1);
@@ -395,6 +366,7 @@ public class WizardController {
 
     @FXML
     public void cancel() {
+        // todo: check & update
         contentPanel.getChildren().remove(steps.get(currentStep.get()));
         currentStep.set(0);  // first screen
         contentPanel.getChildren().add(steps.get(currentStep.get()));
