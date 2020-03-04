@@ -88,11 +88,11 @@ public class WizardController {
         this.finalSteps = new ArrayList<>(
                 Arrays.asList(
                         new WorkflowStep(
-                                JedaiOptions.STEP_LABEL_SELECTION_CONFIRMATION,
-                                JedaiOptions.STEP_DESCRIPTION_SELECTION_CONFIRMATION,
-                                "wizard-fxml/steps/Confirm.fxml"
-                        ),
-                        new WorkflowStep(
+//                                JedaiOptions.STEP_LABEL_SELECTION_CONFIRMATION,
+//                                JedaiOptions.STEP_DESCRIPTION_SELECTION_CONFIRMATION,
+//                                "wizard-fxml/steps/Confirm.fxml"
+//                        ),
+//                        new WorkflowStep(
                                 JedaiOptions.STEP_LABEL_WORKFLOW_EXECUTION,
                                 JedaiOptions.STEP_DESCRIPTION_WORKFLOW_EXECUTION,
                                 "wizard-fxml/steps/Completed.fxml"
@@ -190,7 +190,24 @@ public class WizardController {
         }
     }
 
+    /**
+     * Load FXML files for a list of WorkflowSteps
+     *
+     * @param steps List of steps to load nodes for
+     */
+    private void buildSteps(List<WorkflowStep> steps) {
+        for (WorkflowStep step : steps) {
+            step.setNode(
+                    DialogHelper.loadFxml(this.getClass(), injector, step.getFxmlPath())
+            );
+        }
+    }
+
     private void buildSteps() {
+        // Build initial and final steps
+        buildSteps(initialSteps);
+        buildSteps(finalSteps);
+
         // Specify step FXMLs in order that they should appear
         ArrayList<String> controllers = new ArrayList<>(Arrays.asList(
                 "wizard-fxml/steps/Welcome.fxml",
@@ -202,8 +219,9 @@ public class WizardController {
                 "wizard-fxml/steps/ComparisonCleaning.fxml",
                 "wizard-fxml/steps/EntityMatching.fxml",
                 "wizard-fxml/steps/EntityClustering.fxml",
-                "wizard-fxml/steps/Confirm.fxml",
-                "wizard-fxml/steps/Completed.fxml"
+                "wizard-fxml/steps/Confirm.fxml"
+//                ,
+//                "wizard-fxml/steps/Completed.fxml"
         ));
 
         // Create steps and add them to the list
