@@ -253,7 +253,7 @@ public class WizardController {
             }
         }
 
-        // todo: check & update this entire if/else if
+        // todo: check & update this entire if/else if!!!!!!!!!!!!!
         if (currentStep.get() < (totalSteps - 1)) {
             // Check if configuration is manual, and show manual configuration window before next step
             if (this.configurationTypes.containsKey(currentStep.get())
@@ -371,14 +371,19 @@ public class WizardController {
 
     @FXML
     public void back() {
-        // todo: check & update
         if (currentStep.get() > 0) {
-            contentPanel.getChildren().remove(steps.get(currentStep.get()));
-            currentStep.set(currentStep.get() - 1);
-            contentPanel.getChildren().add(steps.get(currentStep.get()));
+            // Remove old step from view
+            contentPanel.getChildren().remove(
+                    getStepNode(currentStep.get())
+            );
 
-            // Set step label & description
-            setLabelAndDescription(currentStep.get());
+            // Increment the current step
+            currentStep.set(currentStep.get() - 1);
+
+            // Show the next step (incremented currentStep)
+            contentPanel.getChildren().add(
+                    getStepNode(currentStep.get())
+            );
         }
     }
 
