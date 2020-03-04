@@ -139,6 +139,16 @@ public class WizardController {
         }
     }
 
+    /**
+     * Similar to getStep, but returns the step's node
+     *
+     * @param stepNum Number of step to get node for.
+     * @return Node of step
+     */
+    private Parent getStepNode(int stepNum) {
+        return getStep(stepNum).getNode();
+    }
+
     private void initButtons() {
         // Disable back button in the 1st step and when workflow is running
         btnBack.disableProperty().bind(currentStep.lessThanOrEqualTo(0).or(model.workflowRunningProperty()));
@@ -173,8 +183,7 @@ public class WizardController {
 
     private void setInitialContent() {
         currentStep.set(0);  // First element
-        WorkflowStep currStep = this.getStep(currentStep.get());
-        contentPanel.getChildren().add(currStep.getNode());
+        contentPanel.getChildren().add(getStepNode(currentStep.get()));
 
         // Set step text & description
         setLabelAndDescription(currentStep.get());
@@ -218,8 +227,7 @@ public class WizardController {
 
     @FXML
     public void next() {
-        // todo: check & update
-        Parent p = steps.get(currentStep.get());
+        Parent p = getStepNode(currentStep.get());
         Object controller = p.getProperties().get(CONTROLLER_KEY);
 
         // validate
@@ -245,7 +253,8 @@ public class WizardController {
             }
         }
 
-        if (currentStep.get() < (steps.size() - 1)) {
+        // todo: check & update this entire if/else if
+        if (currentStep.get() < (totalSteps - 1)) {
             // Check if configuration is manual, and show manual configuration window before next step
             if (this.configurationTypes.containsKey(currentStep.get())
                     && this.configurationTypes.get(currentStep.get()).getValue().equals(JedaiOptions.MANUAL_CONFIG)) {
@@ -342,13 +351,21 @@ public class WizardController {
                 }
             }
 
-            // Go to next step
-            contentPanel.getChildren().remove(steps.get(currentStep.get()));
+            // Remove old step from view
+            contentPanel.getChildren().remove(
+                    getStepNode(currentStep.get())
+            );
+
+            // Increment the current step
             currentStep.set(currentStep.get() + 1);
-            contentPanel.getChildren().add(steps.get(currentStep.get()));
+
+            // Show the next step (incremented currentStep)
+            contentPanel.getChildren().add(
+                    getStepNode(currentStep.get())
+            );
 
             // Set step label & description
-            setLabelAndDescription(currentStep.getValue());
+            setLabelAndDescription(currentStep.get());
         }
     }
 
@@ -361,7 +378,7 @@ public class WizardController {
             contentPanel.getChildren().add(steps.get(currentStep.get()));
 
             // Set step label & description
-            setLabelAndDescription(currentStep.getValue());
+            setLabelAndDescription(currentStep.get());
         }
     }
 
@@ -372,7 +389,7 @@ public class WizardController {
         currentStep.set(0);  // first screen
         contentPanel.getChildren().add(steps.get(currentStep.get()));
 
-        setLabelAndDescription(currentStep.getValue());
+        setLabelAndDescription(currentStep.get());
 
         // Get controller of last step, to reset its data (only if it's an instance of the CompletedController)
         Object ctrl = steps.get(steps.size() - 1).getProperties().get(CONTROLLER_KEY);
