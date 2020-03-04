@@ -40,8 +40,6 @@ public class WizardController {
     public Label stepsLabel;
     public TextArea stepDescriptionTextarea;
 
-    private List<String> stepTexts;
-    private List<String> stepDescriptions;
     private Map<Integer, StringProperty> configurationTypes;
 
     @FXML
@@ -126,10 +124,10 @@ public class WizardController {
 
     /**
      * Given a step number, return its WorkflowStep object for the current workflow.
-     * Starts from initialSteps, then intermediate then final ones.
+     * If initial, intermediate and final steps were 1 list, get the step with index stepNum...
      *
-     * @param stepNum
-     * @return
+     * @param stepNum Number of step to get.
+     * @return WorkflowStep object of the wanted step.
      */
     private WorkflowStep getStep(int stepNum) {
         if (stepNum < initialSteps.size()) {
@@ -183,8 +181,11 @@ public class WizardController {
     }
 
     private void buildIndicatorCircles() {
-        // todo: check & update
-        for (int i = 0; i < steps.size(); i++) {
+        // Remove old indicators
+        hboxIndicators.getChildren().clear();
+
+        // Build new indicators
+        for (int i = 0; i < this.totalSteps; i++) {
             hboxIndicators.getChildren().add(createIndicatorCircle(i));
         }
     }
