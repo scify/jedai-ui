@@ -6,7 +6,6 @@ import javafx.beans.binding.When;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -29,7 +28,9 @@ import org.scify.jedai.utilities.enumerations.SimilarityMetric;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class WizardController {
     @SuppressWarnings("FieldCanBeLocal")
@@ -38,8 +39,6 @@ public class WizardController {
     private final String CONTROLLER_KEY = "controller";
     public Label stepsLabel;
     public TextArea stepDescriptionTextarea;
-
-    private Map<Integer, StringProperty> configurationTypes;
 
     @FXML
     VBox contentPanel;
@@ -55,8 +54,6 @@ public class WizardController {
 
     @Inject
     private WizardData model;
-
-    private final List<Parent> steps = new ArrayList<>();
 
     private final List<WorkflowStep> initialSteps;
     private final List<WorkflowStep> finalSteps;
@@ -105,15 +102,6 @@ public class WizardController {
 
     @FXML
     public void initialize() {
-        // todo: most things below will be replaced
-
-        // Initialize hashmap with configuration types
-        this.configurationTypes = new HashMap<>();
-        this.configurationTypes.put(3, model.schemaClusteringConfigTypeProperty());
-        this.configurationTypes.put(6, model.comparisonCleaningConfigTypeProperty());
-        this.configurationTypes.put(7, model.entityMatchingConfigTypeProperty());
-        this.configurationTypes.put(8, model.entityClusteringConfigTypeProperty());
-
         buildSteps(initialSteps);
         buildSteps(finalSteps);
         initButtons();
@@ -154,7 +142,7 @@ public class WizardController {
         // Disable next step button in the last step and when workflow is running
         btnNext.disableProperty()
                 .bind(currentStep.greaterThanOrEqualTo(this.totalSteps - 1).or(model.workflowRunningProperty()));
-//                .bind(currentStep.greaterThanOrEqualTo(steps.size() - 1).or(model.workflowRunningProperty()));
+        // todo: when number of steps change, this might need updating?
 
         // Make the cancel button's text show "Start Over" in the last step
         btnCancel.textProperty().bind(
@@ -242,10 +230,16 @@ public class WizardController {
 
     @FXML
     public void next() {
+        // Stop if we can't go to next step
+        if (currentStep.get() >= (this.totalSteps - 1)) {
+            return;
+        }
+
+        // Get current step node to check if everything is valid
         Parent p = this.getCurrentStep().getNode();
         Object controller = p.getProperties().get(CONTROLLER_KEY);
 
-        // validate
+        // Validate
         Method v = getMethod(Validate.class, controller);
         if (v != null) {
             try {
@@ -258,7 +252,7 @@ public class WizardController {
             }
         }
 
-        // submit
+        // Submit
         Method sub = getMethod(Submit.class, controller);
         if (sub != null) {
             try {
@@ -268,107 +262,106 @@ public class WizardController {
             }
         }
 
-        // todo: check & update this entire if/else if!!!!!!!!!!!!!
-        if (currentStep.get() < (totalSteps - 1)) {
-            // Check if configuration is manual, and show manual configuration window before next step
-            if (this.configurationTypes.containsKey(currentStep.get())
-                    && this.configurationTypes.get(currentStep.get()).getValue().equals(JedaiOptions.MANUAL_CONFIG)) {
+        // Get WorkflowStep object for current step, to check for manual configuration
+        WorkflowStep step = this.getCurrentStep();
 
-                // Get method instance & model parameter property in order to show the configuration modal
-                IDocumentation method = null;
-                String methodName;
-                ListProperty<JPair<String, Object>> parametersProperty = null;
+        // Check if configuration is manual
+        if (step.hasConfigProperty() && step.getConfigProperty().equals(JedaiOptions.MANUAL_CONFIG)) {
+            // Get method instance & model parameter property in order to show the configuration modal
+            IDocumentation method = null;
+            String methodName;
+            ListProperty<JPair<String, Object>> parametersProperty = null;
 
-                switch (currentStep.get()) {
-                    case 3:
-                        // Schema Clustering
-                        // todo: when selecting "no SC" and manual configuration, we can't advance to next step
-                        parametersProperty = model.schemaClusteringParametersProperty();
+            switch (step.getLabel()) {
+                case JedaiOptions.STEP_LABEL_SCHEMA_CLUSTERING:
+                    // Schema Clustering
+                    // todo: when selecting "no SC" and manual configuration, we can't advance to next step
+                    parametersProperty = model.schemaClusteringParametersProperty();
 
-                        methodName = model.getSchemaClustering();
-                        method = SchemaClusteringMethod.getModel(
-                                RepresentationModel.CHARACTER_TRIGRAMS,
-                                SimilarityMetric.ENHANCED_JACCARD_SIMILARITY,
-                                MethodMapping.schemaClusteringMethods.get(methodName));
-                        break;
-                    case 6:
-                        // Comparison Cleaning
-                        // todo: when selecting "no CoCl" and manual configuration, we can't advance to next step
-                        parametersProperty = model.comparisonCleaningParametersProperty();
+                    methodName = model.getSchemaClustering();
+                    method = SchemaClusteringMethod.getModel(
+                            RepresentationModel.CHARACTER_TRIGRAMS,
+                            SimilarityMetric.ENHANCED_JACCARD_SIMILARITY,
+                            MethodMapping.schemaClusteringMethods.get(methodName));
+                    break;
+                case JedaiOptions.STEP_LABEL_COMPARISON_CLEANING:
+                    // Comparison Cleaning
+                    // todo: when selecting "no CoCl" and manual configuration, we can't advance to next step
+                    parametersProperty = model.comparisonCleaningParametersProperty();
 
-                        methodName = model.getComparisonCleaning();
-                        method = MethodMapping.getMethodByName(methodName);
+                    methodName = model.getComparisonCleaning();
+                    method = MethodMapping.getMethodByName(methodName);
 
-                        break;
-                    case 7:
-                        // Entity Matching
-                        parametersProperty = model.entityMatchingParametersProperty();
+                    break;
+                case JedaiOptions.STEP_LABEL_ENTITY_MATCHING:
+                    // Entity Matching
+                    parametersProperty = model.entityMatchingParametersProperty();
 
-                        methodName = model.getEntityMatching();
-                        method = (methodName.equals(JedaiOptions.GROUP_LINKAGE)) ?
-                                new GroupLinkage() : new ProfileMatcher();
+                    methodName = model.getEntityMatching();
+                    method = (methodName.equals(JedaiOptions.GROUP_LINKAGE)) ?
+                            new GroupLinkage() : new ProfileMatcher();
 
-                        break;
-                    case 8:
-                        // Entity Clustering
-                        parametersProperty = model.entityClusteringParametersProperty();
+                    break;
+                case JedaiOptions.STEP_LABEL_ENTITY_CLUSTERING:
+                    // Entity Clustering
+                    parametersProperty = model.entityClusteringParametersProperty();
 
-                        methodName = model.getEntityClustering();
-                        method = MethodMapping.getEntityClusteringMethod(methodName);
+                    methodName = model.getEntityClustering();
+                    method = MethodMapping.getEntityClusteringMethod(methodName);
 
-                        break;
-                }
+                    break;
+            }
 
-                // Check that the method isn't null
-                if (method == null)
-                    return;
+            // Check that the method isn't null
+            if (method == null)
+                return;
 
-                // Display the configuration modal
-                DynamicMethodConfiguration.displayModal(getClass(), injector, method, parametersProperty);
+            // Display the configuration modal
+            DynamicMethodConfiguration.displayModal(getClass(), injector, method, parametersProperty);
 
-                // If configuration failed, don't go to next step
-                if (!DynamicMethodConfiguration.configurationOk(method, parametersProperty.get())) {
-                    return;
-                }
-            } else if (currentStep.get() == 4 || currentStep.get() == 5) {
-                boolean isBlockBuilding = (currentStep.get() == 4);
+            // If configuration failed, don't go to next step
+            if (!DynamicMethodConfiguration.configurationOk(method, parametersProperty.get())) {
+                return;
+            }
+        } else if (step.getLabel().equals(JedaiOptions.STEP_LABEL_BLOCK_BUILDING) ||
+                step.getLabel().equals(JedaiOptions.STEP_LABEL_BLOCK_CLEANING)) {
+            // Special case: Block Building and Cleaning can have multiple methods.
+            boolean isBlockBuilding = (step.getLabel().equals(JedaiOptions.STEP_LABEL_BLOCK_BUILDING));
 
-                // Special case: Block Building and Cleaning can have multiple methods.
-                // We need to check each one separately. Get the methods...
-                List<JedaiMethodConfiguration> methodConfigs =
-                        isBlockBuilding ? model.getBlockBuildingMethods() : model.getBlockCleaningMethods();
+            // We need to check each method separately. Get the methods...
+            List<JedaiMethodConfiguration> methodConfigs =
+                    isBlockBuilding ? model.getBlockBuildingMethods() : model.getBlockCleaningMethods();
 
-                for (JedaiMethodConfiguration methodConfig : methodConfigs) {
-                    // If the method is enabled and its configuration type is set to manual...
-                    if (methodConfig.isEnabled() && methodConfig.getConfigurationType().equals(JedaiOptions.MANUAL_CONFIG)) {
-                        // Get an instance of the method
+            for (JedaiMethodConfiguration methodConfig : methodConfigs) {
+                // If the method is enabled and its configuration type is set to manual...
+                if (methodConfig.isEnabled() && methodConfig.getConfigurationType().equals(JedaiOptions.MANUAL_CONFIG)) {
+                    // Get an instance of the method
 
-                        IDocumentation method;
-                        if (isBlockBuilding) {
-                            // Get block building method
-                            method = BlockBuildingMethod.getDefaultConfiguration(
-                                    MethodMapping.blockBuildingMethods.get(methodConfig.getName())
-                            );
-                        } else {
-                            // Get block cleaning method
-                            method = MethodMapping.getMethodByName(methodConfig.getName());
-                        }
+                    IDocumentation method;
+                    if (isBlockBuilding) {
+                        // Get block building method
+                        method = BlockBuildingMethod.getDefaultConfiguration(
+                                MethodMapping.blockBuildingMethods.get(methodConfig.getName())
+                        );
+                    } else {
+                        // Get block cleaning method
+                        method = MethodMapping.getMethodByName(methodConfig.getName());
+                    }
 
-                        // Configure the method
-                        DynamicMethodConfiguration.displayModal(getClass(), injector, method,
-                                methodConfig.manualParametersProperty());
+                    // Configure the method
+                    DynamicMethodConfiguration.displayModal(getClass(), injector, method,
+                            methodConfig.manualParametersProperty());
 
-                        // If configuration failed, don't go to next step
-                        if (!DynamicMethodConfiguration.configurationOk(method, methodConfig.getManualParameters())) {
-                            return;
-                        }
+                    // If configuration failed, don't go to next step
+                    if (!DynamicMethodConfiguration.configurationOk(method, methodConfig.getManualParameters())) {
+                        return;
                     }
                 }
             }
-
-            // Go to the next step
-            this.goToStep(currentStep.get() + 1);
         }
+
+        // Go to the next step
+        this.goToStep(currentStep.get() + 1);
     }
 
     @FXML
