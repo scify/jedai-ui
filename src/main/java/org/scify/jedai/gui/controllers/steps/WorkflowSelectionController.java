@@ -2,7 +2,6 @@ package org.scify.jedai.gui.controllers.steps;
 
 import com.google.inject.Inject;
 import javafx.scene.layout.VBox;
-import org.scify.jedai.gui.utilities.DialogHelper;
 import org.scify.jedai.gui.utilities.JedaiOptions;
 import org.scify.jedai.gui.utilities.RadioButtonHelper;
 import org.scify.jedai.gui.wizard.Submit;
@@ -35,14 +34,7 @@ public class WorkflowSelectionController {
 
     @Validate
     public boolean validate() {
-        if (model.getWorkflow().equals(JedaiOptions.WORKFLOW_BLOCKING_BASED)) {
-            return true;
-        }
-
-        // Show error and do not continue
-        DialogHelper.showError("Error", "Workflow not implemented yet!",
-                "Only blocking based workflow is implemented for now!");
-        return false;
+        return true;
     }
 
     @Submit
