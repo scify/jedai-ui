@@ -53,13 +53,13 @@ public class WizardController {
     @Inject
     private WizardData model;
 
-    private final List<WorkflowStep> initialSteps;
-    private final List<WorkflowStep> finalSteps;
+    private List<WorkflowStep> initialSteps;
+    private List<WorkflowStep> finalSteps;
     private List<WorkflowStep> intermediateSteps = new ArrayList<>();
 
-    private final List<WorkflowStep> blockingWorkflowSteps;
-    private final List<WorkflowStep> joinWorkflowSteps;
-    private final List<WorkflowStep> progressiveWorkflowSteps;
+    private List<WorkflowStep> blockingWorkflowSteps;
+    private List<WorkflowStep> joinWorkflowSteps;
+    private List<WorkflowStep> progressiveWorkflowSteps;
 
     private final Map<String, WorkflowStep> availableSteps;
 
@@ -72,57 +72,17 @@ public class WizardController {
         this.availableSteps = new HashMap<>();
         initializeStepsMap();
 
-        // Initialize initial steps, which always stay the same
-        this.initialSteps = new ArrayList<>(
-                Arrays.asList(
-                        availableSteps.get(JedaiOptions.STEP_LABEL_WELCOME),
-                        availableSteps.get(JedaiOptions.STEP_LABEL_WORKFLOW_SELECTION),
-                        availableSteps.get(JedaiOptions.STEP_LABEL_DATA_READING)
-                )
-        );
-
-        // Initialize last steps
-        //noinspection ArraysAsListWithZeroOrOneArgument
-        this.finalSteps = new ArrayList<>(
-                Arrays.asList(
-//                        availableSteps.get(JedaiOptions.STEP_LABEL_SELECTION_CONFIRMATION),
-                        availableSteps.get(JedaiOptions.STEP_LABEL_WORKFLOW_EXECUTION)
-                )
-        );
+        // Initialize lists of steps for the beginning/end of workflows as well as the three workflows
+        initializeStepLists();
 
         // Set total steps (will be updated later as well)
         totalSteps = initialSteps.size() + finalSteps.size();
-
-        // Initialize blocking-based, join-based and progressive workflow lists of steps
-        this.blockingWorkflowSteps = new ArrayList<>(
-                Arrays.asList(
-                        availableSteps.get(JedaiOptions.STEP_LABEL_SCHEMA_CLUSTERING),
-                        availableSteps.get(JedaiOptions.STEP_LABEL_BLOCK_BUILDING),
-                        availableSteps.get(JedaiOptions.STEP_LABEL_BLOCK_CLEANING),
-                        availableSteps.get(JedaiOptions.STEP_LABEL_COMPARISON_CLEANING),
-                        availableSteps.get(JedaiOptions.STEP_LABEL_ENTITY_MATCHING),
-                        availableSteps.get(JedaiOptions.STEP_LABEL_ENTITY_CLUSTERING)
-                )
-        );
-
-        this.joinWorkflowSteps = new ArrayList<>(
-                Arrays.asList(
-                        availableSteps.get(JedaiOptions.STEP_LABEL_SIMILARITY_JOIN),
-                        availableSteps.get(JedaiOptions.STEP_LABEL_ENTITY_CLUSTERING)
-                )
-        );
-
-        this.progressiveWorkflowSteps = new ArrayList<>(
-                Arrays.asList(
-                        availableSteps.get(JedaiOptions.STEP_LABEL_SCHEMA_CLUSTERING),
-                        availableSteps.get(JedaiOptions.STEP_LABEL_BLOCK_BUILDING),
-                        availableSteps.get(JedaiOptions.STEP_LABEL_BLOCK_CLEANING),
-                        availableSteps.get(JedaiOptions.STEP_LABEL_PRIORITIZATION),
-                        availableSteps.get(JedaiOptions.STEP_LABEL_ENTITY_MATCHING)
-                )
-        );
     }
 
+    /**
+     * Create the map of step name -> WorkflowStep object for that step
+     * (containing its name, description, configuration etc.
+     */
     private void initializeStepsMap() {
         this.availableSteps.put(JedaiOptions.STEP_LABEL_WELCOME,
                 new WorkflowStep(
@@ -214,6 +174,59 @@ public class WizardController {
                         JedaiOptions.STEP_DESCRIPTION_WORKFLOW_EXECUTION,
                         "wizard-fxml/steps/Completed.fxml"
                 ));
+    }
+
+    /**
+     * Create the lists of steps for start of workflow, end of workflow, and the intermediate steps for each of the
+     * three JedAI workflows.
+     */
+    private void initializeStepLists() {
+        // Initialize initial steps, which always stay the same
+        this.initialSteps = new ArrayList<>(
+                Arrays.asList(
+                        availableSteps.get(JedaiOptions.STEP_LABEL_WELCOME),
+                        availableSteps.get(JedaiOptions.STEP_LABEL_WORKFLOW_SELECTION),
+                        availableSteps.get(JedaiOptions.STEP_LABEL_DATA_READING)
+                )
+        );
+
+        // Initialize last steps
+        //noinspection ArraysAsListWithZeroOrOneArgument
+        this.finalSteps = new ArrayList<>(
+                Arrays.asList(
+//                        availableSteps.get(JedaiOptions.STEP_LABEL_SELECTION_CONFIRMATION),
+                        availableSteps.get(JedaiOptions.STEP_LABEL_WORKFLOW_EXECUTION)
+                )
+        );
+
+        // Initialize blocking-based, join-based and progressive workflow lists of steps
+        this.blockingWorkflowSteps = new ArrayList<>(
+                Arrays.asList(
+                        availableSteps.get(JedaiOptions.STEP_LABEL_SCHEMA_CLUSTERING),
+                        availableSteps.get(JedaiOptions.STEP_LABEL_BLOCK_BUILDING),
+                        availableSteps.get(JedaiOptions.STEP_LABEL_BLOCK_CLEANING),
+                        availableSteps.get(JedaiOptions.STEP_LABEL_COMPARISON_CLEANING),
+                        availableSteps.get(JedaiOptions.STEP_LABEL_ENTITY_MATCHING),
+                        availableSteps.get(JedaiOptions.STEP_LABEL_ENTITY_CLUSTERING)
+                )
+        );
+
+        this.joinWorkflowSteps = new ArrayList<>(
+                Arrays.asList(
+                        availableSteps.get(JedaiOptions.STEP_LABEL_SIMILARITY_JOIN),
+                        availableSteps.get(JedaiOptions.STEP_LABEL_ENTITY_CLUSTERING)
+                )
+        );
+
+        this.progressiveWorkflowSteps = new ArrayList<>(
+                Arrays.asList(
+                        availableSteps.get(JedaiOptions.STEP_LABEL_SCHEMA_CLUSTERING),
+                        availableSteps.get(JedaiOptions.STEP_LABEL_BLOCK_BUILDING),
+                        availableSteps.get(JedaiOptions.STEP_LABEL_BLOCK_CLEANING),
+                        availableSteps.get(JedaiOptions.STEP_LABEL_PRIORITIZATION),
+                        availableSteps.get(JedaiOptions.STEP_LABEL_ENTITY_MATCHING)
+                )
+        );
     }
 
     private void switchWorkflow(String workflow) {
