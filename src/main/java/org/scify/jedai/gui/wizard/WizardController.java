@@ -28,9 +28,7 @@ import org.scify.jedai.utilities.enumerations.SimilarityMetric;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class WizardController {
     @SuppressWarnings("FieldCanBeLocal")
@@ -59,50 +57,163 @@ public class WizardController {
     private final List<WorkflowStep> finalSteps;
     private List<WorkflowStep> intermediateSteps = new ArrayList<>();
 
+    private final List<WorkflowStep> blockingWorkflowSteps;
+    private final List<WorkflowStep> joinWorkflowSteps;
+    private final List<WorkflowStep> progressiveWorkflowSteps;
+
+    private final Map<String, WorkflowStep> availableSteps;
+
     private int totalSteps;
 
     private final IntegerProperty currentStep = new SimpleIntegerProperty(-1);
 
     public WizardController() {
+        // Create WorkflowSteps for all possible steps
+        this.availableSteps = new HashMap<>();
+        initializeStepsMap();
+
         // Initialize initial steps, which always stay the same
         this.initialSteps = new ArrayList<>(
                 Arrays.asList(
-                        new WorkflowStep(
-                                JedaiOptions.STEP_LABEL_WELCOME,
-                                JedaiOptions.STEP_DESCRIPTION_WELCOME,
-                                "wizard-fxml/steps/Welcome.fxml"
-                        ),
-                        new WorkflowStep(
-                                JedaiOptions.STEP_LABEL_WORKFLOW_SELECTION,
-                                JedaiOptions.STEP_DESCRIPTION_WORKFLOW_SELECTION,
-                                "wizard-fxml/steps/WorkflowSelection.fxml"
-                        ),
-                        new WorkflowStep(
-                                JedaiOptions.STEP_LABEL_DATA_READING,
-                                JedaiOptions.STEP_DESCRIPTION_DATA_READING,
-                                "wizard-fxml/steps/DataReading.fxml"
-                        )
+                        availableSteps.get(JedaiOptions.STEP_LABEL_WELCOME),
+                        availableSteps.get(JedaiOptions.STEP_LABEL_WORKFLOW_SELECTION),
+                        availableSteps.get(JedaiOptions.STEP_LABEL_DATA_READING)
                 )
         );
 
         // Initialize last steps
+        //noinspection ArraysAsListWithZeroOrOneArgument
         this.finalSteps = new ArrayList<>(
                 Arrays.asList(
-                        new WorkflowStep(
-//                                JedaiOptions.STEP_LABEL_SELECTION_CONFIRMATION,
-//                                JedaiOptions.STEP_DESCRIPTION_SELECTION_CONFIRMATION,
-//                                "wizard-fxml/steps/Confirm.fxml"
-//                        ),
-//                        new WorkflowStep(
-                                JedaiOptions.STEP_LABEL_WORKFLOW_EXECUTION,
-                                JedaiOptions.STEP_DESCRIPTION_WORKFLOW_EXECUTION,
-                                "wizard-fxml/steps/Completed.fxml"
-                        )
+//                        availableSteps.get(JedaiOptions.STEP_LABEL_SELECTION_CONFIRMATION),
+                        availableSteps.get(JedaiOptions.STEP_LABEL_WORKFLOW_EXECUTION)
                 )
         );
 
         // Set total steps (will be updated later as well)
         totalSteps = initialSteps.size() + finalSteps.size();
+
+        // Initialize blocking-based, join-based and progressive workflow lists of steps
+        this.blockingWorkflowSteps = new ArrayList<>(
+                Arrays.asList(
+                        availableSteps.get(JedaiOptions.STEP_LABEL_SCHEMA_CLUSTERING),
+                        availableSteps.get(JedaiOptions.STEP_LABEL_BLOCK_BUILDING),
+                        availableSteps.get(JedaiOptions.STEP_LABEL_BLOCK_CLEANING),
+                        availableSteps.get(JedaiOptions.STEP_LABEL_COMPARISON_CLEANING),
+                        availableSteps.get(JedaiOptions.STEP_LABEL_ENTITY_MATCHING),
+                        availableSteps.get(JedaiOptions.STEP_LABEL_ENTITY_CLUSTERING)
+                )
+        );
+
+        this.joinWorkflowSteps = new ArrayList<>(
+                Arrays.asList(
+                        availableSteps.get(JedaiOptions.STEP_LABEL_SIMILARITY_JOIN),
+                        availableSteps.get(JedaiOptions.STEP_LABEL_ENTITY_CLUSTERING)
+                )
+        );
+
+        this.progressiveWorkflowSteps = new ArrayList<>(
+                Arrays.asList(
+                        availableSteps.get(JedaiOptions.STEP_LABEL_SCHEMA_CLUSTERING),
+                        availableSteps.get(JedaiOptions.STEP_LABEL_BLOCK_BUILDING),
+                        availableSteps.get(JedaiOptions.STEP_LABEL_BLOCK_CLEANING),
+                        availableSteps.get(JedaiOptions.STEP_LABEL_PRIORITIZATION),
+                        availableSteps.get(JedaiOptions.STEP_LABEL_ENTITY_MATCHING)
+                )
+        );
+    }
+
+    private void initializeStepsMap() {
+        this.availableSteps.put(JedaiOptions.STEP_LABEL_WELCOME,
+                new WorkflowStep(
+                        JedaiOptions.STEP_LABEL_WELCOME,
+                        JedaiOptions.STEP_DESCRIPTION_WELCOME,
+                        "wizard-fxml/steps/Welcome.fxml"
+                ));
+
+        this.availableSteps.put(JedaiOptions.STEP_LABEL_WORKFLOW_SELECTION,
+                new WorkflowStep(
+                        JedaiOptions.STEP_LABEL_WORKFLOW_SELECTION,
+                        JedaiOptions.STEP_DESCRIPTION_WORKFLOW_SELECTION,
+                        "wizard-fxml/steps/WorkflowSelection.fxml"
+                ));
+
+        this.availableSteps.put(JedaiOptions.STEP_LABEL_DATA_READING,
+                new WorkflowStep(
+                        JedaiOptions.STEP_LABEL_DATA_READING,
+                        JedaiOptions.STEP_DESCRIPTION_DATA_READING,
+                        "wizard-fxml/steps/DataReading.fxml"
+                ));
+
+        this.availableSteps.put(JedaiOptions.STEP_LABEL_SCHEMA_CLUSTERING,
+                new WorkflowStep(
+                        JedaiOptions.STEP_LABEL_SCHEMA_CLUSTERING,
+                        JedaiOptions.STEP_DESCRIPTION_SCHEMA_CLUSTERING,
+                        "wizard-fxml/steps/SchemaClustering.fxml"
+                ));
+
+        this.availableSteps.put(JedaiOptions.STEP_LABEL_BLOCK_BUILDING,
+                new WorkflowStep(
+                        JedaiOptions.STEP_LABEL_BLOCK_BUILDING,
+                        JedaiOptions.STEP_DESCRIPTION_BLOCK_BUILDING,
+                        "wizard-fxml/steps/BlockBuilding.fxml"
+                ));
+
+        this.availableSteps.put(JedaiOptions.STEP_LABEL_BLOCK_CLEANING,
+                new WorkflowStep(
+                        JedaiOptions.STEP_LABEL_BLOCK_CLEANING,
+                        JedaiOptions.STEP_DESCRIPTION_BLOCK_CLEANING,
+                        "wizard-fxml/steps/BlockCleaning.fxml"
+                ));
+
+        this.availableSteps.put(JedaiOptions.STEP_LABEL_COMPARISON_CLEANING,
+                new WorkflowStep(
+                        JedaiOptions.STEP_LABEL_COMPARISON_CLEANING,
+                        JedaiOptions.STEP_DESCRIPTION_COMPARISON_CLEANING,
+                        "wizard-fxml/steps/ComparisonCleaning.fxml"
+                ));
+
+        this.availableSteps.put(JedaiOptions.STEP_LABEL_ENTITY_MATCHING,
+                new WorkflowStep(
+                        JedaiOptions.STEP_LABEL_ENTITY_MATCHING,
+                        JedaiOptions.STEP_DESCRIPTION_ENTITY_MATCHING,
+                        "wizard-fxml/steps/EntityMatching.fxml"
+                ));
+
+        this.availableSteps.put(JedaiOptions.STEP_LABEL_ENTITY_CLUSTERING,
+                new WorkflowStep(
+                        JedaiOptions.STEP_LABEL_ENTITY_CLUSTERING,
+                        JedaiOptions.STEP_DESCRIPTION_ENTITY_CLUSTERING,
+                        "wizard-fxml/steps/EntityClustering.fxml"
+                ));
+
+        this.availableSteps.put(JedaiOptions.STEP_LABEL_SIMILARITY_JOIN,
+                new WorkflowStep(
+                        JedaiOptions.STEP_LABEL_SIMILARITY_JOIN,
+                        JedaiOptions.STEP_DESCRIPTION_SIMILARITY_JOIN,
+                        "wizard-fxml/steps/Welcome.fxml" // todo...
+                ));
+
+        this.availableSteps.put(JedaiOptions.STEP_LABEL_PRIORITIZATION,
+                new WorkflowStep(
+                        JedaiOptions.STEP_LABEL_PRIORITIZATION,
+                        JedaiOptions.STEP_DESCRIPTION_PRIORITIZATION,
+                        "wizard-fxml/steps/Welcome.fxml" // todo...
+                ));
+
+        this.availableSteps.put(JedaiOptions.STEP_LABEL_SELECTION_CONFIRMATION,
+                new WorkflowStep(
+                        JedaiOptions.STEP_LABEL_SELECTION_CONFIRMATION,
+                        JedaiOptions.STEP_DESCRIPTION_SELECTION_CONFIRMATION,
+                        "wizard-fxml/steps/Confirm.fxml"
+                ));
+
+        this.availableSteps.put(JedaiOptions.STEP_LABEL_WORKFLOW_EXECUTION,
+                new WorkflowStep(
+                        JedaiOptions.STEP_LABEL_WORKFLOW_EXECUTION,
+                        JedaiOptions.STEP_DESCRIPTION_WORKFLOW_EXECUTION,
+                        "wizard-fxml/steps/Completed.fxml"
+                ));
     }
 
     private void switchWorkflow(String workflow) {
