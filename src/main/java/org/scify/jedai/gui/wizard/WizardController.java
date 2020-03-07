@@ -61,22 +61,33 @@ public class WizardController {
     private List<WorkflowStep> joinWorkflowSteps;
     private List<WorkflowStep> progressiveWorkflowSteps;
 
-    private final Map<String, WorkflowStep> availableSteps;
+    private Map<String, WorkflowStep> availableSteps;
 
-    private int totalSteps;
+    private int totalSteps = -1;
 
     private final IntegerProperty currentStep = new SimpleIntegerProperty(-1);
 
-    public WizardController() {
+    @FXML
+    public void initialize() {
         // Create WorkflowSteps for all possible steps
-        this.availableSteps = new HashMap<>();
         initializeStepsMap();
 
         // Initialize lists of steps for the beginning/end of workflows as well as the three workflows
         initializeStepLists();
 
-        // Set total steps (will be updated later as well)
-        totalSteps = initialSteps.size() + finalSteps.size();
+        // Set total steps
+        updateTotalSteps();
+
+        // Build wizard steps & content
+        buildSteps(initialSteps);
+        buildSteps(finalSteps);
+        initButtons();
+        buildIndicatorCircles();
+        setInitialContent();
+
+        // Add a listener to change the intermediate steps of the workflow then the selected workflow changes
+        // todo: Move listener to top of method
+        this.model.workflowProperty().addListener((observable, oldValue, newValue) -> switchWorkflow(newValue));
     }
 
     /**
@@ -84,6 +95,8 @@ public class WizardController {
      * (containing its name, description, configuration etc.
      */
     private void initializeStepsMap() {
+        this.availableSteps = new HashMap<>();
+
         this.availableSteps.put(JedaiOptions.STEP_LABEL_WELCOME,
                 new WorkflowStep(
                         JedaiOptions.STEP_LABEL_WELCOME,
@@ -233,35 +246,40 @@ public class WizardController {
         );
     }
 
+    /**
+     * Update the totalSteps variable with the number of steps in the current workflow.
+     */
+    private void updateTotalSteps() {
+        this.totalSteps = this.initialSteps.size() + this.intermediateSteps.size() + this.finalSteps.size();
+    }
+
     private void switchWorkflow(String workflow) {
         System.out.println("Changing workflow to " + workflow);
 
-        // todo: Add intermediate steps
+        // Add intermediate steps
         switch (workflow) {
             case JedaiOptions.WORKFLOW_BLOCKING_BASED:
+                this.intermediateSteps = this.blockingWorkflowSteps;
                 break;
             case JedaiOptions.WORKFLOW_JOIN_BASED:
+                this.intermediateSteps = this.joinWorkflowSteps;
                 break;
             case JedaiOptions.WORKFLOW_PROGRESSIVE:
+                this.intermediateSteps = this.progressiveWorkflowSteps;
                 break;
         }
 
-        // todo: Rebuild indicator circles
-        // todo: Check if we need to re-initialize buttons
-    }
+        // Build the steps
+        // todo: Check if we could build them once and re-use
+        buildSteps(intermediateSteps);
 
-    @FXML
-    public void initialize() {
-        // Build wizard steps & content
-        buildSteps(initialSteps);
-        buildSteps(finalSteps);
-        initButtons();
+        // Set totalSteps to the correct number of steps
+        updateTotalSteps();
+
+        // Rebuild indicator circles
         buildIndicatorCircles();
-        setInitialContent();
 
-        // Add a listener to change the intermediate steps of the workflow then the selected workflow changes
-        // todo: Move listener to top of method
-        this.model.workflowProperty().addListener((observable, oldValue, newValue) -> switchWorkflow(newValue));
+        // todo: Check if we need to re-initialize buttons
     }
 
     /**
