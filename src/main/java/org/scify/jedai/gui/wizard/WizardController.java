@@ -75,19 +75,20 @@ public class WizardController {
         // Initialize lists of steps for the beginning/end of workflows as well as the three workflows
         initializeStepLists();
 
-        // Set total steps
-        updateTotalSteps();
-
-        // Build wizard steps & content
+        // Build steps
         buildSteps(initialSteps);
         buildSteps(finalSteps);
+
+        // Add a listener to change the intermediate steps of the workflow then the selected workflow changes
+        this.model.workflowProperty().addListener((observable, oldValue, newValue) -> switchWorkflow(newValue));
+
+        // Switch to the default selected workflow
+        this.switchWorkflow(this.model.getWorkflow());
+
+        // Initialize wizard GUI content
         initButtons();
         buildIndicatorCircles();
         setInitialContent();
-
-        // Add a listener to change the intermediate steps of the workflow then the selected workflow changes
-        // todo: Move listener to top of method
-        this.model.workflowProperty().addListener((observable, oldValue, newValue) -> switchWorkflow(newValue));
     }
 
     /**
