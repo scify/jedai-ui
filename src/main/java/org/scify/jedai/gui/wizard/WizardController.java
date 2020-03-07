@@ -100,13 +100,35 @@ public class WizardController {
         totalSteps = initialSteps.size() + finalSteps.size();
     }
 
+    private void switchWorkflow(String workflow) {
+        System.out.println("Changing workflow to " + workflow);
+
+        // todo: Add intermediate steps
+        switch (workflow) {
+            case JedaiOptions.WORKFLOW_BLOCKING_BASED:
+                break;
+            case JedaiOptions.WORKFLOW_JOIN_BASED:
+                break;
+            case JedaiOptions.WORKFLOW_PROGRESSIVE:
+                break;
+        }
+
+        // todo: Rebuild indicator circles
+        // todo: Check if we need to re-initialize buttons
+    }
+
     @FXML
     public void initialize() {
+        // Build wizard steps & content
         buildSteps(initialSteps);
         buildSteps(finalSteps);
         initButtons();
         buildIndicatorCircles();
         setInitialContent();
+
+        // Add a listener to change the intermediate steps of the workflow then the selected workflow changes
+        // todo: Move listener to top of method
+        this.model.workflowProperty().addListener((observable, oldValue, newValue) -> switchWorkflow(newValue));
     }
 
     /**
