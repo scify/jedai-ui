@@ -279,7 +279,8 @@ public class WizardController {
         // Rebuild indicator circles
         buildIndicatorCircles();
 
-        // todo: Check if we need to re-initialize buttons
+        // Re-initialize buttons as the number of steps could have changed
+        initButtons();
     }
 
     /**
@@ -308,16 +309,21 @@ public class WizardController {
         return getStep(currentStep.get());
     }
 
+    /**
+     * (Re)bind back/next/cancel button properties.
+     */
     private void initButtons() {
         // Disable back button in the 1st step and when workflow is running
+        btnBack.disableProperty().unbind();
         btnBack.disableProperty().bind(currentStep.lessThanOrEqualTo(0).or(model.workflowRunningProperty()));
 
         // Disable next step button in the last step and when workflow is running
+        btnNext.disableProperty().unbind();
         btnNext.disableProperty()
                 .bind(currentStep.greaterThanOrEqualTo(this.totalSteps - 1).or(model.workflowRunningProperty()));
-        // todo: when number of steps change, this might need updating?
 
         // Make the cancel button's text show "Start Over" in the last step
+        btnCancel.textProperty().unbind();
         btnCancel.textProperty().bind(
 //                new When(currentStep.lessThan(steps.size() - 1))
                 new When(currentStep.lessThan(this.totalSteps - 1))
@@ -326,6 +332,7 @@ public class WizardController {
         );
 
         // Disable the cancel/start over button in the 1st step and when workflow is running
+        btnCancel.disableProperty().unbind();
         btnCancel.disableProperty().bind(currentStep.lessThanOrEqualTo(0).or(model.workflowRunningProperty()));
     }
 
