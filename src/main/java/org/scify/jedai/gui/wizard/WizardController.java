@@ -109,7 +109,8 @@ public class WizardController {
                 new WorkflowStep(
                         JedaiOptions.STEP_LABEL_SCHEMA_CLUSTERING,
                         JedaiOptions.STEP_DESCRIPTION_SCHEMA_CLUSTERING,
-                        "wizard-fxml/steps/SchemaClustering.fxml"
+                        "wizard-fxml/steps/SchemaClustering.fxml",
+                        model.schemaClusteringConfigTypeProperty()
                 ));
 
         this.availableSteps.put(JedaiOptions.STEP_LABEL_BLOCK_BUILDING,
@@ -130,21 +131,24 @@ public class WizardController {
                 new WorkflowStep(
                         JedaiOptions.STEP_LABEL_COMPARISON_CLEANING,
                         JedaiOptions.STEP_DESCRIPTION_COMPARISON_CLEANING,
-                        "wizard-fxml/steps/ComparisonCleaning.fxml"
+                        "wizard-fxml/steps/ComparisonCleaning.fxml",
+                        model.comparisonCleaningConfigTypeProperty()
                 ));
 
         this.availableSteps.put(JedaiOptions.STEP_LABEL_ENTITY_MATCHING,
                 new WorkflowStep(
                         JedaiOptions.STEP_LABEL_ENTITY_MATCHING,
                         JedaiOptions.STEP_DESCRIPTION_ENTITY_MATCHING,
-                        "wizard-fxml/steps/EntityMatching.fxml"
+                        "wizard-fxml/steps/EntityMatching.fxml",
+                        model.entityMatchingConfigTypeProperty()
                 ));
 
         this.availableSteps.put(JedaiOptions.STEP_LABEL_ENTITY_CLUSTERING,
                 new WorkflowStep(
                         JedaiOptions.STEP_LABEL_ENTITY_CLUSTERING,
                         JedaiOptions.STEP_DESCRIPTION_ENTITY_CLUSTERING,
-                        "wizard-fxml/steps/EntityClustering.fxml"
+                        "wizard-fxml/steps/EntityClustering.fxml",
+                        model.entityClusteringConfigTypeProperty()
                 ));
 
         this.availableSteps.put(JedaiOptions.STEP_LABEL_SIMILARITY_JOIN,
