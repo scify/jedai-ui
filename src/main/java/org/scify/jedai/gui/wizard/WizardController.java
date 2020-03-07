@@ -76,6 +76,11 @@ public class WizardController {
                                 JedaiOptions.STEP_LABEL_WORKFLOW_SELECTION,
                                 JedaiOptions.STEP_DESCRIPTION_WORKFLOW_SELECTION,
                                 "wizard-fxml/steps/WorkflowSelection.fxml"
+                        ),
+                        new WorkflowStep(
+                                JedaiOptions.STEP_LABEL_DATA_READING,
+                                JedaiOptions.STEP_DESCRIPTION_DATA_READING,
+                                "wizard-fxml/steps/DataReading.fxml"
                         )
                 )
         );
