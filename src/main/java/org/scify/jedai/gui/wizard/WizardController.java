@@ -225,6 +225,24 @@ public class WizardController {
         return circle;
     }
 
+    private void goToStep(int stepNum) {
+        // Remove old step from view
+        contentPanel.getChildren().remove(
+                getStepNode(currentStep.get())
+        );
+
+        // Increment the current step
+        currentStep.set(stepNum);
+
+        // Show the next step (incremented currentStep)
+        contentPanel.getChildren().add(
+                getStepNode(currentStep.get())
+        );
+
+        // Set step label & description
+        setLabelAndDescription(currentStep.get());
+    }
+
     @FXML
     public void next() {
         Parent p = getStepNode(currentStep.get());
@@ -351,57 +369,30 @@ public class WizardController {
                 }
             }
 
-            // Remove old step from view
-            contentPanel.getChildren().remove(
-                    getStepNode(currentStep.get())
-            );
-
-            // Increment the current step
-            currentStep.set(currentStep.get() + 1);
-
-            // Show the next step (incremented currentStep)
-            contentPanel.getChildren().add(
-                    getStepNode(currentStep.get())
-            );
-
-            // Set step label & description
-            setLabelAndDescription(currentStep.get());
+            // Go to the next step
+            this.goToStep(currentStep.get() + 1);
         }
     }
 
     @FXML
     public void back() {
+        // Go to previous step if we aren't in the 1st step already
         if (currentStep.get() > 0) {
-            // Remove old step from view
-            contentPanel.getChildren().remove(
-                    getStepNode(currentStep.get())
-            );
-
-            // Increment the current step
-            currentStep.set(currentStep.get() - 1);
-
-            // Show the next step (incremented currentStep)
-            contentPanel.getChildren().add(
-                    getStepNode(currentStep.get())
-            );
+            this.goToStep(currentStep.get() - 1);
         }
     }
 
     @FXML
     public void cancel() {
-        // todo: check & update
-        contentPanel.getChildren().remove(steps.get(currentStep.get()));
-        currentStep.set(0);  // first screen
-        contentPanel.getChildren().add(steps.get(currentStep.get()));
+        // Go to first step
+        this.goToStep(0);
 
-        setLabelAndDescription(currentStep.get());
-
-        // Get controller of last step, to reset its data (only if it's an instance of the CompletedController)
-        Object ctrl = steps.get(steps.size() - 1).getProperties().get(CONTROLLER_KEY);
-
-        if (ctrl instanceof CompletedController) {
-            ((CompletedController) ctrl).resetData();
-        }
+        // todo: Get controller of last step, to reset its data (only if it's an instance of the CompletedController)
+//        Object ctrl = steps.get(steps.size() - 1).getProperties().get(CONTROLLER_KEY);
+//
+//        if (ctrl instanceof CompletedController) {
+//            ((CompletedController) ctrl).resetData();
+//        }
     }
 
     private Method getMethod(Class<? extends Annotation> an, Object obj) {
