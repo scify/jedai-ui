@@ -174,53 +174,54 @@ public class ConfirmController {
         addRow(rows++, boldLabel("Ground Truth Reader Parameters"),
                 DynamicMethodConfiguration.newParamsNode(model.groundTruthParametersProperty()));
 
-        // Schema Clustering method
-        addRow(rows++, boldLabel("Schema Clustering Method"), boundLabel(model.schemaClusteringProperty()));
-
-        // Schema Clustering parameters
-        addRow(rows++, boldLabel("Schema Clustering Parameters"),
-                DynamicMethodConfiguration.newParamsNode(model.schemaClusteringParametersProperty()));
-
-        // Block Building methods list
-        addRow(rows++, boldLabel("Block Building Methods"),
-                getJedaiMethodConfigurationsListView(model.getBlockBuildingMethods()));
-
-        // Block Cleaning methods list
-        addRow(rows++, boldLabel("Block Cleaning Methods"),
-                getJedaiMethodConfigurationsListView(model.getBlockCleaningMethods()));
-
-        // Comparison Cleaning method
-        addRow(rows++, boldLabel("Comparison Cleaning Method"), boundLabel(model.comparisonCleaningProperty()));
-
-        // Comparison Cleaning configuration type
-        addRow(rows++, boldLabel("Comparison Cleaning Configuration"),
-                boundLabel(model.comparisonCleaningConfigTypeProperty()));
-
-        // Comparison Cleaning parameters
-        addRow(rows++, boldLabel("Comparison Cleaning Parameters"),
-                DynamicMethodConfiguration.newParamsNode(model.comparisonCleaningParametersProperty()));
-
-        // Entity Matching method
-        addRow(rows++, boldLabel("Entity Matching Method"), boundLabel(model.entityMatchingProperty()));
-
-        // Entity Matching configuration type
-        addRow(rows++, boldLabel("Entity Matching Configuration"),
-                boundLabel(model.entityMatchingConfigTypeProperty()));
-
-        // Entity Matching parameters
-        addRow(rows++, boldLabel("Entity Matching Parameters"),
-                DynamicMethodConfiguration.newParamsNode(model.entityMatchingParametersProperty()));
-
-        // Entity Clustering algorithm
-        addRow(rows++, boldLabel("Entity Clustering Algorithm"), boundLabel(model.entityClusteringProperty()));
-
-        // Entity Clustering configuration type
-        addRow(rows++, boldLabel("Entity Clustering Configuration"),
-                boundLabel(model.entityClusteringConfigTypeProperty()));
-
-        // Entity Clustering parameters
-        addRow(rows, boldLabel("Entity Clustering Parameters"),
-                DynamicMethodConfiguration.newParamsNode(model.entityClusteringParametersProperty()));
+        // todo: change what is being shown based on model.getWorkflow()....
+//        // Schema Clustering method
+//        addRow(rows++, boldLabel("Schema Clustering Method"), boundLabel(model.schemaClusteringProperty()));
+//
+//        // Schema Clustering parameters
+//        addRow(rows++, boldLabel("Schema Clustering Parameters"),
+//                DynamicMethodConfiguration.newParamsNode(model.schemaClusteringParametersProperty()));
+//
+//        // Block Building methods list
+//        addRow(rows++, boldLabel("Block Building Methods"),
+//                getJedaiMethodConfigurationsListView(model.getBlockBuildingMethods()));
+//
+//        // Block Cleaning methods list
+//        addRow(rows++, boldLabel("Block Cleaning Methods"),
+//                getJedaiMethodConfigurationsListView(model.getBlockCleaningMethods()));
+//
+//        // Comparison Cleaning method
+//        addRow(rows++, boldLabel("Comparison Cleaning Method"), boundLabel(model.comparisonCleaningProperty()));
+//
+//        // Comparison Cleaning configuration type
+//        addRow(rows++, boldLabel("Comparison Cleaning Configuration"),
+//                boundLabel(model.comparisonCleaningConfigTypeProperty()));
+//
+//        // Comparison Cleaning parameters
+//        addRow(rows++, boldLabel("Comparison Cleaning Parameters"),
+//                DynamicMethodConfiguration.newParamsNode(model.comparisonCleaningParametersProperty()));
+//
+//        // Entity Matching method
+//        addRow(rows++, boldLabel("Entity Matching Method"), boundLabel(model.entityMatchingProperty()));
+//
+//        // Entity Matching configuration type
+//        addRow(rows++, boldLabel("Entity Matching Configuration"),
+//                boundLabel(model.entityMatchingConfigTypeProperty()));
+//
+//        // Entity Matching parameters
+//        addRow(rows++, boldLabel("Entity Matching Parameters"),
+//                DynamicMethodConfiguration.newParamsNode(model.entityMatchingParametersProperty()));
+//
+//        // Entity Clustering algorithm
+//        addRow(rows++, boldLabel("Entity Clustering Algorithm"), boundLabel(model.entityClusteringProperty()));
+//
+//        // Entity Clustering configuration type
+//        addRow(rows++, boldLabel("Entity Clustering Configuration"),
+//                boundLabel(model.entityClusteringConfigTypeProperty()));
+//
+//        // Entity Clustering parameters
+//        addRow(rows, boldLabel("Entity Clustering Parameters"),
+//                DynamicMethodConfiguration.newParamsNode(model.entityClusteringParametersProperty()));
     }
 
     /**

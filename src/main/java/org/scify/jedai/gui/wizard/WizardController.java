@@ -209,10 +209,9 @@ public class WizardController {
         );
 
         // Initialize last steps
-        //noinspection ArraysAsListWithZeroOrOneArgument
         this.finalSteps = new ArrayList<>(
                 Arrays.asList(
-//                        availableSteps.get(JedaiOptions.STEP_LABEL_SELECTION_CONFIRMATION),
+                        availableSteps.get(JedaiOptions.STEP_LABEL_SELECTION_CONFIRMATION),
                         availableSteps.get(JedaiOptions.STEP_LABEL_WORKFLOW_EXECUTION)
                 )
         );
