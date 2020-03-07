@@ -18,7 +18,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import org.scify.jedai.entitymatching.GroupLinkage;
 import org.scify.jedai.entitymatching.ProfileMatcher;
-import org.scify.jedai.gui.controllers.steps.CompletedController;
 import org.scify.jedai.gui.model.JedaiMethodConfiguration;
 import org.scify.jedai.gui.utilities.*;
 import org.scify.jedai.utilities.IDocumentation;
@@ -140,13 +139,12 @@ public class WizardController {
     }
 
     /**
-     * Similar to getStep, but returns the step's node
+     * Get the WorkflowStep object for the current step
      *
-     * @param stepNum Number of step to get node for.
-     * @return Node of step
+     * @return WorkflowStep object for the current step
      */
-    private Parent getStepNode(int stepNum) {
-        return getStep(stepNum).getNode();
+    private WorkflowStep getCurrentStep() {
+        return getStep(currentStep.get());
     }
 
     private void initButtons() {
@@ -171,22 +169,21 @@ public class WizardController {
     }
 
     /**
-     * Set the stepsLabel and stepDescriptionTextArea values to the ones for the given step
-     *
-     * @param stepNum Step number
+     * Update the stepsLabel and stepDescriptionTextArea values to the ones for the current step
      */
-    private void setLabelAndDescription(int stepNum) {
-        WorkflowStep step = this.getStep(stepNum);
+    private void updateLabelAndDescription() {
+        WorkflowStep step = this.getCurrentStep();
+
         stepsLabel.setText(step.getLabel());
         stepDescriptionTextarea.setText(step.getDescription());
     }
 
     private void setInitialContent() {
         currentStep.set(0);  // First element
-        contentPanel.getChildren().add(getStepNode(currentStep.get()));
+        contentPanel.getChildren().add(this.getCurrentStep().getNode());
 
         // Set step text & description
-        setLabelAndDescription(currentStep.get());
+        updateLabelAndDescription();
     }
 
     private void buildIndicatorCircles() {
@@ -228,7 +225,7 @@ public class WizardController {
     private void goToStep(int stepNum) {
         // Remove old step from view
         contentPanel.getChildren().remove(
-                getStepNode(currentStep.get())
+                this.getCurrentStep().getNode()
         );
 
         // Increment the current step
@@ -236,16 +233,16 @@ public class WizardController {
 
         // Show the next step (incremented currentStep)
         contentPanel.getChildren().add(
-                getStepNode(currentStep.get())
+                this.getCurrentStep().getNode()
         );
 
         // Set step label & description
-        setLabelAndDescription(currentStep.get());
+        updateLabelAndDescription();
     }
 
     @FXML
     public void next() {
-        Parent p = getStepNode(currentStep.get());
+        Parent p = this.getCurrentStep().getNode();
         Object controller = p.getProperties().get(CONTROLLER_KEY);
 
         // validate
