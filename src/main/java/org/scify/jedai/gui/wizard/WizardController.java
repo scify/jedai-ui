@@ -254,8 +254,6 @@ public class WizardController {
     }
 
     private void switchWorkflow(String workflow) {
-        System.out.println("Changing workflow to " + workflow);
-
         // Add intermediate steps
         switch (workflow) {
             case JedaiOptions.WORKFLOW_BLOCKING_BASED:
