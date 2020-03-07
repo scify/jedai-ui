@@ -37,7 +37,7 @@ public class WorkflowStep {
     }
 
     public boolean hasConfigProperty() {
-        return (configProperty == null);
+        return (configProperty != null);
     }
 
     public String getConfigProperty() {
