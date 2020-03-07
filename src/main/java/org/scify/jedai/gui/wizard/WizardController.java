@@ -477,7 +477,7 @@ public class WizardController {
 
                     methodName = model.getEntityMatching();
                     method = (methodName.equals(JedaiOptions.GROUP_LINKAGE)) ?
-                            new GroupLinkage() : new ProfileMatcher();
+                            new GroupLinkage(new ArrayList<>()) : new ProfileMatcher(new ArrayList<>());
 
                     break;
                 case JedaiOptions.STEP_LABEL_ENTITY_CLUSTERING:

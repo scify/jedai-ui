@@ -39,7 +39,7 @@ public class DataReader {
                 // Get parameters
                 String csvPath = parameters.get(0).getRight().toString();
                 boolean attributeNamesInFirstRow = (boolean) parameters.get(1).getRight();
-                char separator = (char) parameters.get(2).getRight();
+                String separator = (String) parameters.get(2).getRight();
                 int idIndex = (int) parameters.get(3).getRight();
                 Set<Integer> indicesToExcludeSet = (Set<Integer>) parameters.get(4).getRight();
 
@@ -141,7 +141,8 @@ public class DataReader {
                 // Get parameters
                 String csvPath = parameters.get(0).getRight().toString();
                 boolean ignoreFirstRow = (boolean) parameters.get(1).getRight();
-                char separator = (char) parameters.get(2).getRight();
+                String separator = (String) parameters.get(2).getRight();
+                // todo: Check that separator works
 
                 // Initialize the reader
                 GtCSVReader csvReader = new GtCSVReader(csvPath);
