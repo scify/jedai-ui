@@ -106,7 +106,14 @@ public class MethodMapping {
         return schemaClustering;
     }
 
-    public static IBlockProcessing getMethodByName(String method) {
+    /**
+     * Create a block processing method instance to be used for running the workflow.
+     *
+     * @param method         Method name
+     * @param isCleanCleanEr Whether we are using Clean-Clean ER or not (only matters for some methods)
+     * @return
+     */
+    public static IBlockProcessing getMethodByName(String method, boolean isCleanCleanEr) {
         IBlockProcessing processingMethod = null;
 
         // Get appropriate processing method
@@ -119,7 +126,7 @@ public class MethodMapping {
                 processingMethod = new SizeBasedBlockPurging();
                 break;
             case JedaiOptions.COMPARISON_BASED_BLOCK_PURGING:
-                processingMethod = new ComparisonsBasedBlockPurging();
+                processingMethod = new ComparisonsBasedBlockPurging(isCleanCleanEr);
                 break;
             // Below: Comparison Cleaning methods
             case JedaiOptions.COMPARISON_PROPAGATION:

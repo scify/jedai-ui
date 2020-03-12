@@ -69,8 +69,9 @@ public class WorkflowManager {
 
     /**
      * Create instances of the methods that will be used for running the workflow
+     * @param isCleanCleanEr    If we are using clean-clean ER or not. Some block cleaning methods require this.
      */
-    public void createMethodInstances() {
+    public void createMethodInstances(boolean isCleanCleanEr) {
         // Get schema clustering method (will become null if no schema clustering method was selected)
         if (!model.getSchemaClusteringConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
             // Default (or automatic, later) configuration of schema clustering
@@ -118,7 +119,7 @@ public class WorkflowManager {
             IBlockProcessing blockCleaningMethod;
             if (!blClMethodConfig.getConfigurationType().equals(JedaiOptions.MANUAL_CONFIG)) {
                 // Auto or default configuration selected: use default configuration
-                blockCleaningMethod = MethodMapping.getMethodByName(blClMethodConfig.getName());
+                blockCleaningMethod = MethodMapping.getMethodByName(blClMethodConfig.getName(), isCleanCleanEr);
             } else {
                 // Manual configuration selected, create method with the saved parameters
                 blockCleaningMethod = DynamicMethodConfiguration.configureBlockCleaningMethod(
@@ -135,7 +136,7 @@ public class WorkflowManager {
             // Create comparison cleaning method
             if (!model.getComparisonCleaningConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
                 // Auto or default configuration selected: use default configuration
-                comparisonCleaningMethod = MethodMapping.getMethodByName(coClMethod);
+                comparisonCleaningMethod = MethodMapping.getMethodByName(coClMethod, isCleanCleanEr);
             } else {
                 // Manual configuration selected, create method with the saved parameters
                 ObservableList<JPair<String, Object>> coClParams = model.getComparisonCleaningParameters();

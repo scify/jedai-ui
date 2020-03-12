@@ -298,6 +298,7 @@ public class CompletedController {
             model.setWorkflowRunning(true);
             exploreBtn.setDisable(true);
             showPlotBtn.setDisable(true);
+
             // Set the starting time
             long startTime = System.currentTimeMillis();
 
@@ -307,7 +308,8 @@ public class CompletedController {
                 workflowMgr.readDatasets(true);
 
                 // Prepare methods for rest of workflow
-                workflowMgr.createMethodInstances();
+                boolean isCleanCleanEr = (model.getErType().equals(JedaiOptions.CLEAN_CLEAN_ER));
+                workflowMgr.createMethodInstances(isCleanCleanEr);
 
                 // Execute the workflow
                 ClustersPerformance clp = workflowMgr.executeWorkflow(statusLabel);
