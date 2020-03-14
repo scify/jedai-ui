@@ -36,7 +36,6 @@ public class WorkflowManager {
     private List<IBlockBuilding> blBuMethods;
     private List<IBlockProcessing> blClMethods;
     private IBlockProcessing comparisonCleaningMethod;
-    private IEntityMatching entityMatchingMethod;
     private IEntityClustering ec;
 
     public WorkflowManager(WizardData model) {
@@ -856,6 +855,9 @@ public class WorkflowManager {
         time1 = System.currentTimeMillis();
         boolean matchingAutomatic = model.getEntityMatchingConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG);
         boolean clusteringAutomatic = model.getEntityClusteringConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG);
+
+        // Create entity matching method instance
+        IEntityMatching entityMatchingMethod = this.getEntityMatchingMethodInstance(profilesD1, profilesD2);
 
         if (matchingAutomatic || clusteringAutomatic) {
             // Show message that we are doing optimization based on the selected options
