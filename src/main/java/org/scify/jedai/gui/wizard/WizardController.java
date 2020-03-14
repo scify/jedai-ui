@@ -169,7 +169,7 @@ public class WizardController {
                 new WorkflowStep(
                         JedaiOptions.STEP_LABEL_SIMILARITY_JOIN,
                         JedaiOptions.STEP_DESCRIPTION_SIMILARITY_JOIN,
-                        "wizard-fxml/steps/Welcome.fxml" // todo...
+                        "wizard-fxml/steps/SimilarityJoin.fxml"
                 ));
 
         this.availableSteps.put(JedaiOptions.STEP_LABEL_PRIORITIZATION,
