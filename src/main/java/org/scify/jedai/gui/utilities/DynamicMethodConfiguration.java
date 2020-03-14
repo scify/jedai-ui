@@ -14,6 +14,7 @@ import org.scify.jedai.blockprocessing.blockcleaning.BlockFiltering;
 import org.scify.jedai.blockprocessing.blockcleaning.ComparisonsBasedBlockPurging;
 import org.scify.jedai.blockprocessing.blockcleaning.SizeBasedBlockPurging;
 import org.scify.jedai.blockprocessing.comparisoncleaning.*;
+import org.scify.jedai.datamodel.EntityProfile;
 import org.scify.jedai.datareader.entityreader.*;
 import org.scify.jedai.datareader.groundtruthreader.GtCSVReader;
 import org.scify.jedai.datareader.groundtruthreader.GtRDFReader;
@@ -381,27 +382,44 @@ public class DynamicMethodConfiguration {
      * @param parameters   Parameters for the method
      * @return Entity Matching method configured with the given parameters
      */
-    public static IEntityMatching configureEntityMatchingMethod(String emMethodName,
+    public static IEntityMatching configureEntityMatchingMethod(String emMethodName, List<EntityProfile> profilesD1,
+                                                                List<EntityProfile> profilesD2,
                                                                 List<JPair<String, Object>> parameters) {
         RepresentationModel rep;
         SimilarityMetric simMetric;
 
         switch (emMethodName) {
             case JedaiOptions.GROUP_LINKAGE:
+                // Get similarity threshold, representation model & similarity metric
                 double simThr = (parameters != null) ? (double) parameters.get(2).getRight() : 0.5;
                 rep = (parameters != null) ?
                         (RepresentationModel) parameters.get(0).getRight() : RepresentationModel.TOKEN_UNIGRAM_GRAPHS;
                 simMetric = (parameters != null) ?
                         (SimilarityMetric) parameters.get(1).getRight() : SimilarityMetric.GRAPH_VALUE_SIMILARITY;
 
-                return new GroupLinkage(simThr, rep, simMetric);
+                // Give them to the constructor, together with the entity profiles
+                if (profilesD2 == null) {
+                    // Dirty ER, only one list populated
+                    return new GroupLinkage(simThr, profilesD1, rep, simMetric);
+                } else {
+                    // Clean-Clean ER
+                    return new GroupLinkage(simThr, profilesD1, profilesD2, rep, simMetric);
+                }
             case JedaiOptions.PROFILE_MATCHER:
+                // Get representation model & similarity metric
                 rep = (parameters != null) ?
                         (RepresentationModel) parameters.get(0).getRight() : RepresentationModel.TOKEN_UNIGRAM_GRAPHS;
                 simMetric = (parameters != null) ?
                         (SimilarityMetric) parameters.get(1).getRight() : SimilarityMetric.GRAPH_VALUE_SIMILARITY;
 
-                return new ProfileMatcher(rep, simMetric);
+                // Give them to the constructor, together with the entity profiles
+                if (profilesD2 == null) {
+                    // Dirty ER, only one list populated
+                    return new ProfileMatcher(profilesD1, rep, simMetric);
+                } else {
+                    // Clean-Clean ER
+                    return new ProfileMatcher(profilesD1, profilesD2, rep, simMetric);
+                }
             default:
                 return null;
         }
