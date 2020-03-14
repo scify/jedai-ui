@@ -207,6 +207,7 @@ public class WorkflowManager {
 
             // Check each block cleaning method config
             for (JedaiMethodConfiguration methodConfig : model.getBlockBuildingMethods()) {
+                //noinspection Duplicates
                 if (methodConfig.isEnabled()) {
                     // Method is enabled, check if we should configure automatically
                     if (methodConfig.getConfigurationType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
@@ -231,6 +232,7 @@ public class WorkflowManager {
 
             // Check each block cleaning method config
             for (JedaiMethodConfiguration blClConfig : model.getBlockCleaningMethods()) {
+                //noinspection Duplicates
                 if (blClConfig.isEnabled()) {
                     // Method is enabled, check if we should configure automatically
                     if (blClConfig.getConfigurationType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
