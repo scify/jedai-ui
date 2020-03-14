@@ -69,7 +69,8 @@ public class WorkflowManager {
 
     /**
      * Create instances of the methods that will be used for running the workflow
-     * @param isCleanCleanEr    If we are using clean-clean ER or not. Some block cleaning methods require this.
+     *
+     * @param isCleanCleanEr If we are using clean-clean ER or not. Some block cleaning methods require this.
      */
     public void createMethodInstances(boolean isCleanCleanEr) {
         // Get schema clustering method (will become null if no schema clustering method was selected)
@@ -144,20 +145,6 @@ public class WorkflowManager {
             }
         }
 
-        // Get entity matching method
-        String entityMatchingMethodStr = model.getEntityMatching();
-
-        if (!model.getEntityMatchingConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
-            // Default or automatic config, use default values
-            entityMatchingMethod = DynamicMethodConfiguration
-                    .configureEntityMatchingMethod(entityMatchingMethodStr, null);
-        } else {
-            // Manual configuration, use given parameters
-            ObservableList<JPair<String, Object>> emParams = model.getEntityMatchingParameters();
-            entityMatchingMethod = DynamicMethodConfiguration
-                    .configureEntityMatchingMethod(entityMatchingMethodStr, emParams);
-        }
-
         // Get entity clustering method
         String entityClusteringMethod = model.getEntityClustering();
 
@@ -168,6 +155,32 @@ public class WorkflowManager {
             // Manual configuration selected, create method with the saved parameters
             ObservableList<JPair<String, Object>> ecParams = model.getEntityClusteringParameters();
             ec = DynamicMethodConfiguration.configureEntityClusteringMethod(entityClusteringMethod, ecParams);
+        }
+    }
+
+    /**
+     * Get an instance of the currently selected entity matching method, configured as required by the selected options
+     * in the Wizard.
+     *
+     * @param profilesD1 Entity profiles for 1st dataset
+     * @param profilesD2 Entity profiles for 2nd dataset (used for Clean-Clean ER, can be null)
+     * @return Configured entity matching method
+     */
+    private IEntityMatching getEntityMatchingMethodInstance(List<EntityProfile> profilesD1,
+                                                            List<EntityProfile> profilesD2) {
+        // Get entity matching method
+        String entityMatchingMethodStr = model.getEntityMatching();
+
+        if (!model.getEntityMatchingConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
+            // Default or automatic config, use default values
+            return DynamicMethodConfiguration
+                    .configureEntityMatchingMethod(entityMatchingMethodStr, profilesD1, profilesD2, null);
+        } else {
+            // Manual configuration, use given parameters
+            ObservableList<JPair<String, Object>> emParams = model.getEntityMatchingParameters();
+
+            return DynamicMethodConfiguration
+                    .configureEntityMatchingMethod(entityMatchingMethodStr, profilesD1, profilesD2, emParams);
         }
     }
 
@@ -301,7 +314,7 @@ public class WorkflowManager {
 
                     // Run a workflow and check its F-measure
                     ClustersPerformance clp = this.runWorkflow(statusLabel, schemaClusteringMethod, blBuMethods,
-                            blClMethods, comparisonCleaningMethod, entityMatchingMethod, ec, false);
+                            blClMethods, comparisonCleaningMethod, ec, false);
 
                     // If there was a problem with this random workflow, skip this iteration
                     if (clp == null) {
@@ -324,18 +337,17 @@ public class WorkflowManager {
 
                 // Run the final workflow (whether there was an automatic configuration or not)
                 return this.runWorkflow(statusLabel, schemaClusteringMethod, blBuMethods, blClMethods,
-                        comparisonCleaningMethod, entityMatchingMethod, ec, true);
+                        comparisonCleaningMethod, ec, true);
             } else {
                 // Step-by-step automatic configuration. Set random or grid depending on the selected search type.
                 return runStepByStepWorkflow(
-                        statusLabel,
-                        model.getSearchType().equals(JedaiOptions.AUTOCONFIG_RANDOMSEARCH)
+                        statusLabel, model.getSearchType().equals(JedaiOptions.AUTOCONFIG_RANDOMSEARCH)
                 );
             }
         } else {
             // Run workflow without any automatic configuration
             return this.runWorkflow(statusLabel, schemaClusteringMethod, blBuMethods, blClMethods,
-                    comparisonCleaningMethod, entityMatchingMethod, ec, true);
+                    comparisonCleaningMethod, ec, true);
         }
     }
 
@@ -478,7 +490,6 @@ public class WorkflowManager {
      * @param blBuMethods List of block building methods
      * @param blClMethods List of block cleaning methods
      * @param coCl        Comparison cleaning method
-     * @param em          Entity matching method
      * @param ec          Entity clustering method
      * @param finalRun    Set to true to print messages while running workflow & save performance of each step
      * @return ClustersPerformance object of the executed workflow
@@ -486,16 +497,18 @@ public class WorkflowManager {
      */
     private ClustersPerformance runWorkflow(Label statusLabel, ISchemaClustering sc, List<IBlockBuilding> blBuMethods,
                                             List<IBlockProcessing> blClMethods, IBlockProcessing coCl,
-                                            IEntityMatching em, IEntityClustering ec, boolean finalRun)
+                                            IEntityClustering ec, boolean finalRun)
             throws Exception {
         // Run schema clustering if it's not null (can't measure its performance)
         if (finalRun)
             Platform.runLater(() -> statusLabel.setText("Running schema clustering..."));
 
+        boolean isDirtyEr = erType.equals(JedaiOptions.DIRTY_ER);
+
         AttributeClusters[] clusters = null;
         if (sc != null) {
             // Run schema clustering
-            if (erType.equals(JedaiOptions.DIRTY_ER)) {
+            if (isDirtyEr) {
                 clusters = sc.getClusters(profilesD1);
             } else {
                 clusters = sc.getClusters(profilesD1, profilesD2);
@@ -568,10 +581,12 @@ public class WorkflowManager {
             Platform.runLater(() -> statusLabel.setText("Running entity matching..."));
         SimilarityPairs simPairs;
 
-        if (em == null)
+        // Create the entity matching method here because it requires the entity profiles
+        IEntityMatching entityMatching = getEntityMatchingMethodInstance(profilesD1, profilesD2);
+        if (entityMatching == null)
             throw new Exception("Entity Matching method is null!");
 
-        simPairs = em.executeComparisons(blocks);
+        simPairs = entityMatching.executeComparisons(blocks);
 
         // Run Entity Clustering
         if (finalRun)
