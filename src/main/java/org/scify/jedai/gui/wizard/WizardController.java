@@ -406,6 +406,15 @@ public class WizardController {
         updateLabelAndDescription();
     }
 
+    /**
+     * Return whether the currently selected ER type is Clean-Clean ER.
+     *
+     * @return True if clean-clean ER is selected.
+     */
+    private boolean isCleanCleanEr() {
+        return model.getErType().equals(JedaiOptions.CLEAN_CLEAN_ER);
+    }
+
     @FXML
     public void next() {
         // Stop if we can't go to next step
@@ -468,7 +477,7 @@ public class WizardController {
                     parametersProperty = model.comparisonCleaningParametersProperty();
 
                     methodName = model.getComparisonCleaning();
-                    method = MethodMapping.getMethodByName(methodName);
+                    method = MethodMapping.getMethodByName(methodName, this.isCleanCleanEr());
 
                     break;
                 case JedaiOptions.STEP_LABEL_ENTITY_MATCHING:
@@ -523,7 +532,7 @@ public class WizardController {
                         );
                     } else {
                         // Get block cleaning method
-                        method = MethodMapping.getMethodByName(methodConfig.getName());
+                        method = MethodMapping.getMethodByName(methodConfig.getName(), this.isCleanCleanEr());
                     }
 
                     // Configure the method
