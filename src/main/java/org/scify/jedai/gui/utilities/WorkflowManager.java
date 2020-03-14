@@ -187,9 +187,10 @@ public class WorkflowManager {
      * When bestIteration is null, set the next random configuraiton for each method in the workflow that should be
      * automatically configured. If it is set, set these methods to that configuration.
      *
-     * @param bestIteration Best iteration (optional)
+     * @param entityMatchingMethod Entity matching method to use
+     * @param bestIteration        Best iteration (optional)
      */
-    private void iterateHolisticRandom(Integer bestIteration) {
+    private void iterateHolisticRandom(IEntityMatching entityMatchingMethod, Integer bestIteration) {
         // Check if schema clustering parameters should be set automatically
         if (model.getSchemaClusteringConfigType().equals(JedaiOptions.AUTOMATIC_CONFIG)) {
             if (bestIteration == null) {
@@ -297,6 +298,7 @@ public class WorkflowManager {
      */
     public ClustersPerformance executeWorkflow(Label statusLabel) throws Exception {
         // todo: make difference between this method and runWorkflow() clearer
+        // Check if automatic configuration was chosen for ANY method in the workflow
         if (anyAutomaticConfig()) {
             // Run the rest of the workflow with holistic, or step-by-step
             if (model.getAutoConfigType().equals(JedaiOptions.AUTOCONFIG_HOLISTIC)) {
@@ -304,12 +306,15 @@ public class WorkflowManager {
                 int bestIteration = 0;
                 double bestFMeasure = 0;
 
+                // Create entity matching method instance
+                IEntityMatching em = this.getEntityMatchingMethodInstance(profilesD1, profilesD2);
+
                 for (int j = 0; j < NO_OF_TRIALS; j++) {
                     int finalJ = j;
                     Platform.runLater(() -> statusLabel.setText("Auto-configuration " + finalJ + "/" + NO_OF_TRIALS));
 
                     // Set the next automatic random configuration
-                    iterateHolisticRandom(null);
+                    iterateHolisticRandom(em, null);
 
                     // Run a workflow and check its F-measure
                     ClustersPerformance clp = this.runWorkflow(statusLabel, schemaClusteringMethod, blBuMethods,
@@ -332,7 +337,7 @@ public class WorkflowManager {
                 System.out.println("Best FMeasure\t:\t" + bestFMeasure);
 
                 // Before running the workflow, we should configure the methods using the best iteration's parameters
-                iterateHolisticRandom(bestIteration);
+                iterateHolisticRandom(em, bestIteration);
 
                 // Run the final workflow (whether there was an automatic configuration or not)
                 return this.runWorkflow(statusLabel, schemaClusteringMethod, blBuMethods, blClMethods,
@@ -384,6 +389,7 @@ public class WorkflowManager {
                 return true;
             }
         }
+
         return false;
     }
 
