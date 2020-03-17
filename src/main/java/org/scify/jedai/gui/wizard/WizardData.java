@@ -51,6 +51,9 @@ public class WizardData {
     private final StringProperty entityClusteringConfigType = new SimpleStringProperty();
     private final ListProperty<JPair<String, Object>> entityClusteringParameters = new SimpleListProperty<>();
 
+    // Similarity Join
+    private final StringProperty similarityJoin = new SimpleStringProperty();
+
     // Automatic Configuration
     private final StringProperty autoConfigType = new SimpleStringProperty();
     private final StringProperty searchType = new SimpleStringProperty();
@@ -405,6 +408,18 @@ public class WizardData {
 
     public void setEntityClusteringParameters(ObservableList<JPair<String, Object>> entityClusteringParameters) {
         this.entityClusteringParameters.set(entityClusteringParameters);
+    }
+
+    public String getSimilarityJoin() {
+        return similarityJoin.get();
+    }
+
+    public StringProperty similarityJoinProperty() {
+        return similarityJoin;
+    }
+
+    public void setSimilarityJoin(String similarityJoin) {
+        this.similarityJoin.set(similarityJoin);
     }
 
     public String getAutoConfigType() {

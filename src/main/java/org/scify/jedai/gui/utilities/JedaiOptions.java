@@ -61,6 +61,14 @@ public class JedaiOptions {
     public static final String GROUP_LINKAGE = "Group Linkage";
     public static final String PROFILE_MATCHER = "Profile Matcher";
 
+    // Similarity Join Methods
+    public static final String ALL_PAIRS_CHAR_BASED = "All Pairs (character-based)";
+    public static final String ALL_PAIRS_TOKEN_BASED = "All Pairs (token-based)";
+    public static final String FAST_SS = "FastSS";
+    public static final String PASS_JOIN = "PassJoin";
+    public static final String PP_JOIN = "PPJoin";
+    public static final String TOP_K = "Top-K";
+
     // todo: These could be used for displaying names better in manual configuration (enum type)?
 //    // Representation Model parameters
 //    public static final String CHARACTER_BIGRAMS = "Character Bigrams";
