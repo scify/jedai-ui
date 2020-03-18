@@ -69,6 +69,14 @@ public class JedaiOptions {
     public static final String PP_JOIN = "PPJoin";
     public static final String TOP_K = "Top-K";
 
+    // Prioritization Methods
+    public static final String GLOBAL_PROGRESSIVE_SORTED_NEIGHBORHOOR = "Global Progressive Sorted Neighborhood";
+    public static final String LOCAL_PROGRESSIVE_SORTED_NEIGHBORHOOD = "Local Progressive Sorted Neighborhood";
+    public static final String PROGRESSIVE_BLOCK_SCHEDULING = "Progressive Block Scheduling";
+    public static final String PROGRESSIVE_ENTITY_SCHEDULING = "Progressive Entity Scheduling";
+    public static final String PROGRESSIVE_GLOBAL_TOP_COMPARISONS = "Progressive Global Top Comparisons";
+    public static final String PROGRESSIVE_LOCAL_TOP_COMPARISONS = "Progressive Local Top Comparisons";
+
     // todo: These could be used for displaying names better in manual configuration (enum type)?
 //    // Representation Model parameters
 //    public static final String CHARACTER_BIGRAMS = "Character Bigrams";

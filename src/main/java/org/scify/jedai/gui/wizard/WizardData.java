@@ -54,6 +54,11 @@ public class WizardData {
     // Similarity Join
     private final StringProperty similarityJoin = new SimpleStringProperty();
 
+    // Prioritization
+    private final StringProperty prioritization = new SimpleStringProperty();
+    private final StringProperty prioritizationConfigType = new SimpleStringProperty();
+    private final ListProperty<JPair<String, Object>> prioritizationParameters = new SimpleListProperty<>();
+
     // Automatic Configuration
     private final StringProperty autoConfigType = new SimpleStringProperty();
     private final StringProperty searchType = new SimpleStringProperty();
@@ -420,6 +425,42 @@ public class WizardData {
 
     public void setSimilarityJoin(String similarityJoin) {
         this.similarityJoin.set(similarityJoin);
+    }
+
+    public String getPrioritization() {
+        return prioritization.get();
+    }
+
+    public StringProperty prioritizationProperty() {
+        return prioritization;
+    }
+
+    public void setPrioritization(String prioritization) {
+        this.prioritization.set(prioritization);
+    }
+
+    public String getPrioritizationConfigType() {
+        return prioritizationConfigType.get();
+    }
+
+    public StringProperty prioritizationConfigTypeProperty() {
+        return prioritizationConfigType;
+    }
+
+    public void setPrioritizationConfigType(String prioritizationConfigType) {
+        this.prioritizationConfigType.set(prioritizationConfigType);
+    }
+
+    public ObservableList<JPair<String, Object>> getPrioritizationParameters() {
+        return prioritizationParameters.get();
+    }
+
+    public ListProperty<JPair<String, Object>> prioritizationParametersProperty() {
+        return prioritizationParameters;
+    }
+
+    public void setPrioritizationParameters(ObservableList<JPair<String, Object>> prioritizationParameters) {
+        this.prioritizationParameters.set(prioritizationParameters);
     }
 
     public String getAutoConfigType() {

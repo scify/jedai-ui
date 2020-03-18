@@ -176,7 +176,7 @@ public class WizardController {
                 new WorkflowStep(
                         JedaiOptions.STEP_LABEL_PRIORITIZATION,
                         JedaiOptions.STEP_DESCRIPTION_PRIORITIZATION,
-                        "wizard-fxml/steps/Welcome.fxml" // todo...
+                        "wizard-fxml/steps/Prioritization.fxml"
                 ));
 
         this.availableSteps.put(JedaiOptions.STEP_LABEL_SELECTION_CONFIRMATION,
