@@ -71,6 +71,7 @@ public class WizardData {
      * @return New cloned WizardData object
      */
     public static WizardData cloneData(WizardData data) {
+        // todo: update this method with workflow, similarity join & prioritization stuff
         WizardData clone = new WizardData();
 
         // Workflow

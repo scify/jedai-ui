@@ -11,7 +11,6 @@ public class JedaiOptions {
     public static final String WORKFLOW_JOIN_BASED = "Join-based";
     public static final String WORKFLOW_PROGRESSIVE = "Progressive";
 
-
     // Entity resolution types
     public static final String DIRTY_ER = "Dirty Entity Resolution";
     public static final String CLEAN_CLEAN_ER = "Clean-Clean Entity Resolution";
@@ -67,7 +66,6 @@ public class JedaiOptions {
     public static final String FAST_SS = "FastSS";
     public static final String PASS_JOIN = "PassJoin";
     public static final String PP_JOIN = "PPJoin";
-    public static final String TOP_K = "Top-K";
 
     // Prioritization Methods
     public static final String GLOBAL_PROGRESSIVE_SORTED_NEIGHBORHOOR = "Global Progressive Sorted Neighborhood";

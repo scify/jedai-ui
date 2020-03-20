@@ -6,6 +6,7 @@ import javafx.beans.binding.When;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -169,7 +170,8 @@ public class WizardController {
                 new WorkflowStep(
                         JedaiOptions.STEP_LABEL_SIMILARITY_JOIN,
                         JedaiOptions.STEP_DESCRIPTION_SIMILARITY_JOIN,
-                        "wizard-fxml/steps/SimilarityJoin.fxml"
+                        "wizard-fxml/steps/SimilarityJoin.fxml",
+                        new SimpleStringProperty(JedaiOptions.MANUAL_CONFIG) // Similarity Join is always manual config.
                 ));
 
         this.availableSteps.put(JedaiOptions.STEP_LABEL_PRIORITIZATION,
@@ -496,6 +498,12 @@ public class WizardController {
                     methodName = model.getEntityClustering();
                     method = MethodMapping.getEntityClusteringMethod(methodName);
 
+                    break;
+                case JedaiOptions.STEP_LABEL_SIMILARITY_JOIN:
+                    parametersProperty = model.similarityJoinParametersProperty();
+
+                    methodName = model.getSimilarityJoin();
+                    method = MethodMapping.getSimilarityJoinMethodByName(methodName);
                     break;
             }
 
