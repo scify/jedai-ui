@@ -464,10 +464,16 @@ public class WizardController {
             switch (step.getLabel()) {
                 case JedaiOptions.STEP_LABEL_SCHEMA_CLUSTERING:
                     // Schema Clustering
-                    // todo: when selecting "no SC" and manual configuration, we can't advance to next step
                     parametersProperty = model.schemaClusteringParametersProperty();
-
                     methodName = model.getSchemaClustering();
+
+                    // Go to next step if "No schema clustering" is selected
+                    if (methodName.equals(JedaiOptions.NO_SCHEMA_CLUSTERING)) {
+                        this.goToStep(currentStep.get() + 1);
+                        return;
+                    }
+
+                    // Create a method instance to manually configure it
                     method = SchemaClusteringMethod.getModel(
                             RepresentationModel.CHARACTER_TRIGRAMS,
                             SimilarityMetric.ENHANCED_JACCARD_SIMILARITY,
@@ -475,12 +481,17 @@ public class WizardController {
                     break;
                 case JedaiOptions.STEP_LABEL_COMPARISON_CLEANING:
                     // Comparison Cleaning
-                    // todo: when selecting "no CoCl" and manual configuration, we can't advance to next step
                     parametersProperty = model.comparisonCleaningParametersProperty();
-
                     methodName = model.getComparisonCleaning();
-                    method = MethodMapping.getMethodByName(methodName, this.isCleanCleanEr());
 
+                    // Go to next step if "No comparison cleaning" is selected
+                    if (methodName.equals(JedaiOptions.NO_CLEANING)) {
+                        this.goToStep(currentStep.get() + 1);
+                        return;
+                    }
+
+                    // Create method instance to manually configure it
+                    method = MethodMapping.getMethodByName(methodName, this.isCleanCleanEr());
                     break;
                 case JedaiOptions.STEP_LABEL_ENTITY_MATCHING:
                     // Entity Matching
