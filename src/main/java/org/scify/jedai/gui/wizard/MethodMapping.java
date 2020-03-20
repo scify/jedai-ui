@@ -11,6 +11,11 @@ import org.scify.jedai.schemaclustering.AttributeNameClustering;
 import org.scify.jedai.schemaclustering.AttributeValueClustering;
 import org.scify.jedai.schemaclustering.HolisticAttributeClustering;
 import org.scify.jedai.schemaclustering.ISchemaClustering;
+import org.scify.jedai.similarityjoins.ISimilarityJoin;
+import org.scify.jedai.similarityjoins.characterbased.AllPairs;
+import org.scify.jedai.similarityjoins.characterbased.FastSS;
+import org.scify.jedai.similarityjoins.characterbased.PassJoin;
+import org.scify.jedai.similarityjoins.tokenbased.PPJoin;
 import org.scify.jedai.utilities.enumerations.*;
 
 import java.util.Collections;
@@ -41,7 +46,7 @@ public class MethodMapping {
     }
 
     /**
-     * Return map of schema clsutering methods' String names to their enumeration values
+     * Return map of schema clustering methods' String names to their enumeration values
      *
      * @return Mapping of schema clustering method names to enum values
      */
@@ -104,6 +109,30 @@ public class MethodMapping {
         }
 
         return schemaClustering;
+    }
+
+    public static ISimilarityJoin getSimilarityJoinMethodByName(String methodName) {
+        ISimilarityJoin similarityJoin = null;
+
+        switch (methodName) {
+            case JedaiOptions.ALL_PAIRS_CHAR_BASED:
+                similarityJoin = new AllPairs(1);
+                break;
+            case JedaiOptions.ALL_PAIRS_TOKEN_BASED:
+                similarityJoin = new org.scify.jedai.similarityjoins.tokenbased.AllPairs(1.);
+                break;
+            case JedaiOptions.FAST_SS:
+                similarityJoin = new FastSS(1);
+                break;
+            case JedaiOptions.PASS_JOIN:
+                similarityJoin = new PassJoin(1);
+                break;
+            case JedaiOptions.PP_JOIN:
+                similarityJoin = new PPJoin(1.);
+                break;
+        }
+
+        return similarityJoin;
     }
 
     /**
