@@ -51,8 +51,9 @@ public class WizardData {
     private final StringProperty entityClusteringConfigType = new SimpleStringProperty();
     private final ListProperty<JPair<String, Object>> entityClusteringParameters = new SimpleListProperty<>();
 
-    // Similarity Join
+    // Similarity Join (always manual config)
     private final StringProperty similarityJoin = new SimpleStringProperty();
+    private final ListProperty<JPair<String, Object>> similarityJoinParameters = new SimpleListProperty<>();
 
     // Prioritization
     private final StringProperty prioritization = new SimpleStringProperty();
@@ -425,6 +426,18 @@ public class WizardData {
 
     public void setSimilarityJoin(String similarityJoin) {
         this.similarityJoin.set(similarityJoin);
+    }
+
+    public ObservableList<JPair<String, Object>> getSimilarityJoinParameters() {
+        return similarityJoinParameters.get();
+    }
+
+    public ListProperty<JPair<String, Object>> similarityJoinParametersProperty() {
+        return similarityJoinParameters;
+    }
+
+    public void setSimilarityJoinParameters(ObservableList<JPair<String, Object>> similarityJoinParameters) {
+        this.similarityJoinParameters.set(similarityJoinParameters);
     }
 
     public String getPrioritization() {
