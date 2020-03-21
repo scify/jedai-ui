@@ -24,6 +24,11 @@ import org.scify.jedai.schemaclustering.AttributeNameClustering;
 import org.scify.jedai.schemaclustering.AttributeValueClustering;
 import org.scify.jedai.schemaclustering.HolisticAttributeClustering;
 import org.scify.jedai.schemaclustering.ISchemaClustering;
+import org.scify.jedai.similarityjoins.ISimilarityJoin;
+import org.scify.jedai.similarityjoins.characterbased.AllPairs;
+import org.scify.jedai.similarityjoins.characterbased.FastSS;
+import org.scify.jedai.similarityjoins.characterbased.PassJoin;
+import org.scify.jedai.similarityjoins.tokenbased.PPJoin;
 import org.scify.jedai.utilities.IDocumentation;
 import org.scify.jedai.utilities.enumerations.BlockBuildingMethod;
 import org.scify.jedai.utilities.enumerations.RepresentationModel;
@@ -70,6 +75,23 @@ public class DynamicMethodConfiguration {
     }
 
     /**
+     * Create a (GUI) node that displays manual configuration parameters for any method.
+     *
+     * @param parametersProperty Parameters of method
+     * @return Node with list of parameters
+     */
+    public static Node newParamsNode(ListProperty<JPair<String, Object>> parametersProperty) {
+        // Create the node to show the parameters
+        ListView<JPair<String, Object>> paramsList = new ListView<>();
+        paramsList.setMaxHeight(60);
+
+        // Bind the ListView's items to the given parameters property
+        paramsList.itemsProperty().bind(parametersProperty);
+
+        return paramsList;
+    }
+
+    /**
      * Check if a method is configured correctly.
      *
      * @param method Method to check
@@ -102,23 +124,6 @@ public class DynamicMethodConfiguration {
         }
 
         return true;
-    }
-
-    /**
-     * Create a (GUI) node that displays manual configuration parameters for any method.
-     *
-     * @param parametersProperty Parameters of method
-     * @return Node with list of parameters
-     */
-    public static Node newParamsNode(ListProperty<JPair<String, Object>> parametersProperty) {
-        // Create the node to show the parameters
-        ListView<JPair<String, Object>> paramsList = new ListView<>();
-        paramsList.setMaxHeight(60);
-
-        // Bind the ListView's items to the given parameters property
-        paramsList.itemsProperty().bind(parametersProperty);
-
-        return paramsList;
     }
 
     /**
@@ -172,6 +177,42 @@ public class DynamicMethodConfiguration {
                 return new LSHMinHashBlocking(
                         (int) parameters.get(0).getRight(),
                         (int) parameters.get(1).getRight()
+                );
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * Given a similarity join method name and a list of parameters, initialize and return a method instance.
+     * Assumes the parameters are of correct type & number.
+     *
+     * @param methodName Name of similarity join method.
+     * @param parameters Parameters list for method.
+     * @return Similarity join method instance
+     */
+    public static ISimilarityJoin configureSimilarityJoinMethod(String methodName,
+                                                                List<JPair<String, Object>> parameters) {
+        switch (methodName) {
+            case JedaiOptions.ALL_PAIRS_CHAR_BASED:
+                return new AllPairs(
+                        (int) parameters.get(0).getRight() // Threshold
+                );
+            case JedaiOptions.ALL_PAIRS_TOKEN_BASED:
+                return new org.scify.jedai.similarityjoins.tokenbased.AllPairs(
+                        (double) parameters.get(0).getRight() // Threshold
+                );
+            case JedaiOptions.FAST_SS:
+                return new FastSS(
+                        (int) parameters.get(0).getRight() // Threshold
+                );
+            case JedaiOptions.PASS_JOIN:
+                return new PassJoin(
+                        (int) parameters.get(0).getRight() // Threshold
+                );
+            case JedaiOptions.PP_JOIN:
+                return new PPJoin(
+                        (double) parameters.get(0).getRight() // Threshold
                 );
             default:
                 return null;

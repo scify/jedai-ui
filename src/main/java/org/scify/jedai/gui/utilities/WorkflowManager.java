@@ -13,6 +13,7 @@ import org.scify.jedai.gui.model.WorkflowResult;
 import org.scify.jedai.gui.wizard.MethodMapping;
 import org.scify.jedai.gui.wizard.WizardData;
 import org.scify.jedai.schemaclustering.ISchemaClustering;
+import org.scify.jedai.similarityjoins.ISimilarityJoin;
 import org.scify.jedai.utilities.BlocksPerformance;
 import org.scify.jedai.utilities.ClustersPerformance;
 import org.scify.jedai.utilities.datastructures.AbstractDuplicatePropagation;
@@ -27,11 +28,16 @@ public class WorkflowManager {
     private final String erType;
     private final List<WorkflowResult> performancePerStep;
 
+    private final boolean isBlockingBasedWorkflow;
+    private final boolean isJoinBasedWorkflow;
+    private final boolean isProgressiveWorkflow;
+
     private EquivalenceCluster[] entityClusters;
     private List<EntityProfile> profilesD1;
     private List<EntityProfile> profilesD2;
     private AbstractDuplicatePropagation duplicatePropagation;
 
+    private ISimilarityJoin similarityJoinMethod;
     private ISchemaClustering schemaClusteringMethod;
     private List<IBlockBuilding> blBuMethods;
     private List<IBlockProcessing> blClMethods;
@@ -39,8 +45,14 @@ public class WorkflowManager {
     private IEntityClustering ec;
 
     public WorkflowManager(WizardData model) {
+        // Set the model and ER type
         this.model = model;
         this.erType = model.getErType();
+
+        // Set workflow booleans
+        this.isBlockingBasedWorkflow = model.getWorkflow().equals(JedaiOptions.WORKFLOW_BLOCKING_BASED);
+        this.isJoinBasedWorkflow = model.getWorkflow().equals(JedaiOptions.WORKFLOW_JOIN_BASED);
+        this.isProgressiveWorkflow = model.getWorkflow().equals(JedaiOptions.WORKFLOW_PROGRESSIVE);
 
         // Initialize performance per step list
         this.performancePerStep = new ArrayList<>();
@@ -154,6 +166,15 @@ public class WorkflowManager {
             // Manual configuration selected, create method with the saved parameters
             ObservableList<JPair<String, Object>> ecParams = model.getEntityClusteringParameters();
             ec = DynamicMethodConfiguration.configureEntityClusteringMethod(entityClusteringMethod, ecParams);
+        }
+
+        // Get similarity join method
+        if (isJoinBasedWorkflow) {
+            // Manually configure the method
+            similarityJoinMethod = DynamicMethodConfiguration.configureSimilarityJoinMethod(
+                    model.getSimilarityJoin(),
+                    model.getSimilarityJoinParameters()
+            );
         }
     }
 
