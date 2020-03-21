@@ -145,7 +145,7 @@ public class JedaiOptions {
     public static final String STEP_LABEL_WORKFLOW_EXECUTION = "Workflow Execution";
     public static final String STEP_DESCRIPTION_WORKFLOW_EXECUTION = "Press \"Run algorithm\" to run the algorithm. You can export the results to a CSV file with the \"Export CSV\" button.";
     public static final String STEP_LABEL_SIMILARITY_JOIN = "Similarity Join";
-    public static final String STEP_DESCRIPTION_SIMILARITY_JOIN = "??";
+    public static final String STEP_DESCRIPTION_SIMILARITY_JOIN = "This step accelerates the computation of a specific character- or token-based similarity measure in combination with a user-determined similarity threshold.";
     public static final String STEP_LABEL_PRIORITIZATION = "Prioritization";
-    public static final String STEP_DESCRIPTION_PRIORITIZATION = "??";
+    public static final String STEP_DESCRIPTION_PRIORITIZATION = "This step associates all comparisons in a block collection with a weight that is proportional to the likelihood that they involve duplicates and then, it emits them iteratively, in decreasing weight.";
 }
