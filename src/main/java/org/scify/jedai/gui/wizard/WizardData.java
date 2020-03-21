@@ -71,7 +71,6 @@ public class WizardData {
      * @return New cloned WizardData object
      */
     public static WizardData cloneData(WizardData data) {
-        // todo: update this method with workflow, similarity join & prioritization stuff
         WizardData clone = new WizardData();
 
         // Workflow
@@ -97,6 +96,19 @@ public class WizardData {
         if (data.getSchemaClusteringParameters() != null)
             clone.setSchemaClusteringParameters(
                     FXCollections.observableArrayList(data.getSchemaClusteringParameters()));
+
+        // Similarity Join
+        clone.setSimilarityJoin(data.getSimilarityJoin());
+        if (data.getSimilarityJoinParameters() != null)
+            clone.setSimilarityJoinParameters(
+                    FXCollections.observableArrayList(data.getSimilarityJoinParameters()));
+
+        // Prioritization
+        clone.setPrioritization(data.getPrioritization());
+        clone.setPrioritizationConfigType(data.getPrioritizationConfigType());
+        if (data.getPrioritizationParameters() != null)
+            clone.setPrioritizationParameters(
+                    FXCollections.observableArrayList(data.getPrioritizationParameters()));
 
         // Block Building
         ObservableList<JedaiMethodConfiguration> newBlBuMethods = FXCollections.observableArrayList();
