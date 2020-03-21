@@ -15,10 +15,6 @@ import org.scify.jedai.blockprocessing.blockcleaning.ComparisonsBasedBlockPurgin
 import org.scify.jedai.blockprocessing.blockcleaning.SizeBasedBlockPurging;
 import org.scify.jedai.blockprocessing.comparisoncleaning.*;
 import org.scify.jedai.datamodel.EntityProfile;
-import org.scify.jedai.datareader.entityreader.*;
-import org.scify.jedai.datareader.groundtruthreader.GtCSVReader;
-import org.scify.jedai.datareader.groundtruthreader.GtRDFReader;
-import org.scify.jedai.datareader.groundtruthreader.GtSerializationReader;
 import org.scify.jedai.entityclustering.*;
 import org.scify.jedai.entitymatching.GroupLinkage;
 import org.scify.jedai.entitymatching.IEntityMatching;
@@ -423,44 +419,5 @@ public class DynamicMethodConfiguration {
             default:
                 return null;
         }
-    }
-
-    /**
-     * Get the IDocumentation instance for a specified Data Reader (either for Entities, or Ground Truth).
-     * Useful for getting the parameters for a reader.
-     *
-     * @param groundTruth Set to true if you want a ground truth reader. If false, Entity Readers will be used instead
-     * @param type        The type of reader
-     * @return IDocumentation instance of the specified reader
-     */
-    public static IDocumentation getDataReader(boolean groundTruth, String type) {
-        if (groundTruth) {
-            // Return ground truth reader
-            switch (type) {
-                case JedaiOptions.SERIALIZED:
-                    return new GtSerializationReader("");
-                case JedaiOptions.CSV:
-                    return new GtCSVReader("");
-                case JedaiOptions.RDF:
-                    return new GtRDFReader("");
-            }
-        } else {
-            // Return entity reader
-            switch (type) {
-                case JedaiOptions.SERIALIZED:
-                    return new EntitySerializationReader("");
-                case JedaiOptions.CSV:
-                    return new EntityCSVReader("");
-                case JedaiOptions.RDF:
-                    return new EntityRDFReader("");
-                case JedaiOptions.DATABASE:
-                    return new EntityDBReader("");
-                case JedaiOptions.XML:
-                    return new EntityXMLreader("");
-            }
-        }
-
-        // If nothing was found, return null...
-        return null;
     }
 }

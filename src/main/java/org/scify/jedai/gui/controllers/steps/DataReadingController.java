@@ -19,6 +19,7 @@ import org.scify.jedai.datamodel.EquivalenceCluster;
 import org.scify.jedai.gui.controllers.DatasetExplorationController;
 import org.scify.jedai.gui.controllers.EntityClusterExplorationController;
 import org.scify.jedai.gui.utilities.*;
+import org.scify.jedai.gui.wizard.MethodMapping;
 import org.scify.jedai.gui.wizard.Submit;
 import org.scify.jedai.gui.wizard.Validate;
 import org.scify.jedai.gui.wizard.WizardData;
@@ -250,7 +251,7 @@ public class DataReadingController {
                     break;
             }
 
-            reader = DynamicMethodConfiguration.getDataReader(groundTruth, readerType);
+            reader = MethodMapping.getDataReader(groundTruth, readerType);
 
             // Now that we have all required parameters, show the configuration window
             DynamicMethodConfiguration.displayModal(getClass(), injector, reader, modelProperty);
