@@ -2,6 +2,7 @@ package org.scify.jedai.gui.controllers.steps;
 
 import com.google.inject.Inject;
 import javafx.fxml.FXML;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import org.scify.jedai.gui.utilities.JedaiOptions;
 import org.scify.jedai.gui.utilities.RadioButtonHelper;
@@ -13,6 +14,8 @@ import java.util.List;
 public class SimilarityJoinController {
     public VBox containerVBox;
     public VBox methodsVBox;
+    public TextField dataset1AttrField;
+    public TextField dataset2AttrField;
 
     @Inject
     private WizardData model;
