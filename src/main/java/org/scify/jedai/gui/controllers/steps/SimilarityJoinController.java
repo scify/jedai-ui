@@ -45,5 +45,9 @@ public class SimilarityJoinController {
 
         // Only show the 2nd attribute name input when clean-clean ER is selected
         dataset2VBox.visibleProperty().bind(model.erTypeProperty().isEqualTo(JedaiOptions.CLEAN_CLEAN_ER));
+
+        // Bind the text field values to the model properties
+        dataset1AttrField.textProperty().bindBidirectional(model.dataset1AttributeProperty());
+        dataset2AttrField.textProperty().bindBidirectional(model.dataset2AttributeProperty());
     }
 }

@@ -54,6 +54,8 @@ public class WizardData {
     // Similarity Join (always manual config)
     private final StringProperty similarityJoin = new SimpleStringProperty();
     private final ListProperty<JPair<String, Object>> similarityJoinParameters = new SimpleListProperty<>();
+    private final StringProperty dataset1Attribute = new SimpleStringProperty();
+    private final StringProperty dataset2Attribute = new SimpleStringProperty();
 
     // Prioritization
     private final StringProperty prioritization = new SimpleStringProperty();
@@ -102,6 +104,8 @@ public class WizardData {
         if (data.getSimilarityJoinParameters() != null)
             clone.setSimilarityJoinParameters(
                     FXCollections.observableArrayList(data.getSimilarityJoinParameters()));
+        clone.setDataset1Attribute(data.getDataset1Attribute());
+        clone.setDataset2Attribute(data.getDataset2Attribute());
 
         // Prioritization
         clone.setPrioritization(data.getPrioritization());
@@ -451,6 +455,30 @@ public class WizardData {
 
     public void setSimilarityJoinParameters(ObservableList<JPair<String, Object>> similarityJoinParameters) {
         this.similarityJoinParameters.set(similarityJoinParameters);
+    }
+
+    public String getDataset1Attribute() {
+        return dataset1Attribute.get();
+    }
+
+    public StringProperty dataset1AttributeProperty() {
+        return dataset1Attribute;
+    }
+
+    public void setDataset1Attribute(String dataset1Attribute) {
+        this.dataset1Attribute.set(dataset1Attribute);
+    }
+
+    public String getDataset2Attribute() {
+        return dataset2Attribute.get();
+    }
+
+    public StringProperty dataset2AttributeProperty() {
+        return dataset2Attribute;
+    }
+
+    public void setDataset2Attribute(String dataset2Attribute) {
+        this.dataset2Attribute.set(dataset2Attribute);
     }
 
     public String getPrioritization() {
