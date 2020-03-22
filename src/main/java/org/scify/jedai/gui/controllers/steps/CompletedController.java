@@ -312,7 +312,7 @@ public class CompletedController {
                 workflowMgr.createMethodInstances(isCleanCleanEr);
 
                 // Execute the workflow
-                ClustersPerformance clp = workflowMgr.executeWorkflow(statusLabel);
+                ClustersPerformance clp = workflowMgr.executeFullWorkflow(statusLabel);
 
                 if (clp == null) {
                     DialogHelper.showError("Workflow execution problem",

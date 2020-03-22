@@ -320,14 +320,13 @@ public class WorkflowManager {
     }
 
     /**
-     * Execute a full workflow. This includes automatically setting the parameters for any methods that should be
-     * automatically configured.
+     * Execute a full workflow. This method is called by the execute workflow button, and does everything required to
+     * run the full workflow.
      *
      * @return ClustersPerformance object for the final run of the workflow
-     * @throws Exception If runWorkflow returns null...
+     * @throws Exception If runSpecificWorkflow returns null...
      */
-    public ClustersPerformance executeWorkflow(Label statusLabel) throws Exception {
-        // todo: make difference between this method and runWorkflow() clearer
+    public ClustersPerformance executeFullWorkflow(Label statusLabel) throws Exception {
         // Check if automatic configuration was chosen for ANY method in the workflow
         if (anyAutomaticConfig()) {
             // Run the rest of the workflow with holistic, or step-by-step
@@ -347,7 +346,7 @@ public class WorkflowManager {
                     iterateHolisticRandom(em, null);
 
                     // Run a workflow and check its F-measure
-                    ClustersPerformance clp = this.runWorkflow(statusLabel, schemaClusteringMethod, blBuMethods,
+                    ClustersPerformance clp = this.runSpecificWorkflow(statusLabel, schemaClusteringMethod, blBuMethods,
                             blClMethods, comparisonCleaningMethod, ec, false);
 
                     // If there was a problem with this random workflow, skip this iteration
@@ -370,7 +369,7 @@ public class WorkflowManager {
                 iterateHolisticRandom(em, bestIteration);
 
                 // Run the final workflow (whether there was an automatic configuration or not)
-                return this.runWorkflow(statusLabel, schemaClusteringMethod, blBuMethods, blClMethods,
+                return this.runSpecificWorkflow(statusLabel, schemaClusteringMethod, blBuMethods, blClMethods,
                         comparisonCleaningMethod, ec, true);
             } else {
                 // Step-by-step automatic configuration. Set random or grid depending on the selected search type.
@@ -380,7 +379,7 @@ public class WorkflowManager {
             }
         } else {
             // Run workflow without any automatic configuration
-            return this.runWorkflow(statusLabel, schemaClusteringMethod, blBuMethods, blClMethods,
+            return this.runSpecificWorkflow(statusLabel, schemaClusteringMethod, blBuMethods, blClMethods,
                     comparisonCleaningMethod, ec, true);
         }
     }
@@ -530,9 +529,9 @@ public class WorkflowManager {
      * @return ClustersPerformance object of the executed workflow
      * @throws Exception In case the Entity Matching method is null (shouldn't happen though)
      */
-    private ClustersPerformance runWorkflow(Label statusLabel, ISchemaClustering sc, List<IBlockBuilding> blBuMethods,
-                                            List<IBlockProcessing> blClMethods, IBlockProcessing coCl,
-                                            IEntityClustering ec, boolean finalRun)
+    private ClustersPerformance runSpecificWorkflow(Label statusLabel, ISchemaClustering sc, List<IBlockBuilding> blBuMethods,
+                                                    List<IBlockProcessing> blClMethods, IBlockProcessing coCl,
+                                                    IEntityClustering ec, boolean finalRun)
             throws Exception {
         // Run schema clustering if it's not null (can't measure its performance)
         if (finalRun)
