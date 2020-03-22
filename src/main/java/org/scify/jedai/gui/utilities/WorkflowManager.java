@@ -389,11 +389,41 @@ public class WorkflowManager {
      *
      * @param statusLabel Label to show current workflow status.
      * @return Clusters performance object
-     * @throws Exception When running a workflow fails
      */
     private ClustersPerformance executeFullJoinBasedWorkflow(Label statusLabel) {
-        // todo
-        return null;
+        double overheadStart = System.currentTimeMillis();
+        boolean isDirtyEr = erType.equals(JedaiOptions.DIRTY_ER);
+
+        // Similarity Join
+        Platform.runLater(() -> statusLabel.setText("Running similarity join..."));
+        SimilarityPairs simPairs;
+        if (isDirtyEr) {
+            simPairs = similarityJoinMethod.executeFiltering(
+                    model.getDataset1Attribute(),
+                    profilesD1
+            );
+        } else {
+            simPairs = similarityJoinMethod.executeFiltering(
+                    model.getDataset1Attribute(),
+                    model.getDataset2Attribute(),
+                    profilesD1,
+                    profilesD2
+            );
+        }
+
+        // Entity Clustering
+        Platform.runLater(() -> statusLabel.setText("Running entity clustering..."));
+        // todo: should probably have automatic configuration?
+        EquivalenceCluster[] clusters = ec.getDuplicates(simPairs);
+
+        // Create clusters performance
+        double overheadEnd = System.currentTimeMillis();
+        ClustersPerformance clp = new ClustersPerformance(clusters, duplicatePropagation);
+        clp.setStatistics();
+        clp.printStatistics(overheadEnd - overheadStart, ec.getMethodName(), ec.getMethodConfiguration());
+
+        // Return clusters performance
+        return clp;
     }
 
     /**
