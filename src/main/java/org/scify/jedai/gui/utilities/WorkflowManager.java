@@ -84,88 +84,95 @@ public class WorkflowManager {
      * @param isCleanCleanEr If we are using clean-clean ER or not. Some block cleaning methods require this.
      */
     public void createMethodInstances(boolean isCleanCleanEr) {
-        // Get schema clustering method (will become null if no schema clustering method was selected)
-        if (!model.getSchemaClusteringConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
-            // Default (or automatic, later) configuration of schema clustering
-            schemaClusteringMethod = MethodMapping.getSchemaClusteringMethodByName(model.getSchemaClustering());
-        } else {
-            // Manual configuration of schema clustering
-            schemaClusteringMethod = DynamicMethodConfiguration.configureSchemaClusteringMethod(
-                    model.getSchemaClustering(),
-                    model.getSchemaClusteringParameters()
-            );
-        }
-
-        // Get list of enabled block cleaning method instances
-        blBuMethods = new ArrayList<>();
-        for (JedaiMethodConfiguration methodConfig : model.getBlockBuildingMethods()) {
-            // Ignore disabled methods
-            if (!methodConfig.isEnabled())
-                continue;
-
-            // Create instance of this method
-            BlockBuildingMethod blockingWorkflow = MethodMapping.blockBuildingMethods.get(methodConfig.getName());
-
-            // Check if the user set any custom parameters for block building
-            IBlockBuilding blockBuildingMethod;
-            if (!methodConfig.getConfigurationType().equals(JedaiOptions.MANUAL_CONFIG)) {
-                // Auto or default configuration selected: use default configuration
-                blockBuildingMethod = BlockBuildingMethod.getDefaultConfiguration(blockingWorkflow);
+        // Initialize methods that exist in both blocking-based and progressive workflows
+        if (isBlockingBasedWorkflow || isProgressiveWorkflow) {
+            // Get schema clustering method (will become null if no schema clustering method was selected)
+            if (!model.getSchemaClusteringConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
+                // Default (or automatic, later) configuration of schema clustering
+                schemaClusteringMethod = MethodMapping.getSchemaClusteringMethodByName(model.getSchemaClustering());
             } else {
-                // Manual configuration selected, create method with the saved parameters
-                ObservableList<JPair<String, Object>> blBuParams = methodConfig.getManualParameters();
-                blockBuildingMethod = DynamicMethodConfiguration.configureBlockBuildingMethod(blockingWorkflow, blBuParams);
+                // Manual configuration of schema clustering
+                schemaClusteringMethod = DynamicMethodConfiguration.configureSchemaClusteringMethod(
+                        model.getSchemaClustering(),
+                        model.getSchemaClusteringParameters()
+                );
             }
 
-            blBuMethods.add(blockBuildingMethod);
-        }
+            // Get list of enabled block building method instances
+            blBuMethods = new ArrayList<>();
+            for (JedaiMethodConfiguration methodConfig : model.getBlockBuildingMethods()) {
+                // Ignore disabled methods
+                if (!methodConfig.isEnabled())
+                    continue;
 
-        // Get list of enabled block cleaning method instances
-        blClMethods = new ArrayList<>();
-        for (JedaiMethodConfiguration blClMethodConfig : model.getBlockCleaningMethods()) {
-            // Ignore disabled methods
-            if (!blClMethodConfig.isEnabled())
-                continue;
+                // Create instance of this method
+                BlockBuildingMethod blockingWorkflow = MethodMapping.blockBuildingMethods.get(methodConfig.getName());
 
-            // Create instance of this method
-            IBlockProcessing blockCleaningMethod;
-            if (!blClMethodConfig.getConfigurationType().equals(JedaiOptions.MANUAL_CONFIG)) {
-                // Auto or default configuration selected: use default configuration
-                blockCleaningMethod = MethodMapping.getMethodByName(blClMethodConfig.getName(), isCleanCleanEr);
-            } else {
-                // Manual configuration selected, create method with the saved parameters
-                blockCleaningMethod = DynamicMethodConfiguration.configureBlockCleaningMethod(
-                        blClMethodConfig.getName(), blClMethodConfig.getManualParameters());
+                // Check if the user set any custom parameters for block building
+                IBlockBuilding blockBuildingMethod;
+                if (!methodConfig.getConfigurationType().equals(JedaiOptions.MANUAL_CONFIG)) {
+                    // Auto or default configuration selected: use default configuration
+                    blockBuildingMethod = BlockBuildingMethod.getDefaultConfiguration(blockingWorkflow);
+                } else {
+                    // Manual configuration selected, create method with the saved parameters
+                    ObservableList<JPair<String, Object>> blBuParams = methodConfig.getManualParameters();
+                    blockBuildingMethod = DynamicMethodConfiguration.configureBlockBuildingMethod(blockingWorkflow, blBuParams);
+                }
+
+                blBuMethods.add(blockBuildingMethod);
             }
 
-            blClMethods.add(blockCleaningMethod);
+            // Get list of enabled block cleaning method instances
+            blClMethods = new ArrayList<>();
+            for (JedaiMethodConfiguration blClMethodConfig : model.getBlockCleaningMethods()) {
+                // Ignore disabled methods
+                if (!blClMethodConfig.isEnabled())
+                    continue;
+
+                // Create instance of this method
+                IBlockProcessing blockCleaningMethod;
+                if (!blClMethodConfig.getConfigurationType().equals(JedaiOptions.MANUAL_CONFIG)) {
+                    // Auto or default configuration selected: use default configuration
+                    blockCleaningMethod = MethodMapping.getMethodByName(blClMethodConfig.getName(), isCleanCleanEr);
+                } else {
+                    // Manual configuration selected, create method with the saved parameters
+                    blockCleaningMethod = DynamicMethodConfiguration.configureBlockCleaningMethod(
+                            blClMethodConfig.getName(), blClMethodConfig.getManualParameters());
+                }
+
+                blClMethods.add(blockCleaningMethod);
+            }
         }
 
         // Get comparison cleaning method
-        String coClMethod = model.getComparisonCleaning();
-        comparisonCleaningMethod = null;
-        if (coClMethod != null && !coClMethod.equals(JedaiOptions.NO_CLEANING)) {
-            // Create comparison cleaning method
-            if (!model.getComparisonCleaningConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
-                // Auto or default configuration selected: use default configuration
-                comparisonCleaningMethod = MethodMapping.getMethodByName(coClMethod, isCleanCleanEr);
-            } else {
-                // Manual configuration selected, create method with the saved parameters
-                ObservableList<JPair<String, Object>> coClParams = model.getComparisonCleaningParameters();
-                comparisonCleaningMethod = DynamicMethodConfiguration.configureComparisonCleaningMethod(coClMethod, coClParams);
+        if (isBlockingBasedWorkflow) {
+            String coClMethod = model.getComparisonCleaning();
+            comparisonCleaningMethod = null;
+            if (coClMethod != null && !coClMethod.equals(JedaiOptions.NO_CLEANING)) {
+                // Create comparison cleaning method
+                if (!model.getComparisonCleaningConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
+                    // Auto or default configuration selected: use default configuration
+                    comparisonCleaningMethod = MethodMapping.getMethodByName(coClMethod, isCleanCleanEr);
+                } else {
+                    // Manual configuration selected, create method with the saved parameters
+                    ObservableList<JPair<String, Object>> coClParams = model.getComparisonCleaningParameters();
+                    comparisonCleaningMethod = DynamicMethodConfiguration.configureComparisonCleaningMethod(coClMethod, coClParams);
+                }
             }
         }
 
         // Get entity clustering method
-        String entityClusteringMethod = model.getEntityClustering();
+        if (isBlockingBasedWorkflow || isJoinBasedWorkflow) {
+            String entityClusteringMethod = model.getEntityClustering();
 
-        if (!model.getEntityClusteringConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
-            // Auto or default configuration selected: use default configuration
-            ec = MethodMapping.getEntityClusteringMethod(entityClusteringMethod);
-        } else {
-            // Manual configuration selected, create method with the saved parameters
-            ObservableList<JPair<String, Object>> ecParams = model.getEntityClusteringParameters();
-            ec = DynamicMethodConfiguration.configureEntityClusteringMethod(entityClusteringMethod, ecParams);
+            if (!model.getEntityClusteringConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
+                // Auto or default configuration selected: use default configuration
+                ec = MethodMapping.getEntityClusteringMethod(entityClusteringMethod);
+            } else {
+                // Manual configuration selected, create method with the saved parameters
+                ObservableList<JPair<String, Object>> ecParams = model.getEntityClusteringParameters();
+                ec = DynamicMethodConfiguration.configureEntityClusteringMethod(entityClusteringMethod, ecParams);
+            }
         }
 
         // Get similarity join method
