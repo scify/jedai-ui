@@ -116,17 +116,21 @@ public class WizardData {
 
         // Block Building
         ObservableList<JedaiMethodConfiguration> newBlBuMethods = FXCollections.observableArrayList();
-        for (JedaiMethodConfiguration method : data.getBlockBuildingMethods()) {
-            // Create new object with the old one's properties to add to the new list
-            newBlBuMethods.add(new JedaiMethodConfiguration(method));
+        if (data.getBlockBuildingMethods() != null) {
+            for (JedaiMethodConfiguration method : data.getBlockBuildingMethods()) {
+                // Create new object with the old one's properties to add to the new list
+                newBlBuMethods.add(new JedaiMethodConfiguration(method));
+            }
         }
         clone.setBlockBuildingMethods(newBlBuMethods);
 
         // Block Cleaning
         ObservableList<JedaiMethodConfiguration> newBlClMethods = FXCollections.observableArrayList();
-        for (JedaiMethodConfiguration method : data.getBlockCleaningMethods()) {
-            // Create new object with the old one's properties to add to the new list
-            newBlClMethods.add(new JedaiMethodConfiguration(method));
+        if (data.getBlockCleaningMethods() != null) {
+            for (JedaiMethodConfiguration method : data.getBlockCleaningMethods()) {
+                // Create new object with the old one's properties to add to the new list
+                newBlClMethods.add(new JedaiMethodConfiguration(method));
+            }
         }
         clone.setBlockCleaningMethods(newBlClMethods);
 

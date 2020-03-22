@@ -414,11 +414,11 @@ public class WorkflowManager {
         // Entity Clustering
         Platform.runLater(() -> statusLabel.setText("Running entity clustering..."));
         // todo: should probably have automatic configuration?
-        EquivalenceCluster[] clusters = ec.getDuplicates(simPairs);
+        entityClusters = ec.getDuplicates(simPairs);
 
         // Create clusters performance
         double overheadEnd = System.currentTimeMillis();
-        ClustersPerformance clp = new ClustersPerformance(clusters, duplicatePropagation);
+        ClustersPerformance clp = new ClustersPerformance(entityClusters, duplicatePropagation);
         clp.setStatistics();
         clp.printStatistics(overheadEnd - overheadStart, ec.getMethodName(), ec.getMethodConfiguration());
 
