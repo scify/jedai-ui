@@ -16,6 +16,7 @@ public class SimilarityJoinController {
     public VBox methodsVBox;
     public TextField dataset1AttrField;
     public TextField dataset2AttrField;
+    public VBox dataset2VBox;
 
     @Inject
     private WizardData model;
@@ -41,5 +42,8 @@ public class SimilarityJoinController {
             // try to "edit" the previously selected parameters, which won't work.
             model.setSimilarityJoinParameters(null);
         });
+
+        // Only show the 2nd attribute name input when clean-clean ER is selected
+        dataset2VBox.visibleProperty().bind(model.erTypeProperty().isEqualTo(JedaiOptions.CLEAN_CLEAN_ER));
     }
 }
