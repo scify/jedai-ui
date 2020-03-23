@@ -21,6 +21,9 @@ public class PrioritizationController {
     private ToggleGroupValue noBlBuValue;
     private ToggleGroupValue blBuValue;
 
+    private List<String> noBlBuOptions;
+    private List<String> blBuOptions;
+
     @Inject
     private WizardData model;
 
@@ -28,13 +31,13 @@ public class PrioritizationController {
     public void initialize() {
         // Create list with options for when no block building methods are selected
         // Lists of methods depending on whether there is at least one block building method selected or not
-        List<String> noBlBuOptions = Arrays.asList(
+        noBlBuOptions = Arrays.asList(
                 JedaiOptions.GLOBAL_PROGRESSIVE_SORTED_NEIGHBORHOOR,
                 JedaiOptions.LOCAL_PROGRESSIVE_SORTED_NEIGHBORHOOD
         );
 
         // Methods for when at least one block building method is selected
-        List<String> blBuOptions = Arrays.asList(
+        blBuOptions = Arrays.asList(
                 JedaiOptions.PROGRESSIVE_BLOCK_SCHEDULING,
                 JedaiOptions.PROGRESSIVE_ENTITY_SCHEDULING,
                 JedaiOptions.PROGRESSIVE_GLOBAL_TOP_COMPARISONS,
@@ -46,11 +49,44 @@ public class PrioritizationController {
                 .createButtonGroup(noBlBuMethodsContainer, noBlBuOptions, model.prioritizationProperty());
         blBuValue = RadioButtonHelper
                 .createButtonGroup(blBuMethodsContainer, blBuOptions, model.prioritizationProperty());
-        // todo: add listener to disable each button group depending on enabled BlBu methods
+
+        // Add listener for when the number of enabled block building methods changes
+        model.enabledBlockBuildingMethodsProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    int oldVal = oldValue.intValue();
+                    int newVal = newValue.intValue();
+
+                    // Check if the # of methods was 0 and one was selected or if all were deselected
+                    if ((oldVal == 0 && newVal != 0) || (oldVal != 0 && newVal == 0)) {
+                        // Need to update enabled radio buttons
+                        updateEnabledRadioButtons(newValue.intValue());
+                    }
+                }
+        );
 
         // Add default/automatic/manual configuration buttons
         confTypeContainer.getChildren().add(
                 new ConfigurationTypeSelector(model.prioritizationConfigTypeProperty())
         );
+    }
+
+    /**
+     * Update which radio buttons are enabled based on the number of enabled block building methods.
+     *
+     * @param enabledMethods Number of currently enabled block building methods
+     */
+    private void updateEnabledRadioButtons(int enabledMethods) {
+        boolean hasBlBu = (enabledMethods > 0);
+
+        // Enable/disable the appropriate radio buttons
+        noBlBuMethodsContainer.getChildren().forEach(node -> node.setDisable(hasBlBu));
+        blBuMethodsContainer.getChildren().forEach(node -> node.setDisable(!hasBlBu));
+
+        // Bind the model properties
+        model.prioritizationProperty().unbindBidirectional(hasBlBu ? noBlBuValue.valueProperty() : blBuValue.valueProperty());
+        model.prioritizationProperty().bindBidirectional(hasBlBu ? blBuValue.valueProperty() : noBlBuValue.valueProperty());
+
+        // Select first option
+        model.setPrioritization(hasBlBu ? blBuOptions.get(0) : noBlBuOptions.get(0));
     }
 }
