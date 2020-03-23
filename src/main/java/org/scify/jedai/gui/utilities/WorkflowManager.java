@@ -488,29 +488,29 @@ public class WorkflowManager {
         overheadStart = System.currentTimeMillis();
         boolean isDirtyEr = model.getErType().equals(JedaiOptions.DIRTY_ER);
 
+        // Calculate the budget/comparisons here
+        long budget;
+
+        if (blocks.isEmpty()) {
+            // No blocks, calculate budget based on entity profiles
+            budget = isDirtyEr ?
+                    (profilesD1.size() * (profilesD1.size() - 1) / 2) : (profilesD1.size() * profilesD2.size());
+            // todo: check if Dirty ER budget calculation is correct pls
+        } else {
+            // Use number of comparisons from blocks as budget
+            budget = 0;
+            for (AbstractBlock b : blocks) {
+                budget += b.getNoOfComparisons();
+            }
+        }
+
         // Create instance of prioritization method
         IPrioritization prioritization;
         if (!model.getPrioritizationConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
-            // Calculate budget to use default method configuration
-            int budget;
-
-            if (blocks.isEmpty()) {
-                // No blocks, calculate budget based on entity profiles
-                budget = isDirtyEr ?
-                        (profilesD1.size() * (profilesD1.size() - 1) / 2) : (profilesD1.size() * profilesD2.size());
-                // todo: check if Dirty ER budget calculation is correct pls
-            } else {
-                // Use number of comparisons from blocks as budget
-                budget = 0;
-                for (AbstractBlock b : blocks) {
-                    budget += b.getNoOfComparisons();
-                }
-            }
-
             // Create method instance
             prioritization = MethodMapping.getPrioritizationMethodByName(
                     model.getPrioritization(),
-                    budget
+                    (int) budget
             );
         } else {
             // Manual configuration selected, create method with the saved parameters
@@ -537,7 +537,19 @@ public class WorkflowManager {
         overheadEnd = System.currentTimeMillis();
         // todo: do something with overhead times? add workflow step?
 
-        // todo: Entity Matching
+        // Entity Matching
+        IEntityMatching entityMatching = getEntityMatchingMethodInstance(profilesD1, profilesD2);
+        SimilarityPairs sims = new SimilarityPairs(!isDirtyEr, (int) budget);
+
+        while (prioritization.hasNext()) {
+            Comparison comparison = prioritization.next();
+
+            double similarity = entityMatching.executeComparison(comparison);
+            comparison.setUtilityMeasure(similarity);
+
+            sims.addComparison(comparison);
+        }
+
 
         // todo: Entity Clustering
 
