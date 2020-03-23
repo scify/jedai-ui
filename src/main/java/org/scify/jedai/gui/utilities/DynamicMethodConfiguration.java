@@ -20,6 +20,7 @@ import org.scify.jedai.entitymatching.GroupLinkage;
 import org.scify.jedai.entitymatching.IEntityMatching;
 import org.scify.jedai.entitymatching.ProfileMatcher;
 import org.scify.jedai.gui.controllers.DynamicConfigurationController;
+import org.scify.jedai.prioritization.*;
 import org.scify.jedai.schemaclustering.AttributeNameClustering;
 import org.scify.jedai.schemaclustering.AttributeValueClustering;
 import org.scify.jedai.schemaclustering.HolisticAttributeClustering;
@@ -30,10 +31,7 @@ import org.scify.jedai.similarityjoins.characterbased.FastSS;
 import org.scify.jedai.similarityjoins.characterbased.PassJoin;
 import org.scify.jedai.similarityjoins.tokenbased.PPJoin;
 import org.scify.jedai.utilities.IDocumentation;
-import org.scify.jedai.utilities.enumerations.BlockBuildingMethod;
-import org.scify.jedai.utilities.enumerations.RepresentationModel;
-import org.scify.jedai.utilities.enumerations.SimilarityMetric;
-import org.scify.jedai.utilities.enumerations.WeightingScheme;
+import org.scify.jedai.utilities.enumerations.*;
 
 import java.util.List;
 
@@ -177,6 +175,51 @@ public class DynamicMethodConfiguration {
                 return new LSHMinHashBlocking(
                         (int) parameters.get(0).getRight(),
                         (int) parameters.get(1).getRight()
+                );
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * Given a prioritization method name and a list of parameters, initialize and return a method instance.
+     * Assumes the parameters are of correct type & number.
+     *
+     * @param methodName Name of similarity join method.
+     * @param params     Parameters list for method.
+     * @return Prioritization method instance
+     */
+    public static IPrioritization configurePrioritizationMethod(String methodName, List<JPair<String, Object>> params) {
+        switch (methodName) {
+            case JedaiOptions.GLOBAL_PROGRESSIVE_SORTED_NEIGHBORHOOR:
+                return new GlobalProgressiveSortedNeighborhood(
+                        (int) params.get(0).getRight(), // Budget
+                        (ProgressiveWeightingScheme) params.get(1).getRight() // Weighting Scheme
+                );
+            case JedaiOptions.LOCAL_PROGRESSIVE_SORTED_NEIGHBORHOOD:
+                return new LocalProgressiveSortedNeighborhood(
+                        (int) params.get(0).getRight(), // Budget
+                        (ProgressiveWeightingScheme) params.get(1).getRight() // Weighting Scheme
+                );
+            case JedaiOptions.PROGRESSIVE_BLOCK_SCHEDULING:
+                return new ProgressiveBlockScheduling(
+                        (int) params.get(0).getRight(), // Budget
+                        (WeightingScheme) params.get(1).getRight() // Weighting Scheme
+                );
+            case JedaiOptions.PROGRESSIVE_ENTITY_SCHEDULING:
+                return new ProgressiveEntityScheduling(
+                        (int) params.get(0).getRight(), // Budget
+                        (WeightingScheme) params.get(1).getRight() // Weighting Scheme
+                );
+            case JedaiOptions.PROGRESSIVE_GLOBAL_TOP_COMPARISONS:
+                return new ProgressiveGlobalTopComparisons(
+                        (int) params.get(0).getRight(), // Budget
+                        (WeightingScheme) params.get(1).getRight() // Weighting Scheme
+                );
+            case JedaiOptions.PROGRESSIVE_LOCAL_TOP_COMPARISONS:
+                return new ProgressiveLocalTopComparisons(
+                        (int) params.get(0).getRight(), // Budget
+                        (WeightingScheme) params.get(1).getRight() // Weighting Scheme
                 );
             default:
                 return null;

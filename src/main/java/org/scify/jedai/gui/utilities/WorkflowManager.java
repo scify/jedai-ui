@@ -12,6 +12,7 @@ import org.scify.jedai.gui.model.JedaiMethodConfiguration;
 import org.scify.jedai.gui.model.WorkflowResult;
 import org.scify.jedai.gui.wizard.MethodMapping;
 import org.scify.jedai.gui.wizard.WizardData;
+import org.scify.jedai.prioritization.IPrioritization;
 import org.scify.jedai.schemaclustering.ISchemaClustering;
 import org.scify.jedai.similarityjoins.ISimilarityJoin;
 import org.scify.jedai.utilities.BlocksPerformance;
@@ -442,11 +443,10 @@ public class WorkflowManager {
         BlocksPerformance blp;
 
         // Block Building (optional in progressive workflow) & block cleaning
-        List<AbstractBlock> blocks = null;
+        List<AbstractBlock> blocks = new ArrayList<>();
         if (blBuMethods != null && blBuMethods.size() > 0) {
             Platform.runLater(() -> statusLabel.setText("Running block building..."));
 
-            blocks = new ArrayList<>();
             //noinspection Duplicates
             for (IBlockBuilding bb : blBuMethods) {
                 // Start time measurement
@@ -483,7 +483,45 @@ public class WorkflowManager {
             }
         }
 
-        // todo: Prioritization
+        // Prioritization
+        Platform.runLater(() -> statusLabel.setText("Running prioritization..."));
+        overheadStart = System.currentTimeMillis();
+
+        // todo: Calculate budget
+        int budget = 0;
+
+        // Create instance of prioritization method
+        IPrioritization prioritization;
+        if (!model.getPrioritizationConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
+            // Auto or default configuration selected: use default configuration
+            prioritization = MethodMapping.getPrioritizationMethodByName(
+                    model.getPrioritization(),
+                    budget
+            );
+        } else {
+            // Manual configuration selected, create method with the saved parameters
+            prioritization = DynamicMethodConfiguration.configurePrioritizationMethod(
+                    model.getPrioritization(),
+                    model.getPrioritizationParameters()
+            );
+        }
+
+        // Run prioritization
+        if (blocks.isEmpty()) {
+            // Block-based schedule (there were block building methods selected)
+            prioritization.developBlockBasedSchedule(blocks);
+        } else {
+            // Entity-based schedule (directly with input entities!)
+            if (model.getErType().equals(JedaiOptions.DIRTY_ER)) {
+                // Dirty ER
+                prioritization.developEntityBasedSchedule(profilesD1);
+            } else {
+                // Clean-Clean ER
+                prioritization.developEntityBasedSchedule(profilesD1, profilesD2);
+            }
+        }
+        overheadEnd = System.currentTimeMillis();
+        // todo: do something with overhead times? add workflow step?
 
         // todo: Entity Matching
 
@@ -765,12 +803,12 @@ public class WorkflowManager {
         // Run Entity Clustering
         if (finalRun)
             Platform.runLater(() -> statusLabel.setText("Running entity clustering..."));
-        overheadStart = System.currentTimeMillis();
 
+        overheadStart = System.currentTimeMillis();
         entityClusters = ec.getDuplicates(simPairs);
+        overheadEnd = System.currentTimeMillis();
 
         // Print clustering performance
-        overheadEnd = System.currentTimeMillis();
         ClustersPerformance clp = new ClustersPerformance(entityClusters, duplicatePropagation);
         clp.setStatistics();
         if (finalRun)
