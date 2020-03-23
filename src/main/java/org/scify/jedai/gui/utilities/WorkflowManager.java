@@ -436,9 +436,52 @@ public class WorkflowManager {
         Platform.runLater(() -> statusLabel.setText("Running schema clustering..."));
         AttributeClusters[] clusters = runSchemaClustering(schemaClusteringMethod);
 
-        // todo: Block Building
+        // Initialize a few variables
+        double overheadStart;
+        double overheadEnd;
+        BlocksPerformance blp;
 
-        // todo: Block Cleaning
+        // Block Building (optional in progressive workflow) & block cleaning
+        List<AbstractBlock> blocks = null;
+        if (blBuMethods != null && blBuMethods.size() > 0) {
+            Platform.runLater(() -> statusLabel.setText("Running block building..."));
+
+            blocks = new ArrayList<>();
+            //noinspection Duplicates
+            for (IBlockBuilding bb : blBuMethods) {
+                // Start time measurement
+                overheadStart = System.currentTimeMillis();
+
+                // Run the method
+                blocks.addAll(this.runBlockBuilding(erType, clusters, profilesD1, profilesD2, bb));
+
+                // Get blocks performance to print
+                overheadEnd = System.currentTimeMillis();
+                blp = new BlocksPerformance(blocks, duplicatePropagation);
+                blp.setStatistics();
+
+                // Print performance
+                double totalTime = overheadEnd - overheadStart;
+                blp.printStatistics(totalTime, bb.getMethodConfiguration(), bb.getMethodName());
+
+                // Save the performance of block building
+                this.addBlocksPerformance(bb.getMethodName(), totalTime, blp);
+            }
+
+            // Block Cleaning
+            Platform.runLater(() -> statusLabel.setText("Running block cleaning..."));
+
+            if (blClMethods != null && !blClMethods.isEmpty()) {
+                // Execute the methods
+                for (IBlockProcessing currentMethod : blClMethods) {
+                    blocks = runBlockProcessing(duplicatePropagation, true, blocks, currentMethod);
+
+                    if (blocks.isEmpty()) {
+                        return null;
+                    }
+                }
+            }
+        }
 
         // todo: Prioritization
 
