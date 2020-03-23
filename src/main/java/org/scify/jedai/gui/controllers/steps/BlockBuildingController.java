@@ -91,17 +91,22 @@ public class BlockBuildingController {
 
     @Validate
     public boolean validate() {
-        // Check that there is at least one enabled method
-        for (JedaiMethodConfiguration mc : model.getBlockBuildingMethods()) {
-            if (mc.isEnabled()) {
-                return true;
+        if (model.getWorkflow().equals(JedaiOptions.WORKFLOW_BLOCKING_BASED)) {
+            // For blocking-based workflow, we need at least one enabled method
+            for (JedaiMethodConfiguration mc : model.getBlockBuildingMethods()) {
+                if (mc.isEnabled()) {
+                    return true;
+                }
             }
-        }
 
-        // Show error and do not continue
-        DialogHelper.showError("Error", "No method selected!",
-                "You must select at least one method for Block Building!");
-        return false;
+            // Show error and do not continue
+            DialogHelper.showError("Error", "No method selected!",
+                    "You must select at least one method for Block Building!");
+            return false;
+        } else {
+            // Progressive workflow can have no selected block building methods.
+            return true;
+        }
     }
 
     @Submit
