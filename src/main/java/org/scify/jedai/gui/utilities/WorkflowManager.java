@@ -432,7 +432,9 @@ public class WorkflowManager {
      * @return Clusters performance object
      */
     private ClustersPerformance executeFullProgressiveWorkflow(Label statusLabel) {
-        // todo: Schema Clustering
+        // Run schema clustering if it's not null (can't measure its performance)
+        Platform.runLater(() -> statusLabel.setText("Running schema clustering..."));
+        AttributeClusters[] clusters = runSchemaClustering(schemaClusteringMethod);
 
         // todo: Block Building
 
@@ -601,6 +603,27 @@ public class WorkflowManager {
     }
 
     /**
+     * Run a schema clustering method on the current datasets.
+     *
+     * @param method Method to apply
+     * @return Attribute clusters returned by the method, or null if method is null
+     */
+    private AttributeClusters[] runSchemaClustering(ISchemaClustering method) {
+        if (method != null) {
+            // Run schema clustering
+            if (erType.equals(JedaiOptions.DIRTY_ER)) {
+                // Dirty ER
+                return method.getClusters(profilesD1);
+            } else {
+                // Clean-Clean ER
+                return method.getClusters(profilesD1, profilesD2);
+            }
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * Run a blocking-based workflow with the given methods and return its ClustersPerformance
      *
      * @param statusLabel Label to set status on
@@ -621,17 +644,7 @@ public class WorkflowManager {
         if (finalRun)
             Platform.runLater(() -> statusLabel.setText("Running schema clustering..."));
 
-        boolean isDirtyEr = erType.equals(JedaiOptions.DIRTY_ER);
-
-        AttributeClusters[] clusters = null;
-        if (sc != null) {
-            // Run schema clustering
-            if (isDirtyEr) {
-                clusters = sc.getClusters(profilesD1);
-            } else {
-                clusters = sc.getClusters(profilesD1, profilesD2);
-            }
-        }
+        AttributeClusters[] clusters = runSchemaClustering(sc);
 
         // Initialize a few variables
         double overheadStart;
