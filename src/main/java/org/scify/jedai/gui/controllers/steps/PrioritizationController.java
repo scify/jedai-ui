@@ -3,6 +3,7 @@ package org.scify.jedai.gui.controllers.steps;
 import com.google.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
+import jfxtras.scene.control.ToggleGroupValue;
 import org.scify.jedai.gui.nodes.dynamic_configuration.ConfigurationTypeSelector;
 import org.scify.jedai.gui.utilities.JedaiOptions;
 import org.scify.jedai.gui.utilities.RadioButtonHelper;
@@ -16,6 +17,9 @@ public class PrioritizationController {
     public VBox containerVBox;
     public VBox noBlBuMethodsContainer;
     public VBox blBuMethodsContainer;
+
+    private ToggleGroupValue noBlBuValue;
+    private ToggleGroupValue blBuValue;
 
     @Inject
     private WizardData model;
@@ -38,8 +42,10 @@ public class PrioritizationController {
         );
 
         // Create radio buttons using helper method
-        RadioButtonHelper.createButtonGroup(noBlBuMethodsContainer, noBlBuOptions, model.prioritizationProperty());
-        RadioButtonHelper.createButtonGroup(blBuMethodsContainer, blBuOptions, model.prioritizationProperty());
+        noBlBuValue = RadioButtonHelper
+                .createButtonGroup(noBlBuMethodsContainer, noBlBuOptions, model.prioritizationProperty());
+        blBuValue = RadioButtonHelper
+                .createButtonGroup(blBuMethodsContainer, blBuOptions, model.prioritizationProperty());
         // todo: add listener to disable each button group depending on enabled BlBu methods
 
         // Add default/automatic/manual configuration buttons
