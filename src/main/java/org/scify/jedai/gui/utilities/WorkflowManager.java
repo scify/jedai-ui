@@ -486,14 +486,28 @@ public class WorkflowManager {
         // Prioritization
         Platform.runLater(() -> statusLabel.setText("Running prioritization..."));
         overheadStart = System.currentTimeMillis();
-
-        // todo: Calculate budget
-        int budget = 0;
+        boolean isDirtyEr = model.getErType().equals(JedaiOptions.DIRTY_ER);
 
         // Create instance of prioritization method
         IPrioritization prioritization;
         if (!model.getPrioritizationConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
-            // Auto or default configuration selected: use default configuration
+            // Calculate budget to use default method configuration
+            int budget;
+
+            if (blocks.isEmpty()) {
+                // No blocks, calculate budget based on entity profiles
+                budget = isDirtyEr ?
+                        (profilesD1.size() * (profilesD1.size() - 1) / 2) : (profilesD1.size() * profilesD2.size());
+                // todo: check if Dirty ER budget calculation is correct pls
+            } else {
+                // Use number of comparisons from blocks as budget
+                budget = 0;
+                for (AbstractBlock b : blocks) {
+                    budget += b.getNoOfComparisons();
+                }
+            }
+
+            // Create method instance
             prioritization = MethodMapping.getPrioritizationMethodByName(
                     model.getPrioritization(),
                     budget
@@ -512,7 +526,7 @@ public class WorkflowManager {
             prioritization.developBlockBasedSchedule(blocks);
         } else {
             // Entity-based schedule (directly with input entities!)
-            if (model.getErType().equals(JedaiOptions.DIRTY_ER)) {
+            if (isDirtyEr) {
                 // Dirty ER
                 prioritization.developEntityBasedSchedule(profilesD1);
             } else {
