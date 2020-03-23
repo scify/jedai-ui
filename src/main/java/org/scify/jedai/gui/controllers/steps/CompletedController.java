@@ -440,34 +440,6 @@ public class CompletedController {
     }
 
     /**
-     * Reset the view of the step
-     */
-    public void resetData() {
-        // Disable exploration button
-        exploreBtn.setDisable(true);
-        showPlotBtn.setDisable(true);
-
-        // Hide time measurements
-        numOfInstancesLabel.setVisible(false);
-        totalTimeLabel.setVisible(false);
-        numOfClustersLabel.setVisible(false);
-
-        // Reset gauges
-        f1Gauge.setValue(0.0);
-        recallGauge.setValue(0.0);
-        precisionGauge.setValue(0.0);
-
-        // Reset Details tab
-        logTextArea.setText("");
-
-        // Reset status label
-        statusLabel.setText("");
-
-        // Go to first tabset tab
-        tabSelectionModel.selectFirst();
-    }
-
-    /**
      * Explore the results of the dataset. Assumes that it will not be called when this is not possible (because the
      * button is supposed to be disabled when that's the case...)
      *
