@@ -23,10 +23,8 @@ public class EntityClusteringController {
     public VBox cleanCleanErContainer;
     public VBox confTypeContainer;
 
-    private List<String> dirtyErOptions;
-    private List<String> cleanCleanErOptions;
-    ToggleGroupValue dirtyValue;
-    ToggleGroupValue cleanCleanValue;
+    private ToggleGroupValue dirtyValue;
+    private ToggleGroupValue cleanCleanValue;
     private Logger log = LoggerFactory.getLogger(EntityClusteringController.class);
 
     @Inject
@@ -35,7 +33,7 @@ public class EntityClusteringController {
     @FXML
     public void initialize() {
         // Set available options for each ER type
-        dirtyErOptions = Arrays.asList(
+        List<String> dirtyErOptions = Arrays.asList(
                 JedaiOptions.CENTER_CLUSTERING,
                 JedaiOptions.CONNECTED_COMPONENTS_CLUSTERING,
                 JedaiOptions.CUT_CLUSTERING,
@@ -44,7 +42,7 @@ public class EntityClusteringController {
                 JedaiOptions.RICOCHET_SR_CLUSTERING
         );
 
-        cleanCleanErOptions = Collections.singletonList(
+        List<String> cleanCleanErOptions = Collections.singletonList(
                 JedaiOptions.UNIQUE_MAPPING_CLUSTERING
         );
 

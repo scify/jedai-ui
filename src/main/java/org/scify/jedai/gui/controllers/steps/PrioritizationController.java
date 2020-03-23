@@ -17,23 +17,20 @@ public class PrioritizationController {
     public VBox noBlBuMethodsContainer;
     public VBox blBuMethodsContainer;
 
-    // Lists of methods depending on whether there is at least one block building method selected or not
-    private List<String> noBlBuOptions;
-    private List<String> blBuOptions;
-
     @Inject
     private WizardData model;
 
     @FXML
     public void initialize() {
         // Create list with options for when no block building methods are selected
-        noBlBuOptions = Arrays.asList(
+        // Lists of methods depending on whether there is at least one block building method selected or not
+        List<String> noBlBuOptions = Arrays.asList(
                 JedaiOptions.GLOBAL_PROGRESSIVE_SORTED_NEIGHBORHOOR,
                 JedaiOptions.LOCAL_PROGRESSIVE_SORTED_NEIGHBORHOOD
         );
 
         // Methods for when at least one block building method is selected
-        blBuOptions = Arrays.asList(
+        List<String> blBuOptions = Arrays.asList(
                 JedaiOptions.PROGRESSIVE_BLOCK_SCHEDULING,
                 JedaiOptions.PROGRESSIVE_ENTITY_SCHEDULING,
                 JedaiOptions.PROGRESSIVE_GLOBAL_TOP_COMPARISONS,
