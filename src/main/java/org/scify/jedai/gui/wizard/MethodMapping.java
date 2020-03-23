@@ -11,6 +11,7 @@ import org.scify.jedai.datareader.groundtruthreader.GtRDFReader;
 import org.scify.jedai.datareader.groundtruthreader.GtSerializationReader;
 import org.scify.jedai.entityclustering.*;
 import org.scify.jedai.gui.utilities.JedaiOptions;
+import org.scify.jedai.prioritization.*;
 import org.scify.jedai.schemaclustering.AttributeNameClustering;
 import org.scify.jedai.schemaclustering.AttributeValueClustering;
 import org.scify.jedai.schemaclustering.HolisticAttributeClustering;
@@ -63,81 +64,101 @@ public class MethodMapping {
         return Collections.unmodifiableMap(result);
     }
 
-    public static IEntityClustering getEntityClusteringMethod(String methodStr) {
-        IEntityClustering method;
-
-        switch (methodStr) {
+    /**
+     * Get an instance of an entity clustering method in order to read its parameters.
+     *
+     * @param methodName Name of method
+     * @return IEntityClustering with instance of method
+     */
+    public static IEntityClustering getEntityClusteringMethod(String methodName) {
+        switch (methodName) {
             case JedaiOptions.CENTER_CLUSTERING:
-                method = new CenterClustering();
-                break;
+                return new CenterClustering();
             case JedaiOptions.CONNECTED_COMPONENTS_CLUSTERING:
-                method = new ConnectedComponentsClustering();
-                break;
+                return new ConnectedComponentsClustering();
             case JedaiOptions.CUT_CLUSTERING:
-                method = new CutClustering();
-                break;
+                return new CutClustering();
             case JedaiOptions.MARKOV_CLUSTERING:
-                method = new MarkovClustering();
-                break;
+                return new MarkovClustering();
             case JedaiOptions.MERGE_CENTER_CLUSTERING:
-                method = new MergeCenterClustering();
-                break;
+                return new MergeCenterClustering();
             case JedaiOptions.RICOCHET_SR_CLUSTERING:
-                method = new RicochetSRClustering();
-                break;
+                return new RicochetSRClustering();
             case JedaiOptions.UNIQUE_MAPPING_CLUSTERING:
-                method = new UniqueMappingClustering();
-                break;
+                return new UniqueMappingClustering();
             default:
-                method = null;
+                return null;
         }
-
-        return method;
     }
 
+    /**
+     * Get an instance of a schema clustering method in order to read its parameters.
+     *
+     * @param methodName Name of method
+     * @return ISchemaClustering with instance of method
+     */
     public static ISchemaClustering getSchemaClusteringMethodByName(String methodName) {
-        ISchemaClustering schemaClustering = null;
-
         switch (methodName) {
             case JedaiOptions.ATTRIBUTE_NAME_CLUSTERING:
-                schemaClustering = new AttributeNameClustering(
+                return new AttributeNameClustering(
                         RepresentationModel.CHARACTER_TRIGRAMS, SimilarityMetric.ENHANCED_JACCARD_SIMILARITY);
-                break;
             case JedaiOptions.ATTRIBUTE_VALUE_CLUSTERING:
-                schemaClustering = new AttributeValueClustering(
+                return new AttributeValueClustering(
                         RepresentationModel.CHARACTER_TRIGRAMS, SimilarityMetric.ENHANCED_JACCARD_SIMILARITY);
-                break;
             case JedaiOptions.HOLISTIC_ATTRIBUTE_CLUSTERING:
-                schemaClustering = new HolisticAttributeClustering(
+                return new HolisticAttributeClustering(
                         RepresentationModel.CHARACTER_TRIGRAMS, SimilarityMetric.ENHANCED_JACCARD_SIMILARITY);
-                break;
+            default:
+                return null;
         }
-
-        return schemaClustering;
     }
 
+    /**
+     * Get an instance of a similarity join method in order to read its parameters.
+     *
+     * @param methodName Name of method
+     * @return ISimilarityJoin with instance of method
+     */
     public static ISimilarityJoin getSimilarityJoinMethodByName(String methodName) {
-        ISimilarityJoin similarityJoin = null;
-
         switch (methodName) {
             case JedaiOptions.ALL_PAIRS_CHAR_BASED:
-                similarityJoin = new AllPairs(1);
-                break;
+                return new AllPairs(1);
             case JedaiOptions.ALL_PAIRS_TOKEN_BASED:
-                similarityJoin = new org.scify.jedai.similarityjoins.tokenbased.AllPairs(1.);
-                break;
+                return new org.scify.jedai.similarityjoins.tokenbased.AllPairs(1.);
             case JedaiOptions.FAST_SS:
-                similarityJoin = new FastSS(1);
-                break;
+                return new FastSS(1);
             case JedaiOptions.PASS_JOIN:
-                similarityJoin = new PassJoin(1);
-                break;
+                return new PassJoin(1);
             case JedaiOptions.PP_JOIN:
-                similarityJoin = new PPJoin(1.);
-                break;
+                return new PPJoin(1.);
+            default:
+                return null;
         }
+    }
 
-        return similarityJoin;
+    /**
+     * Get an instance of a prioritization method in order to read its parameters.
+     *
+     * @param methodName Name of method
+     * @return IPrioritization with instance of method
+     */
+    public static IPrioritization getPrioritizationMethodByName(String methodName) {
+        switch (methodName) {
+            case JedaiOptions.GLOBAL_PROGRESSIVE_SORTED_NEIGHBORHOOR:
+                return new GlobalProgressiveSortedNeighborhood(0, ProgressiveWeightingScheme.ACF);
+            case JedaiOptions.LOCAL_PROGRESSIVE_SORTED_NEIGHBORHOOD:
+                return new LocalProgressiveSortedNeighborhood(0, ProgressiveWeightingScheme.ACF);
+            case JedaiOptions.PROGRESSIVE_BLOCK_SCHEDULING:
+                return new ProgressiveBlockScheduling(0, WeightingScheme.ARCS);
+            case JedaiOptions.PROGRESSIVE_ENTITY_SCHEDULING:
+                return new ProgressiveEntityScheduling(0, WeightingScheme.ARCS);
+            case JedaiOptions.PROGRESSIVE_GLOBAL_TOP_COMPARISONS:
+                return new ProgressiveGlobalTopComparisons(0, WeightingScheme.ARCS);
+            case JedaiOptions.PROGRESSIVE_LOCAL_TOP_COMPARISONS:
+                return new ProgressiveLocalTopComparisons(0, WeightingScheme.JS);
+            default:
+                return null;
+        }
     }
 
     /**
@@ -184,7 +205,7 @@ public class MethodMapping {
      *
      * @param method         Method name
      * @param isCleanCleanEr Whether we are using Clean-Clean ER or not (only matters for some methods)
-     * @return
+     * @return IBlockProcessing method instance
      */
     public static IBlockProcessing getMethodByName(String method, boolean isCleanCleanEr) {
         IBlockProcessing processingMethod = null;

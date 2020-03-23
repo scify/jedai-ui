@@ -178,7 +178,8 @@ public class WizardController {
                 new WorkflowStep(
                         JedaiOptions.STEP_LABEL_PRIORITIZATION,
                         JedaiOptions.STEP_DESCRIPTION_PRIORITIZATION,
-                        "wizard-fxml/steps/Prioritization.fxml"
+                        "wizard-fxml/steps/Prioritization.fxml",
+                        model.prioritizationConfigTypeProperty()
                 ));
 
         this.availableSteps.put(JedaiOptions.STEP_LABEL_SELECTION_CONFIRMATION,
@@ -512,10 +513,18 @@ public class WizardController {
 
                     break;
                 case JedaiOptions.STEP_LABEL_SIMILARITY_JOIN:
+                    // Similarity Join
                     parametersProperty = model.similarityJoinParametersProperty();
 
                     methodName = model.getSimilarityJoin();
                     method = MethodMapping.getSimilarityJoinMethodByName(methodName);
+                    break;
+                case JedaiOptions.STEP_LABEL_PRIORITIZATION:
+                    // Prioritization
+                    parametersProperty = model.prioritizationParametersProperty();
+
+                    methodName = model.getPrioritization();
+                    method = MethodMapping.getPrioritizationMethodByName(methodName);
                     break;
             }
 
