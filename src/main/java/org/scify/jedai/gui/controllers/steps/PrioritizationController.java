@@ -16,15 +16,23 @@ public class PrioritizationController {
     public VBox confTypeContainer;
     public VBox containerVBox;
 
+    // Lists of methods depending on whether there is at least one block building method selected or not
+    private List<String> noBlBuOptions;
+    private List<String> blBuOptions;
+
     @Inject
     private WizardData model;
 
     @FXML
     public void initialize() {
-        // Create List with options
-        List<String> options = Arrays.asList(
+        // Create list with options for when no block building methods are selected
+        noBlBuOptions = Arrays.asList(
                 JedaiOptions.GLOBAL_PROGRESSIVE_SORTED_NEIGHBORHOOR,
-                JedaiOptions.LOCAL_PROGRESSIVE_SORTED_NEIGHBORHOOD,
+                JedaiOptions.LOCAL_PROGRESSIVE_SORTED_NEIGHBORHOOD
+        );
+
+        // Methods for when at least one block building method is selected
+        blBuOptions = Arrays.asList(
                 JedaiOptions.PROGRESSIVE_BLOCK_SCHEDULING,
                 JedaiOptions.PROGRESSIVE_ENTITY_SCHEDULING,
                 JedaiOptions.PROGRESSIVE_GLOBAL_TOP_COMPARISONS,
@@ -32,7 +40,9 @@ public class PrioritizationController {
         );
 
         // Create radio buttons using helper method
-        RadioButtonHelper.createButtonGroup(radioBtnsContainer, options, model.prioritizationProperty());
+        RadioButtonHelper.createButtonGroup(radioBtnsContainer, blBuOptions, model.prioritizationProperty());
+        // todo: make two radio button helpers
+        // todo: add listener to disable each button group depending on enabled BlBu methods
 
         // Add default/automatic/manual configuration buttons
         confTypeContainer.getChildren().add(
