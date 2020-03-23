@@ -213,7 +213,7 @@ public class WizardController {
         // Initialize last steps
         this.finalSteps = new ArrayList<>(
                 Arrays.asList(
-                        availableSteps.get(JedaiOptions.STEP_LABEL_SELECTION_CONFIRMATION),
+//                        availableSteps.get(JedaiOptions.STEP_LABEL_SELECTION_CONFIRMATION),
                         availableSteps.get(JedaiOptions.STEP_LABEL_WORKFLOW_EXECUTION)
                 )
         );
