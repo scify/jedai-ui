@@ -12,9 +12,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class PrioritizationController {
-    public VBox radioBtnsContainer;
     public VBox confTypeContainer;
     public VBox containerVBox;
+    public VBox noBlBuMethodsContainer;
+    public VBox blBuMethodsContainer;
 
     // Lists of methods depending on whether there is at least one block building method selected or not
     private List<String> noBlBuOptions;
@@ -40,8 +41,8 @@ public class PrioritizationController {
         );
 
         // Create radio buttons using helper method
-        RadioButtonHelper.createButtonGroup(radioBtnsContainer, blBuOptions, model.prioritizationProperty());
-        // todo: make two radio button helpers
+        RadioButtonHelper.createButtonGroup(noBlBuMethodsContainer, noBlBuOptions, model.prioritizationProperty());
+        RadioButtonHelper.createButtonGroup(blBuMethodsContainer, blBuOptions, model.prioritizationProperty());
         // todo: add listener to disable each button group depending on enabled BlBu methods
 
         // Add default/automatic/manual configuration buttons
