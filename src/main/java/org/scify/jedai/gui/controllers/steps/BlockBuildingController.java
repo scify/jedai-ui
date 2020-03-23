@@ -111,6 +111,17 @@ public class BlockBuildingController {
 
     @Submit
     public void submit() {
+        // Count number of enabled block building methods
+        int enabledMethods = 0;
+        for (JedaiMethodConfiguration mc : model.getBlockBuildingMethods()) {
+            if (mc.isEnabled()) {
+                enabledMethods++;
+            }
+        }
+
+        // Set the number of enabled block building methods in the model
+        model.setEnabledBlockBuildingMethods(enabledMethods);
+
         if (log.isDebugEnabled()) {
             log.debug("[SUBMIT] the user has completed step 2");
         }
