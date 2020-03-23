@@ -87,22 +87,39 @@ public class BlockBuildingController {
 
         // Set list cells to have checkboxes which use the map's boolean values
         list.setCellFactory(CheckBoxListCell.forListView(optionsMap::get));
+
+        // Set the number of enabled block building methods in the model
+        model.setEnabledBlockBuildingMethods(countEnabledMethods());
+    }
+
+    /**
+     * Count the number of enabled block building methods.
+     *
+     * @return The number of enabled block building methods
+     */
+    private int countEnabledMethods() {
+        int enabledMethods = 0;
+        for (JedaiMethodConfiguration mc : model.getBlockBuildingMethods()) {
+            if (mc.isEnabled()) {
+                enabledMethods++;
+            }
+        }
+
+        return enabledMethods;
     }
 
     @Validate
     public boolean validate() {
         if (model.getWorkflow().equals(JedaiOptions.WORKFLOW_BLOCKING_BASED)) {
             // For blocking-based workflow, we need at least one enabled method
-            for (JedaiMethodConfiguration mc : model.getBlockBuildingMethods()) {
-                if (mc.isEnabled()) {
-                    return true;
-                }
+            if (countEnabledMethods() > 0) {
+                return true;
+            } else {
+                // Show error and do not continue
+                DialogHelper.showError("Error", "No method selected!",
+                        "You must select at least one method for Block Building!");
+                return false;
             }
-
-            // Show error and do not continue
-            DialogHelper.showError("Error", "No method selected!",
-                    "You must select at least one method for Block Building!");
-            return false;
         } else {
             // Progressive workflow can have no selected block building methods.
             return true;
@@ -111,16 +128,8 @@ public class BlockBuildingController {
 
     @Submit
     public void submit() {
-        // Count number of enabled block building methods
-        int enabledMethods = 0;
-        for (JedaiMethodConfiguration mc : model.getBlockBuildingMethods()) {
-            if (mc.isEnabled()) {
-                enabledMethods++;
-            }
-        }
-
         // Set the number of enabled block building methods in the model
-        model.setEnabledBlockBuildingMethods(enabledMethods);
+        model.setEnabledBlockBuildingMethods(countEnabledMethods());
 
         if (log.isDebugEnabled()) {
             log.debug("[SUBMIT] the user has completed step 2");
