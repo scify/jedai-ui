@@ -162,17 +162,15 @@ public class WorkflowManager {
         }
 
         // Get entity clustering method
-        if (isBlockingBasedWorkflow || isJoinBasedWorkflow) {
-            String entityClusteringMethod = model.getEntityClustering();
+        String entityClusteringMethod = model.getEntityClustering();
 
-            if (!model.getEntityClusteringConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
-                // Auto or default configuration selected: use default configuration
-                ec = MethodMapping.getEntityClusteringMethod(entityClusteringMethod);
-            } else {
-                // Manual configuration selected, create method with the saved parameters
-                ObservableList<JPair<String, Object>> ecParams = model.getEntityClusteringParameters();
-                ec = DynamicMethodConfiguration.configureEntityClusteringMethod(entityClusteringMethod, ecParams);
-            }
+        if (!model.getEntityClusteringConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
+            // Auto or default configuration selected: use default configuration
+            ec = MethodMapping.getEntityClusteringMethod(entityClusteringMethod);
+        } else {
+            // Manual configuration selected, create method with the saved parameters
+            ObservableList<JPair<String, Object>> ecParams = model.getEntityClusteringParameters();
+            ec = DynamicMethodConfiguration.configureEntityClusteringMethod(entityClusteringMethod, ecParams);
         }
 
         // Get similarity join method
