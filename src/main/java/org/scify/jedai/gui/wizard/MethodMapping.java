@@ -137,25 +137,26 @@ public class MethodMapping {
     }
 
     /**
-     * Get an instance of a prioritization method in order to read its parameters.
+     * Get an instance of a prioritization method with its default weighting scheme and the specified budget.
      *
      * @param methodName Name of method
+     * @param budget     Budget for method
      * @return IPrioritization with instance of method
      */
-    public static IPrioritization getPrioritizationMethodByName(String methodName) {
+    public static IPrioritization getPrioritizationMethodByName(String methodName, int budget) {
         switch (methodName) {
             case JedaiOptions.GLOBAL_PROGRESSIVE_SORTED_NEIGHBORHOOR:
-                return new GlobalProgressiveSortedNeighborhood(0, ProgressiveWeightingScheme.ACF);
+                return new GlobalProgressiveSortedNeighborhood(budget, ProgressiveWeightingScheme.ACF);
             case JedaiOptions.LOCAL_PROGRESSIVE_SORTED_NEIGHBORHOOD:
-                return new LocalProgressiveSortedNeighborhood(0, ProgressiveWeightingScheme.ACF);
+                return new LocalProgressiveSortedNeighborhood(budget, ProgressiveWeightingScheme.ACF);
             case JedaiOptions.PROGRESSIVE_BLOCK_SCHEDULING:
-                return new ProgressiveBlockScheduling(0, WeightingScheme.ARCS);
+                return new ProgressiveBlockScheduling(budget, WeightingScheme.ARCS);
             case JedaiOptions.PROGRESSIVE_ENTITY_SCHEDULING:
-                return new ProgressiveEntityScheduling(0, WeightingScheme.ARCS);
+                return new ProgressiveEntityScheduling(budget, WeightingScheme.ARCS);
             case JedaiOptions.PROGRESSIVE_GLOBAL_TOP_COMPARISONS:
-                return new ProgressiveGlobalTopComparisons(0, WeightingScheme.ARCS);
+                return new ProgressiveGlobalTopComparisons(budget, WeightingScheme.ARCS);
             case JedaiOptions.PROGRESSIVE_LOCAL_TOP_COMPARISONS:
-                return new ProgressiveLocalTopComparisons(0, WeightingScheme.JS);
+                return new ProgressiveLocalTopComparisons(budget, WeightingScheme.JS);
             default:
                 return null;
         }

@@ -524,7 +524,7 @@ public class WizardController {
                     parametersProperty = model.prioritizationParametersProperty();
 
                     methodName = model.getPrioritization();
-                    method = MethodMapping.getPrioritizationMethodByName(methodName);
+                    method = MethodMapping.getPrioritizationMethodByName(methodName, 0);
                     break;
             }
 
