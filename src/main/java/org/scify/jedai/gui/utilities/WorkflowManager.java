@@ -538,6 +538,7 @@ public class WorkflowManager {
         // todo: do something with overhead times? add workflow step?
 
         // Entity Matching
+        Platform.runLater(() -> statusLabel.setText("Running entity matching..."));
         IEntityMatching entityMatching = getEntityMatchingMethodInstance(profilesD1, profilesD2);
         SimilarityPairs sims = new SimilarityPairs(!isDirtyEr, (int) budget);
 
@@ -550,10 +551,20 @@ public class WorkflowManager {
             sims.addComparison(comparison);
         }
 
+        // Entity Clustering
+        Platform.runLater(() -> statusLabel.setText("Running entity clustering..."));
 
-        // todo: Entity Clustering
+        overheadStart = System.currentTimeMillis();
+        entityClusters = ec.getDuplicates(sims);
+        overheadEnd = System.currentTimeMillis();
 
-        return null;
+        // Print clustering performance
+        ClustersPerformance clp = new ClustersPerformance(entityClusters, duplicatePropagation);
+        clp.setStatistics();
+        clp.printStatistics(overheadEnd - overheadStart, ec.getMethodName(),
+                ec.getMethodConfiguration());
+
+        return clp;
     }
 
     /**
