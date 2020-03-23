@@ -389,6 +389,7 @@ public class WorkflowManager {
      * @return Clusters performance object
      */
     private ClustersPerformance executeFullJoinBasedWorkflow(Label statusLabel) {
+        // todo: make this method use addBlocksPerformance()...
         double overheadStart = System.currentTimeMillis();
         boolean isDirtyEr = erType.equals(JedaiOptions.DIRTY_ER);
 
@@ -425,6 +426,28 @@ public class WorkflowManager {
     }
 
     /**
+     * Execute a full progressive ER workflow.
+     *
+     * @param statusLabel Label to show current workflow status.
+     * @return Clusters performance object
+     */
+    private ClustersPerformance executeFullProgressiveWorkflow(Label statusLabel) {
+        // todo: Schema Clustering
+
+        // todo: Block Building
+
+        // todo: Block Cleaning
+
+        // todo: Prioritization
+
+        // todo: Entity Matching
+
+        // todo: Entity Clustering
+
+        return null;
+    }
+
+    /**
      * Execute a full workflow. This method is called by the execute workflow button, and does everything required to
      * run the full workflow.
      *
@@ -439,8 +462,7 @@ public class WorkflowManager {
             case JedaiOptions.WORKFLOW_JOIN_BASED:
                 return executeFullJoinBasedWorkflow(statusLabel);
             case JedaiOptions.WORKFLOW_PROGRESSIVE:
-                // todo
-                return null;
+                return executeFullProgressiveWorkflow(statusLabel);
             default:
                 return null;
         }
