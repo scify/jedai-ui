@@ -32,6 +32,7 @@ public class WizardData {
 
     // Block Building
     private final ListProperty<JedaiMethodConfiguration> blockBuildingMethods = new SimpleListProperty<>();
+    private final IntegerProperty enabledBlockBuildingMethods = new SimpleIntegerProperty();
 
     // Block Cleaning
     private final ListProperty<JedaiMethodConfiguration> blockCleaningMethods = new SimpleListProperty<>();
@@ -315,6 +316,18 @@ public class WizardData {
 
     public void setBlockBuildingMethods(ObservableList<JedaiMethodConfiguration> blockBuildingMethods) {
         this.blockBuildingMethods.set(blockBuildingMethods);
+    }
+
+    public int getEnabledBlockBuildingMethods() {
+        return enabledBlockBuildingMethods.get();
+    }
+
+    public IntegerProperty enabledBlockBuildingMethodsProperty() {
+        return enabledBlockBuildingMethods;
+    }
+
+    public void setEnabledBlockBuildingMethods(int enabledBlockBuildingMethods) {
+        this.enabledBlockBuildingMethods.set(enabledBlockBuildingMethods);
     }
 
     public ObservableList<JedaiMethodConfiguration> getBlockCleaningMethods() {
