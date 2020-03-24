@@ -154,9 +154,9 @@ public class MethodMapping {
             case JedaiOptions.PROGRESSIVE_ENTITY_SCHEDULING:
                 return new ProgressiveEntityScheduling(budget, WeightingScheme.ARCS);
             case JedaiOptions.PROGRESSIVE_GLOBAL_TOP_COMPARISONS:
-                return new ProgressiveGlobalTopComparisons(budget, WeightingScheme.ARCS);
+                return new ProgressiveGlobalTopComparisons(budget, WeightingScheme.JS);
             case JedaiOptions.PROGRESSIVE_LOCAL_TOP_COMPARISONS:
-                return new ProgressiveLocalTopComparisons(budget, WeightingScheme.JS);
+                return new ProgressiveLocalTopComparisons(budget, WeightingScheme.ARCS);
             default:
                 return null;
         }
