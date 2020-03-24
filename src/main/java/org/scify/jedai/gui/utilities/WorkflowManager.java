@@ -488,6 +488,14 @@ public class WorkflowManager {
         overheadStart = System.currentTimeMillis();
         boolean isDirtyEr = model.getErType().equals(JedaiOptions.DIRTY_ER);
 
+        // Calculate total comparisons, if applicable
+        long totalComparisons = 0;
+        if (!blocks.isEmpty()) {
+            for (AbstractBlock b : blocks) {
+                totalComparisons += b.getNoOfComparisons();
+            }
+        }
+
         // Calculate the budget/comparisons here
         long budget;
 
@@ -498,16 +506,13 @@ public class WorkflowManager {
             // todo: check if Dirty ER budget calculation is correct pls
         } else {
             // Use number of comparisons from blocks as budget
-            budget = 0;
-            for (AbstractBlock b : blocks) {
-                budget += b.getNoOfComparisons();
-            }
+            budget = totalComparisons;
         }
 
         // Create instance of prioritization method
         IPrioritization prioritization;
         if (!model.getPrioritizationConfigType().equals(JedaiOptions.MANUAL_CONFIG)) {
-            // Create method instance
+            // Create method instance with default configuration
             prioritization = MethodMapping.getPrioritizationMethodByName(
                     model.getPrioritization(),
                     (int) budget
@@ -545,7 +550,10 @@ public class WorkflowManager {
         Platform.runLater(() -> statusLabel.setText("Running entity matching..."));
         overheadStart = System.currentTimeMillis();
         IEntityMatching entityMatching = getEntityMatchingMethodInstance(profilesD1, profilesD2);
-        SimilarityPairs sims = new SimilarityPairs(!isDirtyEr, (int) budget);
+        SimilarityPairs sims = new SimilarityPairs(
+                !isDirtyEr,
+                (int) ((!blocks.isEmpty() && !isDirtyEr) ? totalComparisons : budget)
+        );
 
         assert prioritization != null;
         while (prioritization.hasNext()) {
