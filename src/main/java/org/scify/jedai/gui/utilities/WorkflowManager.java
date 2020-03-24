@@ -535,13 +535,19 @@ public class WorkflowManager {
             }
         }
         overheadEnd = System.currentTimeMillis();
-        // todo: do something with overhead times? add workflow step?
+
+        // Add prioritization performance step for workbench
+        performancePerStep.add(
+                new WorkflowResult(prioritization.getMethodName(), -1, -1, -1, (overheadEnd - overheadStart) / 1000.0, -1, -1, -1)
+        );
 
         // Entity Matching
         Platform.runLater(() -> statusLabel.setText("Running entity matching..."));
+        overheadStart = System.currentTimeMillis();
         IEntityMatching entityMatching = getEntityMatchingMethodInstance(profilesD1, profilesD2);
         SimilarityPairs sims = new SimilarityPairs(!isDirtyEr, (int) budget);
 
+        assert prioritization != null;
         while (prioritization.hasNext()) {
             Comparison comparison = prioritization.next();
 
@@ -550,6 +556,12 @@ public class WorkflowManager {
 
             sims.addComparison(comparison);
         }
+        overheadEnd = System.currentTimeMillis();
+
+        // Add entity matching performance step for workbench
+        performancePerStep.add(
+                new WorkflowResult(entityMatching.getMethodName(), -1, -1, -1, (overheadEnd - overheadStart) / 1000.0, -1, -1, -1)
+        );
 
         // Entity Clustering
         Platform.runLater(() -> statusLabel.setText("Running entity clustering..."));
