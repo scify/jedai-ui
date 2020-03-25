@@ -32,7 +32,7 @@ public class WizardData {
 
     // Block Building
     private final ListProperty<JedaiMethodConfiguration> blockBuildingMethods = new SimpleListProperty<>();
-    private final IntegerProperty enabledBlockBuildingMethods = new SimpleIntegerProperty();
+    private final IntegerProperty enabledBlockBuildingMethods = new SimpleIntegerProperty(-1);
 
     // Block Cleaning
     private final ListProperty<JedaiMethodConfiguration> blockCleaningMethods = new SimpleListProperty<>();
