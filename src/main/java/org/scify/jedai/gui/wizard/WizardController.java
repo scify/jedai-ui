@@ -243,6 +243,7 @@ public class WizardController {
                         availableSteps.get(JedaiOptions.STEP_LABEL_SCHEMA_CLUSTERING),
                         availableSteps.get(JedaiOptions.STEP_LABEL_BLOCK_BUILDING),
                         availableSteps.get(JedaiOptions.STEP_LABEL_BLOCK_CLEANING),
+                        availableSteps.get(JedaiOptions.STEP_LABEL_COMPARISON_CLEANING),
                         availableSteps.get(JedaiOptions.STEP_LABEL_PRIORITIZATION),
                         availableSteps.get(JedaiOptions.STEP_LABEL_ENTITY_MATCHING),
                         availableSteps.get(JedaiOptions.STEP_LABEL_ENTITY_CLUSTERING)
