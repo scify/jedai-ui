@@ -491,36 +491,39 @@ public class CompletedController {
      * @param actionEvent Click event of the button
      */
     public void showPlot(ActionEvent actionEvent) {
+        // Create stage that will show the plot
         Stage stage = new Stage();
         stage.setTitle("Progressive Workflow ROC Curve");
 
+        // Create X axis
         final NumberAxis xAxis = new NumberAxis();
-        final NumberAxis yAxis = new NumberAxis();
-
-        yAxis.setAutoRanging(true);
-        yAxis.setLabel("Recall % ");
-
         xAxis.setAutoRanging(true);
 //        xAxis.setLabel("Normalized number of emitted records");
         xAxis.setLabel("Iterations");
-        //creating the chart
-        final LineChart<Number, Number> lineChart =
-                new LineChart<Number, Number>(xAxis, yAxis);
 
+        // Create Y axis
+        final NumberAxis yAxis = new NumberAxis();
+        yAxis.setAutoRanging(true);
+        yAxis.setLabel("Recall %");
+
+        // Create the chart
+        final LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
         lineChart.setTitle("Progressive Workflow ROC Curve");
-        //defining a series
-        XYChart.Series series = new XYChart.Series();
 
+        // Define series
+        XYChart.Series<Number, Number> series = new XYChart.Series<>();
         lineChart.setLegendVisible(false);
 
-        //populating the series with data
+        // Get the data from the workflow manager and add it to the series
         List<Double> data = this.workflowMgr.getRecallCurve();
         for (int i = 0; i < data.size(); i++) {
-            series.getData().add(new XYChart.Data(i + 1, data.get(i)));
+            series.getData().add(new XYChart.Data<>(i + 1, data.get(i)));
         }
 
+        // Add the series to the chart
         lineChart.getData().add(series);
 
+        // Show the stage with the plot
         stage.setScene(new Scene(lineChart, 800, 600));
         stage.show();
     }
