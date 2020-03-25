@@ -45,6 +45,8 @@ public class WorkflowManager {
     private IBlockProcessing comparisonCleaningMethod;
     private IEntityClustering ec;
 
+    private List<Double> recallCurve;
+
     public WorkflowManager(WizardData model) {
         // Set the model and ER type
         this.model = model;
@@ -444,6 +446,7 @@ public class WorkflowManager {
 
         // Block Building (optional in progressive workflow) & block cleaning
         List<AbstractBlock> blocks = new ArrayList<>();
+        double originalRecall = 0;
         if (blBuMethods != null && blBuMethods.size() > 0) {
             Platform.runLater(() -> statusLabel.setText("Running block building..."));
 
@@ -496,6 +499,23 @@ public class WorkflowManager {
 
                 System.out.println("Blocks after Comparison Cleaning\t:\t" + blocks.size());
             }
+        }
+
+        // If we have blocks, run an initial entity matching/clustering before the similarity matching
+        if (!blocks.isEmpty()) {
+            // Entity matching
+            IEntityMatching originalEntityMatching = getEntityMatchingMethodInstance(profilesD1, profilesD2);
+            SimilarityPairs originalSims = originalEntityMatching.executeComparisons(blocks);
+            System.out.println("Executed comparisons\t:\t" + originalSims.getNoOfComparisons());
+
+            // Entity clustering
+            EquivalenceCluster[] originalClusters = ec.getDuplicates(originalSims);
+
+            // Get original recall
+            ClustersPerformance clp = new ClustersPerformance(originalClusters, duplicatePropagation);
+            clp.setStatistics();
+            clp.printStatistics(0, "", "");
+            originalRecall = clp.getRecall();
         }
 
         // Prioritization
@@ -573,33 +593,42 @@ public class WorkflowManager {
                 (int) ((!blocks.isEmpty() && !isDirtyEr) ? totalComparisons : budget)
         );
 
+        recallCurve = new ArrayList<>();
+        ClustersPerformance clp = null;
         while (prioritization.hasNext()) {
+            // Get the comparison
             Comparison comparison = prioritization.next();
 
+            // Calculate the similarity
             double similarity = entityMatching.executeComparison(comparison);
             comparison.setUtilityMeasure(similarity);
 
             sims.addComparison(comparison);
+
+            // Run clustering
+            entityClusters = ec.getDuplicates(sims);
+
+            // Calculate new clusters performance
+            clp = new ClustersPerformance(entityClusters, duplicatePropagation);
+            clp.setStatistics();
+
+            double recall = clp.getRecall();
+
+            // Add current recall to the list
+            recallCurve.add(recall);
+
+            // If this recall is less than the original, stop
+            if (originalRecall <= recall) {
+                break;
+            }
         }
         overheadEnd = System.currentTimeMillis();
 
-        // Add entity matching performance step for workbench
-        performancePerStep.add(
-                new WorkflowResult(entityMatching.getMethodName(), -1, -1, -1, (overheadEnd - overheadStart) / 1000.0, -1, -1, -1)
-        );
-
-        // Entity Clustering
-        Platform.runLater(() -> statusLabel.setText("Running entity clustering..."));
-
-        overheadStart = System.currentTimeMillis();
-        entityClusters = ec.getDuplicates(sims);
-        overheadEnd = System.currentTimeMillis();
-
         // Print clustering performance
-        ClustersPerformance clp = new ClustersPerformance(entityClusters, duplicatePropagation);
-        clp.setStatistics();
-        clp.printStatistics(overheadEnd - overheadStart, ec.getMethodName(),
-                ec.getMethodConfiguration());
+        if (clp != null) {
+            clp.printStatistics(overheadEnd - overheadStart, ec.getMethodName(),
+                    ec.getMethodConfiguration());
+        }
 
         return clp;
     }
