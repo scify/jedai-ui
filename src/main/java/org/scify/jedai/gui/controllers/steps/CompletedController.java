@@ -25,7 +25,6 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.scify.jedai.datamodel.EquivalenceCluster;
 import org.scify.jedai.datawriter.ClustersPerformanceWriter;
@@ -487,12 +486,9 @@ public class CompletedController {
     }
 
     /**
-     * TODO: Integrate real data
+     * Shows a Line chart with the recall and the [Normalized number of emitted records] ?
      *
-     * Shows a Line chart (currently with dummy data)
-     * With the Precision and the Normalized number of emitted records
-     *
-     * @param actionEvent
+     * @param actionEvent Click event of the button
      */
     public void showPlot(ActionEvent actionEvent) {
         Stage stage = new Stage();
@@ -501,20 +497,15 @@ public class CompletedController {
         final NumberAxis xAxis = new NumberAxis();
         final NumberAxis yAxis = new NumberAxis();
 
-        yAxis.setAutoRanging(false);
-        yAxis.setLowerBound(0);
-        yAxis.setUpperBound(100);
-        yAxis.setTickUnit(20);
+        yAxis.setAutoRanging(true);
         yAxis.setLabel("Recall % ");
 
-        xAxis.setAutoRanging(false);
-        xAxis.setLowerBound(0);
-        xAxis.setUpperBound(35);
-        xAxis.setTickUnit(5);
-        xAxis.setLabel("Normalized number of emitted records");
+        xAxis.setAutoRanging(true);
+//        xAxis.setLabel("Normalized number of emitted records");
+        xAxis.setLabel("Iterations");
         //creating the chart
-        final LineChart<Number,Number> lineChart =
-                new LineChart<Number,Number>(xAxis,yAxis);
+        final LineChart<Number, Number> lineChart =
+                new LineChart<Number, Number>(xAxis, yAxis);
 
         lineChart.setTitle("Progressive Workflow ROC Curve");
         //defining a series
@@ -523,40 +514,14 @@ public class CompletedController {
         lineChart.setLegendVisible(false);
 
         //populating the series with data
-        series.getData().add(new XYChart.Data(1, 5));
-        series.getData().add(new XYChart.Data(1.2, 22));
-        series.getData().add(new XYChart.Data(2.5, 37));
-        series.getData().add(new XYChart.Data(3, 42));
-        series.getData().add(new XYChart.Data(4.8, 50));
-        series.getData().add(new XYChart.Data(5.2, 63));
-        series.getData().add(new XYChart.Data(6.8, 75));
-        series.getData().add(new XYChart.Data(7.5, 80));
-        series.getData().add(new XYChart.Data(9.5, 82));
-        series.getData().add(new XYChart.Data(12, 85));
-        series.getData().add(new XYChart.Data(14, 88));
-        series.getData().add(new XYChart.Data(15, 90));
-        series.getData().add(new XYChart.Data(17, 92));
-        series.getData().add(new XYChart.Data(18, 95));
-        series.getData().add(new XYChart.Data(20, 97));
-        series.getData().add(new XYChart.Data(22, 98));
-        series.getData().add(new XYChart.Data(25, 99));
+        List<Double> data = this.workflowMgr.getRecallCurve();
+        for (int i = 0; i < data.size(); i++) {
+            series.getData().add(new XYChart.Data(i + 1, data.get(i)));
+        }
 
         lineChart.getData().add(series);
 
         stage.setScene(new Scene(lineChart, 800, 600));
         stage.show();
-
-        showDummyDataAlert(stage);
-    }
-
-    protected void showDummyDataAlert(Stage stage) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Information Dialog");
-        alert.setHeaderText("Plot information");
-        alert.setContentText("This plot is currently in development and contains dummy data");
-        alert.initStyle(StageStyle.UTILITY);
-        alert.initOwner(stage);
-        alert.getDialogPane().setPrefSize(480, 250);
-        alert.showAndWait();
     }
 }

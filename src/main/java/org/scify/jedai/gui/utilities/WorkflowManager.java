@@ -81,6 +81,10 @@ public class WorkflowManager {
         return duplicatePropagation;
     }
 
+    public List<Double> getRecallCurve() {
+        return recallCurve;
+    }
+
     /**
      * Create instances of the methods that will be used for running the workflow
      *
