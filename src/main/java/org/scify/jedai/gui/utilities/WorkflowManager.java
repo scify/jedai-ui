@@ -467,6 +467,7 @@ public class WorkflowManager {
                 // Save the performance of block building
                 this.addBlocksPerformance(bb.getMethodName(), totalTime, blp);
             }
+            System.out.println("Original blocks\t:\t" + blocks.size());
 
             // Block Cleaning
             Platform.runLater(() -> statusLabel.setText("Running block cleaning..."));
@@ -481,6 +482,8 @@ public class WorkflowManager {
                     }
                 }
             }
+
+            System.out.println("Blocks after Block Cleaning\t:\t" + blocks.size());
         }
 
         // Prioritization
@@ -495,6 +498,7 @@ public class WorkflowManager {
                 totalComparisons += b.getNoOfComparisons();
             }
         }
+        System.out.println("Total comparisons\t:\t" + totalComparisons);
 
         // Calculate the budget/comparisons here
         long budget;
@@ -517,16 +521,18 @@ public class WorkflowManager {
                     model.getPrioritization(),
                     (int) budget
             );
+            System.out.println("Prioritization budget: " + budget);
         } else {
             // Manual configuration selected, create method with the saved parameters
             prioritization = DynamicMethodConfiguration.configurePrioritizationMethod(
                     model.getPrioritization(),
                     model.getPrioritizationParameters()
             );
+            System.out.println("Prioritization parameters: " + model.getPrioritizationParameters());
         }
 
         // Run prioritization
-        if (blocks.isEmpty()) {
+        if (!blocks.isEmpty()) {
             // Block-based schedule (there were block building methods selected)
             prioritization.developBlockBasedSchedule(blocks);
         } else {
@@ -555,7 +561,6 @@ public class WorkflowManager {
                 (int) ((!blocks.isEmpty() && !isDirtyEr) ? totalComparisons : budget)
         );
 
-        assert prioritization != null;
         while (prioritization.hasNext()) {
             Comparison comparison = prioritization.next();
 
