@@ -486,14 +486,16 @@ public class WorkflowManager {
             System.out.println("Blocks after Block Cleaning\t:\t" + blocks.size());
 
             // Comparison Cleaning
-            Platform.runLater(() -> statusLabel.setText("Running comparison cleaning..."));
-            blocks = runBlockProcessing(duplicatePropagation, true, blocks, comparisonCleaningMethod);
+            if (comparisonCleaningMethod != null) {
+                Platform.runLater(() -> statusLabel.setText("Running comparison cleaning..."));
+                blocks = runBlockProcessing(duplicatePropagation, true, blocks, comparisonCleaningMethod);
 
-            if (blocks.isEmpty()) {
-                return null;
+                if (blocks.isEmpty()) {
+                    return null;
+                }
+
+                System.out.println("Blocks after Comparison Cleaning\t:\t" + blocks.size());
             }
-
-            System.out.println("Blocks after Comparison Cleaning\t:\t" + blocks.size());
         }
 
         // Prioritization
