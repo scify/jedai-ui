@@ -221,6 +221,10 @@ public class DynamicMethodConfiguration {
                         (int) params.get(0).getRight(), // Budget
                         (WeightingScheme) params.get(1).getRight() // Weighting Scheme
                 );
+            case JedaiOptions.PROGRESSIVE_GLOBAL_RANDOM_COMPARISONS:
+                return new ProgressiveGlobalRandomComparisons(
+                        (int) params.get(0).getRight() // Budget
+                );
             default:
                 return null;
         }

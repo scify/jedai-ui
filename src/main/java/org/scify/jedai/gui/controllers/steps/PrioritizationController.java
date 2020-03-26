@@ -41,7 +41,8 @@ public class PrioritizationController {
                 JedaiOptions.PROGRESSIVE_BLOCK_SCHEDULING,
                 JedaiOptions.PROGRESSIVE_ENTITY_SCHEDULING,
                 JedaiOptions.PROGRESSIVE_GLOBAL_TOP_COMPARISONS,
-                JedaiOptions.PROGRESSIVE_LOCAL_TOP_COMPARISONS
+                JedaiOptions.PROGRESSIVE_LOCAL_TOP_COMPARISONS,
+                JedaiOptions.PROGRESSIVE_GLOBAL_RANDOM_COMPARISONS
         );
 
         // Create radio buttons using helper method

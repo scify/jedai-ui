@@ -157,6 +157,8 @@ public class MethodMapping {
                 return new ProgressiveGlobalTopComparisons(budget, WeightingScheme.JS);
             case JedaiOptions.PROGRESSIVE_LOCAL_TOP_COMPARISONS:
                 return new ProgressiveLocalTopComparisons(budget, WeightingScheme.ARCS);
+            case JedaiOptions.PROGRESSIVE_GLOBAL_RANDOM_COMPARISONS:
+                return new ProgressiveGlobalRandomComparisons(budget);
             default:
                 return null;
         }

@@ -74,6 +74,7 @@ public class JedaiOptions {
     public static final String PROGRESSIVE_ENTITY_SCHEDULING = "Progressive Entity Scheduling";
     public static final String PROGRESSIVE_GLOBAL_TOP_COMPARISONS = "Progressive Global Top Comparisons";
     public static final String PROGRESSIVE_LOCAL_TOP_COMPARISONS = "Progressive Local Top Comparisons";
+    public static final String PROGRESSIVE_GLOBAL_RANDOM_COMPARISONS = "Progressive Global Random Comparisons";
 
     // todo: These could be used for displaying names better in manual configuration (enum type)?
 //    // Representation Model parameters
