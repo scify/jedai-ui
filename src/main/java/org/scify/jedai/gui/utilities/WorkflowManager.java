@@ -513,12 +513,14 @@ public class WorkflowManager {
             System.out.println("Executed comparisons\t:\t" + originalSims.getNoOfComparisons());
 
             // Entity clustering
+            overheadStart = System.currentTimeMillis();
             EquivalenceCluster[] originalClusters = ec.getDuplicates(originalSims);
+            overheadEnd = System.currentTimeMillis();
 
             // Get original recall
             ClustersPerformance clp = new ClustersPerformance(originalClusters, duplicatePropagation);
             clp.setStatistics();
-            clp.printStatistics(0, "", "");
+            clp.printStatistics(overheadEnd - overheadStart, ec.getMethodName(), ec.getMethodConfiguration());
             originalRecall = clp.getRecall();
         }
 
@@ -621,7 +623,8 @@ public class WorkflowManager {
             // Add current recall to the list
             recallCurve.add(recall);
 
-            // If this recall is less than the original, stop
+            // If we reached the original recall, stop
+            System.out.println("Current recall\t:\t" + recall);
             if (originalRecall <= recall) {
                 break;
             }
