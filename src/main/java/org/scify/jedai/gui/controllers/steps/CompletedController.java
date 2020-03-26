@@ -61,7 +61,7 @@ public class CompletedController {
     public Button exploreBtn;
     public Button showPlotBtn;
     public VBox autoConfigContainer;
-    public ComboBox outputFormatCombobox;
+    public ComboBox<String> outputFormatCombobox;
     public Label statusLabel;
     public TreeTableView<WorkflowResult> resultsTable;  // Tree table with results
 
