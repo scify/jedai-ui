@@ -65,7 +65,6 @@ public class CompletedController {
     public Label statusLabel;
     public TreeTableView<WorkflowResult> resultsTable;  // Tree table with results
 
-    private SingleSelectionModel<Tab> tabSelectionModel;
     private final ObservableList<WorkflowResult> tableData = FXCollections.observableArrayList();
 
     private Gauge f1Gauge;
@@ -112,7 +111,7 @@ public class CompletedController {
         System.setErr(err);
 
         // Save the TabPane's selection model to use it for resetting the selected tab later
-        tabSelectionModel = resultsTabPane.getSelectionModel();
+        SingleSelectionModel<Tab> tabSelectionModel = resultsTabPane.getSelectionModel();
 
         // Add radio buttons for configuring automatic configuration options
         Label l = new Label("Automatic Configuration Type");
