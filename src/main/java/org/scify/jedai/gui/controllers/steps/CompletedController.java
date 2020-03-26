@@ -240,6 +240,9 @@ public class CompletedController {
         detailsBtnCol.setCellFactory(
                 param -> new DetailsTreeCell(root.getChildren(), this.previousRunConfigs, this.injector));
         resultsTable.getColumns().add(detailsBtnCol);
+
+        // Hide recall chart button for all workflows except progressive
+        showPlotBtn.visibleProperty().bind(model.workflowProperty().isEqualTo(JedaiOptions.WORKFLOW_PROGRESSIVE));
     }
 
     /**
