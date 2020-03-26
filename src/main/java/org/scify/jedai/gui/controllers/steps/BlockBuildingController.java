@@ -87,6 +87,9 @@ public class BlockBuildingController {
 
         // Set list cells to have checkboxes which use the map's boolean values
         list.setCellFactory(CheckBoxListCell.forListView(optionsMap::get));
+
+        // Set the number of enabled block building methods in the model
+        model.setEnabledBlockBuildingMethods(countEnabledMethods());
     }
 
     /**

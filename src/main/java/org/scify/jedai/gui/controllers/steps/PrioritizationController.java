@@ -68,6 +68,9 @@ public class PrioritizationController {
         confTypeContainer.getChildren().add(
                 new ConfigurationTypeSelector(model.prioritizationConfigTypeProperty())
         );
+
+        // Enable/disable the appropriate radio buttons initially
+        updateEnabledRadioButtons(model.getEnabledBlockBuildingMethods());
     }
 
     /**
