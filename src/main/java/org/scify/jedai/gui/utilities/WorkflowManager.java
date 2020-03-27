@@ -588,16 +588,9 @@ public class WorkflowManager {
                 prioritization.developEntityBasedSchedule(profilesD1, profilesD2);
             }
         }
-        overheadEnd = System.currentTimeMillis();
-
-        // Add prioritization performance step for workbench
-        performancePerStep.add(
-                new WorkflowResult(prioritization.getMethodName(), -1, -1, -1, (overheadEnd - overheadStart) / 1000.0, -1, -1, -1)
-        );
 
         // Entity Matching
         Platform.runLater(() -> statusLabel.setText("Running entity matching..."));
-        overheadStart = System.currentTimeMillis();
         IEntityMatching entityMatching = getEntityMatchingMethodInstance(profilesD1, profilesD2);
         SimilarityPairs sims = new SimilarityPairs(
                 !isDirtyEr,
@@ -639,6 +632,25 @@ public class WorkflowManager {
         if (clp != null) {
             clp.printStatistics(overheadEnd - overheadStart, ec.getMethodName(),
                     ec.getMethodConfiguration());
+
+            // Add prioritization performance step for workbench
+            performancePerStep.add(
+                    new WorkflowResult(
+                            prioritization.getMethodName(),
+                            clp.getRecall(),
+                            clp.getPrecision(),
+                            clp.getFMeasure(),
+                            (overheadEnd - overheadStart) / 1000.0,
+                            -1,
+                            clp.getEntityClusters(),
+                            -1
+                    )
+            );
+        } else {
+            // Add prioritization performance step for workbench without clustering values
+            performancePerStep.add(
+                    new WorkflowResult(prioritization.getMethodName(), -1, -1, -1, (overheadEnd - overheadStart) / 1000.0, -1, -1, -1)
+            );
         }
 
         // Create recallIterations
@@ -663,6 +675,7 @@ public class WorkflowManager {
                 recallIterations.add(i);
             }
         }
+
 
         return clp;
     }
