@@ -517,9 +517,10 @@ public class CompletedController {
         lineChart.setLegendVisible(false);
 
         // Get the data from the workflow manager and add it to the series
-        List<Double> data = this.workflowMgr.getRecallCurve();
-        for (int i = 0; i < data.size(); i++) {
-            series.getData().add(new XYChart.Data<>(i + 1, data.get(i)));
+        List<Double> yData = this.workflowMgr.getRecallCurve();
+        List<Integer> xData = this.workflowMgr.getRecallIterations();
+        for (int i = 0; i < yData.size(); i++) {
+            series.getData().add(new XYChart.Data<>(xData.get(i), yData.get(i)));
         }
 
         // Add the series to the chart

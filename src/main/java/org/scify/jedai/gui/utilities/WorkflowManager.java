@@ -45,6 +45,7 @@ public class WorkflowManager {
     private IBlockProcessing comparisonCleaningMethod;
     private IEntityClustering ec;
 
+    private List<Integer> recallIterations;
     private List<Double> recallCurve;
 
     public WorkflowManager(WizardData model) {
@@ -83,6 +84,10 @@ public class WorkflowManager {
 
     public List<Double> getRecallCurve() {
         return recallCurve;
+    }
+
+    public List<Integer> getRecallIterations() {
+        return recallIterations;
     }
 
     /**
@@ -635,6 +640,29 @@ public class WorkflowManager {
         if (clp != null) {
             clp.printStatistics(overheadEnd - overheadStart, ec.getMethodName(),
                     ec.getMethodConfiguration());
+        }
+
+        // Create recallIterations
+        int maxPoints = 500;
+        if (recallCurve.size() > maxPoints) {
+            // Needs undersampling
+            List<Double> newPoints = new ArrayList<>(maxPoints);
+            recallIterations = new ArrayList<>(maxPoints);
+
+            int step = recallCurve.size() / maxPoints;
+            for (int i = 0; i < maxPoints; i++) {
+                newPoints.add(recallCurve.get(i * step));
+                recallIterations.add(i * step);
+            }
+
+            recallCurve = newPoints;
+        } else {
+            // Add iterations from 1 to recallCurve.size()
+            recallIterations = new ArrayList<>(recallCurve.size());
+
+            for (int i = 1; i <= recallCurve.size(); i++) {
+                recallIterations.add(i);
+            }
         }
 
         return clp;
