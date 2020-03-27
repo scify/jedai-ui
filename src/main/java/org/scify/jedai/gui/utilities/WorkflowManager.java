@@ -629,7 +629,6 @@ public class WorkflowManager {
             recallCurve.add(recall);
 
             // If we reached the original recall, stop
-            System.out.println("Current recall\t:\t" + recall);
             if (originalRecall <= recall) {
                 break;
             }
