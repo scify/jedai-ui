@@ -52,14 +52,14 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-graphics</artifactId>
-            <version>11</version>
+            <version>14</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-fxml -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>11</version>
+            <version>14</version>
         </dependency>
     </dependencies>
 
@@ -109,6 +109,14 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.4</version>
+                <configuration>
+                    <mainClass>org.scify.jedai.gui.wizard.WizardMain</mainClass>
+                </configuration>
             </plugin>
         </plugins>
     </build>
