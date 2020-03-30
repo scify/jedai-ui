@@ -13,10 +13,8 @@ From the CLI navigate into project's directory, then build it with:
 $ mvn clean package
 ```
 
-You'll find the executable in `{this_project_dir}/target/jedai-ui-{version}-SNAPSHOT.jar`. Then run it with:
+You'll find the executable in `{this_project_dir}/target/jedai-ui-{version}-jar-with-dependencies.jar`. Then run it with:
 ```
-$ java -jar target/jedai-ui-{version}-SNAPSHOT.jar
+$ java -jar target/jedai-ui-{version}-jar-with-dependencies.jar
 ```
-If on Linux, make sure the .jar file has permissions to be executed (e.g. with `chmod +x jedai-ui.jar`) and that you are running Java 8 by Oracle, *not* OpenJDK which comes pre-installed in many distributions. 
-
-
+If on Linux, make sure the .jar file has permissions to be executed (e.g. with `chmod +x jedai-ui.jar`) and that you are running Java 8 and above.
