@@ -40,7 +40,7 @@ public class DataReader {
                 // Get parameters
                 String csvPath = parameters.get(0).getRight().toString();
                 boolean attributeNamesInFirstRow = (boolean) parameters.get(1).getRight();
-                String separator = (String) parameters.get(2).getRight();
+                String separator = parameters.get(2).getRight().toString();
                 int idIndex = (int) parameters.get(3).getRight();
                 Set<Integer> indicesToExcludeSet = (Set<Integer>) parameters.get(4).getRight();
 
@@ -97,7 +97,7 @@ public class DataReader {
                 // Initialize the Entity reader
                 EntityXMLreader xmlReader = new EntityXMLreader(xmlPath);
                 xmlReader.setAttributesToExclude(
-                        excludedAttributes.toArray(new String[excludedAttributes.size()]));
+                        excludedAttributes.toArray(new String[0]));
                 eReader = xmlReader;
                 break;
         }

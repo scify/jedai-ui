@@ -389,7 +389,7 @@ public class CompletedController {
         FileChooser fileChooser = new FileChooser();
 
         // Get selected output format
-        String outputFormat = outputFormatCombobox.getValue().toString();
+        String outputFormat = outputFormatCombobox.getValue();
 
         // Set extension
         String extension = null;

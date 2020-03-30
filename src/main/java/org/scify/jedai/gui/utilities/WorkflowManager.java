@@ -979,7 +979,7 @@ public class WorkflowManager {
         double originalComparisons = 0;
         originalComparisons = blocks.stream()
                 .map(AbstractBlock::getNoOfComparisons)
-                .reduce(originalComparisons, (accumulator, _item) -> accumulator + _item);
+                .reduce(originalComparisons, Double::sum);
         System.out.println("Original comparisons\t:\t" + originalComparisons);
         return originalComparisons;
     }

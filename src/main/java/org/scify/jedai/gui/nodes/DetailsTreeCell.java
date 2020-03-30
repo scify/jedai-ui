@@ -40,7 +40,7 @@ public class DetailsTreeCell extends TreeTableCell<WorkflowResult, Object> {
 
         link.setOnAction(evt -> {
             // Get the TreeItem for this item
-            TreeItem treeItem = this.getTreeTableRow().getTreeItem();
+            TreeItem<WorkflowResult> treeItem = this.getTreeTableRow().getTreeItem();
 
             // Check if we should use the parent TreeItem
             if (!workflowResultRows.contains(treeItem)) {
@@ -83,8 +83,7 @@ public class DetailsTreeCell extends TreeTableCell<WorkflowResult, Object> {
                 openedPopups.add(index);
 
                 // When the popup closes, remove its index from the opened list so it can be opened again
-                int indexToRemove = index;
-                dialog.setOnCloseRequest(event -> openedPopups.remove(Integer.valueOf(indexToRemove)));
+                dialog.setOnCloseRequest(event -> openedPopups.remove(Integer.valueOf(index)));
             }
         });
 

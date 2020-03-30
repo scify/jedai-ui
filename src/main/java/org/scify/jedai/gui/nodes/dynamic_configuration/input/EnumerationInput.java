@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Enumeration input.
  */
-public class EnumerationInput extends ComboBox {
+public class EnumerationInput extends ComboBox<Object> {
     /**
      * Enumeration input constructor
      *

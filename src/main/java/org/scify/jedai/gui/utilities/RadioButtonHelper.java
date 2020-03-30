@@ -17,9 +17,9 @@ public class RadioButtonHelper {
      * @param radioBtns     List of Strings, one for each radio button
      * @param modelProperty Property to bind selected radio button's value to
      */
-    public static ToggleGroupValue createButtonGroup(Pane container, List<String> radioBtns, StringProperty modelProperty) {
+    public static ToggleGroupValue<String> createButtonGroup(Pane container, List<String> radioBtns, StringProperty modelProperty) {
         // Create new ToggleGroup and ToggleGroupValue for the radio buttons
-        ToggleGroupValue groupValue = new ToggleGroupValue();
+        ToggleGroupValue<String> groupValue = new ToggleGroupValue<>();
         ToggleGroup btnsGroup = new ToggleGroup();
 
         // Create a radio button for each option
@@ -31,7 +31,7 @@ public class RadioButtonHelper {
 
             // Add to RadioButton to the container pane and the ToggleGroupValue
             container.getChildren().add(radioBtn);
-            groupValue.add(radioBtn, radioBtn.getUserData());
+            groupValue.add(radioBtn, radioBtn.getUserData().toString());
         }
 
         // Bind toggle group value to model

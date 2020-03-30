@@ -18,8 +18,8 @@ public class PrioritizationController {
     public VBox noBlBuMethodsContainer;
     public VBox blBuMethodsContainer;
 
-    private ToggleGroupValue noBlBuValue;
-    private ToggleGroupValue blBuValue;
+    private ToggleGroupValue<String> noBlBuValue;
+    private ToggleGroupValue<String> blBuValue;
 
     private List<String> noBlBuOptions;
     private List<String> blBuOptions;

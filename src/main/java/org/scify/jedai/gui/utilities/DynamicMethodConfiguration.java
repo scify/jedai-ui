@@ -44,7 +44,7 @@ public class DynamicMethodConfiguration {
      * @param injector    Injector to use when loading FXML, so that the model etc. are injected automatically.
      * @param method      Method that the window should display configuration options for.
      */
-    public static void displayModal(Class callerClass, Injector injector, IDocumentation method,
+    public static void displayModal(Class<?> callerClass, Injector injector, IDocumentation method,
                                     ListProperty<MutablePair<String, Object>> paramsProperty) {
         // Load FXML and get controller
         Parent root = DialogHelper.loadFxml(callerClass, injector, "wizard-fxml/DynamicConfiguration.fxml");

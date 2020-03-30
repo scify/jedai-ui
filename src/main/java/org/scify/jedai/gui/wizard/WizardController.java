@@ -616,7 +616,7 @@ public class WizardController {
         }
 
         Method[] methods = obj.getClass().getMethods();
-        if (methods != null && methods.length > 0) {
+        if (methods.length > 0) {
             for (Method m : methods) {
                 if (m.isAnnotationPresent(an)) {
                     return m;
