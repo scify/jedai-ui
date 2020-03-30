@@ -1,7 +1,7 @@
 package org.scify.jedai.gui.nodes.dynamic_configuration.input;
 
 import javafx.scene.control.CheckBox;
-import org.scify.jedai.gui.utilities.JPair;
+import org.apache.commons.lang3.tuple.MutablePair;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ public class BooleanInput extends CheckBox {
      * @param index           Index of the parameter that the input should use.
      * @param defaultValue    Default value
      */
-    public BooleanInput(List<JPair<String, Object>> parameterValues, int index, String defaultValue) {
+    public BooleanInput(List<MutablePair<String, Object>> parameterValues, int index, String defaultValue) {
         // Use the default value
         boolean defaultBool;
         try {

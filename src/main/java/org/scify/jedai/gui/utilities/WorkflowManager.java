@@ -3,6 +3,7 @@ package org.scify.jedai.gui.utilities;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.scify.jedai.blockbuilding.IBlockBuilding;
 import org.scify.jedai.blockprocessing.IBlockProcessing;
 import org.scify.jedai.datamodel.*;
@@ -127,7 +128,7 @@ public class WorkflowManager {
                     blockBuildingMethod = BlockBuildingMethod.getDefaultConfiguration(blockingWorkflow);
                 } else {
                     // Manual configuration selected, create method with the saved parameters
-                    ObservableList<JPair<String, Object>> blBuParams = methodConfig.getManualParameters();
+                    ObservableList<MutablePair<String, Object>> blBuParams = methodConfig.getManualParameters();
                     blockBuildingMethod = DynamicMethodConfiguration.configureBlockBuildingMethod(blockingWorkflow, blBuParams);
                 }
 
@@ -167,7 +168,7 @@ public class WorkflowManager {
                     comparisonCleaningMethod = MethodMapping.getMethodByName(coClMethod, isCleanCleanEr);
                 } else {
                     // Manual configuration selected, create method with the saved parameters
-                    ObservableList<JPair<String, Object>> coClParams = model.getComparisonCleaningParameters();
+                    ObservableList<MutablePair<String, Object>> coClParams = model.getComparisonCleaningParameters();
                     comparisonCleaningMethod = DynamicMethodConfiguration.configureComparisonCleaningMethod(coClMethod, coClParams);
                 }
             }
@@ -181,7 +182,7 @@ public class WorkflowManager {
             ec = MethodMapping.getEntityClusteringMethod(entityClusteringMethod);
         } else {
             // Manual configuration selected, create method with the saved parameters
-            ObservableList<JPair<String, Object>> ecParams = model.getEntityClusteringParameters();
+            ObservableList<MutablePair<String, Object>> ecParams = model.getEntityClusteringParameters();
             ec = DynamicMethodConfiguration.configureEntityClusteringMethod(entityClusteringMethod, ecParams);
         }
 
@@ -214,7 +215,7 @@ public class WorkflowManager {
                     .configureEntityMatchingMethod(entityMatchingMethodStr, profilesD1, profilesD2, null);
         } else {
             // Manual configuration, use given parameters
-            ObservableList<JPair<String, Object>> emParams = model.getEntityMatchingParameters();
+            ObservableList<MutablePair<String, Object>> emParams = model.getEntityMatchingParameters();
 
             return DynamicMethodConfiguration
                     .configureEntityMatchingMethod(entityMatchingMethodStr, profilesD1, profilesD2, emParams);

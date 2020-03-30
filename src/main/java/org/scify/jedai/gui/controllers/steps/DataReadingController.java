@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.jena.riot.RiotException;
 import org.scify.jedai.datamodel.EntityProfile;
 import org.scify.jedai.datamodel.EquivalenceCluster;
@@ -132,7 +133,7 @@ public class DataReadingController {
     @Validate
     public boolean validate() {
         // Create HashMap with values to check (ordered)
-        Map<String, List<JPair<String, Object>>> readerParams = new LinkedHashMap<>();
+        Map<String, List<MutablePair<String, Object>>> readerParams = new LinkedHashMap<>();
         readerParams.put("entities1", model.getEntityProfilesD1Parameters());
         if (model.getErType().equals(JedaiOptions.CLEAN_CLEAN_ER))
             // For Clean-Clean ER, will also check that the 2nd path has been filled
@@ -227,7 +228,7 @@ public class DataReadingController {
             String id = ((Button) actionEvent.getSource()).getId();
 
             // Get the required parameters to give to configuration modal
-            ListProperty<JPair<String, Object>> modelProperty = null;
+            ListProperty<MutablePair<String, Object>> modelProperty = null;
             String readerType = null;
             boolean groundTruth = false;
             IDocumentation reader;
@@ -266,7 +267,7 @@ public class DataReadingController {
     public void exploreGroundTruth(ActionEvent actionEvent) {
         // Get ground truth reader type and parameters
         String gtType = model.getGroundTruthType();
-        List<JPair<String, Object>> gtParams = model.getGroundTruthParameters();
+        List<MutablePair<String, Object>> gtParams = model.getGroundTruthParameters();
 
         // Get ER type (to know if we need to read 2nd dataset or not)
         String erType = model.getErType();
@@ -346,7 +347,7 @@ public class DataReadingController {
 
         int datasetNum = -1;
         String datasetType = null;
-        List<JPair<String, Object>> datasetParams = null;
+        List<MutablePair<String, Object>> datasetParams = null;
 
         if (src instanceof Button) {
             // Get the button ID

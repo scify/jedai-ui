@@ -10,12 +10,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.atlas.json.JsonValue;
 import org.scify.jedai.gui.nodes.dynamic_configuration.HelpTooltip;
 import org.scify.jedai.gui.nodes.dynamic_configuration.input.*;
-import org.scify.jedai.gui.utilities.JPair;
 import org.scify.jedai.utilities.enumerations.RepresentationModel;
 import org.scify.jedai.utilities.enumerations.SimilarityMetric;
 
@@ -28,8 +28,8 @@ public class DynamicConfigurationController {
     public Button saveBtn;
     public Label methodNameLabel;
 
-    private ListProperty<JPair<String, Object>> parametersProperty;
-    private List<JPair<String, Object>> parameterValues;
+    private ListProperty<MutablePair<String, Object>> parametersProperty;
+    private List<MutablePair<String, Object>> parameterValues;
 
     @FXML
     public void initialize() {
@@ -104,11 +104,11 @@ public class DynamicConfigurationController {
      * @param jsonParamDescriptions Parameters as specified by the JedAI library
      * @param parametersProperty    Property to save the selected values to
      */
-    public void setParameters(JsonArray jsonParamDescriptions, ListProperty<JPair<String, Object>> parametersProperty) {
+    public void setParameters(JsonArray jsonParamDescriptions, ListProperty<MutablePair<String, Object>> parametersProperty) {
         this.parametersProperty = parametersProperty;
 
         // Determine if there are, and we should use previously set values for the parameters
-        ObservableList<JPair<String, Object>> prevParams = parametersProperty.get();
+        ObservableList<MutablePair<String, Object>> prevParams = parametersProperty.get();
 
         boolean usePrevParams = false;
         if (prevParams != null && !prevParams.isEmpty() && prevParams.size() == jsonParamDescriptions.size()) {
@@ -272,47 +272,47 @@ public class DynamicConfigurationController {
 
         switch (paramType) {
             case "JEDAI_FILEPATH":
-                parameterValues.add(new JPair<>(name, ""));
+                parameterValues.add(MutablePair.of(name, ""));
 
                 control = new FileSelectorInput(parameterValues, index, configGrid, defaultValue);
                 break;
             case "java.lang.Integer":
-                parameterValues.add(new JPair<>(name, -1));
+                parameterValues.add(MutablePair.of(name, -1));
 
                 control = new IntegerInput(parameterValues, index, defaultValue, minValue, maxValue);
                 break;
             case "java.lang.Double":
-                parameterValues.add(new JPair<>(name, -1.0));
+                parameterValues.add(MutablePair.of(name, -1.0));
 
                 control = new DoubleInput(parameterValues, index, defaultValue, minValue, maxValue);
                 break;
             case "java.lang.String":
-                parameterValues.add(new JPair<>(name, ""));
+                parameterValues.add(MutablePair.of(name, ""));
 
                 control = new StringInput(parameterValues, index, defaultValue);
                 break;
             case "java.lang.Boolean":
-                parameterValues.add(new JPair<>(name, false));
+                parameterValues.add(MutablePair.of(name, false));
 
                 control = new BooleanInput(parameterValues, index, defaultValue);
                 break;
             case "java.lang.Character":
-                parameterValues.add(new JPair<>(name, ','));
+                parameterValues.add(MutablePair.of(name, ','));
 
                 control = new CharacterInput(parameterValues, index, defaultValue);
                 break;
             case "java.util.Set<Integer>":
-                parameterValues.add(new JPair<>(name, null));
+                parameterValues.add(MutablePair.of(name, null));
 
                 control = new IntegerListInput(parameterValues, index, defaultValue);
                 break;
             case "java.util.Set<String>":
-                parameterValues.add(new JPair<>(name, null));
+                parameterValues.add(MutablePair.of(name, null));
 
                 control = new StringListInput(parameterValues, index, defaultValue);
                 break;
             default:
-                parameterValues.add(new JPair<>(name, null));
+                parameterValues.add(MutablePair.of(name, null));
 
                 control = new EnumerationInput(parameterValues, index, paramType, defaultValue);
                 break;

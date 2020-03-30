@@ -16,10 +16,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.scify.jedai.entitymatching.GroupLinkage;
 import org.scify.jedai.entitymatching.ProfileMatcher;
 import org.scify.jedai.gui.model.JedaiMethodConfiguration;
-import org.scify.jedai.gui.utilities.*;
+import org.scify.jedai.gui.utilities.DialogHelper;
+import org.scify.jedai.gui.utilities.DynamicMethodConfiguration;
+import org.scify.jedai.gui.utilities.JedaiOptions;
+import org.scify.jedai.gui.utilities.WorkflowStep;
 import org.scify.jedai.utilities.IDocumentation;
 import org.scify.jedai.utilities.enumerations.BlockBuildingMethod;
 import org.scify.jedai.utilities.enumerations.RepresentationModel;
@@ -462,7 +466,7 @@ public class WizardController {
             // Get method instance & model parameter property in order to show the configuration modal
             IDocumentation method = null;
             String methodName;
-            ListProperty<JPair<String, Object>> parametersProperty = null;
+            ListProperty<MutablePair<String, Object>> parametersProperty = null;
 
             switch (step.getLabel()) {
                 case JedaiOptions.STEP_LABEL_SCHEMA_CLUSTERING:

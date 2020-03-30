@@ -4,10 +4,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
 import javafx.scene.layout.VBox;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.scify.jedai.datamodel.EntityProfile;
 import org.scify.jedai.gui.nodes.EntityProfileNode;
 import org.scify.jedai.gui.utilities.DataReader;
-import org.scify.jedai.gui.utilities.JPair;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public class DatasetExplorationController {
     public VBox containerVBox;
     public Pagination entityPagination;
     private String datasetType = null;
-    private List<JPair<String, Object>> datasetParams = null;
+    private List<MutablePair<String, Object>> datasetParams = null;
 
     @FXML
     public void initialize() {
@@ -82,7 +82,7 @@ public class DatasetExplorationController {
         }
     }
 
-    public void setDatasetParams(List<JPair<String, Object>> datasetParams) {
+    public void setDatasetParams(List<MutablePair<String, Object>> datasetParams) {
         this.datasetParams = datasetParams;
 
         // Check if we can show the entities
