@@ -38,7 +38,7 @@ public class DialogHelper {
      * @param fxmlPath Path to the FXML file to load
      * @return Parent with loaded FXML
      */
-    public static Parent loadFxml(Class clClass, Injector injector, String fxmlPath) {
+    public static Parent loadFxml(Class<?> clClass, Injector injector, String fxmlPath) {
         Parent root;
         FXMLLoader loader = new FXMLLoader(
                 clClass.getClassLoader().getResource(fxmlPath),

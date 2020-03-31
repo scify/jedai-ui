@@ -1,7 +1,7 @@
 package org.scify.jedai.gui.nodes.dynamic_configuration.input;
 
 import javafx.scene.control.TextField;
-import org.scify.jedai.gui.utilities.JPair;
+import org.apache.commons.lang3.tuple.MutablePair;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public class StringInput extends TextField {
      * @param index           Index of the parameter that the input should use.
      * @param defaultValue    Default value to use.
      */
-    public StringInput(List<JPair<String, Object>> parameterValues, int index, String defaultValue) {
+    public StringInput(List<MutablePair<String, Object>> parameterValues, int index, String defaultValue) {
         // Set default value
         if (!defaultValue.equals("-")) {
             this.setText(defaultValue);

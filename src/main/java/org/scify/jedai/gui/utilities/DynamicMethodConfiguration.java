@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ListView;
 import javafx.stage.Modality;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
 import org.scify.jedai.blockbuilding.*;
@@ -43,8 +44,8 @@ public class DynamicMethodConfiguration {
      * @param injector    Injector to use when loading FXML, so that the model etc. are injected automatically.
      * @param method      Method that the window should display configuration options for.
      */
-    public static void displayModal(Class callerClass, Injector injector, IDocumentation method,
-                                    ListProperty<JPair<String, Object>> paramsProperty) {
+    public static void displayModal(Class<?> callerClass, Injector injector, IDocumentation method,
+                                    ListProperty<MutablePair<String, Object>> paramsProperty) {
         // Load FXML and get controller
         Parent root = DialogHelper.loadFxml(callerClass, injector, "wizard-fxml/DynamicConfiguration.fxml");
         Object controller = null;
@@ -78,9 +79,9 @@ public class DynamicMethodConfiguration {
      * @param parametersProperty Parameters of method
      * @return Node with list of parameters
      */
-    public static Node newParamsNode(ListProperty<JPair<String, Object>> parametersProperty) {
+    public static Node newParamsNode(ListProperty<MutablePair<String, Object>> parametersProperty) {
         // Create the node to show the parameters
-        ListView<JPair<String, Object>> paramsList = new ListView<>();
+        ListView<MutablePair<String, Object>> paramsList = new ListView<>();
         paramsList.setMaxHeight(60);
 
         // Bind the ListView's items to the given parameters property
@@ -96,7 +97,7 @@ public class DynamicMethodConfiguration {
      * @param params Parameters for method
      * @return True if configuration seems correct, false otherwise
      */
-    public static boolean configurationOk(IDocumentation method, List<JPair<String, Object>> params) {
+    public static boolean configurationOk(IDocumentation method, List<MutablePair<String, Object>> params) {
         // Get the expected parameter configuration
         JsonArray paramDetails = method.getParameterConfiguration();
 
@@ -108,7 +109,7 @@ public class DynamicMethodConfiguration {
         // Check if each parameter has a valid value
         for (int i = 0; i < paramDetails.size(); i++) {
             JsonObject paramDescription = paramDetails.get(i).getAsObject();
-            JPair<String, Object> paramConfig = params.get(i);
+            MutablePair<String, Object> paramConfig = params.get(i);
 //            System.out.println(paramDescription);
 //            System.out.println(paramConfig + "\n");
 
@@ -133,7 +134,7 @@ public class DynamicMethodConfiguration {
      * @return Block Building method configured with the given parameters
      */
     public static IBlockBuilding configureBlockBuildingMethod(BlockBuildingMethod method,
-                                                              List<JPair<String, Object>> parameters) {
+                                                              List<MutablePair<String, Object>> parameters) {
         switch (method) {
             case STANDARD_BLOCKING:
                 return new StandardBlocking();
@@ -189,7 +190,7 @@ public class DynamicMethodConfiguration {
      * @param params     Parameters list for method.
      * @return Prioritization method instance
      */
-    public static IPrioritization configurePrioritizationMethod(String methodName, List<JPair<String, Object>> params) {
+    public static IPrioritization configurePrioritizationMethod(String methodName, List<MutablePair<String, Object>> params) {
         switch (methodName) {
             case JedaiOptions.GLOBAL_PROGRESSIVE_SORTED_NEIGHBORHOOR:
                 return new GlobalProgressiveSortedNeighborhood(
@@ -239,7 +240,7 @@ public class DynamicMethodConfiguration {
      * @return Similarity join method instance
      */
     public static ISimilarityJoin configureSimilarityJoinMethod(String methodName,
-                                                                List<JPair<String, Object>> parameters) {
+                                                                List<MutablePair<String, Object>> parameters) {
         switch (methodName) {
             case JedaiOptions.ALL_PAIRS_CHAR_BASED:
                 return new AllPairs(
@@ -275,7 +276,7 @@ public class DynamicMethodConfiguration {
      * @return Configured comparison cleaning method
      */
     public static IBlockProcessing configureComparisonCleaningMethod(String methodName,
-                                                                     List<JPair<String, Object>> parameters) {
+                                                                     List<MutablePair<String, Object>> parameters) {
         IBlockProcessing processingMethod = null;
 
         // Get appropriate processing method
@@ -339,7 +340,7 @@ public class DynamicMethodConfiguration {
      * @return Configured block cleaning method
      */
     public static IBlockProcessing configureBlockCleaningMethod(String methodName,
-                                                                List<JPair<String, Object>> parameters) {
+                                                                List<MutablePair<String, Object>> parameters) {
         IBlockProcessing processingMethod = null;
 
         // Get appropriate processing method
@@ -373,7 +374,7 @@ public class DynamicMethodConfiguration {
      * @return Configured schema clustering method
      */
     public static ISchemaClustering configureSchemaClusteringMethod(String methodName,
-                                                                    List<JPair<String, Object>> parameters) {
+                                                                    List<MutablePair<String, Object>> parameters) {
         ISchemaClustering processingMethod = null;
 
         // Get appropriate processing method
@@ -410,7 +411,7 @@ public class DynamicMethodConfiguration {
      * @return Configured entity clustering method
      */
     public static IEntityClustering configureEntityClusteringMethod(String methodName,
-                                                                    List<JPair<String, Object>> parameters) {
+                                                                    List<MutablePair<String, Object>> parameters) {
         IEntityClustering ecMethod = null;
 
         // Get appropriate processing method
@@ -468,7 +469,7 @@ public class DynamicMethodConfiguration {
      */
     public static IEntityMatching configureEntityMatchingMethod(String emMethodName, List<EntityProfile> profilesD1,
                                                                 List<EntityProfile> profilesD2,
-                                                                List<JPair<String, Object>> parameters) {
+                                                                List<MutablePair<String, Object>> parameters) {
         RepresentationModel rep;
         SimilarityMetric simMetric;
 

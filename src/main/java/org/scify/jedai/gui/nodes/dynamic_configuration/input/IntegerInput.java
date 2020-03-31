@@ -1,7 +1,7 @@
 package org.scify.jedai.gui.nodes.dynamic_configuration.input;
 
 import javafx.scene.control.TextField;
-import org.scify.jedai.gui.utilities.JPair;
+import org.apache.commons.lang3.tuple.MutablePair;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public class IntegerInput extends TextField {
      * @param minValue        Minimum allowed value. Expected to be properly formatted integer.
      * @param maxValue        Maximum allowed value. Expected to be properly formatted integer.
      */
-    public IntegerInput(List<JPair<String, Object>> parameterValues, int index, String defaultValue, String minValue, String maxValue) {
+    public IntegerInput(List<MutablePair<String, Object>> parameterValues, int index, String defaultValue, String minValue, String maxValue) {
         // Get minimum and maximum Integer values
         int min;
         if (!minValue.equals("-")) {

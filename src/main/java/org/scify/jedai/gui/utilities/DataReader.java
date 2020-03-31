@@ -1,6 +1,7 @@
 package org.scify.jedai.gui.utilities;
 
 import com.google.common.primitives.Ints;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.scify.jedai.datamodel.EntityProfile;
 import org.scify.jedai.datareader.entityreader.*;
 import org.scify.jedai.datareader.groundtruthreader.GtCSVReader;
@@ -26,7 +27,7 @@ public class DataReader {
      * @param parameters Parameters for Entity Reader
      * @return List of read entities
      */
-    public static List<EntityProfile> getEntities(String type, List<JPair<String, Object>> parameters) {
+    public static List<EntityProfile> getEntities(String type, List<MutablePair<String, Object>> parameters) {
         List<EntityProfile> profiles = null;
         IEntityReader eReader = null;
 
@@ -39,7 +40,7 @@ public class DataReader {
                 // Get parameters
                 String csvPath = parameters.get(0).getRight().toString();
                 boolean attributeNamesInFirstRow = (boolean) parameters.get(1).getRight();
-                String separator = (String) parameters.get(2).getRight();
+                String separator = parameters.get(2).getRight().toString();
                 int idIndex = (int) parameters.get(3).getRight();
                 Set<Integer> indicesToExcludeSet = (Set<Integer>) parameters.get(4).getRight();
 
@@ -96,7 +97,7 @@ public class DataReader {
                 // Initialize the Entity reader
                 EntityXMLreader xmlReader = new EntityXMLreader(xmlPath);
                 xmlReader.setAttributesToExclude(
-                        excludedAttributes.toArray(new String[excludedAttributes.size()]));
+                        excludedAttributes.toArray(new String[0]));
                 eReader = xmlReader;
                 break;
         }
@@ -126,7 +127,7 @@ public class DataReader {
      * @param profilesD2 Entity Profiles for Dataset 2
      * @return Ground truth (duplicate propagation)
      */
-    public static AbstractDuplicatePropagation getGroundTruth(String type, List<JPair<String, Object>> parameters,
+    public static AbstractDuplicatePropagation getGroundTruth(String type, List<MutablePair<String, Object>> parameters,
                                                               String erType, List<EntityProfile> profilesD1,
                                                               List<EntityProfile> profilesD2) {
         AbstractDuplicatePropagation dp = null;

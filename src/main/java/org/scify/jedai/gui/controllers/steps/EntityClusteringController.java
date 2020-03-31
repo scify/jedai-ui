@@ -23,8 +23,8 @@ public class EntityClusteringController {
     public VBox cleanCleanErContainer;
     public VBox confTypeContainer;
 
-    private ToggleGroupValue dirtyValue;
-    private ToggleGroupValue cleanCleanValue;
+    private ToggleGroupValue<String> dirtyValue;
+    private ToggleGroupValue<String> cleanCleanValue;
     private Logger log = LoggerFactory.getLogger(EntityClusteringController.class);
 
     @Inject

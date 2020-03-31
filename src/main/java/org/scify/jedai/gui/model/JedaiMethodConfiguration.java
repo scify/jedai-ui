@@ -2,7 +2,7 @@ package org.scify.jedai.gui.model;
 
 import javafx.beans.property.*;
 import javafx.collections.ObservableList;
-import org.scify.jedai.gui.utilities.JPair;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.scify.jedai.gui.utilities.JedaiOptions;
 
 /**
@@ -17,7 +17,7 @@ public class JedaiMethodConfiguration {
     private SimpleBooleanProperty enabled;
     private String name;
     private StringProperty configurationType;
-    private ListProperty<JPair<String, Object>> manualParameters;
+    private ListProperty<MutablePair<String, Object>> manualParameters;
 
     public JedaiMethodConfiguration(String methodName) {
         this.name = methodName;
@@ -87,15 +87,15 @@ public class JedaiMethodConfiguration {
         this.configurationType.set(configurationType);
     }
 
-    public ObservableList<JPair<String, Object>> getManualParameters() {
+    public ObservableList<MutablePair<String, Object>> getManualParameters() {
         return manualParameters.get();
     }
 
-    public ListProperty<JPair<String, Object>> manualParametersProperty() {
+    public ListProperty<MutablePair<String, Object>> manualParametersProperty() {
         return manualParameters;
     }
 
-    public void setManualParameters(ObservableList<JPair<String, Object>> manualParameters) {
+    public void setManualParameters(ObservableList<MutablePair<String, Object>> manualParameters) {
         this.manualParameters.set(manualParameters);
     }
 }

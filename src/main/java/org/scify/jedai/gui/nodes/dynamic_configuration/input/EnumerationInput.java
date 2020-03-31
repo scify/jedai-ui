@@ -1,14 +1,14 @@
 package org.scify.jedai.gui.nodes.dynamic_configuration.input;
 
 import javafx.scene.control.ComboBox;
-import org.scify.jedai.gui.utilities.JPair;
+import org.apache.commons.lang3.tuple.MutablePair;
 
 import java.util.List;
 
 /**
  * Enumeration input.
  */
-public class EnumerationInput extends ComboBox {
+public class EnumerationInput extends ComboBox<Object> {
     /**
      * Enumeration input constructor
      *
@@ -17,7 +17,7 @@ public class EnumerationInput extends ComboBox {
      * @param enumName        Full name of the enumeration to show options for.
      * @param defaultValue    Default value.
      */
-    public EnumerationInput(List<JPair<String, Object>> parameterValues, int index, String enumName, String defaultValue) {
+    public EnumerationInput(List<MutablePair<String, Object>> parameterValues, int index, String enumName, String defaultValue) {
         try {
             // Create an instance of the given class
             Class<?> cls = Class.forName(enumName);
