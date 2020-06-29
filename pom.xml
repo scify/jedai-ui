@@ -24,7 +24,7 @@
         <dependency>
             <groupId>org.scify</groupId>
             <artifactId>jedai-core</artifactId>
-            <version>3.0-SNAPSHOT</version>
+            <version>3.01-SNAPSHOT</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.google.inject/guice -->
