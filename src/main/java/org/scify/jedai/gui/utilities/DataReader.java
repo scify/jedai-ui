@@ -40,7 +40,7 @@ public class DataReader {
                 // Get parameters
                 String csvPath = parameters.get(0).getRight().toString();
                 boolean attributeNamesInFirstRow = (boolean) parameters.get(1).getRight();
-                String separator = parameters.get(2).getRight().toString();
+                char separator = (char) parameters.get(2).getRight();
                 int idIndex = (int) parameters.get(3).getRight();
                 Set<Integer> indicesToExcludeSet = (Set<Integer>) parameters.get(4).getRight();
 
