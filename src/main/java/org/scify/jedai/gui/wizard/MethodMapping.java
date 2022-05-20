@@ -124,13 +124,13 @@ public class MethodMapping {
             case JedaiOptions.ALL_PAIRS_CHAR_BASED:
                 return new AllPairs(1);
             case JedaiOptions.ALL_PAIRS_TOKEN_BASED:
-                return new org.scify.jedai.similarityjoins.tokenbased.AllPairs(1.);
+                return new org.scify.jedai.similarityjoins.tokenbased.AllPairs(1.F);
             case JedaiOptions.FAST_SS:
                 return new FastSS(1);
             case JedaiOptions.PASS_JOIN:
                 return new PassJoin(1);
             case JedaiOptions.PP_JOIN:
-                return new PPJoin(1.);
+                return new PPJoin(1.F);
             default:
                 return null;
         }
