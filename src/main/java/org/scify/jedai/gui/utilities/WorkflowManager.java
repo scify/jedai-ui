@@ -21,6 +21,7 @@ import org.scify.jedai.utilities.ClustersPerformance;
 import org.scify.jedai.utilities.datastructures.AbstractDuplicatePropagation;
 import org.scify.jedai.utilities.enumerations.BlockBuildingMethod;
 
+import java.nio.channels.FileLock;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -403,7 +404,7 @@ public class WorkflowManager {
      */
     private ClustersPerformance executeFullJoinBasedWorkflow(Label statusLabel) {
         // todo: make this method use addBlocksPerformance()...
-        double overheadStart = System.currentTimeMillis();
+        float overheadStart = System.currentTimeMillis();
         boolean isDirtyEr = erType.equals(JedaiOptions.DIRTY_ER);
 
         // Similarity Join
@@ -429,7 +430,7 @@ public class WorkflowManager {
         entityClusters = ec.getDuplicates(simPairs);
 
         // Create clusters performance
-        double overheadEnd = System.currentTimeMillis();
+        float overheadEnd = System.currentTimeMillis();
         ClustersPerformance clp = new ClustersPerformance(entityClusters, duplicatePropagation);
         clp.setStatistics();
         clp.printStatistics(overheadEnd - overheadStart, ec.getMethodName(), ec.getMethodConfiguration());
@@ -475,7 +476,7 @@ public class WorkflowManager {
 
                 // Print performance
                 double totalTime = overheadEnd - overheadStart;
-                blp.printStatistics(totalTime, bb.getMethodConfiguration(), bb.getMethodName());
+                blp.printStatistics((float) totalTime, bb.getMethodConfiguration(), bb.getMethodName());
 
                 // Save the performance of block building
                 this.addBlocksPerformance(bb.getMethodName(), totalTime, blp);
@@ -526,7 +527,7 @@ public class WorkflowManager {
             // Get original recall
             ClustersPerformance clp = new ClustersPerformance(originalClusters, duplicatePropagation);
             clp.setStatistics();
-            clp.printStatistics(overheadEnd - overheadStart, ec.getMethodName(), ec.getMethodConfiguration());
+            clp.printStatistics((float) (overheadEnd - overheadStart), ec.getMethodName(), ec.getMethodConfiguration());
             originalRecall = clp.getRecall();
         }
 
@@ -605,7 +606,7 @@ public class WorkflowManager {
             Comparison comparison = prioritization.next();
 
             // Calculate the similarity
-            double similarity = entityMatching.executeComparison(comparison);
+            float similarity = entityMatching.executeComparison(comparison);
             comparison.setUtilityMeasure(similarity);
 
             sims.addComparison(comparison);
@@ -631,7 +632,7 @@ public class WorkflowManager {
 
         // Print clustering performance
         if (clp != null) {
-            clp.printStatistics(overheadEnd - overheadStart, ec.getMethodName(),
+            clp.printStatistics((float) (overheadEnd - overheadStart), ec.getMethodName(),
                     ec.getMethodConfiguration());
 
             // Add prioritization performance step for workbench
@@ -790,7 +791,7 @@ public class WorkflowManager {
                 blp = new BlocksPerformance(blocks, duProp);
                 blp.setStatistics();
 
-                double totalTime = overheadEnd - overheadStart;
+                float totalTime = (float) (overheadEnd - overheadStart);
                 blp.printStatistics(totalTime, currentMethod.getMethodConfiguration(),
                         currentMethod.getMethodName());
 
@@ -900,7 +901,7 @@ public class WorkflowManager {
             blp = new BlocksPerformance(blocks, duplicatePropagation);
             blp.setStatistics();
             if (finalRun) {
-                double totalTime = overheadEnd - overheadStart;
+                float totalTime =(float) (overheadEnd - overheadStart);
 
                 // Print performance
                 blp.printStatistics(totalTime, bb.getMethodConfiguration(), bb.getMethodName());
@@ -963,7 +964,7 @@ public class WorkflowManager {
         ClustersPerformance clp = new ClustersPerformance(entityClusters, duplicatePropagation);
         clp.setStatistics();
         if (finalRun)
-            clp.printStatistics(overheadEnd - overheadStart, ec.getMethodName(),
+            clp.printStatistics((float)(overheadEnd - overheadStart), ec.getMethodName(),
                     ec.getMethodConfiguration());
 
         return clp;
@@ -976,10 +977,10 @@ public class WorkflowManager {
      * @return Number of comparisons
      */
     private double getTotalComparisons(List<AbstractBlock> blocks) {
-        double originalComparisons = 0;
+        float originalComparisons = 0;
         originalComparisons = blocks.stream()
                 .map(AbstractBlock::getNoOfComparisons)
-                .reduce(originalComparisons, Double::sum);
+                .reduce(originalComparisons, Float::sum);
         System.out.println("Original comparisons\t:\t" + originalComparisons);
         return originalComparisons;
     }
@@ -1143,7 +1144,7 @@ public class WorkflowManager {
 
                 blp = new BlocksPerformance(blocks, duplicatePropagation);
                 blp.setStatistics();
-                blp.printStatistics(totalTimeMillis, bb.getMethodConfiguration(),
+                blp.printStatistics((float)totalTimeMillis, bb.getMethodConfiguration(),
                         bb.getMethodName());
                 this.addBlocksPerformance(bb.getMethodName(), totalTimeMillis, blp);
 
@@ -1187,7 +1188,7 @@ public class WorkflowManager {
 
                 blp = new BlocksPerformance(cleanedBlocks, duplicatePropagation);
                 blp.setStatistics();
-                blp.printStatistics(totalTimeMillis, bp.getMethodConfiguration(), bp.getMethodName());
+                blp.printStatistics((float)totalTimeMillis, bp.getMethodConfiguration(), bp.getMethodName());
                 this.addBlocksPerformance(bp.getMethodName(), totalTimeMillis, blp);
 
                 // Increment index
@@ -1211,7 +1212,7 @@ public class WorkflowManager {
 
         blp = new BlocksPerformance(finalBlocks, duplicatePropagation);
         blp.setStatistics();
-        blp.printStatistics(totalTimeMillis, comparisonCleaningMethod.getMethodConfiguration(),
+        blp.printStatistics((float)totalTimeMillis, comparisonCleaningMethod.getMethodConfiguration(),
                 comparisonCleaningMethod.getMethodName());
         this.addBlocksPerformance(comparisonCleaningMethod.getMethodName(), totalTimeMillis, blp);
 
@@ -1335,7 +1336,7 @@ public class WorkflowManager {
         final ClustersPerformance clp = new ClustersPerformance(entityClusters, duplicatePropagation);
         clp.setStatistics();
         // todo: Could set the entire configuration details instead of entity clustering method name & config.
-        clp.printStatistics(totalTimeMillis, ec.getMethodName(), ec.getMethodConfiguration());
+        clp.printStatistics((float)totalTimeMillis, ec.getMethodName(), ec.getMethodConfiguration());
 
         return clp;
     }

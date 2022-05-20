@@ -160,7 +160,7 @@ public class DynamicMethodConfiguration {
                 );
             case EXTENDED_Q_GRAMS_BLOCKING:
                 return new ExtendedQGramsBlocking(
-                        (double) parameters.get(1).getRight(),
+                        (float) parameters.get(1).getRight(),
                         (int) parameters.get(0).getRight()
                 );
             case EXTENDED_SORTED_NEIGHBORHOOD:
@@ -248,7 +248,7 @@ public class DynamicMethodConfiguration {
                 );
             case JedaiOptions.ALL_PAIRS_TOKEN_BASED:
                 return new org.scify.jedai.similarityjoins.tokenbased.AllPairs(
-                        (double) parameters.get(0).getRight() // Threshold
+                        (float) parameters.get(0).getRight() // Threshold
                 );
             case JedaiOptions.FAST_SS:
                 return new FastSS(
@@ -260,7 +260,7 @@ public class DynamicMethodConfiguration {
                 );
             case JedaiOptions.PP_JOIN:
                 return new PPJoin(
-                        (double) parameters.get(0).getRight() // Threshold
+                        (float) parameters.get(0).getRight() // Threshold
                 );
             default:
                 return null;
@@ -316,8 +316,8 @@ public class DynamicMethodConfiguration {
                 break;
             case JedaiOptions.CANOPY_CLUSTERING:
                 processingMethod = new CanopyClustering(
-                        (double) parameters.get(0).getRight(), // Inclusive threshold
-                        (double) parameters.get(1).getRight()  // Exclusive threshold
+                        (float) parameters.get(0).getRight(), // Inclusive threshold
+                        (float) parameters.get(1).getRight()  // Exclusive threshold
                 );
                 break;
             case JedaiOptions.CANOPY_CLUSTERING_EXTENDED:
@@ -347,17 +347,17 @@ public class DynamicMethodConfiguration {
         switch (methodName) {
             case JedaiOptions.BLOCK_FILTERING:
                 processingMethod = new BlockFiltering(
-                        (double) parameters.get(0).getRight()
+                        (float) parameters.get(0).getRight()
                 );
                 break;
             case JedaiOptions.SIZE_BASED_BLOCK_PURGING:
                 processingMethod = new SizeBasedBlockPurging(
-                        (double) parameters.get(0).getRight()
+                        (float) parameters.get(0).getRight()
                 );
                 break;
             case JedaiOptions.COMPARISON_BASED_BLOCK_PURGING:
                 processingMethod = new ComparisonsBasedBlockPurging(
-                        (double) parameters.get(0).getRight()
+                        (float) parameters.get(0).getRight()
                 );
                 break;
         }
@@ -418,41 +418,41 @@ public class DynamicMethodConfiguration {
         switch (methodName) {
             case JedaiOptions.CENTER_CLUSTERING:
                 ecMethod = new CenterClustering(
-                        (double) parameters.get(0).getRight()
+                        (float) parameters.get(0).getRight()
                 );
                 break;
             case JedaiOptions.CONNECTED_COMPONENTS_CLUSTERING:
                 ecMethod = new ConnectedComponentsClustering(
-                        (double) parameters.get(0).getRight()
+                        (float) parameters.get(0).getRight()
                 );
                 break;
             case JedaiOptions.CUT_CLUSTERING:
                 ecMethod = new CutClustering(
-                        (double) parameters.get(1).getRight(),  // 1st parameter of CutClustering, but 2nd in JedAI-core
-                        (double) parameters.get(0).getRight()
+                        (float) parameters.get(1).getRight(),  // 1st parameter of CutClustering, but 2nd in JedAI-core
+                        (float) parameters.get(0).getRight()
                 );
                 break;
             case JedaiOptions.MARKOV_CLUSTERING:
                 ecMethod = new MarkovClustering(
-                        (double) parameters.get(1).getRight(),  // Cluster Threshold
-                        (double) parameters.get(2).getRight(),  // Matrix Similarity Threshold
+                        (float) parameters.get(1).getRight(),  // Cluster Threshold
+                        (float) parameters.get(2).getRight(),  // Matrix Similarity Threshold
                         (int) parameters.get(3).getRight(),     // Similarity Checks Limit
-                        (double) parameters.get(0).getRight()   // Similarity Threshold
+                        (float) parameters.get(0).getRight()   // Similarity Threshold
                 );
                 break;
             case JedaiOptions.MERGE_CENTER_CLUSTERING:
                 ecMethod = new MergeCenterClustering(
-                        (double) parameters.get(0).getRight()
+                        (float) parameters.get(0).getRight()
                 );
                 break;
             case JedaiOptions.RICOCHET_SR_CLUSTERING:
                 ecMethod = new RicochetSRClustering(
-                        (double) parameters.get(0).getRight()
+                        (float) parameters.get(0).getRight()
                 );
                 break;
             case JedaiOptions.UNIQUE_MAPPING_CLUSTERING:
                 ecMethod = new UniqueMappingClustering(
-                        (double) parameters.get(0).getRight()
+                        (float) parameters.get(0).getRight()
                 );
                 break;
         }
@@ -476,7 +476,7 @@ public class DynamicMethodConfiguration {
         switch (emMethodName) {
             case JedaiOptions.GROUP_LINKAGE:
                 // Get similarity threshold, representation model & similarity metric
-                double simThr = (parameters != null) ? (double) parameters.get(2).getRight() : 0.5;
+                float simThr = (parameters != null) ? (float) parameters.get(2).getRight() : 0.5F;
                 rep = (parameters != null) ?
                         (RepresentationModel) parameters.get(0).getRight() : RepresentationModel.TOKEN_UNIGRAM_GRAPHS;
                 simMetric = (parameters != null) ?
