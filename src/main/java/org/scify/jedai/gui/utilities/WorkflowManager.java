@@ -21,6 +21,7 @@ import org.scify.jedai.utilities.ClustersPerformance;
 import org.scify.jedai.utilities.datastructures.AbstractDuplicatePropagation;
 import org.scify.jedai.utilities.enumerations.BlockBuildingMethod;
 
+import java.nio.channels.FileLock;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -976,10 +977,10 @@ public class WorkflowManager {
      * @return Number of comparisons
      */
     private double getTotalComparisons(List<AbstractBlock> blocks) {
-        double originalComparisons = 0;
+        float originalComparisons = 0;
         originalComparisons = blocks.stream()
                 .map(AbstractBlock::getNoOfComparisons)
-                .reduce(originalComparisons, Double::sum);
+                .reduce(originalComparisons, Float::sum);
         System.out.println("Original comparisons\t:\t" + originalComparisons);
         return originalComparisons;
     }
